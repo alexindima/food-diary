@@ -54,8 +54,8 @@ or use raw Git deletion to bypass a primary/shared-worktree rejection. Preserve
 the checkout and report the lifecycle limitation when no supported return exists.
 
 During release monitoring, use connected tools for the run metadata they actually
-expose. A PR-only list cannot establish a push CI or `workflow_run` deployment;
-use `gh run list --commit <sha>` and inspect the triggering run relation. A
+expose. Use `gh run list --commit <sha>` to find push CI and inspect the manual
+`Deploy` run summary for the selected source SHA and successful CI link. A
 `404 BlobNotFound` for an unfinished job log does not prove deployment failure:
 check job status, wait for completion, then fetch available logs. Use one bounded
 poll for the current SHA, report only meaningful transitions and retain run IDs

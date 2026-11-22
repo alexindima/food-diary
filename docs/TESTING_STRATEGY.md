@@ -47,15 +47,18 @@ To run the complete backend suite locally:
 dotnet test FoodDiary.slnx --maxcpucount:1
 ```
 
-For every authorized production release, follow the exact published SHA through
-`CI Tests` and its resulting `Deploy` run until both have terminal results.
-Successful push, successful CI, and successful deployment are separate facts.
-Inspect failed job logs before diagnosing a failure. If a fix is authorized,
-follow its replacement SHA through the same chain. Report CI and deployment
-links/results and application health separately; a healthy endpoint alone does
-not prove which revision was deployed. A superseded or skipped deployment must
-not be reported as successful. See
-[fooddiary-delivery](../.agents/skills/fooddiary-delivery/SKILL.md).
+Pushes to `master` run `CI Tests`. Production deployment starts when an
+authorized operator explicitly runs `Deploy` on `master` in GitHub Actions.
+See the [production deployment runbook](backend/BLUE_GREEN_DEPLOYMENT.md).
+
+For an authorized release, correlate the successful `CI Tests` run and the
+manual `Deploy` run with the selected source SHA. Follow `Deploy` to its
+terminal result and report links and results for CI and deployment alongside
+application health. Verify the deployed revision and report the actual
+conclusion for skipped and superseded runs. Inspect failed job logs before
+diagnosing a failure. If an authorized fix produces a replacement SHA, verify
+its CI result and follow its deployment when that release is authorized. See the
+[FoodDiary delivery skill](../.agents/skills/fooddiary-delivery/SKILL.md).
 
 ### Backend CI order and completeness
 

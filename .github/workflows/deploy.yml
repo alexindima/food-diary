@@ -1,15 +1,12 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows:
-      - CI Tests
-    types:
-      - completed
-    branches:
-      - master
   workflow_dispatch:
     inputs:
+      commit_sha:
+        description: Full commit SHA (blank selects the newest commit on master with successful CI)
+        type: string
+        required: false
       mode:
         description: Deployment mode (maintenance for breaking contracts or Nginx image upgrades)
         type: choice
@@ -21,8 +18,7 @@ on:
 env:
   SERVER_IP: 193.109.69.58
   IMAGE_PREFIX: ghcr.io/alexindima/food-diary
-  SOURCE_COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
-  DEPLOY_MODE: ${{ github.event.inputs.mode || 'auto' }}
+  DEPLOY_MODE: ${{ inputs.mode || 'auto' }}
 
 concurrency:
   group: fooddiary-production-deploy
@@ -31,42 +27,38 @@ concurrency:
 jobs:
   authorize:
     if: >-
-      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') ||
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'push' &&
-       github.event.workflow_run.head_branch == 'master' &&
-       github.event.workflow_run.head_repository.full_name == github.repository)
+      github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
+      actions: read
       contents: read
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
+      source_sha: ${{ steps.source.outputs.source_sha }}
     steps:
-      - name: Authorize deployment source
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          master_sha=$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/ref/heads/master" | jq -er '.object.sha')
-          [[ "${SOURCE_COMMIT_SHA}" =~ ^[0-9a-f]{40}$ ]]
-          if [[ "${SOURCE_COMMIT_SHA}" != "${master_sha}" ]]; then
-            echo 'Deployment source must be the current master commit.' >&2
-            exit 1
-          fi
-      - name: Checkout code
+      - name: Checkout deployment workflow revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ env.SOURCE_COMMIT_SHA }}
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 22
+      - name: Authorize deployment source
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_SHA: ${{ inputs.commit_sha }}
+        run: node .github/scripts/select-deploy-source.mjs
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ steps.source.outputs.source_sha }}
+          persist-credentials: false
       - name: Prepare image matrix
         id: matrix
         run: echo "matrix=$(node .github/scripts/deploy-images.mjs matrix)" >> "$GITHUB_OUTPUT"
@@ -74,6 +66,8 @@ jobs:
   build-images:
     name: Build and sign (${{ matrix.image }})
     needs: authorize
+    env:
+      SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -195,28 +189,29 @@ jobs:
 
   deploy:
     needs: [authorize, build-images]
+    env:
+      SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
       packages: read
     steps:
-      # A newer master may have arrived while the image matrix was building.
-      - name: Authorize deployment source
+      - name: Recheck deployment source ancestry
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          master_sha=$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/ref/heads/master" | jq -er '.object.sha')
           [[ "${SOURCE_COMMIT_SHA}" =~ ^[0-9a-f]{40}$ ]]
-          if [[ "${SOURCE_COMMIT_SHA}" != "${master_sha}" ]]; then
-            echo 'Deployment source must be the current master commit.' >&2
-            exit 1
-          fi
+          master_sha=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/master" --jq '.object.sha')
+          [[ "${master_sha}" =~ ^[0-9a-f]{40}$ ]]
+          comparison=$(gh api --method GET "repos/${GITHUB_REPOSITORY}/compare/${SOURCE_COMMIT_SHA}...${master_sha}" \
+            -f per_page=1 --jq '.status')
+          case "$comparison" in
+            ahead|identical) ;;
+            *) echo 'Deployment source must still be in master history.' >&2; exit 1 ;;
+          esac
       - name: Initialize deploy diagnostics
         run: |
           mkdir -p "${RUNNER_TEMP}/deploy-logs"
@@ -738,7 +733,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          COMMIT_SHA: ${{ steps.commit_meta.outputs.sha }}
+          COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}
           COMMIT_SUBJECT: ${{ steps.commit_meta.outputs.subject }}
         run: |
           FAILED_AREA="deploy"
@@ -760,11 +755,7 @@ jobs:
             fi
           fi
 
-          REF_NAME="${GITHUB_REF_NAME}"
-          if [ -z "${REF_NAME}" ] && [ "${GITHUB_EVENT_NAME}" = "workflow_run" ]; then
-            REF_NAME="${{ github.event.workflow_run.head_branch }}"
-          fi
-          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${REF_NAME}"$'\nCommit: '"${COMMIT_SHA}"$'\nTitle: '"${COMMIT_SUBJECT}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'❌ Deploy failed\nWorkflow: Deploy\nRepo: '"${GITHUB_REPOSITORY}"$'\nBranch: '"${GITHUB_REF_NAME}"$'\nCommit: '"${COMMIT_SHA}"$'\nTitle: '"${COMMIT_SUBJECT}"$'\nActor: '"${GITHUB_ACTOR}"$'\nArea: '"${FAILED_AREA}"$'\nStep: '"${FAILED_TARGET}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null
@@ -783,12 +774,13 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           AUTHORIZATION_RESULT: ${{ needs.authorize.result }}
           IMAGE_BUILD_RESULT: ${{ needs.build-images.result }}
+          SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}
         run: |
           if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
             echo "Skipping Telegram notification: missing secrets."
             exit 0
           fi
-          MESSAGE=$'❌ Deploy image preparation failed\nCommit: '"${SOURCE_COMMIT_SHA}"$'\nAuthorization: '"${AUTHORIZATION_RESULT}"$'\nImages: '"${IMAGE_BUILD_RESULT}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          MESSAGE=$'❌ Deploy image preparation failed\nCommit: '"${SOURCE_COMMIT_SHA:-unselected}"$'\nAuthorization: '"${AUTHORIZATION_RESULT}"$'\nImages: '"${IMAGE_BUILD_RESULT}"$'\nRun: '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             --data-urlencode text="${MESSAGE}" >/dev/null

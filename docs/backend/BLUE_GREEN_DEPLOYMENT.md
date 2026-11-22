@@ -11,6 +11,19 @@ after preparing `.env`. This generates private `.env.mail-relay`,
 each supporting service's own settings. Run the same helper after changing
 `.env` before a manual Compose startup or recreation of these services.
 
+## Start a production release
+
+Open **Actions → Deploy → Run workflow** in GitHub and select the `master`
+branch. Pushes to `master` run `CI Tests` automatically. Starting the production
+deployment requires the explicit **Run workflow** action.
+
+Leave `commit_sha` blank to release the most recent commit in `master` history
+with a successful `CI Tests` run triggered by a push to `master`. To release
+a specific eligible commit, enter its full 40-character SHA. The workflow
+uses that source SHA for the build and deployment. Keep `mode` set to `auto`
+for routine releases, or choose `maintenance` for the cases below. Follow the
+run to completion and verify application health for the selected release.
+
 ## Automatic decision
 
 Preflight queries the pinned candidate Initializer with `list` and the live

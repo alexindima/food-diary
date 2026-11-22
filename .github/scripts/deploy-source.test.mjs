@@ -7,103 +7,109 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 import { images, createMatrix, createReceipt, collectReceipts } from "./deploy-images.mjs";
+import { selectDeploymentSource } from "./select-deploy-source.mjs";
 
 const workflow = await readFile(
     new URL("../workflows/deploy.yml", import.meta.url),
     "utf8",
 );
-const expression = workflow
-    .match(/    if: >-\r?\n([\s\S]*?)    runs-on:/)?.[1]
-    .trim();
-assert.ok(expression, "Deploy must authorize the event at job level");
-const allows = new Function("github", `return (${expression});`);
+const job = name => workflow.match(new RegExp(`^  ${name}:\\r?\\n([\\s\\S]*?)(?=^  [\\w-]+:\\r?$|(?![\\s\\S]))`, "mu"))?.[1];
 const repository = "alexindima/food-diary";
-const push = {
-    conclusion: "success",
-    event: "push",
-    head_branch: "master",
-    head_repository: { full_name: repository },
-};
+const masterTip = "a".repeat(40);
+const latestGreen = "b".repeat(40);
+const olderGreen = "c".repeat(40);
+const outsideMaster = "d".repeat(40);
+const history = [masterTip, latestGreen, olderGreen];
 
-for (const [name, event, ref, run, expected] of [
-    ["master push", "workflow_run", "refs/heads/master", push, true],
-    [
-        "fork PR named master",
-        "workflow_run",
-        "refs/heads/master",
-        {
-            ...push,
-            event: "pull_request",
-            head_repository: { full_name: "attacker/fork" },
-        },
-        false,
-    ],
-    [
-        "same repository PR",
-        "workflow_run",
-        "refs/heads/master",
-        { ...push, event: "pull_request" },
-        false,
-    ],
-    [
-        "foreign push",
-        "workflow_run",
-        "refs/heads/master",
-        { ...push, head_repository: { full_name: "attacker/fork" } },
-        false,
-    ],
-    [
-        "other branch",
-        "workflow_run",
-        "refs/heads/master",
-        { ...push, head_branch: "feature" },
-        false,
-    ],
-    [
-        "failed CI",
-        "workflow_run",
-        "refs/heads/master",
-        { ...push, conclusion: "failure" },
-        false,
-    ],
-    [
-        "manual master",
-        "workflow_dispatch",
-        "refs/heads/master",
-        undefined,
-        true,
-    ],
-    [
-        "manual feature",
-        "workflow_dispatch",
-        "refs/heads/feature",
-        undefined,
-        false,
-    ],
-]) {
-    test(name, () =>
-        assert.equal(
-            allows({
-                repository,
-                event_name: event,
-                ref,
-                event: { workflow_run: run },
-            }),
-            expected,
-        ),
-    );
+function ciRun(sha, id) {
+    return {
+        id,
+        head_sha: sha,
+        head_branch: "master",
+        head_repository: { full_name: repository },
+        event: "push",
+        status: "completed",
+        conclusion: "success",
+    };
 }
 
-test("source authorization runs before checkout, credentials and source scripts", () => {
-    const guard = workflow.indexOf("- name: Authorize deployment source");
-    assert.ok(guard > 0 && guard < workflow.indexOf("- name: Checkout code"));
-    assert.ok(
-        workflow.includes(
-            '"${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/ref/heads/master"',
-        ),
+test("Deploy only accepts manual runs from the master branch", () => {
+    const triggers = workflow.match(/^on:\r?\n((?:[ \t][^\r\n]*\r?\n|\r?\n)*)/mu)?.[1];
+    assert.ok(triggers, "Deploy must declare its manual trigger");
+    assert.deepEqual([...triggers.matchAll(/^  (\w+):/gmu)].map(match => match[1]), ["workflow_dispatch"]);
+
+    const expression = workflow.match(/^  authorize:\r?\n    if:([\s\S]*?)^    runs-on:/mu)?.[1]
+        .trim()
+        .replace(/^>-\s*/u, "")
+        .replace(/^\$\{\{\s*|\s*\}\}$/gu, "");
+    assert.ok(expression, "Deploy must authorize the event at job level");
+    const allows = new Function("github", `return (${expression});`);
+    assert.equal(allows({ event_name: "workflow_dispatch", ref: "refs/heads/master" }), true);
+    assert.equal(allows({ event_name: "workflow_dispatch", ref: "refs/heads/feature" }), false);
+    assert.equal(allows({ event_name: "workflow_dispatch", ref: "refs/tags/master" }), false);
+    assert.equal(allows({ event_name: "workflow_run", ref: "refs/heads/master" }), false);
+    assert.equal(allows({ event_name: "push", ref: "refs/heads/master" }), false);
+});
+
+test("omitting the SHA selects the latest green commit by master history", () => {
+    const runs = [
+        ciRun(outsideMaster, 5),
+        ciRun(olderGreen, 4),
+        { ...ciRun(masterTip, 3), status: "in_progress", conclusion: null },
+        ciRun(latestGreen, 2),
+    ];
+    assert.deepEqual(selectDeploymentSource("", history, runs, repository), { sha: latestGreen, ciRunId: 2 });
+});
+
+test("a full explicit SHA selects that exact commit even when a newer one passed", () => {
+    const runs = [ciRun(latestGreen, 2), ciRun(olderGreen, 1)];
+    assert.deepEqual(
+        selectDeploymentSource(` ${olderGreen.toUpperCase()} `, history, runs, repository),
+        { sha: olderGreen, ciRunId: 1 },
     );
-    assert.ok(workflow.includes('"${SOURCE_COMMIT_SHA}" != "${master_sha}"'));
-    assert.ok(workflow.includes("curl --fail --silent --show-error"));
+});
+
+test("a requested SHA must be a full commit ID in the current master history", () => {
+    const runs = [ciRun(latestGreen, 2), ciRun(outsideMaster, 1)];
+    assert.throws(() => selectDeploymentSource("master", history, runs, repository), /SHA|commit ID/iu);
+    assert.throws(() => selectDeploymentSource(latestGreen.slice(0, 12), history, runs, repository), /SHA|commit ID/iu);
+    assert.throws(() => selectDeploymentSource(outsideMaster, history, runs, repository), /master/iu);
+});
+
+test("only completed successful pushes from this repository's master qualify", () => {
+    const run = ciRun(masterTip, 2);
+    for (const ineligible of [
+        { ...run, event: "pull_request" },
+        { ...run, event: "workflow_dispatch" },
+        { ...run, head_branch: "feature" },
+        { ...run, head_repository: { full_name: "other/fork" } },
+        { ...run, head_repository: null },
+        { ...run, status: "in_progress", conclusion: null },
+        { ...run, conclusion: "failure" },
+        { ...run, id: 0 },
+    ]) {
+        const runs = [ineligible, ciRun(olderGreen, 1)];
+        assert.deepEqual(selectDeploymentSource("", history, runs, repository), { sha: olderGreen, ciRunId: 1 });
+        assert.throws(() => selectDeploymentSource(masterTip, history, runs, repository), /CI/iu);
+    }
+    assert.throws(() => selectDeploymentSource("", history, [ciRun(outsideMaster, 1)], repository), /CI/iu);
+});
+
+test("the authorized SHA is pinned before source checkout, builds and deployment", () => {
+    const authorize = job("authorize");
+    const selector = authorize.indexOf("node .github/scripts/select-deploy-source.mjs");
+    const trustedCheckout = authorize.indexOf("ref: ${{ github.sha }}");
+    const fullHistory = authorize.indexOf("fetch-depth: 0");
+    assert.ok(trustedCheckout >= 0 && trustedCheckout < selector);
+    assert.ok(fullHistory >= 0 && fullHistory < selector);
+    assert.ok(authorize.indexOf("ref: ${{ steps.source.outputs.source_sha }}") > selector);
+    assert.ok(authorize.includes("source_sha: ${{ steps.source.outputs.source_sha }}"));
+
+    for (const name of ["build-images", "deploy"]) {
+        const jobBody = job(name);
+        assert.ok(jobBody.includes("SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}"));
+        assert.ok(jobBody.includes("ref: ${{ env.SOURCE_COMMIT_SHA }}"));
+    }
 });
 
 test("database readiness runs before server uploads and writer shutdown", () => {
@@ -196,7 +202,6 @@ const receipts = () => images.map(({ name }, index) => createReceipt({
     name, digest: `sha256:${(index + 1).toString(16).padStart(64, "0")}`, ...identity,
 }));
 const helper = fileURLToPath(new URL("./deploy-images.mjs", import.meta.url));
-const job = name => workflow.match(new RegExp(`^  ${name}:\\r?\\n([\\s\\S]*?)(?=^  [\\w-]+:\\r?$|(?![\\s\\S]))`, "mu"))?.[1];
 
 test("cache failure recovery permits one classified clean rebuild before signing", () => {
     const workers = job("build-images");
@@ -416,13 +421,14 @@ test("each worker signs its image index before uploading a same-run receipt", ()
 
 test("server rechecks source and verifies the complete manifest before any SSH", () => {
     const server = job("deploy");
-    const source = server.indexOf("- name: Authorize deployment source");
+    const source = server.indexOf("/compare/");
     const checkout = server.indexOf("- name: Checkout code");
     const collect = server.indexOf("deploy-images.mjs collect");
     const verify = server.indexOf("cosign verify");
     const outputs = server.indexOf('cat "${RUNNER_TEMP}/image-digests.env" >> "$GITHUB_OUTPUT"');
     const ssh = server.indexOf("- name: Setup SSH");
     assert.ok(source >= 0 && source < checkout && checkout < collect && collect < verify && verify < outputs && outputs < ssh);
+    assert.match(server, /ahead\|identical\)/u);
     assert.match(server, /pattern: production-image-\$\{\{ github\.run_id \}\}-\*/u);
     assert.match(server, /--certificate-identity "https:\/\/github\.com\/\$\{GITHUB_REPOSITORY\}\/\.github\/workflows\/deploy\.yml@refs\/heads\/master"/u);
     for (const { name } of images) assert.ok(server.includes(`steps.images.outputs.${name.replaceAll("-", "_")}`), name);

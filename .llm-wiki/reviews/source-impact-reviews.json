@@ -1719,14 +1719,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "669bdf0a037e3f7f40bd9e1773c62b42f8ed2f0e87087332a192759410010917",
-          "reviewReason": "Checked that the documented Admin 100/100/99/100 and UI kit 100/100/100/100 minimums match Angular. Admin coverage, Chromium smoke, and build remain the applicable checks."
+          "sha256": "14ea65bc15bb954a8089d180db1c8a1473511e393fd943490954169609254ce1",
+          "reviewReason": "Reviewed the production launch instructions. The test-plan page cites the Docker startup and Rider coverage sections, and both citations still match their source sections."
         }
       ],
-      "reason": "Checked that the documented Admin 100/100/99/100 and UI kit 100/100/100/100 minimums match Angular. Admin coverage, Chromium smoke, and build remain the applicable checks.",
-      "baseRef": "500547d99",
-      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T19:41:23.9392294Z"
+      "reason": "Reviewed the production launch instructions. The test-plan page cites the Docker startup and Rider coverage sections, and both citations still match their source sections.",
+      "baseRef": "HEAD",
+      "gitHead": "f17b8a2f792b2919ac4e47a05e13f60341aa4e48",
+      "reviewedAtUtc": "2026-11-22T21:48:54.4753804Z"
     },
     {
       "pageId": "workflow-trace-feature",

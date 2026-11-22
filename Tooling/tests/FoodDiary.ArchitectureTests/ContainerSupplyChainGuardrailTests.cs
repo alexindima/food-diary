@@ -424,11 +424,29 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
+    public void DeployWorkflow_BuildsAndDeploysTheAuthorizedManualSource() {
+        string workflow = ReadDeployWorkflow();
+        var matchTimeout = TimeSpan.FromSeconds(1);
+
+        Match triggers = Regex.Match(workflow, @"^on:\r?\n.*?(?=^\S|\z)", RegexOptions.Multiline | RegexOptions.Singleline, matchTimeout);
+        Assert.Equal("workflow_dispatch:", Assert.Single(
+            Regex.Matches(triggers.Value, @"^  \S[^\r\n]*", RegexOptions.Multiline, matchTimeout)).Value.Trim());
+        Assert.Contains("github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master'", workflow, StringComparison.Ordinal);
+        Assert.Contains("source_sha: ${{ steps.source.outputs.source_sha }}", workflow, StringComparison.Ordinal);
+
+        foreach (string job in new[] { "build-images", "deploy" }) {
+            Match section = Regex.Match(workflow, $@"^  {job}:\r?\n.*?(?=^ {{0,2}}\S|\z)", RegexOptions.Multiline | RegexOptions.Singleline, matchTimeout);
+            Assert.True(section.Success, $"The '{job}' job is missing.");
+            Assert.Contains("SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}", section.Value, StringComparison.Ordinal);
+            Assert.Contains("ref: ${{ env.SOURCE_COMMIT_SHA }}", section.Value, StringComparison.Ordinal);
+        }
+
+        Assert.DoesNotContain(":sha-${{ github.sha }}", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void DeployWorkflow_DeploysTheSignedBuildOutputDigests() {
         string workflow = ReadDeployWorkflow();
-
-        Assert.Contains("SOURCE_COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}", workflow, StringComparison.Ordinal);
-        Assert.DoesNotContain(":sha-${{ github.sha }}", workflow, StringComparison.Ordinal);
 
         foreach (string image in ExpectedProductionImages) {
             Assert.Contains($"@${{{{ steps.images.outputs.{image.Replace('-', '_')} }}}}", workflow, StringComparison.Ordinal);
