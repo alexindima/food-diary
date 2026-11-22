@@ -163,6 +163,12 @@ export class RecipeManageComponent implements UnsavedEditor {
         max(path.manualFiber, MANUAL_NUTRITION_MAX_NUTRIENT);
         max(path.manualAlcohol, MANUAL_NUTRITION_MAX_NUTRIENT);
     });
+    protected readonly hasMixedLegacyGallery = computed(() => {
+        const { images, steps } = this.recipeFormModel();
+        return [images, ...steps.map(step => step.images)].some(
+            gallery => gallery?.some(photo => photo.kind === 'remote') === true && gallery.some(photo => photo.assetId !== null),
+        );
+    });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
@@ -397,8 +403,8 @@ export class RecipeManageComponent implements UnsavedEditor {
             this.isSubmitting() ||
             this.checkingLanguage() ||
             this.checkingPublication() ||
-            this.photosUploading() ||
-            this.stepPhotosUploading()
+            this.anyPhotosUploading() ||
+            this.hasMixedLegacyGallery()
         ) {
             return;
         }

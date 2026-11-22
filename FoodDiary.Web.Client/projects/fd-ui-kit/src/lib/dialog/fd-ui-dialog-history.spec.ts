@@ -176,6 +176,34 @@ describe('dialog Back dismissal', () => {
 });
 
 describe('dialog explicit close history cleanup', () => {
+    it('closes normally without a history entry and restores Back dismissal on the next open', () => {
+        const pushState = vi.spyOn(context.view.history, 'pushState').mockImplementationOnce(() => {
+            throw new DOMException('The browser rejected the dialog history entry', 'SecurityError');
+        });
+        const dialog = context.open();
+        expect(pushState).toHaveBeenCalledOnce();
+        expect(context.view.history.state).toEqual({ navigationId: 2, editor: 'draft' });
+
+        dialog.close();
+        vi.runAllTimers();
+        expect(context.back).not.toHaveBeenCalled();
+        expect(context.navigated).not.toHaveBeenCalled();
+
+        const nextDialog = context.open();
+        context.view.history.back();
+        vi.runAllTimers();
+        expect(nextDialog.close).toHaveBeenCalledOnce();
+        expect(dialog.close).toHaveBeenCalledOnce();
+        expect(context.view.location.href).toBe('https://fooddiary.test/current?date=2026-10-24#details');
+        expect(context.view.history.state).toEqual({ navigationId: 2, editor: 'draft' });
+        expect(context.navigated).not.toHaveBeenCalled();
+
+        context.view.history.back();
+        vi.runAllTimers();
+        expect(context.view.location.href).toBe('https://fooddiary.test/previous');
+        expect(context.navigated).toHaveBeenCalledOnce();
+    });
+
     it('removes the temporary step when the final dialog closes through its UI', () => {
         context.open().close();
         vi.runAllTimers();

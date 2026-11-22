@@ -117,7 +117,6 @@ export function buildConvertedNutritionPatch(values: ProductFormValues, factor: 
 }
 
 export function buildProductFormPatch(product: Product): Partial<ProductFormValues> {
-    const normalizedVisibility = normalizeProductVisibility(product.visibility);
     const normalizedProductType = normalizeProductTypeValue(product.productType ?? product.category ?? null) ?? ProductType.Unknown;
     const targetBaseAmount = getDefaultProductBaseAmount(product.baseUnit);
     const normalizedNutrition = normalizeProductNutritionValues(
@@ -151,7 +150,7 @@ export function buildProductFormPatch(product: Product): Partial<ProductFormValu
         carbsPerBase: normalizedNutrition.carbsPerBase,
         fiberPerBase: normalizedNutrition.fiberPerBase,
         alcoholPerBase: normalizedNutrition.alcoholPerBase,
-        visibility: normalizedVisibility,
+        visibility: product.visibility,
         usdaFdcId: product.usdaFdcId ?? null,
     };
 }
@@ -237,14 +236,6 @@ function roundOptionalProductNutrientValue(value: number | null, factor: number)
 
 function getProductImageSelection(product: Product): ImageSelection {
     return imageSelection(product.imageUrl ?? null, product.imageAssetId ?? null);
-}
-
-function normalizeProductVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
-    if (typeof value !== 'string') {
-        return ProductVisibility.Private;
-    }
-
-    return value.toUpperCase() === ProductVisibility.Public.toUpperCase() ? ProductVisibility.Public : ProductVisibility.Private;
 }
 
 function getProductGallery(product: Product): ImageSelection[] | undefined {

@@ -5279,7 +5279,8 @@
         "TEXT_NOT_CALCULATED": "Not included in nutrition calculations",
         "USE_AS_TEXT": "Use “{{name}}” as text",
         "INGREDIENT_PICKER_TITLE": "Choose an ingredient",
-        "SERVINGS_INTEGER_ERROR": "Enter a whole number of servings."
+        "SERVINGS_INTEGER_ERROR": "Enter a whole number of servings.",
+        "MIXED_LEGACY_GALLERY": "A recipe or step gallery has both an older linked photo and uploaded photos. Remove the linked photo to save the uploads, or remove the uploads to keep the linked photo."
     },
     "PRODUCT_MANAGE": {
         "SAVE_ERROR": "Could not save the product. Your changes are still here; please try again.",

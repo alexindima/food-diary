@@ -7,7 +7,7 @@
     "outputs": 556,
     "apiCalls": 335,
     "templatesWithTranslations": 369,
-    "translationKeys": 2270,
+    "translationKeys": 2271,
     "consumerEdges": 1332,
     "consumedComponents": 326,
     "unconsumedComponents": 182
@@ -25162,6 +25162,7 @@
         "RECIPE_MANAGE.IMPORT.TITLE",
         "RECIPE_MANAGE.IMPORT.URL_LABEL",
         "RECIPE_MANAGE.IMPORT.URL_PLACEHOLDER",
+        "RECIPE_MANAGE.MIXED_LEGACY_GALLERY",
         "RECIPE_MANAGE.SUBTITLE",
         "RECIPE_MANAGE.TOUR.START_TOUR"
       ]

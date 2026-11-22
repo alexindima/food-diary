@@ -1454,6 +1454,78 @@ it('keeps an existing asset-only cover when the owner uploads an additional reci
     );
 });
 
+it.each([
+    { slot: 'cover', owner: 'fd-recipe-basic-info' },
+    { slot: 'first step', owner: 'fd-recipe-step-card' },
+])('preserves both photos until the user resolves a mixed $slot gallery', async ({ owner }) => {
+    const cover = { imageUrl: '/recipes/legacy-cover.jpg', imageAssetId: null, images: [] };
+    const step = { imageUrl: '/recipes/legacy-step-cover.jpg', imageAssetId: null, images: [] };
+    const source = confirmedRecipe();
+    const legacy: Recipe = { ...source, ...cover, steps: [{ ...source.steps[0], ...step }] };
+    readRecipe.mockReturnValueOnce(of(legacy));
+    const transport = TestBed.runInInjectionContext(() => new RecipeService());
+    updateRecipe.mockImplementation((id, data) => transport.update(id, data));
+    const harness = await RouterTestingHarness.create(EDIT_RECIPE);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/core.json?')).flush({});
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/app.json?')).flush({});
+    const current = owner === 'fd-recipe-basic-info' ? cover : step;
+    const gallery = `${owner} fd-image-gallery-editor`;
+    expectRecipeGalleryImage(harness, `${gallery} img`, current.imageUrl);
+
+    const input = recipeGalleryFileInput(harness.routeNativeElement, owner);
+    expect(input.disabled).toBe(false);
+    const { confirmation, assetId, fileUrl } = await holdRecipePhotoConfirmationAsync(input);
+    confirmation.flush({ assetId, fileUrl });
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expectRecipeGalleryImage(harness, `${gallery} img[src="${fileUrl}"]`, fileUrl);
+        expectRecipeGalleryImage(harness, `${gallery} img[src="${current.imageUrl}"]`, current.imageUrl);
+    });
+
+    const submit = getButton(harness.routeNativeElement, 'button[type="submit"]');
+    const patch = { method: 'PATCH', url: `${environment.apiUrls.recipes}/${legacy.id}` };
+    submit.click();
+    const attemptedSave = await vi.waitFor(() => {
+        harness.detectChanges();
+        const writeCount = http.match(patch).length;
+        const warning = harness.routeNativeElement?.querySelector('[role="alert"]')?.textContent.trim() ?? '';
+        if (writeCount === 0 && warning.length === 0) {
+            throw new Error('Expected either a gallery warning or an actual save request.');
+        }
+        return { writeCount, warning };
+    });
+    expect(attemptedSave).toEqual({ writeCount: 0, warning: 'RECIPE_MANAGE.MIXED_LEGACY_GALLERY' });
+    expect(submit.disabled).toBe(true);
+    expectRecipeGalleryImage(harness, `${gallery} img[src="${fileUrl}"]`, fileUrl);
+    expectRecipeGalleryImage(harness, `${gallery} img[src="${current.imageUrl}"]`, current.imageUrl);
+
+    const keepUpload = owner === 'fd-recipe-basic-info';
+    const removeUrl = keepUpload ? current.imageUrl : fileUrl;
+    const keepUrl = keepUpload ? fileUrl : current.imageUrl;
+    const thumbnail = getButton(harness.routeNativeElement, `${gallery} button:has(img[src="${removeUrl}"])`);
+    thumbnail.click();
+    harness.detectChanges();
+    recipeTextButton(document.querySelector('[role="menu"]'), 'IMAGE_UPLOAD_FIELD.REMOVE').click();
+    harness.detectChanges();
+
+    expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
+    expectRecipeGalleryImage(harness, `${gallery} img`, keepUrl);
+    expect(harness.routeNativeElement?.querySelector(`${gallery} img[src="${removeUrl}"]`)).toBeNull();
+    expect(submit.disabled).toBe(false);
+    submit.click();
+    const write = await vi.waitFor(() => http.expectOne(patch));
+    const serialized: unknown = write.request.body;
+    expect(serialized).toMatchObject(
+        keepUpload
+            ? { imageUrl: fileUrl, imageAssetId: assetId, imageAssetIds: [assetId] }
+            : { steps: [expect.objectContaining({ imageUrl: step.imageUrl, imageAssetId: null })] },
+    );
+    if (!keepUpload) {
+        expect(serialized).not.toMatchObject({ steps: [expect.objectContaining({ imageAssetIds: [assetId] })] });
+    }
+});
+
 it('saves reordered recipe and step galleries while preserving hydrated manual nutrition', async () => {
     const source = confirmedRecipe();
     const cover = { imageAssetId: entityId<'image-asset'>('soup-front'), imageUrl: '/recipes/soup-front.jpg' };

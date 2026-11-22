@@ -2,12 +2,13 @@ import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { provideRouter, Router, RouterOutlet, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, switchMap, take, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, type MockInstance, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
@@ -142,6 +143,36 @@ function savedMeal(comment = ORIGINAL_NOTE, amount = PRODUCT_AMOUNT, product?: P
         aiSessions: [],
     };
 }
+
+describe('Meal editor navigation during activation', () => {
+    it.each([ADD_URL, MEAL_URL])('allows leaving %s when another navigation starts during activation', async url => {
+        const api = setupEditorRoutes();
+        const harness = await RouterTestingHarness.create(MEALS_URL);
+        const router = TestBed.inject(Router);
+        const host = harness.fixture.debugElement;
+        const outlet = host.query(By.css('fd-meal-container router-outlet')).injector.get(RouterOutlet);
+        const departure = firstValueFrom(
+            outlet.activateEvents.pipe(
+                take(1),
+                switchMap(async () => {
+                    expect(outlet.isActivated).toBe(true);
+                    expect(outlet.activatedRoute.snapshot.routeConfig?.path).toBe(url === ADD_URL ? 'add' : ':id/edit');
+                    expect(host.query(By.css('fd-meal-manage-form'))).not.toBeNull();
+                    return router.navigateByUrl(OTHER_URL);
+                }),
+            ),
+        );
+
+        const [left] = await Promise.all([departure, router.navigateByUrl(url)]);
+        harness.detectChanges();
+
+        expect(left).toBe(true);
+        expect(router.url).toBe(OTHER_URL);
+        expect(harness.routeNativeElement?.textContent).toContain('Home');
+        expect(api.create).not.toHaveBeenCalled();
+        expect(api.update).not.toHaveBeenCalled();
+    });
+});
 
 describe('Routed meal type after changing the local time', () => {
     const breakfastTime = '08:15';

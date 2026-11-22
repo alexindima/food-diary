@@ -29,9 +29,9 @@
             [attr.aria-busy]="isFormLocked() || anyPhotosUploading()"
             (submit)="onFormSubmit($event)"
         >
-            @if (globalError()) {
+            @if (hasMixedLegacyGallery() ? ('RECIPE_MANAGE.MIXED_LEGACY_GALLERY' | translate) : globalError(); as error) {
                 <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
-                    {{ globalError() }}
+                    {{ error }}
                 </div>
             }
 
@@ -178,6 +178,7 @@
                                               ? ('DISABLED_HINTS.STEPS_INVALID' | translate)
                                               : null
                                     "
+                                    [disabled]="hasMixedLegacyGallery()"
                                     [loading]="isSubmitting() || anyPhotosUploading()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}

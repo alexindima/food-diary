@@ -1368,6 +1368,83 @@ function profilePasswordSuccessButton(): HTMLButtonElement {
     return button;
 }
 
+describe('Profile Telegram disconnect with unavailable browser history', () => {
+    it('keeps a visible confirmation connected to the profile when the browser rejects its history entry', async () => {
+        const account = profileOverview({ hasTelegramIdentity: true, hasGoogleIdentity: false });
+        const result = new Subject<User>();
+        const disconnect = vi.fn<AuthService['disconnectTelegram']>().mockReturnValue(result);
+        const { router } = await renderProfileAsync({
+            account: of(account),
+            providers: [{ provide: AuthService, useValue: { isAdmin: (): boolean => false, disconnectTelegram: disconnect } }],
+        });
+        const { connection, trigger } = revealProfileTelegramControls(router);
+        expect(trigger.disabled).toBe(false);
+
+        const dialogSelector = 'fd-telegram-disconnect-dialog';
+        let mountedAtHistoryWrite = false;
+        const pushHistory = vi.spyOn(window.history, 'pushState').mockImplementationOnce(() => {
+            mountedAtHistoryWrite = document.querySelector(dialogSelector)?.isConnected === true;
+            throw new DOMException('The browser rejected the dialog history entry', 'SecurityError');
+        });
+        trigger.click();
+        TestBed.tick();
+
+        expect(pushHistory).toHaveBeenCalledOnce();
+        expect(pushHistory.mock.calls[0]?.[1]).toBe('');
+        expect(pushHistory.mock.calls[0]?.[2]).toBe(window.location.href);
+        const dialog = document.querySelector(dialogSelector);
+        const password = dialog?.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+        if (dialog === null || password === null || password === undefined) {
+            throw new Error('Expected the mounted Telegram confirmation');
+        }
+        expect(disconnect).not.toHaveBeenCalled();
+        const beforeConfirmation = { disabled: trigger.disabled, ...profileTelegramConnectionState(connection) };
+
+        password.value = 'current-password-fixture';
+        password.dispatchEvent(new Event('input', { bubbles: true }));
+        TestBed.tick();
+        const confirm = getButton(dialog, 'USER_MANAGE.TELEGRAM_UNLINK');
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+        expect(disconnect).toHaveBeenCalledExactlyOnceWith(account.user.id, { password: 'current-password-fixture' });
+        expect(result.observed).toBe(true);
+        result.next({ ...account.user, hasTelegramIdentity: false });
+        result.complete();
+        await router.fixture.whenStable();
+        router.detectChanges();
+
+        expect(dialog.isConnected).toBe(false);
+        expect(TestBed.inject(Router).url).toBe(PROFILE_URL);
+        expect({
+            mountedAtHistoryWrite,
+            beforeConfirmation,
+            afterConfirmation: profileTelegramConnectionState(connection),
+        }).toEqual({
+            mountedAtHistoryWrite: true,
+            beforeConfirmation: { disabled: true, status: 'USER_MANAGE.METHOD_CONNECTED', alert: null },
+            afterConfirmation: { status: 'USER_MANAGE.METHOD_NOT_CONNECTED', alert: null },
+        });
+    });
+});
+
+function revealProfileTelegramControls(router: RouterTestingHarness): { connection: Element; trigger: HTMLButtonElement } {
+    const connection = profilePage(router).querySelector('fd-user-manage-telegram-connection');
+    const summary = connection?.closest('details')?.querySelector('summary');
+    if (connection === null || summary === null || summary === undefined) {
+        throw new Error('Expected the rendered profile Telegram controls');
+    }
+    summary.click();
+    router.detectChanges();
+    return { connection, trigger: getButton(connection, 'USER_MANAGE.TELEGRAM_UNLINK') };
+}
+
+function profileTelegramConnectionState(connection: Element): { status: string | null; alert: string | null } {
+    return {
+        status: connection.querySelector('.user-manage__connection-status')?.textContent.trim() ?? null,
+        alert: connection.querySelector('[role="alert"]')?.textContent.trim() ?? null,
+    };
+}
+
 describe('Profile while a legacy Telegram disconnect is pending', () => {
     it('keeps the connected account and the pending attempt when viewing the same profile', async () => {
         const account = profileOverview({ hasTelegramIdentity: true });

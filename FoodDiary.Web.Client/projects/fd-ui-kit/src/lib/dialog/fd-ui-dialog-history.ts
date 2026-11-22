@@ -99,16 +99,29 @@ export class FdUiDialogHistory {
         const previousEntry = readEntry(view.history.state);
         const state: unknown = previousEntry === undefined ? view.history.state : previousEntry.state;
         const entry = { id: `${Date.now()}-${++nextHistoryId}`, url: view.location.href, state };
-        const pageState = state !== null && typeof state === 'object' ? state : {};
-        const dialogState = { ...pageState, [DIALOG_HISTORY_KEY]: entry };
-        if (previousEntry === undefined) {
-            view.history.pushState(dialogState, '', entry.url);
-        } else {
-            view.history.replaceState(dialogState, '', entry.url);
+        if (!this.tryWriteEntry(view, entry, previousEntry !== undefined)) {
+            return;
         }
         this.entry = entry;
         this.staleForward = undefined;
         this.lastUrl = entry.url;
+    }
+
+    private tryWriteEntry(view: Window, entry: DialogHistoryEntry, replace: boolean): boolean {
+        const { state, url } = entry;
+        const pageState = state !== null && typeof state === 'object' ? state : {};
+        const dialogState = { ...pageState, [DIALOG_HISTORY_KEY]: entry };
+        try {
+            if (replace) {
+                view.history.replaceState(dialogState, '', url);
+            } else {
+                view.history.pushState(dialogState, '', url);
+            }
+        } catch {
+            // The dialog remains usable if the browser refuses the temporary Back entry.
+            return false;
+        }
+        return true;
     }
 
     private remove(dialog: HistoryDialog): void {

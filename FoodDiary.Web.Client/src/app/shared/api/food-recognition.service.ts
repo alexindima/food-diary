@@ -208,9 +208,7 @@ export class FoodRecognitionService {
                 this.changes.next(null);
             });
             connection.onclose(() => {
-                if (owner.connection === connection) {
-                    owner.connection = null;
-                }
+                owner.connection = null;
             });
             await connection.start();
             if (!this.isCurrentHubOwner(owner)) {
