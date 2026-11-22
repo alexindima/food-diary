@@ -1,9 +1,9 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { WearableConnectionsFacade } from '../../lib/wearable-connections.facade';
 
 @Component({
@@ -17,9 +17,7 @@ import { WearableConnectionsFacade } from '../../lib/wearable-connections.facade
 export class WearableConnectionsComponent {
     private readonly facade = inject(WearableConnectionsFacade);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly document = inject(DOCUMENT);
-    private readonly platformId = inject(PLATFORM_ID);
-    private readonly isBrowser = isPlatformBrowser(this.platformId);
+    private readonly browserWindow = inject(BrowserWindowService);
 
     protected readonly providerRows = this.facade.providerRows;
 
@@ -32,10 +30,8 @@ export class WearableConnectionsComponent {
         this.facade
             .getAuthUrl(providerId, state)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(result => {
-                if (this.isBrowser) {
-                    this.document.location.href = result.authorizationUrl;
-                }
+            .subscribe(({ authorizationUrl }) => {
+                this.browserWindow.navigateCurrentTab(authorizationUrl);
             });
     }
 

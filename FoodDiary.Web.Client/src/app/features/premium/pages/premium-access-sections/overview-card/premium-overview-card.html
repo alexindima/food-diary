@@ -52,7 +52,7 @@
         </p>
 
         <div class="premium-access-page__actions fd-row fd-wrap fd-gap-actions" [hidden]="!showActions()">
-            <fd-ui-button [hidden]="!showResume()" (click)="resumeSubscription.emit()">
+            <fd-ui-button [hidden]="!showResume()" [ariaControls]="plansRegionId()" (click)="resumeSubscription.emit()">
                 {{ 'PREMIUM_PAGE.OVERVIEW.RESUME_ACTION' | translate }}
             </fd-ui-button>
             <fd-ui-button

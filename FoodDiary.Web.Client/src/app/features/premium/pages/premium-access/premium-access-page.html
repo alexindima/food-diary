@@ -28,32 +28,38 @@
             [isLoading]="isLoading()"
             [overview]="overview()"
             [plansAvailable]="showPlans()"
+            [plansRegionId]="renewalPlans.id"
             (overviewChanged)="applyBillingChange($event)"
             (manageBilling)="openPortalAsync()"
             (startTrial)="startTrialAsync()"
-            (resumeSubscription)="showRenewalPlans()"
+            (resumeSubscription)="showRenewalPlans(renewalPlans)"
             (readSupport)="support.expanded.set(true)"
         />
 
-        @if (showPlans()) {
-            <fd-premium-plans-card
-                #plansCard
-                data-tour-id="premium-plans"
-                role="region"
-                tabindex="-1"
-                [attr.aria-label]="'PREMIUM_PAGE.PLANS.TITLE' | translate"
-                [cards]="planCards()"
-                [prices]="pricing.prices()"
-                [pricesLoading]="pricing.loading()"
-                [pricesUnavailable]="pricing.unavailable()"
-                [starsPrice]="overview()?.telegramStarsPrice ?? null"
-                [checkoutBlocked]="trialLoading()"
-                [preferTrial]="overviewViewModel().showStartTrial && overviewViewModel().isFreePlan"
-                (retryPrices)="reloadOverviewAsync()"
-                (checkout)="startCheckoutFromViewAsync($event)"
-                (readTerms)="support.expanded.set(true)"
-            />
-        }
+        <section
+            #renewalPlans
+            id="premium-renewal-plans"
+            class="fd-stack"
+            tabindex="-1"
+            [hidden]="!showPlans()"
+            [attr.aria-label]="'PREMIUM_PAGE.PLANS.TITLE' | translate"
+        >
+            @if (showPlans()) {
+                <fd-premium-plans-card
+                    data-tour-id="premium-plans"
+                    [cards]="planCards()"
+                    [prices]="pricing.prices()"
+                    [pricesLoading]="pricing.loading()"
+                    [pricesUnavailable]="pricing.unavailable()"
+                    [starsPrice]="overview()?.telegramStarsPrice ?? null"
+                    [checkoutBlocked]="trialLoading()"
+                    [preferTrial]="overviewViewModel().showStartTrial && overviewViewModel().isFreePlan"
+                    (retryPrices)="reloadOverviewAsync()"
+                    (checkout)="startCheckoutFromViewAsync($event)"
+                    (readTerms)="support.expanded.set(true)"
+                />
+            }
+        </section>
 
         <fd-premium-benefits-card data-tour-id="premium-benefits" [accessActive]="isPremium()" />
 

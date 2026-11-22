@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import type { Provider } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -13,6 +14,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
@@ -52,6 +54,7 @@ import {
 } from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import type { ProductDeleteResult } from '../../../lib/product-manage.types';
+import { ProductBasicInfoComponent } from '../product-basic-info/product-basic-info';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductManageFormComponent } from './product-manage-form';
 
@@ -2012,6 +2015,35 @@ describe('Product editor rendered nutrition precision', () => {
 });
 
 describe('Product editor legacy cover actions', () => {
+    it.each([
+        { label: 'asset-only', url: null, assetId: entityId<'image-asset'>('14fc3d4e-412b-47b4-a2eb-0b8d02b5f0cb') },
+        { label: 'URL-only', url: 'https://images.example.test/unchanged-cover.jpg', assetId: null },
+    ])('keeps an unchanged $label cover and omits gallery replacement when saving', async ({ url, assetId }) => {
+        const { el, fixture, component, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', { ...PRODUCT, imageUrl: url, imageAssetId: assetId });
+        fixture.detectChanges();
+        const details = fixture.debugElement.query(By.directive(ProductBasicInfoComponent)).injector.get(ProductBasicInfoComponent);
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent)).injector.get(ImageGalleryEditorComponent);
+        const field = details.form()();
+        const original = field.value();
+        expect(gallery.photos()).toHaveLength(url === null ? 0 : 1);
+
+        gallery.photos.set(gallery.photos().map(photo => imageSelection(photo.url, photo.assetId)));
+        fixture.detectChanges();
+
+        expect(field.value()).toBe(original);
+        expect({ dirty: field.dirty(), touched: field.touched(), mayLeave: await component.canLeaveAsync() }).toEqual({
+            dirty: false,
+            touched: false,
+            mayLeave: true,
+        });
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+        const payload = productManageFacade.submitProductAsync.mock.calls[0]?.[1];
+        expect(payload).toMatchObject({ imageUrl: url, imageAssetId: assetId });
+        expect(payload).not.toHaveProperty('imageAssetIds');
+    });
+
     it('removes the previous URL-only cover and saves an explicit empty gallery', async () => {
         const { el, fixture, productManageFacade } = await setupComponentAsync();
         const legacyCover = 'https://images.example.test/legacy-cover.jpg';

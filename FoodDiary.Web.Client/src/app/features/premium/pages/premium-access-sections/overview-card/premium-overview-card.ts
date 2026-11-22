@@ -23,6 +23,7 @@ export class PremiumOverviewCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly overview = input.required<BillingOverview | null>();
     public readonly plansAvailable = input(false);
+    public readonly plansRegionId = input<string | null>(null);
 
     public readonly overviewChanged = output<BillingOverview>();
     public readonly manageBilling = output();

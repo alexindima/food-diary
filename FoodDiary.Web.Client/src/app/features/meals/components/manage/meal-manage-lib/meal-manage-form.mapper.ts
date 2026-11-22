@@ -11,7 +11,13 @@ import {
 } from '../../../../../shared/models/meal.data';
 import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 import { recipeServingsFromInput, UNKNOWN_SERVING_MASS } from '../../../lib/recipe-serving/recipe-display-amount';
-import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
+import type {
+    CommittedMealFormValues,
+    CommittedMealItemFormValues,
+    MealFormValues,
+    MealItemFormValues,
+    NutritionTotals,
+} from './meal-manage.types';
 
 export type MealManageDtoCallbacks = {
     aiSessions: MealManageDto['aiSessions'];
@@ -21,7 +27,7 @@ export type MealManageDtoCallbacks = {
 
 export type MealManageFormPatchValue = Partial<MealFormValues>;
 
-export function createMealManageFormValue(now = new Date()): MealFormValues {
+export function createMealManageFormValue(now = new Date()): CommittedMealFormValues {
     return {
         date: getDateInputValue(now),
         time: getTimeInputValue(now),
@@ -41,6 +47,25 @@ export function createMealManageFormValue(now = new Date()): MealFormValues {
     };
 }
 
+/* eslint-disable no-redeclare -- TypeScript overloads preserve the distinction between committed items and editable drafts. */
+export function createMealItemValue(
+    product?: MealItemFormValues['product'],
+    recipe?: null,
+    amount?: number | null,
+    sourceType?: MealSourceType,
+): CommittedMealItemFormValues;
+export function createMealItemValue(
+    product: MealItemFormValues['product'],
+    recipe: MealItemFormValues['recipe'],
+    amount: number,
+    sourceType?: MealSourceType,
+): CommittedMealItemFormValues;
+export function createMealItemValue(
+    product: MealItemFormValues['product'],
+    recipe: MealItemFormValues['recipe'],
+    amount: number | null,
+    sourceType?: MealSourceType,
+): MealItemFormValues;
 export function createMealItemValue(
     product: MealItemFormValues['product'] = null,
     recipe: MealItemFormValues['recipe'] = null,
@@ -55,6 +80,7 @@ export function createMealItemValue(
         recipeMass: UNKNOWN_SERVING_MASS,
     };
 }
+/* eslint-enable no-redeclare -- The rest of this mapper uses standard redeclaration checks. */
 
 export function buildMealDateTime(dateValue: string, timeValue: string, fallback: Date, original?: Date): Date {
     if (

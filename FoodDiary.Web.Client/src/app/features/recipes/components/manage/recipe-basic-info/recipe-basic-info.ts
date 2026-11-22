@@ -9,7 +9,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
-import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { type ImageSelection, sameOrderedImageSelections } from '../../../../../shared/models/image-upload.data';
 import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeId } from '../../../../../shared/models/semantics/entity-id';
 import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
@@ -66,10 +66,7 @@ export class RecipeBasicInfoComponent {
     }
 
     protected setPhotos(images: ImageSelection[]): void {
-        const current = this.photos();
-        const changed =
-            current.length !== images.length ||
-            current.some((image, index) => image.url !== images[index]?.url || image.assetId !== images[index]?.assetId);
+        const changed = !sameOrderedImageSelections(this.photos(), images);
         this.form()().value.update(value => ({ ...value, images, imageUrl: images[0] ?? null }));
         if (changed) {
             this.form()().markAsDirty();

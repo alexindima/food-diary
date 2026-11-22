@@ -188,8 +188,8 @@ export class CycleSettingsFacade {
         this.state.isSavingCycle.set(true);
         try {
             const cycle = await firstValueFrom(this.cyclesService.create(payload).pipe(takeUntilDestroyed(this.destroyRef)));
-            this.state.cycle.set(cycle);
-            this.state.loadNutritionSummary(cycle);
+            this.state.publishProfileSnapshot(cycle);
+            this.state.refreshNutritionSummary();
         } catch {
             this.state.createError.set('CYCLE_TRACKING.CREATE_CYCLE_FAILED');
         } finally {
@@ -241,7 +241,7 @@ export class CycleSettingsFacade {
             const settings = this.hasSettingsChanges(currentCycle, payload)
                 ? applyOwnedWrite(this.cyclesService.updateSettings(currentCycle.id, payload))
                 : of(currentCycle);
-            const updatedCycle = await firstValueFrom(
+            await firstValueFrom(
                 settings.pipe(
                     concatMap(cycle =>
                         updateConsentIfChanged(cycle, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS, formValue.nutritionInsightsConsentGranted),
@@ -256,12 +256,12 @@ export class CycleSettingsFacade {
             if (!ownsProfile()) {
                 return;
             }
-            this.state.loadNutritionSummary(updatedCycle);
+            this.state.refreshNutritionSummary();
             this.state.settingsSaveRevision.update(revision => revision + 1);
         } catch {
             if (ownsProfile()) {
                 this.state.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
-                this.state.loadNutritionSummary(this.state.cycle());
+                this.state.refreshNutritionSummary();
             }
         } finally {
             this.state.isSavingSettings.set(false);

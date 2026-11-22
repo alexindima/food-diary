@@ -13,21 +13,28 @@ import { describe, expect, it, type Mock, type MockInstance, onTestFinished, vi 
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
+import { RecipeLookupService } from '../../shared/api/recipe-lookup.service';
 import { FoodDiaryTranslationLoader } from '../../shared/i18n/food-diary-translation.loader';
 import { ImageUploadFacade } from '../../shared/lib/image-upload.facade';
 import { type ImageSelection, imageSelection } from '../../shared/models/image-upload.data';
 import {
     createEmptyProductSnapshot,
+    createEmptyRecipeSnapshot,
     type Meal,
     type MealAiSession,
     type MealOverview,
     MealSourceType,
     type ProductMealItem,
+    type RecipeMealItem,
 } from '../../shared/models/meal.data';
 import type { Product } from '../../shared/models/product.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
-import { MAXIMUM_CONSUMED_QUANTITY, productQuantityFromStored } from '../../shared/models/semantics/meal-quantity';
+import {
+    MAXIMUM_CONSUMED_QUANTITY,
+    productQuantityFromStored,
+    recipeServingsFromStored,
+} from '../../shared/models/semantics/meal-quantity';
 import { ViewportService } from '../../shared/platform/viewport.service';
 import { PrivacyConsentFacade } from '../../shared/privacy/privacy-consent.facade';
 import { MealService } from './api/meal.service';
@@ -1173,6 +1180,62 @@ describe('Routed meal manual item cancellation', () => {
                 comment: ORIGINAL_NOTE,
                 items: [{ productId: PRODUCT_ID, recipeId: null, amount: CORRECTED_AMOUNT, origin: 'Manual' }],
             }),
+        );
+    });
+});
+
+describe('Routed meal recipe quantity validation', () => {
+    it('keeps the saved recipe quantity until a cleared portion is corrected and applied', async () => {
+        const api = setupEditorRoutes();
+        const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('saved-soup'), name: 'Saved soup' };
+        const savedServings = 1;
+        const correctedServings = 1.5;
+        const item: RecipeMealItem = {
+            id: entityId<'meal-item'>('saved-recipe-item'),
+            mealId: MEAL_ID,
+            sourceType: MealSourceType.Recipe,
+            recipe,
+            product: null,
+            amount: recipeServingsFromStored(savedServings),
+        };
+        const meal = { ...savedMeal(), items: [item] };
+        api.getById.mockReturnValueOnce(of(meal));
+        api.update.mockReturnValueOnce(of({ ...meal, items: [{ ...item, amount: recipeServingsFromStored(correctedServings) }] }));
+        vi.spyOn(TestBed.inject(RecipeLookupService), 'getById').mockReturnValue(
+            of({ id: recipe.id, servings: recipe.servings, steps: [] }),
+        );
+
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-edit');
+        const dialog = openMealQuantityEditor(harness, editor);
+        const amount = mealQuantityInput(dialog);
+        const apply = nativeEditorButton(dialog, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE');
+        expect(amount.valueAsNumber).toBe(savedServings);
+
+        amount.focus();
+        amount.value = '';
+        amount.dispatchEvent(new Event('input', { bubbles: true }));
+        amount.blur();
+        harness.detectChanges();
+        expect(dialog.textContent).toContain('FORM_ERRORS.REQUIRED');
+        expect(apply.disabled).toBe(true);
+        apply.click();
+        expect(dialog.isConnected).toBe(true);
+        expect(api.update).not.toHaveBeenCalled();
+
+        enterMealQuantity(amount, correctedServings);
+        harness.detectChanges();
+        expect(apply.disabled).toBe(false);
+        apply.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(dialog.isConnected).toBe(false);
+        });
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await waitForDiaryAsync(harness);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({ items: [{ productId: null, recipeId: recipe.id, amount: correctedServings, origin: 'Manual' }] }),
         );
     });
 });

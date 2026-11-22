@@ -31,6 +31,10 @@ export type MealItemFormValues = {
     recipeMass: ServingMassResult;
 };
 
+export type CommittedMealItemFormValues = MealItemFormValues & ({ recipe: null } | { recipe: Recipe; amount: number });
+
+export type CommittedMealFormValues = Omit<MealFormValues, 'items'> & { items: CommittedMealItemFormValues[] };
+
 export type NutritionTotals = {
     calories: number;
     proteins: number;

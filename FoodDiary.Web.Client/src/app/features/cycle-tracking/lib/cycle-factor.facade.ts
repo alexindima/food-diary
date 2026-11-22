@@ -86,7 +86,7 @@ export class CycleFactorFacade {
             }
             this.state.acceptProfileWrite(cycle);
             this.resetFactorForm();
-            this.state.loadNutritionSummary(cycle);
+            this.state.refreshNutritionSummary();
         } catch (error: unknown) {
             if (!this.isCurrentProfile(currentCycle)) {
                 return;
@@ -201,7 +201,7 @@ export class CycleFactorFacade {
             if (this.state.editingFactorId() === factorId) {
                 this.resetFactorForm();
             }
-            this.state.loadNutritionSummary(cycle);
+            this.state.refreshNutritionSummary();
         } catch {
             if (this.isCurrentProfile(currentCycle)) {
                 this.state.factorError.set('CYCLE_TRACKING.END_FACTOR_FAILED');

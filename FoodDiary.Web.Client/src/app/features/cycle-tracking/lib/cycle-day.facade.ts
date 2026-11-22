@@ -178,7 +178,7 @@ export class CycleDayFacade {
             throw new Error('Cycle predictions refresh returned a different or missing profile.');
         }
 
-        this.state.cycle.set({
+        this.state.publishProfileSnapshot({
             ...current,
             menstrualEpisodes: refreshedCycle.menstrualEpisodes,
             predictions: refreshedCycle.predictions,
@@ -214,7 +214,7 @@ export class CycleDayFacade {
         };
         this.state.editingDayDate.set(null);
         this.state.acceptProfileWrite(updatedCycle);
-        this.state.loadNutritionSummary(updatedCycle);
+        this.state.refreshNutritionSummary();
     }
 
     private shouldClearBleeding(formValue: CycleDayFormModel): boolean {
@@ -316,7 +316,7 @@ export class CycleDayFacade {
                         fertilitySignals: current.fertilitySignals.filter(entry => toCycleDateKey(entry.date) !== dateKey),
                     };
                     this.state.acceptProfileWrite(updated);
-                    this.state.loadNutritionSummary(updated);
+                    this.state.refreshNutritionSummary();
                 }),
                 switchMap(() => {
                     const read = this.state.startProfileRead();
@@ -345,7 +345,7 @@ export class CycleDayFacade {
                         menstrualEpisodes: refreshedCycle.menstrualEpisodes,
                         predictions: refreshedCycle.predictions,
                     };
-                    this.state.cycle.set(updatedCycle);
+                    this.state.publishProfileSnapshot(updatedCycle);
                     this.state.setRefreshError(null);
                 },
                 error: () => {

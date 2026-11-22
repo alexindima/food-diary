@@ -1,5 +1,6 @@
 <div class="fd-stack fd-gap-md">
-    @switch (step()) {
+    @let view = transferView();
+    @switch (view.kind) {
         @case ('conflict') {
             <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.CONFLICT' | translate }}</p>
             <fd-ui-button [fullWidth]="true" (click)="beginSignIn()">
@@ -32,27 +33,27 @@
         @case ('review') {
             <div class="fd-stack fd-gap-sm">
                 <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.REVIEW' | translate }}</p>
-                <div [hidden]="recordCounts().length === 0">
+                <div [hidden]="view.recordCounts.length === 0">
                     <p class="fd-ui-body-sm">
                         <strong>{{ 'AUTH.TELEGRAM_DIARY.TRANSFER_ITEMS' | translate }}</strong>
                     </p>
                     <ul class="transfer-records fd-ui-body-sm">
-                        @for (record of recordCounts(); track record.label) {
+                        @for (record of view.recordCounts; track record.label) {
                             <li>{{ record.label | translate: { count: record.count } }}</li>
                         }
                     </ul>
                 </div>
-                <p class="fd-ui-body-sm" [hidden]="recordCounts().length > 0">{{ 'AUTH.TELEGRAM_DIARY.EMPTY' | translate }}</p>
+                <p class="fd-ui-body-sm" [hidden]="view.recordCounts.length > 0">{{ 'AUTH.TELEGRAM_DIARY.EMPTY' | translate }}</p>
             </div>
-            <div [hidden]="goalOptions().length === 0">
+            <div [hidden]="view.goalOptions.length === 0">
                 <fd-ui-radio-group
                     [label]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
-                    [options]="goalOptions()"
+                    [options]="view.goalOptions"
                     [disabled]="busy()"
                     [(value)]="choice"
                 />
             </div>
-            <p class="fd-ui-body-sm fd-ui-text-muted" [hidden]="goalOptions().length > 0">
+            <p class="fd-ui-body-sm fd-ui-text-muted" [hidden]="view.goalOptions.length > 0">
                 {{ 'AUTH.TELEGRAM_DIARY.KEEP_EMAIL_GOALS' | translate }}
             </p>
             <fd-ui-button
@@ -62,7 +63,7 @@
                 [disabledReason]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
                 (click)="confirm()"
             >
-                {{ confirmLabel() | translate }}
+                {{ view.confirmLabel | translate }}
             </fd-ui-button>
         }
         @case ('done') {

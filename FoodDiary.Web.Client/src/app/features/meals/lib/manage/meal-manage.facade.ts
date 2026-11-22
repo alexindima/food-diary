@@ -30,6 +30,7 @@ import { NutritionDataInvalidationService } from '../../../../shared/state/nutri
 import { MealService } from '../../api/meal.service';
 import type {
     CalorieMismatchWarning,
+    CommittedMealItemFormValues,
     MealFormValues,
     MealItemFormValues,
     MealNutritionSummaryState,
@@ -149,6 +150,13 @@ export class MealManageFacade {
     }
 
     public createMealItem(
+        product: Product | null | undefined,
+        recipe?: Recipe | null,
+        amount?: number | null,
+        sourceType?: MealSourceType,
+    ): MealItemFormValues;
+    public createMealItem(): CommittedMealItemFormValues;
+    public createMealItem(
         product: Product | null = null,
         recipe: Recipe | null = null,
         amount: number | null = null,
@@ -157,7 +165,7 @@ export class MealManageFacade {
         return createMealItemValue(product, recipe, amount, sourceType);
     }
 
-    public prepareMealItems(items: readonly MealItem[]): Observable<MealItemFormValues[]> {
+    public prepareMealItems(items: readonly MealItem[]): Observable<CommittedMealItemFormValues[]> {
         if (items.length === 0) {
             return of([this.createMealItem()]);
         }
@@ -165,11 +173,11 @@ export class MealManageFacade {
         return forkJoin(
             items.map(item => {
                 if (item.sourceType === MealSourceType.Product) {
-                    return of(this.createMealItem(item.product, null, item.amount, item.sourceType));
+                    return of(createMealItemValue(item.product, null, item.amount, item.sourceType));
                 }
                 const recipe = item.recipe;
                 return recipe === null
-                    ? of(this.createMealItem(null, null, item.amount, item.sourceType))
+                    ? of(createMealItemValue(null, null, item.amount, item.sourceType))
                     : this.recipeWeight.loadServingMass(recipe).pipe(map(mass => this.createRecipeItem(recipe, item.amount, mass)));
             }),
         );
@@ -184,6 +192,8 @@ export class MealManageFacade {
         return createMealItemValue(product, recipe, amount, sourceType);
     }
 
+    public configureItemType(item: CommittedMealItemFormValues, type: MealSourceType, clearSelection?: false): CommittedMealItemFormValues;
+    public configureItemType(item: MealItemFormValues, type: MealSourceType, clearSelection?: boolean): MealItemFormValues;
     public configureItemType(item: MealItemFormValues, type: MealSourceType, clearSelection = false): MealItemFormValues {
         return {
             ...item,
@@ -194,12 +204,12 @@ export class MealManageFacade {
         };
     }
 
-    public async prepareRecipeItemAsync(recipe: Recipe, servings: RecipeServings): Promise<MealItemFormValues> {
+    public async prepareRecipeItemAsync(recipe: Recipe, servings: RecipeServings): Promise<CommittedMealItemFormValues> {
         const mass = await firstValueFrom(this.recipeWeight.loadServingMass(recipe));
         return this.createRecipeItem(recipe, servings, mass);
     }
 
-    private createRecipeItem(recipe: Recipe, servings: RecipeServings, recipeMass: ServingMassResult): MealItemFormValues {
+    private createRecipeItem(recipe: Recipe, servings: RecipeServings, recipeMass: ServingMassResult): CommittedMealItemFormValues {
         return {
             sourceType: MealSourceType.Recipe,
             product: null,
@@ -223,7 +233,9 @@ export class MealManageFacade {
         };
     }
 
-    public buildManualNutritionPatchFromTotals(totals: NutritionTotals): Partial<MealFormValues> {
+    public buildManualNutritionPatchFromTotals(
+        totals: NutritionTotals,
+    ): Pick<MealFormValues, 'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualFiber' | 'manualAlcohol'> {
         return {
             manualCalories: roundNutrient(totals.calories),
             manualProteins: roundNutrient(totals.proteins),

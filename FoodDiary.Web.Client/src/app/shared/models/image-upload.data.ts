@@ -27,6 +27,16 @@ export type ImageSelection =
     | { kind: 'uploaded'; url: PublicImageUrl; assetId: ImageAssetId }
     | { kind: 'legacy-asset-only'; url: null; assetId: ImageAssetId };
 
+export function sameOrderedImageSelections(current: readonly ImageSelection[], next: readonly ImageSelection[]): boolean {
+    return (
+        current.length === next.length &&
+        next.every((image, index) => {
+            const previous = current.at(index);
+            return image.assetId === previous?.assetId && image.url === previous.url;
+        })
+    );
+}
+
 export function imageSelection(
     url: UnbrandedString | PublicImageUrl | null | undefined,
     assetId: UnbrandedString | ImageAssetId | null | undefined,

@@ -1,9 +1,9 @@
-import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { WearableService } from '../../api/wearable.service';
 import type { WearableAuthUrl, WearableConnection } from '../../models/wearable.data';
 import { WearableConnectionsComponent } from './wearable-connections';
@@ -39,9 +39,12 @@ describe('WearableConnectionsComponent', () => {
         expect(service.getConnections).toHaveBeenCalledTimes(2);
     });
 
-    it('requests the selected Fitbit authorization and navigates when the response arrives', () => {
-        const navigate = vi.fn<(url: string) => void>();
-        const { fixture, service } = setupComponent(withNavigation(navigate), []);
+    it.each([
+        { when: 'while connected', destroyed: false },
+        { when: 'after leaving the connection screen', destroyed: true },
+    ])('handles the pending Fitbit authorization $when', ({ destroyed }) => {
+        const navigate = vi.fn<BrowserWindowService['navigateCurrentTab']>();
+        const { fixture, service } = setupComponent(navigate, []);
         const authorization = new Subject<WearableAuthUrl>();
         service.getAuthUrl.mockReturnValueOnce(authorization);
         const element = fixture.nativeElement as HTMLElement;
@@ -58,15 +61,22 @@ describe('WearableConnectionsComponent', () => {
         expect(state).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u);
         expect(navigate).not.toHaveBeenCalled();
 
+        if (destroyed) {
+            fixture.destroy();
+        }
         const authorizationUrl = 'https://provider.example.test/authorize';
         authorization.next({ authorizationUrl });
         authorization.complete();
-        expect(navigate).toHaveBeenCalledExactlyOnceWith(authorizationUrl);
+        if (destroyed) {
+            expect(navigate).not.toHaveBeenCalled();
+        } else {
+            expect(navigate).toHaveBeenCalledExactlyOnceWith(authorizationUrl);
+        }
     });
 });
 
 function setupComponent(
-    ownedDocument: Document = document,
+    navigateCurrentTab = vi.fn<BrowserWindowService['navigateCurrentTab']>(),
     connections = [CONNECTION],
 ): {
     component: WearableConnectionsComponent;
@@ -88,7 +98,7 @@ function setupComponent(
         providers: [
             provideTranslateTesting(),
             { provide: WearableService, useValue: service },
-            { provide: DOCUMENT, useValue: ownedDocument },
+            { provide: BrowserWindowService, useValue: { navigateCurrentTab } },
         ],
     });
 
@@ -100,23 +110,6 @@ function setupComponent(
         fixture,
         service,
     };
-}
-
-function withNavigation(navigate: (url: string) => void): Document {
-    const location = {
-        set href(url: string) {
-            navigate(url);
-        },
-    };
-    return new Proxy(document, {
-        get(target, property): unknown {
-            if (property === 'location') {
-                return location;
-            }
-            const value: unknown = Reflect.get(target, property, target);
-            return typeof value === 'function' ? (value.bind(target) as unknown) : value;
-        },
-    });
 }
 
 function getText(fixture: ComponentFixture<WearableConnectionsComponent>): string {

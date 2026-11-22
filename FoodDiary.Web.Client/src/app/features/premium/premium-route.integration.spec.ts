@@ -450,22 +450,58 @@ describe('Premium rendered account and plan controls', () => {
         expect(createCheckout).not.toHaveBeenCalled();
         expect(openWidget).not.toHaveBeenCalled();
     });
+});
 
-    it('focuses renewal choices from the ended subscription without starting checkout', async () => {
+describe('Premium renewal plan focus', () => {
+    it('links Resume to the current choices and focuses the labelled region without starting checkout', async () => {
         const account = overview({ subscriptionStatus: 'canceled', manageBillingAvailable: true, canStartPremiumTrial: false });
+        const pendingOverview = new Subject<BillingOverview>();
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValueOnce(pendingOverview);
+        const { harness, createCheckout } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        const overviewCard = root.querySelector('fd-premium-overview-card');
+        expect(overviewCard).not.toBeNull();
+        const region = renewalPlansRegion(root);
+        expect(region.hidden).toBe(true);
+        expect(root.querySelector(PLANS)).toBeNull();
+
+        pendingOverview.next(account);
+        pendingOverview.complete();
+        await redrawAsync(harness);
+        expect(root.querySelectorAll('fd-premium-overview-card')).toHaveLength(1);
+        expect(root.querySelector('fd-premium-overview-card')).toBe(overviewCard);
+        expect(renewalPlansRegion(root)).toBe(region);
+        expect(region.hidden).toBe(false);
+        expect(region.getAttribute('aria-label')).toBe('PREMIUM_PAGE.PLANS.TITLE');
+        expect(region.tabIndex).toBe(-1);
+        expect(region.querySelector(PLANS)).not.toBeNull();
+
+        const resume = nativeButton(root, 'PREMIUM_PAGE.OVERVIEW.RESUME_ACTION');
+        expect(resume.closest('[hidden]')).toBeNull();
+        expect(resume.getAttribute('aria-controls')).toBe(region.id);
+        const scroll = vi.fn();
+        Object.defineProperty(region, 'scrollIntoView', { value: scroll });
+
+        resume.click();
+        expect(document.activeElement).toBe(region);
+        expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
+        expect(createCheckout).not.toHaveBeenCalled();
+    });
+
+    it('keeps Resume and the region hidden when no renewal choices are offered', async () => {
+        const account = overview({
+            subscriptionStatus: 'canceled',
+            manageBillingAvailable: true,
+            canStartPremiumTrial: false,
+            availableProviders: [],
+        });
         const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(account));
         const { harness, createCheckout } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
         const root = premiumRoot(harness);
-        const plans = root.querySelector(PLANS);
-        if (!(plans instanceof HTMLElement)) {
-            throw new Error('Expected the plans for a historical subscription');
-        }
-        const scroll = vi.fn();
-        Object.defineProperty(plans, 'scrollIntoView', { value: scroll });
-
-        nativeButton(root, 'PREMIUM_PAGE.OVERVIEW.RESUME_ACTION').click();
-        expect(document.activeElement).toBe(plans);
-        expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
+        expect(root.querySelectorAll('fd-premium-overview-card')).toHaveLength(1);
+        expect(nativeButton(root, 'PREMIUM_PAGE.OVERVIEW.RESUME_ACTION').closest('[hidden]')).not.toBeNull();
+        expect(renewalPlansRegion(root).hidden).toBe(true);
+        expect(root.querySelector(PLANS)).toBeNull();
         expect(createCheckout).not.toHaveBeenCalled();
     });
 });
@@ -1139,6 +1175,14 @@ function premiumRoot(harness: RouterTestingHarness): HTMLElement {
         throw new Error('Expected a rendered Premium screen');
     }
     return root;
+}
+
+function renewalPlansRegion(root: HTMLElement): HTMLElement {
+    const region = root.querySelector('section#premium-renewal-plans');
+    if (!(region instanceof HTMLElement)) {
+        throw new Error('Expected the renewal plans region');
+    }
+    return region;
 }
 
 function nativeButton(root: HTMLElement, label: string): HTMLButtonElement {

@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
-import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { type ImageSelection, sameOrderedImageSelections } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import type { ProductId } from '../../../../../shared/models/semantics/entity-id';
 import { ProductRecognitionPhotosComponent } from '../../../dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos';
@@ -124,14 +124,7 @@ export class ProductBasicInfoComponent {
     }
 
     protected setPhotos(photos: ImageSelection[]): void {
-        const currentPhotos = this.productPhotos();
-        if (
-            photos.length === currentPhotos.length &&
-            photos.every((photo, index) => {
-                const currentPhoto = currentPhotos.at(index);
-                return photo.assetId === currentPhoto?.assetId && photo.url === currentPhoto.url;
-            })
-        ) {
+        if (sameOrderedImageSelections(this.productPhotos(), photos)) {
             return;
         }
         const field = this.form()();

@@ -1,15 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    ElementRef,
-    inject,
-    PLATFORM_ID,
-    signal,
-    viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -88,7 +78,6 @@ export class PremiumAccessPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     private readonly isBrowser = isPlatformBrowser(this.platformId);
-    private readonly plansCard = viewChild<PremiumPlansCardComponent, ElementRef<HTMLElement>>('plansCard', { read: ElementRef });
 
     protected readonly overview = signal<BillingOverview | null>(null);
     protected readonly isLoading = signal(true);
@@ -214,12 +203,9 @@ export class PremiumAccessPageComponent {
         await this.startCheckoutAsync(request.plan, request.provider);
     }
 
-    protected showRenewalPlans(): void {
-        const plans = this.plansCard()?.nativeElement;
-        if (plans !== undefined) {
-            plans.focus({ preventScroll: true });
-            scrollElementIntoView(plans);
-        }
+    protected showRenewalPlans(plans: HTMLElement): void {
+        plans.focus({ preventScroll: true });
+        scrollElementIntoView(plans);
     }
 
     protected async startTrialAsync(): Promise<void> {

@@ -32,7 +32,12 @@ import { servingMassFromObservation } from '../../lib/recipe-serving/recipe-disp
 import { MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import { MealManageFormComponent } from './meal-manage-form';
-import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
+import type {
+    CommittedMealItemFormValues,
+    MealItemFormValues,
+    MealNutritionSummaryState,
+    NutritionTotals,
+} from './meal-manage-lib/meal-manage.types';
 import { createMealItemValue, getDateInputValue, getTimeInputValue } from './meal-manage-lib/meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
@@ -134,7 +139,7 @@ describe('MealManageFormComponent comment boundary', () => {
     });
 });
 
-function createCommentTestItem(): MealItemFormValues {
+function createCommentTestItem(): CommittedMealItemFormValues {
     return createMealItemValue(
         { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
         null,
@@ -762,7 +767,7 @@ describe('Meal editor development capability', () => {
             },
         });
         const recipe = createEmptyRecipeSnapshot();
-        let complete: ((value: MealItemFormValues) => void) | undefined;
+        let complete: ((value: CommittedMealItemFormValues) => void) | undefined;
         mealManageFacade.prepareRecipeItemAsync.mockImplementationOnce(
             async () =>
                 new Promise(resolve => {
@@ -910,7 +915,7 @@ function createNutritionSummaryState(): MealNutritionSummaryState {
     return createNutritionSummaryStateWithCalories(0);
 }
 
-function createRecipeEditorItem(recipe: ReturnType<typeof createEmptyRecipeSnapshot>, amount: number): MealItemFormValues {
+function createRecipeEditorItem(recipe: ReturnType<typeof createEmptyRecipeSnapshot>, amount: number): CommittedMealItemFormValues {
     return { ...createMealItemValue(null, recipe, amount, MealSourceType.Recipe), recipeMass: RECIPE_DRAFT_MASS };
 }
 
@@ -1731,7 +1736,7 @@ describe('Meal editor development capability during photo preparation', () => {
     it('does not apply a pending development draft after photo preparation starts', async () => {
         const screens: MealDevelopmentScreen[] = [];
         const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
-        let resolveAmount: ((item: MealItemFormValues) => void) | undefined;
+        let resolveAmount: ((item: CommittedMealItemFormValues) => void) | undefined;
         mealManageFacade.prepareRecipeItemAsync.mockReturnValueOnce(
             new Promise(resolve => {
                 resolveAmount = resolve;

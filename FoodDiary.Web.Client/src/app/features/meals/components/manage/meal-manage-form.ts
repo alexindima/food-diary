@@ -58,6 +58,8 @@ import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import type {
     CalorieMismatchWarning,
+    CommittedMealFormValues,
+    CommittedMealItemFormValues,
     MacroBarState,
     MealFormValues,
     MealItemFormValues,
@@ -172,7 +174,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             return errors;
         }, this.createEmptyGeneralFieldErrors());
     });
-    protected readonly mealFormModel = signal<MealFormValues>(createMealManageFormValue());
+    protected readonly mealFormModel = signal<CommittedMealFormValues>(createMealManageFormValue());
     private readonly submitMealFormAsync = async (): Promise<void> => {
         await this.onSubmitAsync();
     };
@@ -314,7 +316,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         };
     }
 
-    private readDevelopmentItem(item: MealItemFormValues): unknown {
+    private readDevelopmentItem(item: CommittedMealItemFormValues): unknown {
         if (item.product !== null) {
             return {
                 name: item.product.name,
@@ -332,7 +334,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             name: item.recipe.name,
             productId: null,
             recipeId: item.recipe.id,
-            servings: item.amount === null ? null : recipeServingsFromInput(item.amount, item.recipeMass),
+            servings: recipeServingsFromInput(item.amount, item.recipeMass),
             amount: item.amount,
             unit: item.recipeMass.kind === 'known' ? 'grams' : 'servings',
         };
@@ -343,7 +345,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             throw new Error('A clean new meal editor is required.');
         }
         const original = this.mealFormModel();
-        const resolveItemAsync = async (item: MealDevelopmentDraft['items'][number]): Promise<MealItemFormValues> =>
+        const resolveItemAsync = async (item: MealDevelopmentDraft['items'][number]): Promise<CommittedMealItemFormValues> =>
             item.recipe === undefined
                 ? createMealItemValue(item.product, null, item.amount)
                 : this.mealManageFacade.prepareRecipeItemAsync(item.recipe, item.servings);
@@ -438,7 +440,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         this.tourService.start(this.localizedTour.build(MEAL_MANAGE_TOUR), { force });
     }
 
-    protected get items(): MealItemFormValues[] {
+    protected get items(): CommittedMealItemFormValues[] {
         return this.mealFormModel().items;
     }
 
@@ -464,7 +466,7 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     protected removeItem(item: MealItemFormValues): void {
         const items = this.items;
-        const index = items.indexOf(item);
+        const index = items.findIndex(currentItem => currentItem === item);
         if (index === -1) {
             return;
         }
@@ -928,7 +930,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         return this.mealFormModel();
     }
 
-    private patchMealFormModel(patch: Partial<MealFormValues>): void {
+    private patchMealFormModel(patch: Partial<CommittedMealFormValues>): void {
         patchSignalFormModel(this.mealFormModel, patch);
     }
 
@@ -947,7 +949,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         };
     }
 
-    private replaceMealItem(index: number, item: MealItemFormValues): void {
+    private replaceMealItem(index: number, item: CommittedMealItemFormValues): void {
         this.patchMealFormModel({
             items: this.items.map((currentItem, currentIndex) => (currentIndex === index ? item : currentItem)),
         });

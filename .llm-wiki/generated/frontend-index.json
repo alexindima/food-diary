@@ -3523,7 +3523,7 @@
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 75
+      "line": 80
     },
     {
       "name": "MarketingConsentComponent",
@@ -3922,7 +3922,7 @@
       "role": "Component",
       "selector": "fd-telegram-diary-transfer",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
-      "line": 45
+      "line": 47
     },
     {
       "name": "MobileLoginComponent",
@@ -5077,7 +5077,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 116
+      "line": 118
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -5203,7 +5203,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "QuickMealService",
@@ -5364,7 +5364,7 @@
       "role": "Component",
       "selector": "fd-premium-access-page",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "line": 71
+      "line": 61
     },
     {
       "name": "FavoriteProductService",

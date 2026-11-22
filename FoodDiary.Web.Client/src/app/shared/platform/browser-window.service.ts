@@ -85,6 +85,13 @@ export class BrowserWindowService {
         return this.getWindow()?.location.hostname ?? null;
     }
 
+    public navigateCurrentTab(url: string): void {
+        const target = this.getWindow();
+        if (target !== null) {
+            target.location.href = url;
+        }
+    }
+
     public replaceCurrentUrl(nextUrl: string): void {
         this.getWindow()?.history.replaceState({}, '', nextUrl);
     }

@@ -29,6 +29,7 @@ export class CycleTrackingStateFacade {
 
     private readonly cycleLoad = new RequestStateController<true>();
     private readonly nutritionLoad = new RequestStateController<CycleNutritionSummary | null>();
+    private readonly cycleValue = signal<CycleResponse | null>(null);
     private readonly refreshError = signal<string | null>(null);
     private cycleRead: Subscription | undefined;
     private profileWriteRevision = 0;
@@ -105,7 +106,7 @@ export class CycleTrackingStateFacade {
 
     public readonly isLoadingNutritionSummary = this.nutritionLoad.isLoading;
 
-    public readonly cycle = signal<CycleResponse | null>(null);
+    public readonly cycle = this.cycleValue.asReadonly();
 
     public readonly nutritionSummary = this.nutritionLoad.data;
     public readonly nutritionError = this.nutritionLoad.error;
@@ -129,17 +130,25 @@ export class CycleTrackingStateFacade {
     public constructor() {
         this.destroyRef.onDestroy(() => {
             this.cycleLoad.reset();
-            this.nutritionLoad.reset();
+            this.resetNutritionSummary();
         });
     }
 
     public acceptProfileWrite(cycle: CycleResponse): void {
-        const nutritionPurpose = CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS;
-        if (this.hasActiveConsent(this.cycle(), nutritionPurpose) && !this.hasActiveConsent(cycle, nutritionPurpose)) {
-            this.loadNutritionSummary(null);
-        }
         this.profileWriteRevision += 1;
-        this.cycle.set(cycle);
+        this.publishProfileSnapshot(cycle);
+    }
+
+    public publishProfileSnapshot(cycle: CycleResponse | null): void {
+        const previous = this.cycleValue();
+        const nutritionPurpose = CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS;
+        if (
+            previous?.id !== cycle?.id ||
+            (this.hasActiveConsent(previous, nutritionPurpose) && !this.hasActiveConsent(cycle, nutritionPurpose))
+        ) {
+            this.resetNutritionSummary();
+        }
+        this.cycleValue.set(cycle);
     }
 
     public startProfileRead(): { revision: number; response: Observable<CycleResponse | null> } {
@@ -150,31 +159,34 @@ export class CycleTrackingStateFacade {
         return this.latestFullReadRevision > revision;
     }
 
-    public loadNutritionSummary(cycle: CycleResponse | null): void {
-        this.nutritionRead?.unsubscribe();
+    public refreshNutritionSummary(): void {
+        const cycle = this.cycleValue();
         if (cycle === null) {
-            this.nutritionLoad.reset();
+            this.resetNutritionSummary();
             return;
         }
 
         const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), new Date());
         if (range.dateFrom > range.dateTo) {
-            this.nutritionLoad.reset();
+            this.resetNutritionSummary();
             return;
         }
 
         const requestId = this.nutritionLoad.begin();
+        this.nutritionRead?.unsubscribe();
         this.nutritionRead = this.cyclesService
             .getNutritionSummary(calendarDate(range.dateFrom), calendarDate(range.dateTo))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: summary => {
-                    if (this.cycle()?.id === cycle.id) {
-                        this.nutritionLoad.succeed(requestId, summary);
-                    }
-                },
+                next: summary => this.nutritionLoad.succeed(requestId, summary),
                 error: () => this.nutritionLoad.fail(requestId, 'CYCLE_TRACKING.LOAD_FAILED', { preserveData: false }),
             });
+    }
+
+    private resetNutritionSummary(): void {
+        this.nutritionLoad.reset();
+        this.nutritionRead?.unsubscribe();
+        this.nutritionRead = undefined;
     }
 
     public loadCycle(onLoaded: (cycle: CycleResponse | null) => void): void {
@@ -191,9 +203,9 @@ export class CycleTrackingStateFacade {
                     this.cycleLoad.succeed(requestId, true);
                     this.latestFullReadRevision = revision;
                     this.refreshError.set(null);
-                    this.cycle.set(cycle);
+                    this.publishProfileSnapshot(cycle);
                     onLoaded(cycle);
-                    this.loadNutritionSummary(cycle);
+                    this.refreshNutritionSummary();
                 },
                 error: () => {
                     this.cycleLoad.fail(requestId, 'CYCLE_TRACKING.LOAD_FAILED');
@@ -219,8 +231,7 @@ export class CycleTrackingStateFacade {
     public clearCycle(): void {
         this.cycleRead?.unsubscribe();
         this.cycleLoad.reset();
-        this.cycle.set(null);
-        this.loadNutritionSummary(null);
+        this.publishProfileSnapshot(null);
     }
 
     public setRefreshError(error: string | null): void {

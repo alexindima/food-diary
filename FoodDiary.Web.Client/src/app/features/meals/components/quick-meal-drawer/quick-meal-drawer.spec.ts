@@ -15,7 +15,7 @@ import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import { servingMassFromObservation, UNKNOWN_SERVING_MASS } from '../../lib/recipe-serving/recipe-display-amount';
-import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
+import type { CommittedMealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import type { MealManualItemDialogResult } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 import { QuickMealDrawerComponent } from './quick-meal-drawer';
 
@@ -284,8 +284,8 @@ describe('QuickMealDrawerComponent draft changes during editing', () => {
 
     it('does not let a canceled preparation release a newer edit operation', async () => {
         const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
-        const first = new Subject<MealItemFormValues>();
-        const second = new Subject<MealItemFormValues>();
+        const first = new Subject<CommittedMealItemFormValues>();
+        const second = new Subject<CommittedMealItemFormValues>();
         mealManageFacade.prepareRecipeItemAsync.mockReturnValueOnce(firstValueFrom(first)).mockReturnValueOnce(firstValueFrom(second));
         component['edit'](quickService.items()[0]);
         component['clear']();
@@ -591,13 +591,13 @@ function createRecipeDraftItem(): QuickMealItem {
     return { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS };
 }
 
-function deferRecipeWeight(facade: MealManageFacadeMock): Subject<MealItemFormValues> {
-    const weight = new Subject<MealItemFormValues>();
+function deferRecipeWeight(facade: MealManageFacadeMock): Subject<CommittedMealItemFormValues> {
+    const weight = new Subject<CommittedMealItemFormValues>();
     facade.prepareRecipeItemAsync.mockReturnValue(firstValueFrom(weight));
     return weight;
 }
 
-function createPreparedRecipeItem(): MealItemFormValues {
+function createPreparedRecipeItem(): CommittedMealItemFormValues {
     return createRecipeDialogResult(RECIPE_GRAMS);
 }
 

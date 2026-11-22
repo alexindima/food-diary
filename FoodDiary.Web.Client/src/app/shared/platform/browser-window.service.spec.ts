@@ -107,6 +107,30 @@ describe('BrowserWindowService window actions', () => {
         vi.restoreAllMocks();
     });
 
+    it.each([
+        { platform: 'browser', expectedHash: '#wearable-connected' },
+        { platform: 'server', expectedHash: '' },
+    ])('limits same-tab navigation to the owned browser window on $platform', ({ platform, expectedHash }) => {
+        const frame = document.createElement('iframe');
+        document.body.append(frame);
+        try {
+            const frameDocument = frame.contentDocument;
+            const frameWindow = frame.contentWindow;
+            if (frameDocument === null || frameWindow === null) {
+                throw new Error('Expected an attached test frame');
+            }
+            const currentPage = window.location.href;
+            const destination = new URL('#wearable-connected', frameWindow.location.href).href;
+
+            createService(frameDocument, platform).navigateCurrentTab(destination);
+
+            expect(frameWindow.location.hash).toBe(expectedHash);
+            expect(window.location.href).toBe(currentPage);
+        } finally {
+            frame.remove();
+        }
+    });
+
     it('replaces current URL through history API', () => {
         const replaceState = vi.spyOn(window.history, 'replaceState').mockImplementation(() => {});
         const service = createService(document);

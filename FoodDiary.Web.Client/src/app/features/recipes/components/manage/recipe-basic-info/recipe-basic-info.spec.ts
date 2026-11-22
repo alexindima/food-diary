@@ -67,21 +67,22 @@ describe('RecipeBasicInfoComponent photo edit state', () => {
         expect(recipeForm().dirty()).toBe(true);
     });
 
-    it('keeps photo initialization and equivalent photo selections pristine', () => {
+    it('materializes an equivalent legacy cover without making the form dirty or touched', () => {
         const { fixture, formModel, recipeForm } = setupComponent();
-        formModel.update(value => ({
-            ...value,
-            images: [imageSelection('/first.jpg', 'first')],
-            imageUrl: imageSelection('/first.jpg', 'first'),
-        }));
+        const legacyCover = imageSelection(null, 'legacy-recipe-cover');
+        formModel.update(value => ({ ...value, imageUrl: legacyCover }));
         fixture.detectChanges();
-        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
-            .componentInstance as ImageGalleryEditorComponent;
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent)).injector.get(ImageGalleryEditorComponent);
+        expect(gallery.photos()).toEqual([legacyCover]);
+        expect(formModel().images).toBeUndefined();
+        const equivalent = [imageSelection(null, 'legacy-recipe-cover')];
 
-        gallery.photos.set([imageSelection('/first.jpg', 'first')]);
+        gallery.photos.set(equivalent);
         fixture.detectChanges();
 
-        expect(recipeForm().dirty()).toBe(false);
+        expect(formModel().images).toBe(equivalent);
+        expect(formModel().imageUrl).toBe(equivalent[0]);
+        expect({ dirty: recipeForm().dirty(), touched: recipeForm().touched() }).toEqual({ dirty: false, touched: false });
     });
 });
 

@@ -837,9 +837,11 @@ describe('FdUiInputComponent delayed browser autofill', () => {
         control.value = 'initial native autofill';
         await vi.advanceTimersByTimeAsync(delay);
         expect(changed).toHaveBeenCalledExactlyOnceWith('initial native autofill');
+        fixture.detectChanges();
 
         autofill.next({ target: control, isAutofilled: true });
         control.value = 'late native autofill';
+        expect(changed).toHaveBeenCalledExactlyOnceWith('initial native autofill');
         await vi.advanceTimersByTimeAsync(0);
         expect(changed.mock.calls).toEqual([['initial native autofill'], ['late native autofill']]);
 

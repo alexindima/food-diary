@@ -10,6 +10,8 @@ import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import {
     BLEEDING_TYPE_BLEEDING,
+    CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING,
+    CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -18,7 +20,7 @@ import {
     type CycleResponse,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../../shared/models/cycle.data';
-import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { CycleDayFacade } from './cycle-day.facade';
@@ -138,6 +140,53 @@ beforeEach(() => {
 });
 
 describe('CycleTrackingFacade read lifetime', () => {
+    it.each(['success', 'failure'] as const)('isolates replacement nutrition while the previous read reports %s', outcome => {
+        const expectedReads = 3;
+        const original = withNutritionConsent(createCycleResponse());
+        const replacement = withNutritionConsent({
+            ...original,
+            id: entityId<'cycle-profile'>('cycle-2'),
+            factors: [],
+            menstrualEpisodes: [],
+            predictions: null,
+        });
+        const originalSummary = createNutritionSummary();
+        const previousRead = new Subject<CycleNutritionSummary | null>();
+        const replacementRead = new Subject<CycleNutritionSummary | null>();
+        cyclesService.getCurrent.mockReturnValueOnce(of(original)).mockReturnValueOnce(of(original)).mockReturnValueOnce(of(replacement));
+        cyclesService.getNutritionSummary
+            .mockReturnValueOnce(of(originalSummary))
+            .mockReturnValueOnce(previousRead)
+            .mockReturnValueOnce(replacementRead);
+
+        facade.initialize();
+        expect(facade.nutritionSummary()).toBe(originalSummary);
+        facade.initialize();
+        expect(previousRead.observed).toBe(true);
+        expect(facade.nutritionSummary()).toBe(originalSummary);
+
+        facade.initialize();
+        expect(facade.cycle()?.id).toBe(replacement.id);
+        expect(previousRead.observed).toBe(false);
+        expect(replacementRead.observed).toBe(true);
+        if (outcome === 'success') {
+            previousRead.next(originalSummary);
+            previousRead.complete();
+        } else {
+            previousRead.error(new Error('Previous nutrition request failed'));
+        }
+        expect(facade.nutritionSummary()).toBeNull();
+        expect(facade.isLoadingNutritionSummary()).toBe(true);
+        expect(TestBed.inject(CycleTrackingStateFacade).nutritionError()).toBeNull();
+
+        const replacementSummary = { ...originalSummary, loggedCycleDays: originalSummary.loggedCycleDays + 1 };
+        replacementRead.next(replacementSummary);
+        replacementRead.complete();
+        expect(facade.nutritionSummary()).toBe(replacementSummary);
+        expect(facade.isLoadingNutritionSummary()).toBe(false);
+        expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(expectedReads);
+    });
+
     it('cancels a nutrition read on deletion and ignores its late response', async () => {
         const pending = new Subject<CycleNutritionSummary | null>();
         cyclesService.getNutritionSummary.mockReturnValue(pending);
@@ -156,7 +205,7 @@ describe('CycleTrackingFacade read lifetime', () => {
         const second = new Subject<CycleNutritionSummary | null>();
         cyclesService.getNutritionSummary.mockReturnValueOnce(first).mockReturnValueOnce(second);
         facade.initialize();
-        TestBed.inject(CycleTrackingStateFacade).loadNutritionSummary(facade.cycle());
+        facade.initialize();
         expect(first.observed).toBe(false);
         const latest = createNutritionSummary();
         second.next(latest);
@@ -171,11 +220,24 @@ describe('CycleTrackingFacade read lifetime', () => {
         const state = TestBed.inject(CycleTrackingStateFacade);
         expect(state.nutritionError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
         expect(facade.isLoadingNutritionSummary()).toBe(false);
-        state.loadNutritionSummary(facade.cycle());
+        facade.initialize();
         expect(state.nutritionError()).toBeNull();
         expect(facade.nutritionSummary()).toEqual(createNutritionSummary());
     });
 });
+
+function withNutritionConsent(profile: CycleResponse): CycleResponse {
+    const purposes = [CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS] as const;
+    return {
+        ...profile,
+        consents: purposes.map(purpose => ({
+            id: entityId<'cycle-consent'>(`${profile.id}-consent-${String(purpose)}`),
+            purpose,
+            grantedAtUtc: utcInstant('2026-04-01T00:00:00Z'),
+            isActive: true,
+        })),
+    };
+}
 
 describe('CycleTrackingFacade fertility validation', () => {
     it.each([TEMPERATURE_MIN - 1, TEMPERATURE_MAX + 1, Number.NaN, Number.POSITIVE_INFINITY])(
