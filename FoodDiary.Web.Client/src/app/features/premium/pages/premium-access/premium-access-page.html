@@ -16,7 +16,7 @@
         <fd-premium-access-banners
             [checkoutReturnState]="checkoutReturnState()"
             [errorMessage]="errorMessage()"
-            (retry)="reloadOverviewAsync()"
+            (retry)="retryAfterErrorAsync()"
         />
 
         <fd-premium-overview-card

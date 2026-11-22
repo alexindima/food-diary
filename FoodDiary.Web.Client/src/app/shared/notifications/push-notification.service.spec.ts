@@ -847,6 +847,199 @@ describe('PushNotificationService subscription creation and removal', () => {
     });
 });
 
+describe('Push notification device removal after browser expiration', () => {
+    it('removes the device when its browser subscription expires before the removal lock is available', async () => {
+        const device = createPushSubscription('https://push.example.com/subscriptions/expired-during-removal');
+        const { removal } = await expireDeviceWhileRemovalWaitsAsync(device);
+
+        await expect(removal).resolves.toBe(true);
+        expect(device.unsubscribeMock).not.toHaveBeenCalled();
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(device.endpoint);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
+        expect(localStorage.getItem('webPushDeviceOptIn:user-a')).toBe('false');
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+        expect(service.isBusy()).toBe(false);
+    });
+
+    it('keeps the expired-device marker through a failed removal and retries when the browser resumes', async () => {
+        const device = createPushSubscription('https://push.example.com/subscriptions/expired-removal-retry');
+        const deleting = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        try {
+            const { removal } = await expireDeviceWhileRemovalWaitsAsync(device);
+            await vi.waitFor(() => {
+                expect(deleting.observed).toBe(true);
+            });
+
+            window.dispatchEvent(new Event('focus'));
+            await waitForAsyncTasksAsync();
+            expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(device.endpoint);
+
+            deleting.error(new Error('offline'));
+            await expect(removal).resolves.toBe(false);
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: device.endpoint, userId: 'user-a' }));
+            expect(localStorage.getItem('webPushDeviceOptIn:user-a')).toBe('false');
+            expect(service.isBusy()).toBe(false);
+
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(notificationService.removeWebPushSubscription.mock.calls).toEqual([[device.endpoint], [device.endpoint]]);
+                expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
+            });
+            expect(service.currentSubscriptionEndpoint()).toBeNull();
+            expect(device.unsubscribeMock).not.toHaveBeenCalled();
+            expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        } finally {
+            visibility.mockRestore();
+        }
+    });
+});
+
+describe('Push notification removal after a manual retry', () => {
+    it('keeps acknowledged removal final when the browser was absent before the retry', async () => {
+        const device = createPushSubscription('https://push.example.com/subscriptions/expired-before-manual-retry');
+        const deleting = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        try {
+            const { removal } = await expireDeviceWhileRemovalWaitsAsync(device);
+            await vi.waitFor(() => {
+                expect(deleting.observed).toBe(true);
+            });
+            deleting.error(new Error('Connection interrupted'));
+            await expect(removal).resolves.toBe(false);
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: device.endpoint, userId: 'user-a' }));
+
+            await expect(service.removeSubscriptionAsync(device.endpoint)).resolves.toBe(true);
+            const markerAfterRetry = localStorage.getItem(pushOwnerStorageKey);
+            const focusWork = vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync');
+            focusWork.mockClear();
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(focusWork).toHaveBeenCalledOnce();
+            });
+            await expect(focusWork.mock.results[0]?.value).resolves.toBeDefined();
+
+            expect(notificationService.removeWebPushSubscription.mock.calls).toEqual([[device.endpoint], [device.endpoint]]);
+            expect(markerAfterRetry).toBeNull();
+            expect(localStorage.getItem('webPushDeviceOptIn:user-a')).toBe('false');
+            expect(device.unsubscribeMock).not.toHaveBeenCalled();
+            expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        } finally {
+            visibility.mockRestore();
+        }
+    });
+});
+
+describe('Push notification removal after server acknowledgement', () => {
+    it('keeps successful removal acknowledged when the browser lock refuses cleanup', async () => {
+        const device = createPushSubscription('https://push.example.com/subscriptions/expired-acknowledgement');
+        const deleting = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        const { removal } = await expireDeviceWhileRemovalWaitsAsync(device);
+
+        await vi.waitFor(() => {
+            expect(deleting.observed).toBe(true);
+        });
+        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockRejectedValueOnce(
+            new DOMException('Browser lock unavailable', 'InvalidStateError'),
+        );
+        deleting.next();
+
+        await expect(removal).resolves.toBe(true);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: device.endpoint, userId: 'user-a' }));
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(device.endpoint);
+        expect(service.isBusy()).toBe(false);
+        expect(device.unsubscribeMock).not.toHaveBeenCalled();
+    });
+
+    it('preserves the newer browser registration when the earlier device removal finishes', async () => {
+        const device = createPushSubscription('https://push.example.com/subscriptions/expired-before-replacement');
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/replacement');
+        const deleting = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        const { removal } = await expireDeviceWhileRemovalWaitsAsync(device);
+
+        await vi.waitFor(() => {
+            expect(deleting.observed).toBe(true);
+        });
+        swPush.subscription = of(replacement);
+        confirmSubscriptionOwner(replacement, 'user-a');
+        deleting.next();
+
+        await expect(removal).resolves.toBe(true);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-a' }));
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(device.endpoint);
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+});
+
+describe('Push notification acknowledgement waiting for a browser lock', () => {
+    it('keeps another tab’s newer registration published while acknowledgement waits for the browser lock', async () => {
+        const expired = createPushSubscription('https://push.example.com/subscriptions/expired-before-ack-lock');
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/replaced-during-ack-lock');
+        const deleting = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        const { removal } = await expireDeviceWhileRemovalWaitsAsync(expired);
+        await vi.waitFor(() => {
+            expect(deleting.observed).toBe(true);
+        });
+        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockRestore();
+
+        let releaseCleanup = (): void => {};
+        const crossTabRelease = new Promise<void>(resolve => {
+            releaseCleanup = resolve;
+        });
+        const requestLock = vi.fn(async <T>(_name: string, operation: () => Promise<T>): Promise<T> => {
+            await crossTabRelease;
+            return operation();
+        });
+        const navigator = window.navigator;
+        const originalLocks = Object.getOwnPropertyDescriptor(navigator, 'locks');
+        Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: requestLock } });
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        try {
+            deleting.next();
+            deleting.complete();
+            await vi.waitFor(() => {
+                expect(requestLock).toHaveBeenCalledExactlyOnceWith('fooddiary.push.subscription', expect.any(Function));
+            });
+            expect(service.isBusy()).toBe(true);
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: expired.endpoint, userId: 'user-a' }));
+
+            // The other tab commits its explicit re-enrollment while it owns the browser lock.
+            swPush.subscription = of(replacement);
+            confirmSubscriptionOwner(replacement, 'user-a');
+            localStorage.setItem('webPushDeviceOptIn:user-a', 'true');
+            releaseCleanup();
+
+            await expect(removal).resolves.toBe(true);
+            expect(service.isBusy()).toBe(false);
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-a' }));
+
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(service.currentSubscriptionEndpoint()).toBe(replacement.endpoint);
+            });
+            expect(service.isSubscribed()).toBe(true);
+            expect(localStorage.getItem('webPushDeviceOptIn:user-a')).toBe('true');
+            expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(expired.endpoint);
+            expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+            expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        } finally {
+            releaseCleanup();
+            visibility.mockRestore();
+            if (originalLocks === undefined) {
+                Reflect.deleteProperty(navigator, 'locks');
+            } else {
+                Object.defineProperty(navigator, 'locks', originalLocks);
+            }
+        }
+    });
+});
+
 describe('Push notification device removal across session and network changes', () => {
     it('drops a pending removal when another account signs in before browser discovery completes', async () => {
         const oldDevice = createPushSubscription('https://push.example.com/subscriptions/old-device');
@@ -892,6 +1085,31 @@ describe('Push notification device removal across session and network changes', 
         expect(local.unsubscribeMock).not.toHaveBeenCalled();
     });
 });
+
+async function expireDeviceWhileRemovalWaitsAsync(device: PushSubscription): Promise<{ removal: Promise<boolean> }> {
+    let current: PushSubscription | null = device;
+    swPush.subscription = defer(() => of(current));
+    confirmSubscriptionOwner(device, 'user-a');
+    await expect(service.ensureSubscriptionAsync()).resolves.toBe('already-subscribed');
+
+    let releaseLock = (): void => {};
+    const lockReady = new Promise<void>(resolve => {
+        releaseLock = resolve;
+    });
+    const lock = vi
+        .spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync')
+        .mockImplementationOnce(async <T>(_name: string, operation: () => Promise<T>): Promise<T> => lockReady.then(operation));
+    const removal = service.removeSubscriptionAsync(device.endpoint);
+    await vi.waitFor(() => {
+        expect(lock).toHaveBeenCalledOnce();
+    });
+    expect(service.isBusy()).toBe(true);
+    expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+
+    current = null;
+    releaseLock();
+    return { removal };
+}
 
 describe('Push notification removal reservations across logout', () => {
     useSessionCleanupTimers();

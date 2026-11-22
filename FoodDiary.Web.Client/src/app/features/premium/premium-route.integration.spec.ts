@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { BrowserPlatformLocation, Location, PlatformLocation } from '@angular/common';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
@@ -171,6 +171,133 @@ function createDeferredPaddleFixture(): {
     const waitingForLoad = (): boolean => listen.mock.calls.some(([type]) => type === 'load');
     return { waitingForLoad, initialize, open, completeLoad };
 }
+
+describe('Premium returned transaction retry', () => {
+    it('reopens the same transaction when the user retries a temporary Paddle failure', async () => {
+        const retryOverview = new Subject<BillingOverview>();
+        const readOverview = vi
+            .fn<PremiumBillingService['getOverview']>()
+            .mockReturnValueOnce(of(overview()))
+            .mockReturnValueOnce(retryOverview);
+        const openWidget = vi
+            .fn<PaddleCheckoutService['openTransactionCheckoutAsync']>()
+            .mockRejectedValueOnce(new Error('Paddle script could not load'))
+            .mockResolvedValue(undefined);
+        TestBed.overrideProvider(PaddleCheckoutService, {
+            useValue: {
+                openTransactionCheckoutAsync: openWidget,
+                previewPlanPricesAsync: vi.fn<PaddleCheckoutService['previewPlanPricesAsync']>(),
+            },
+        });
+        const { harness, router, createCheckout } = await renderPremiumAsync(TRANSACTION_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(router.url).toBe(TRANSACTION_ROUTE);
+        expect(openWidget).toHaveBeenCalledOnce();
+
+        nativeButton(root, 'PREMIUM_PAGE.RETRY_ACTION').click();
+        await redrawAsync(harness);
+        expect(readOverview).toHaveBeenCalledTimes(2);
+        expect(openWidget).toHaveBeenCalledOnce();
+        retryOverview.next(overview());
+        retryOverview.complete();
+
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(openWidget).toHaveBeenCalledTimes(2);
+            expect(router.url).toBe(PREMIUM_ROUTE);
+        });
+        expect(openWidget.mock.calls.map(([transactionId]) => transactionId)).toEqual([RETURNED_TRANSACTION, RETURNED_TRANSACTION]);
+        expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(readOverview).toHaveBeenCalledTimes(2);
+        expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
+
+describe('Premium unavailable returned transaction overview', () => {
+    it('keeps the returned transaction available when a checkout retry cannot read billing details', async () => {
+        const openWidget = vi
+            .fn<PaddleCheckoutService['openTransactionCheckoutAsync']>()
+            .mockRejectedValueOnce(new Error('Paddle script could not load'))
+            .mockResolvedValue(undefined);
+        TestBed.overrideProvider(PaddleCheckoutService, {
+            useValue: {
+                openTransactionCheckoutAsync: openWidget,
+                previewPlanPricesAsync: vi.fn<PaddleCheckoutService['previewPlanPricesAsync']>(),
+            },
+        });
+        const { harness, router } = await renderPremiumAsync(TRANSACTION_ROUTE, undefined, false, overview());
+        const root = premiumRoot(harness);
+        const http = TestBed.inject(HttpTestingController);
+        expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(openWidget).toHaveBeenCalledOnce();
+
+        nativeButton(root, 'PREMIUM_PAGE.RETRY_ACTION').click();
+        http.expectOne({ method: 'GET', url: `${BILLING_URL}/overview` }).flush(null, {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Service Unavailable',
+        });
+        await redrawAsync(harness);
+        expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_GENERIC');
+        expect(router.url).toBe(TRANSACTION_ROUTE);
+        expect(openWidget).toHaveBeenCalledOnce();
+
+        nativeButton(root, 'PREMIUM_PAGE.RETRY_ACTION').click();
+        http.expectOne({ method: 'GET', url: `${BILLING_URL}/overview` }).flush(overview());
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(router.url).toBe(PREMIUM_ROUTE);
+        });
+        expect(openWidget.mock.calls.map(([transactionId]) => transactionId)).toEqual([RETURNED_TRANSACTION, RETURNED_TRANSACTION]);
+        expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_GENERIC');
+        http.expectNone({ method: 'POST', url: `${BILLING_URL}/checkout-session` });
+        http.verify();
+    });
+});
+
+describe('Premium returned transaction URL cleanup', () => {
+    it('retries refused History cleanup without opening the returned transaction twice', async () => {
+        const history = window.history;
+        const initialUrl = window.location.href;
+        const initialState: unknown = history.state;
+        const replaceState = history.replaceState.bind(history);
+        replaceState(null, '', TRANSACTION_ROUTE);
+        let refusedCleanup = false;
+        const cleanupSpy = vi.spyOn(history, 'replaceState').mockImplementation((state: unknown, title, url) => {
+            if (!refusedCleanup && url !== undefined && url !== null) {
+                const target = new URL(url, window.location.href);
+                if (target.pathname === PREMIUM_ROUTE && target.search === '') {
+                    refusedCleanup = true;
+                    throw new DOMException('History temporarily refused the query cleanup', 'SecurityError');
+                }
+            }
+            replaceState(state, title, url);
+        });
+        onTestFinished(() => {
+            cleanupSpy.mockRestore();
+            replaceState(initialState, '', initialUrl);
+        });
+        TestBed.overrideProvider(PlatformLocation, { useFactory: () => new BrowserPlatformLocation() });
+
+        const { harness, router, openWidget, createCheckout } = await renderPremiumAsync(TRANSACTION_ROUTE);
+        const root = premiumRoot(harness);
+        expect(refusedCleanup).toBe(true);
+        expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(router.url).toBe(TRANSACTION_ROUTE);
+        expect(window.location.search).toBe(`?_ptxn=${RETURNED_TRANSACTION}`);
+        expect(openWidget).toHaveBeenCalledOnce();
+
+        nativeButton(root, 'PREMIUM_PAGE.RETRY_ACTION').click();
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(window.location.search).toBe('');
+            expect(router.url).toBe(PREMIUM_ROUTE);
+        });
+        expect(openWidget).toHaveBeenCalledOnce();
+        expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
 
 describe('Premium activation return ownership', () => {
     it('clears an unfamiliar checkout return code and renders normal Premium without an activation result', async () => {

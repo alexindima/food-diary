@@ -398,7 +398,7 @@ export class PushNotificationService {
         newSubscription: PushSubscription | null,
         session: PushSession,
     ): Promise<OwnedPushSubscription> {
-        if (newSubscription === null || (oldSubscription !== null && this.isConfirmedOwner(oldSubscription, session.owner))) {
+        if (newSubscription === null || (oldSubscription !== null && this.isConfirmedOwner(oldSubscription.endpoint, session.owner))) {
             return { subscription: newSubscription, revoked: false };
         }
         return this.readOwnedSubscriptionAsync(session);
@@ -456,22 +456,38 @@ export class PushNotificationService {
     }
 
     private async removeEndpointAsync(endpoint: string, current: PushSubscription | null, session: PushSession): Promise<boolean> {
-        if (current?.endpoint === endpoint) {
-            this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
-            if (!(await this.revokeBrowserSubscriptionAsync(current, session))) {
-                return false;
-            }
-            // A registration already sent for the disconnected browser must settle before its removal.
-            await Promise.allSettled(this.pendingUpserts);
+        if (current?.endpoint === endpoint && !(await this.disconnectCurrentDeviceAsync(current, session))) {
+            return false;
         }
         if (!this.isCurrentSession(session)) {
             return false;
         }
         await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint));
-        if (current?.endpoint === endpoint && this.isCurrentSession(session)) {
-            this.setSubscriptionState(null);
+        if (this.isCurrentSession(session) && this.isConfirmedOwner(endpoint, session.owner)) {
+            await this.forgetRemovedDeviceAsync(endpoint, session);
         }
         return true;
+    }
+
+    private async disconnectCurrentDeviceAsync(subscription: PushSubscription, session: PushSession): Promise<boolean> {
+        this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
+        const disconnected = await this.revokeBrowserSubscriptionAsync(subscription, session, true);
+        if (disconnected) {
+            // A registration already sent for the disconnected browser must settle before its removal.
+            await Promise.allSettled(this.pendingUpserts);
+        }
+        return disconnected;
+    }
+
+    private async forgetRemovedDeviceAsync(endpoint: string, session: PushSession): Promise<void> {
+        await this.runBrowserMutationAsync(async () => {
+            const current = await this.readCurrentSubscriptionAsync();
+            if (current?.endpoint !== endpoint && this.isCurrentSession(session) && this.isConfirmedOwner(endpoint, session.owner)) {
+                this.browserContext?.storage.removeItem('local', PUSH_OWNER_STORAGE_KEY);
+            }
+        }).catch(() => {
+            // The server already removed the endpoint. Keep its marker available for later reconciliation.
+        });
     }
 
     private mapSubscription(subscription: PushSubscription): WebPushSubscriptionRequest {
@@ -651,9 +667,19 @@ export class PushNotificationService {
         return pending;
     }
 
-    private isConfirmedOwner(subscription: PushSubscription, owner: string): boolean {
+    private isConfirmedOwner(endpoint: string, owner: string): boolean {
         const marker = this.browserContext?.storage.getJson('local', PUSH_OWNER_STORAGE_KEY);
-        return getStringProperty(marker, 'endpoint') === subscription.endpoint && getStringProperty(marker, 'userId') === owner;
+        return getStringProperty(marker, 'endpoint') === endpoint && getStringProperty(marker, 'userId') === owner;
+    }
+
+    private clearRemovedDeviceState(endpoint: string): void {
+        this.knownSubscriptions.delete(endpoint);
+        if (this.currentSubscription?.endpoint === endpoint) {
+            this.currentSubscription = null;
+        }
+        if (this.currentSubscriptionEndpoint() === endpoint) {
+            this.setSubscriptionState(null);
+        }
     }
 
     private forgetSubscription(subscription: PushSubscription): void {
@@ -685,7 +711,7 @@ export class PushNotificationService {
                 await this.removeMissingOwnedSubscriptionAsync(session);
                 return { subscription: null, revoked: false };
             }
-            const confirmedOwner = this.isConfirmedOwner(subscription, session.owner);
+            const confirmedOwner = this.isConfirmedOwner(subscription.endpoint, session.owner);
             if (confirmedOwner && !this.browserNotifications.isPermissionDenied()) {
                 this.rememberDeviceOptIn(session.owner);
                 return { subscription, revoked: false };
@@ -717,7 +743,12 @@ export class PushNotificationService {
     private async removeMissingOwnedSubscriptionAsync(session: PushSession): Promise<void> {
         const marker = this.browserContext?.storage.getJson('local', PUSH_OWNER_STORAGE_KEY);
         const endpoint = getStringProperty(marker, 'endpoint');
-        if (endpoint === undefined || endpoint.length === 0 || getStringProperty(marker, 'userId') !== session.owner) {
+        if (
+            endpoint === undefined ||
+            endpoint.length === 0 ||
+            getStringProperty(marker, 'userId') !== session.owner ||
+            this.isDeviceRemovalPending(endpoint, session)
+        ) {
             return;
         }
 
@@ -742,7 +773,7 @@ export class PushNotificationService {
                 const current = await this.readCurrentSubscriptionAsync();
                 this.requireCurrentSession(session);
                 if (current !== null) {
-                    if (this.isConfirmedOwner(current, session.owner)) {
+                    if (this.isConfirmedOwner(current.endpoint, session.owner)) {
                         return { subscription: current };
                     }
                     if (!(await firstValueFrom(from(current.unsubscribe()).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS))))) {
@@ -762,18 +793,31 @@ export class PushNotificationService {
         return 'subscription' in request ? request.subscription : request.pending;
     }
 
-    private async revokeBrowserSubscriptionAsync(subscription: PushSubscription, session: PushSession | null): Promise<boolean> {
+    private async revokeBrowserSubscriptionAsync(
+        subscription: PushSubscription,
+        session: PushSession | null,
+        explicitRemoval = false,
+    ): Promise<boolean> {
         return this.runBrowserMutationAsync(async metadata => {
             if (!this.canRevokeBrowserSubscription(subscription, session, metadata)) {
                 return false;
             }
             const current = await this.readCurrentSubscriptionAsync();
+            if (current === null && explicitRemoval && this.canRevokeBrowserSubscription(subscription, session, metadata)) {
+                this.clearRemovedDeviceState(subscription.endpoint);
+                return true;
+            }
             if (current?.endpoint !== subscription.endpoint || !this.canRevokeBrowserSubscription(current, session, metadata)) {
                 return false;
             }
             const removed = await firstValueFrom(from(current.unsubscribe()).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)));
             if (removed) {
-                this.forgetSubscription(current);
+                if (explicitRemoval) {
+                    // Keep the owner marker for same-account reconciliation until DELETE succeeds.
+                    this.clearRemovedDeviceState(current.endpoint);
+                } else {
+                    this.forgetSubscription(current);
+                }
             }
             return removed;
         }).catch(() => false);

@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, type Provider, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, type Routes } from '@angular/router';
@@ -651,6 +652,72 @@ describe('Profile disconnect with device registration in flight', () => {
         expect(localStorage.getItem(ownerStorageKey)).toBeNull();
         expect(localStorage.getItem(optInKey)).toBe('false');
         expect(removeButton(fixture, 'Firefox / Linux').disabled).toBe(false);
+    });
+});
+
+describe('Profile removed browser registration recovery', () => {
+    it('retries the failed server removal on focus after the browser successfully unsubscribes', async () => {
+        const discovery = new ReplaySubject<PushSubscription | null>(1);
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockResolvedValue(true);
+        const { worker, providers } = createDiscoveryWorker(discovery);
+        const markerKey = 'webPushSubscriptionOwner';
+        const optInKey = 'webPushDeviceOptIn:profile-user';
+        const ownerMarker = JSON.stringify({ endpoint: localDevice.endpoint, userId: 'profile-user' });
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        localStorage.setItem(markerKey, ownerMarker);
+        onTestFinished(() => {
+            discovery.complete();
+            visibility.mockRestore();
+            localStorage.removeItem(markerKey);
+            localStorage.removeItem(optInKey);
+        });
+
+        const { fixture, account, browser, toast } = setup(initialPreferences, knownDevices, providers);
+        const deleting = new Subject<void>();
+        account.removeWebPushSubscription.mockReturnValueOnce(deleting);
+        discovery.next(
+            createExistingBrowserSubscription(async () => {
+                const removed = await unsubscribe();
+                discovery.next(null);
+                return removed;
+            }),
+        );
+        const push = TestBed.inject(PushNotificationService);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(push.currentSubscriptionEndpoint()).toBe(localDevice.endpoint);
+            expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
+        });
+
+        removeButton(fixture, 'Chrome / Windows').click();
+        await vi.waitFor(() => {
+            expect(deleting.observed).toBe(true);
+        });
+        expect(await firstValueFrom(worker.subscription)).toBeNull();
+        expect(unsubscribe).toHaveBeenCalledOnce();
+        expect(localStorage.getItem(optInKey)).toBe('false');
+        window.dispatchEvent(new Event('focus'));
+        await waitForAsyncTasksAsync();
+        expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(localDevice.endpoint);
+
+        deleting.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' }));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(toast.error).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE_ERROR');
+            expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
+        });
+        const markerAfterFailure = localStorage.getItem(markerKey);
+
+        window.dispatchEvent(new Event('focus'));
+        await vi.waitFor(() => {
+            expect(account.removeWebPushSubscription.mock.calls).toEqual([[localDevice.endpoint], [localDevice.endpoint]]);
+            expect(localStorage.getItem(markerKey)).toBeNull();
+        });
+        expect(markerAfterFailure).toBe(ownerMarker);
+        expect(push.currentSubscriptionEndpoint()).toBeNull();
+        expect(localStorage.getItem(optInKey)).toBe('false');
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+        expect(browser.capability.requestPermissionAsync).not.toHaveBeenCalled();
     });
 });
 

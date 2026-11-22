@@ -250,16 +250,24 @@ describe('Public recipe loading feedback', () => {
         getById.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })));
         const harness = await RouterTestingHarness.create('/explore/other-recipe');
         const detail = harness.routeNativeElement;
-        expect(detail?.querySelector('h1')?.textContent).toBe('PUBLIC_RECIPES.ERROR');
+        if (detail === null) {
+            throw new Error('Expected the public recipe route to render.');
+        }
+        expect(detail.querySelector('h1')?.textContent).toBe('PUBLIC_RECIPES.ERROR');
+        expect(detail.querySelector('fd-public-recipe-gallery')).toBeNull();
         recipeAction(harness, 'PUBLIC_RECIPES.RETRY').click();
         await harness.fixture.whenStable();
         harness.detectChanges();
 
         expect(getById.mock.calls).toEqual([['other-recipe'], ['other-recipe']]);
         expect(harness.routeNativeElement).toBe(detail);
-        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Stew');
-        expect(harness.routeNativeElement?.querySelector('.recipe-facts')?.textContent).toContain('RECIPE_LANGUAGE.RU');
-        expect(harness.routeNativeElement?.querySelector<HTMLElement>('.recipe-time-breakdown')?.hidden).toBe(true);
+        expect(detail.querySelector('h1')?.textContent).toBe('Stew');
+        const cover = detail.querySelector<HTMLImageElement>('fd-public-recipe-gallery .gallery-cover img');
+        expect(cover?.getAttribute('src')).toBe('cover.jpg');
+        expect(cover?.alt).toBe('Stew');
+        expect(detail.querySelectorAll('fd-public-recipe-gallery .gallery-thumbs button')).toHaveLength(2);
+        expect(detail.querySelector('.recipe-facts')?.textContent).toContain('RECIPE_LANGUAGE.RU');
+        expect(detail.querySelector<HTMLElement>('.recipe-time-breakdown')?.hidden).toBe(true);
     });
 });
 

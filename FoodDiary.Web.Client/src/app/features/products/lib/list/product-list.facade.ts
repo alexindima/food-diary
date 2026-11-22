@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, Injector, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
@@ -73,6 +73,7 @@ export class ProductListFacade {
     private readonly favoriteProductService = inject(FavoriteProductService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
     private readonly toastService = inject(FdUiToastService);
@@ -172,14 +173,12 @@ export class ProductListFacade {
     }
 
     private applyActiveFilterQuery(query: ProductListQuery): void {
-        if (this.queryState !== null) {
-            void this.queryState.writeAsync(query).catch(() => {
+        void this.injector
+            .get(PRODUCT_LIST_QUERY_STATE)
+            .writeAsync(query)
+            .catch(() => {
                 this.navigationError.set('ERRORS.LOAD_FAILED_TITLE');
             });
-            return;
-        }
-        this.applyRouteQuery(query);
-        this.loadProducts(1, this.pageSize, query.search).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     public constructor() {

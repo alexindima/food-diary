@@ -100,6 +100,8 @@ export class PremiumAccessPageComponent {
     protected readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
     private overviewRevision = 0;
+    private openingPaddleTransaction = false;
+    private openedPaddleTransactionId: string | null = null;
 
     protected readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
     protected readonly availableProviders = computed(() => {
@@ -276,6 +278,13 @@ export class PremiumAccessPageComponent {
         await this.loadOverviewAsync();
     }
 
+    protected async retryAfterErrorAsync(): Promise<void> {
+        if (this.isLoading() || !(await this.loadOverviewAsync())) {
+            return;
+        }
+        await this.handlePaddleTransactionCheckoutAsync();
+    }
+
     protected applyBillingChange(overview: BillingOverview): void {
         this.overviewRevision++;
         this.overview.set(overview);
@@ -329,7 +338,7 @@ export class PremiumAccessPageComponent {
         });
     }
 
-    private async loadOverviewAsync(): Promise<void> {
+    private async loadOverviewAsync(): Promise<boolean> {
         const revision = ++this.overviewRevision;
         this.isLoading.set(true);
         this.errorMessage.set(null);
@@ -338,7 +347,7 @@ export class PremiumAccessPageComponent {
         try {
             overview = await this.readBillingResponseAsync(this.billingService.getOverview());
             if (!this.isCurrentOverview(revision)) {
-                return;
+                return false;
             }
             this.overview.set(overview);
             if (this.isBrowser && overview.isPremium !== this.authService.isPremium()) {
@@ -348,16 +357,18 @@ export class PremiumAccessPageComponent {
             if (this.isCurrentOverview(revision)) {
                 this.errorMessage.set(this.getErrorMessage(error));
             }
-            return;
+            return false;
         } finally {
             if (revision === this.overviewRevision) {
                 this.isLoading.set(false);
             }
         }
 
-        if (this.isCurrentOverview(revision) && this.showPlans() && this.errorMessage() === null) {
+        const loaded = this.isCurrentOverview(revision) && this.errorMessage() === null;
+        if (loaded && this.showPlans()) {
             void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
         }
+        return loaded;
     }
 
     private isCurrentOverview(revision: number): boolean {
@@ -412,7 +423,7 @@ export class PremiumAccessPageComponent {
     }
 
     private async handlePaddleTransactionCheckoutAsync(): Promise<void> {
-        if (!this.isBrowser || !this.isPageActive()) {
+        if (!this.isBrowser || !this.isPageActive() || this.openingPaddleTransaction) {
             return;
         }
 
@@ -421,17 +432,13 @@ export class PremiumAccessPageComponent {
             return;
         }
 
-        const paddleClientToken = this.resolvePaddleClientToken();
-        if (paddleClientToken === null) {
-            this.showPaddleClientTokenMissingError();
-            return;
-        }
-
+        this.openingPaddleTransaction = true;
         try {
-            await this.openPaddleTransactionCheckoutAsync(transactionId, paddleClientToken);
-            if (!this.isPageActive()) {
+            if (!(await this.ensurePaddleTransactionOpenAsync(transactionId)) || !this.isPageActive()) {
                 return;
             }
+            this.openedPaddleTransactionId = transactionId;
+
             await this.router.navigate([], {
                 relativeTo: this.route,
                 queryParams: {},
@@ -441,6 +448,8 @@ export class PremiumAccessPageComponent {
             if (this.isPageActive()) {
                 this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
             }
+        } finally {
+            this.openingPaddleTransaction = false;
         }
     }
 
@@ -461,7 +470,17 @@ export class PremiumAccessPageComponent {
         this.toastService.error(message);
     }
 
-    private async openPaddleTransactionCheckoutAsync(transactionId: string, paddleClientToken: string): Promise<void> {
+    private async ensurePaddleTransactionOpenAsync(transactionId: string): Promise<boolean> {
+        if (this.openedPaddleTransactionId === transactionId) {
+            return true;
+        }
+
+        const paddleClientToken = this.resolvePaddleClientToken();
+        if (paddleClientToken === null) {
+            this.showPaddleClientTokenMissingError();
+            return false;
+        }
+
         await this.paddleCheckoutService.openTransactionCheckoutAsync(
             transactionId,
             {
@@ -471,6 +490,7 @@ export class PremiumAccessPageComponent {
             },
             this.destroyRef,
         );
+        return true;
     }
 
     private getErrorMessage(error: unknown, fallbackKey = 'PREMIUM_PAGE.ERROR_GENERIC'): string {

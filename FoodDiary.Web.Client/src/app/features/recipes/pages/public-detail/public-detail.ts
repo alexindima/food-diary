@@ -65,9 +65,9 @@ export class PublicRecipeDetailComponent {
     private readonly activeAction = signal<RecipeAction | null>(null);
     protected readonly seo = input.required<PublicRecipePageData>();
     protected readonly recipe = computed(() => this.seo().recipe);
-    protected readonly images = computed(() => {
+    protected readonly recipeDetail = computed(() => {
         const recipe = this.recipe();
-        return recipe === null ? [] : recipeImages(recipe);
+        return recipe === null ? null : { recipe, images: recipeImages(recipe) };
     });
     protected readonly saved = signal(false);
     protected readonly busy = computed(() => this.activeAction()?.recipe === this.recipe());

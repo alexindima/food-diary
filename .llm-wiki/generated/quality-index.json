@@ -55,20 +55,20 @@
       "structuralRiskScore": 340.56
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
+      "nonBlankLines": 960,
+      "decisionPoints": 206,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 328.2
+    },
+    {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
       "nonBlankLines": 973,
       "decisionPoints": 195,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 313.96
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "nonBlankLines": 919,
-      "decisionPoints": 192,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 306.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/users.service.ts",
@@ -455,6 +455,14 @@
       "structuralRiskScore": 130.9
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
+      "nonBlankLines": 448,
+      "decisionPoints": 81,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 130.46
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
       "nonBlankLines": 335,
       "decisionPoints": 81,
@@ -479,14 +487,6 @@
       "structuralRiskScore": 126.88
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 718,
-      "decisionPoints": 75,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 126.86
-    },
-    {
       "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
       "nonBlankLines": 360,
       "decisionPoints": 78,
@@ -501,6 +501,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 125.68
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
+      "nonBlankLines": 717,
+      "decisionPoints": 74,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 125.34
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
@@ -525,14 +533,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 122.94
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "nonBlankLines": 431,
-      "decisionPoints": 76,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 122.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/shopping-lists.service.ts",
@@ -14010,11 +14010,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "nonBlankLines": 431,
-      "decisionPoints": 76,
+      "nonBlankLines": 448,
+      "decisionPoints": 81,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 122.62
+      "structuralRiskScore": 130.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-tour.ts",
@@ -14482,11 +14482,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 718,
-      "decisionPoints": 75,
+      "nonBlankLines": 717,
+      "decisionPoints": 74,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 126.86
+      "structuralRiskScore": 125.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.ts",
@@ -21066,11 +21066,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "nonBlankLines": 919,
-      "decisionPoints": 192,
+      "nonBlankLines": 960,
+      "decisionPoints": 206,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 306.38
+      "structuralRiskScore": 328.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts",

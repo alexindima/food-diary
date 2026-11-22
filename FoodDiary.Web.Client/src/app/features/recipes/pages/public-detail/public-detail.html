@@ -10,9 +10,10 @@
         >{{ 'PUBLIC_RECIPES.CATALOG' | translate }}</fd-ui-button
     >
     <fd-page-body>
-        @if (recipe(); as item) {
+        @if (recipeDetail(); as detail) {
+            @let item = detail.recipe;
             <div class="recipe-intro">
-                <fd-public-recipe-gallery [images]="images()" [name]="item.name" />
+                <fd-public-recipe-gallery [images]="detail.images" [name]="item.name" />
                 <div class="recipe-summary">
                     <p class="recipe-category">{{ recipeCategoryKey(item.category) | translate }}</p>
                     <h1>{{ item.name }}</h1>

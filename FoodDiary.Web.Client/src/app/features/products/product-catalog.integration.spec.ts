@@ -924,6 +924,7 @@ describe('Catalog favorite load recovery', () => {
         const detailButton = button(host, '.recent-products__open');
 
         detailButton.click();
+        await vi.dynamicImportSettled();
         await vi.waitFor(() => {
             expect(showError).toHaveBeenCalledExactlyOnceWith('PRODUCT_FAVORITES.LOAD_ERROR');
             expect(readFavorites).toHaveBeenCalledExactlyOnceWith(1, 1);
@@ -936,6 +937,7 @@ describe('Catalog favorite load recovery', () => {
             of({ allProducts: page([CATALOG_ITEM]), recentItems: [RECENT_ITEM], favoriteItems: [], favoriteTotalCount: 0 }),
         );
         detailButton.click();
+        await vi.dynamicImportSettled();
         await vi.waitFor(() => {
             harness.detectChanges();
             expect(favoriteCount(host)).toBe('0');
@@ -1335,6 +1337,7 @@ describe('Catalog deletion and route ownership', () => {
         const host = catalogRoot(harness);
 
         button(host, '.recent-products__open').click();
+        await vi.dynamicImportSettled();
         await vi.waitFor(() => {
             expect(showError).toHaveBeenCalledExactlyOnceWith('PRODUCT_LIST.DELETE_ERROR');
         });
@@ -1346,6 +1349,7 @@ describe('Catalog deletion and route ownership', () => {
             of({ allProducts: page([COFFEE_ITEM]), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }),
         );
         button(host, '.recent-products__open').click();
+        await vi.dynamicImportSettled();
         await waitForCatalogAsync(harness, COFFEE_ITEM.name);
 
         expect(products.deleteById.mock.calls).toEqual([[RECENT_ITEM.id], [RECENT_ITEM.id]]);
@@ -1360,6 +1364,7 @@ describe('Catalog deletion and route ownership', () => {
         openDialog.mockReturnValueOnce({ afterClosed: () => of(new ProductDetailActionResult(RECENT_ITEM.id, 'Delete')) });
         const harness = await RouterTestingHarness.create('/products');
         button(catalogRoot(harness), '.recent-products__open').click();
+        await vi.dynamicImportSettled();
         await vi.waitFor(() => {
             expect(products.deleteById).toHaveBeenCalledExactlyOnceWith(RECENT_ITEM.id);
             expect(deletion.observed).toBe(true);
