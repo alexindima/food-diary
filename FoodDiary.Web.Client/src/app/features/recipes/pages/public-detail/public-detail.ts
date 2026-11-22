@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiDialogService, FdUiIconComponent } from 'fd-ui-kit';
 import { firstValueFrom, map } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -59,9 +59,12 @@ export class PublicRecipeDetailComponent {
     private readonly facade = inject(PublicRecipesFacade);
     private readonly auth = inject(AuthService);
     private readonly authDialog = inject(PublicAuthDialogService);
+    private readonly dialogs = inject(FdUiDialogService);
     private readonly browser = inject(BrowserWindowService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private qrDialogActive = false;
+    private closeQrDialog?: () => void;
     private readonly activeAction = signal<RecipeAction | null>(null);
     protected readonly seo = input.required<PublicRecipePageData>();
     protected readonly recipe = computed(() => this.seo().recipe);
@@ -98,10 +101,13 @@ export class PublicRecipeDetailComponent {
         () => `PUBLIC_RECIPES.SERVINGS_${new Intl.PluralRules(this.language()).select(this.servings()).toUpperCase()}`,
     );
     public constructor() {
-        effect(() => {
+        effect(onCleanup => {
             this.servings.set(this.recipe()?.servings ?? 1);
             this.shareUrl.set(null);
             this.shopping.setScope(this.recipe()?.id ?? '', this.recipe()?.name ?? '');
+            onCleanup(() => {
+                this.closeQrDialog?.();
+            });
         });
         effect(onCleanup => {
             const recipe = this.recipe();
@@ -188,11 +194,13 @@ export class PublicRecipeDetailComponent {
 
     protected async shareAsync(): Promise<void> {
         const recipe = this.recipe();
-        const origin = this.browser.getOrigin();
-        if (recipe === null || origin === undefined) {
+        if (recipe === null) {
             return;
         }
-        const url = `${origin}/explore/${recipe.id}`;
+        const url = this.publicRecipeUrl(recipe);
+        if (url === undefined) {
+            return;
+        }
         try {
             await this.browser.copyTextAsync(url);
             if (this.isCurrentRecipe(recipe)) {
@@ -203,6 +211,42 @@ export class PublicRecipeDetailComponent {
                 this.shareUrl.set(url);
             }
         }
+    }
+
+    protected async showQrCodeAsync(): Promise<void> {
+        const recipe = this.recipe();
+        if (recipe === null || this.qrDialogActive) {
+            return;
+        }
+        const url = this.publicRecipeUrl(recipe);
+        if (url === undefined) {
+            return;
+        }
+
+        this.qrDialogActive = true;
+        try {
+            const { PublicRecipeQrDialogComponent } = await import('../../dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog');
+            if (!this.isCurrentRecipe(recipe)) {
+                return;
+            }
+            const dialog = this.dialogs.open(PublicRecipeQrDialogComponent, { size: 'sm', data: { url } });
+            this.closeQrDialog = (): void => {
+                dialog.close();
+            };
+            await firstValueFrom(dialog.afterClosed(), { defaultValue: undefined });
+        } catch {
+            if (this.isCurrentRecipe(recipe)) {
+                this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
+            }
+        } finally {
+            this.closeQrDialog = undefined;
+            this.qrDialogActive = false;
+        }
+    }
+
+    private publicRecipeUrl(recipe: PublicRecipe): string | undefined {
+        const origin = this.browser.getOrigin();
+        return origin === undefined ? undefined : `${origin}/explore/${recipe.id}`;
     }
 
     protected retry(): void {

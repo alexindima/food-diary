@@ -978,14 +978,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "7cd8463466e027b0579b86e3d79d2064007b0d93c8cfe6e74f01441d1098c2b1",
-          "reviewReason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change."
+          "sha256": "5af6509603429c2b1987cd8ed1f3c64139338e6398413f6f5afe3efa654067ad",
+          "reviewReason": "Reviewed the package manifest change. It adds angularx-qrcode for the on-demand public recipe dialog. The frontend build, i18n, and Playwright commands cited by the workflow retain their current definitions."
         }
       ],
-      "reason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change.",
+      "reason": "Reviewed the package manifest change. It adds angularx-qrcode for the on-demand public recipe dialog. The frontend build, i18n, and Playwright commands cited by the workflow retain their current definitions.",
       "baseRef": "HEAD",
-      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
-      "reviewedAtUtc": "2026-11-22T13:35:22.2130598Z"
+      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
+      "reviewedAtUtc": "2026-11-22T23:13:11.1137146Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
