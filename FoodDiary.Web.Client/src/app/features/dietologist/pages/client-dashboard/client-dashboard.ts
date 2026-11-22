@@ -101,10 +101,21 @@ const PERIOD_PRESET_DAYS = {
     month: 30,
 } as const;
 
-type DateFilterFormModel = {
-    dateFrom: string;
-    dateTo: string;
-};
+type DashboardPeriod<T> = { dateFrom: T; dateTo: T };
+type DateFilterFormModel = DashboardPeriod<string>;
+type CalendarDay = { year: number; monthIndex: number; day: number };
+
+function toCalendarDay(date: Date): CalendarDay {
+    return { year: date.getFullYear(), monthIndex: date.getMonth(), day: date.getDate() };
+}
+
+function toLocalDate({ year, monthIndex, day }: CalendarDay): Date {
+    return new Date(year, monthIndex, day);
+}
+
+function toCalendarPeriod({ dateFrom, dateTo }: DashboardPeriod<Date>): DashboardPeriod<CalendarDay> {
+    return { dateFrom: toCalendarDay(dateFrom), dateTo: toCalendarDay(dateTo) };
+}
 
 type ClientDashboardDetails = {
     dashboard: DietologistDashboardSnapshot | null;
@@ -190,8 +201,9 @@ export class ClientDashboardComponent {
     protected readonly openDiscussionId = signal<string | null>(null);
     protected readonly error = signal<string | null>(null);
     protected readonly sectionLoadError = signal<string | null>(null);
-    protected readonly selectedDateTo = signal(formatDateInputValue(new Date()));
-    protected readonly selectedDateFrom = signal(formatDateInputValue(this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1))));
+    private readonly selectedPeriod = signal(toCalendarPeriod(this.recentPeriod(DEFAULT_PERIOD_DAYS)));
+    protected readonly selectedDateFrom = computed(() => formatDateInputValue(toLocalDate(this.selectedPeriod().dateFrom)));
+    protected readonly selectedDateTo = computed(() => formatDateInputValue(toLocalDate(this.selectedPeriod().dateTo)));
     protected readonly dateFilterModel = signal<DateFilterFormModel>({
         dateFrom: this.selectedDateFrom(),
         dateTo: this.selectedDateTo(),
@@ -468,20 +480,20 @@ export class ClientDashboardComponent {
 
     private async applyDateFilterAsync(): Promise<void> {
         const client = this.client();
-        const nextPeriod = this.getPeriodFromForm();
+        const draft = this.dateFilterModel();
+        const nextPeriod = this.parsePeriod(draft);
         const skipUnchangedPeriod = this.detailsLoading() || this.dashboard() !== null;
         if (
             client === null ||
             nextPeriod === null ||
             this.dateFilterForm().invalid() ||
-            (skipUnchangedPeriod && nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
+            (skipUnchangedPeriod && draft.dateFrom === this.selectedDateFrom() && draft.dateTo === this.selectedDateTo())
         ) {
             this.dateFilterForm().markAsTouched();
             return;
         }
 
-        this.selectedDateFrom.set(nextPeriod.dateFrom);
-        this.selectedDateTo.set(nextPeriod.dateTo);
+        this.selectedPeriod.set(toCalendarPeriod(nextPeriod));
         await this.reloadDashboardAsync(client);
     }
 
@@ -494,14 +506,11 @@ export class ClientDashboardComponent {
     }
 
     protected showRecentDays(days: number): void {
-        const dateTo = new Date();
-        const dateFrom = this.addDays(dateTo, -(days - 1));
-        this.applyPeriod(formatDateInputValue(dateFrom), formatDateInputValue(dateTo));
+        this.applyPeriod(this.recentPeriod(days));
     }
 
     protected showToday(): void {
-        const today = formatDateInputValue(new Date());
-        this.applyPeriod(today, today);
+        this.showRecentDays(1);
     }
 
     protected loadMoreMeals(): void {
@@ -907,42 +916,37 @@ export class ClientDashboardComponent {
     }
 
     private shiftSelectedPeriod(days: number): void {
-        const period = this.getSelectedPeriodValue();
-        const nextFrom = formatDateInputValue(this.addDays(period.dateFrom, days));
-        const nextTo = formatDateInputValue(this.addDays(period.dateTo, days));
-        this.applyPeriod(nextFrom, nextTo);
+        const { dateFrom, dateTo } = this.getSelectedPeriodValue();
+        this.applyPeriod({ dateFrom: this.addDays(dateFrom, days), dateTo: this.addDays(dateTo, days) });
     }
 
-    private applyPeriod(dateFrom: string, dateTo: string): void {
-        this.dateFilterModel.set({ dateFrom, dateTo });
+    private applyPeriod(period: DashboardPeriod<Date>): void {
+        this.dateFilterModel.set({ dateFrom: formatDateInputValue(period.dateFrom), dateTo: formatDateInputValue(period.dateTo) });
+        this.selectedPeriod.set(toCalendarPeriod(period));
         const client = this.client();
-        if (client === null) {
-            this.selectedDateFrom.set(dateFrom);
-            this.selectedDateTo.set(dateTo);
-            return;
+        if (client !== null) {
+            this.reloadDashboard(client);
         }
-
-        this.selectedDateFrom.set(dateFrom);
-        this.selectedDateTo.set(dateTo);
-        this.reloadDashboard(client);
     }
 
-    private getSelectedPeriodValue(): { dateFrom: Date; dateTo: Date } {
-        return {
-            dateFrom: parseLocalDateInputValue(this.selectedDateFrom()) ?? this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1)),
-            dateTo: parseLocalDateInputValue(this.selectedDateTo()) ?? new Date(),
-        };
+    private recentPeriod(days: number): DashboardPeriod<Date> {
+        const dateTo = new Date();
+        return { dateFrom: this.addDays(dateTo, -(days - 1)), dateTo };
     }
 
-    private getPeriodFromForm(): { dateFrom: string; dateTo: string } | null {
-        const { dateFrom, dateTo } = this.dateFilterModel();
+    private getSelectedPeriodValue(): DashboardPeriod<Date> {
+        const { dateFrom, dateTo } = this.selectedPeriod();
+        return { dateFrom: toLocalDate(dateFrom), dateTo: toLocalDate(dateTo) };
+    }
+
+    private parsePeriod({ dateFrom, dateTo }: DateFilterFormModel): DashboardPeriod<Date> | null {
         const parsedFrom = parseLocalDateInputValue(dateFrom);
         const parsedTo = parseLocalDateInputValue(dateTo);
         if (parsedFrom === null || parsedTo === null || parsedFrom > parsedTo) {
             return null;
         }
 
-        return { dateFrom, dateTo };
+        return { dateFrom: parsedFrom, dateTo: parsedTo };
     }
 
     private getSelectedPeriodLength(): number {
@@ -1010,10 +1014,11 @@ export class ClientDashboardComponent {
                 const filters = devRecord(input, ['dateFrom', 'dateTo', 'timeZone']);
                 const dateFrom = devDay(filters['dateFrom']);
                 const dateTo = devDay(filters['dateTo']);
-                if (filters['timeZone'] !== new Intl.DateTimeFormat().resolvedOptions().timeZone || dateFrom > dateTo) {
+                const period = this.parsePeriod({ dateFrom, dateTo });
+                if (period === null || filters['timeZone'] !== new Intl.DateTimeFormat().resolvedOptions().timeZone) {
                     throw new DevelopmentToolError('Use the current browser timezone and an ordered calendar range.');
                 }
-                this.applyPeriod(dateFrom, dateTo);
+                this.applyPeriod(period);
                 return;
             },
         });

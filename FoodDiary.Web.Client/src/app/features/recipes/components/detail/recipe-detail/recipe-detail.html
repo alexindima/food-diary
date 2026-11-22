@@ -30,13 +30,7 @@
     </header>
 
     <div class="recipe-detail fd-stack fd-gap-lg">
-        <fd-ui-tabs
-            #detailTabs
-            [ariaLabel]="recipe.name"
-            [tabs]="tabs"
-            [selectedValue]="activeTab"
-            (selectedValueChange)="onTabChange($event)"
-        />
+        <fd-ui-tabs #detailTabs [ariaLabel]="recipe.name" [tabs]="tabs" [(selectedValue)]="activeTab" />
         <div
             role="tabpanel"
             tabindex="0"

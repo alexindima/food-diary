@@ -12,7 +12,11 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import { TelegramDiaryTransferComponent } from './telegram-diary-transfer';
 
-type VerificationState = 'pending' | 'success' | 'invalid' | 'error' | 'cancelled';
+type VerificationLink = Readonly<{ userId: string; token: string }>;
+type VerificationState =
+    | { kind: 'pending' | 'success' | 'cancelled'; errorMessage: null }
+    | { kind: 'invalid'; errorMessage: string }
+    | { kind: 'error'; errorMessage: string; link: VerificationLink };
 
 @Component({
     selector: 'fd-email-verification',
@@ -30,9 +34,10 @@ export class EmailVerificationComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly location = inject(Location);
 
-    protected readonly state = signal<VerificationState>('pending');
-    protected readonly isBusy = signal(false);
-    protected readonly errorMessage = signal<string | null>(null);
+    private readonly status = signal<VerificationState>({ kind: 'pending', errorMessage: null });
+    protected readonly state = computed(() => this.status().kind);
+    protected readonly isBusy = computed(() => this.state() === 'pending');
+    protected readonly errorMessage = computed(() => this.status().errorMessage);
     protected readonly transferTicket = signal<string | null>(null);
     protected readonly emailToken = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
     protected readonly isBackupEmail = computed(() => this.emailToken().token?.startsWith('telegram-backup.') === true);
@@ -54,15 +59,10 @@ export class EmailVerificationComponent {
     }
 
     protected onRetry(): void {
-        if (this.isBusy()) {
-            return;
+        const status = this.status();
+        if (status.kind === 'error') {
+            this.verify(status.link);
         }
-        const { userId, token } = this.emailToken();
-        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
-            this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
-            return;
-        }
-        this.verify(userId, token);
     }
 
     protected onBackToLogin(): void {
@@ -79,7 +79,7 @@ export class EmailVerificationComponent {
 
     protected onKeepDiariesSeparate(): void {
         this.transferTicket.set(null);
-        this.state.set('cancelled');
+        this.status.set({ kind: 'cancelled', errorMessage: null });
     }
 
     protected async onUseAnotherEmailAsync(): Promise<void> {
@@ -102,8 +102,7 @@ export class EmailVerificationComponent {
         this.emailToken.set({ userId, token });
 
         if (userId === null || token === null || userId.length === 0 || token.length === 0) {
-            this.state.set('invalid');
-            this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
+            this.status.set({ kind: 'invalid', errorMessage: this.translateService.instant('AUTH.VERIFY.ERROR_INVALID') });
             return;
         }
         if (this.isBackupEmail()) {
@@ -113,38 +112,33 @@ export class EmailVerificationComponent {
             });
         }
 
-        this.verify(userId, token);
+        this.verify({ userId, token });
     }
 
-    private verify(userId: string, token: string): void {
-        this.isBusy.set(true);
-        this.state.set('pending');
-        this.errorMessage.set(null);
+    private verify(link: VerificationLink): void {
+        this.status.set({ kind: 'pending', errorMessage: null });
+        const { userId, token } = link;
 
         const verification = this.isBackupEmail()
             ? this.authService.verifyTelegramBackupEmail(userId, token)
             : this.authService.verifyEmail(userId, token).pipe(map(() => null));
         verification.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: ticket => {
-                this.isBusy.set(false);
-                this.state.set('success');
+                this.status.set({ kind: 'success', errorMessage: null });
                 if (ticket !== null) {
                     this.transferTicket.set(ticket);
                 }
             },
             error: (error: unknown) => {
-                this.isBusy.set(false);
                 const invalidToken = getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.InvalidToken';
-                this.state.set(invalidToken ? 'invalid' : 'error');
-                this.errorMessage.set(
-                    this.translateService.instant(
-                        this.isBackupEmail()
-                            ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR'
-                            : invalidToken
-                              ? 'AUTH.VERIFY.ERROR_INVALID'
-                              : 'AUTH.VERIFY.ERROR_GENERIC',
-                    ),
+                const errorMessage = this.translateService.instant(
+                    this.isBackupEmail()
+                        ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR'
+                        : invalidToken
+                          ? 'AUTH.VERIFY.ERROR_INVALID'
+                          : 'AUTH.VERIFY.ERROR_GENERIC',
                 );
+                this.status.set(invalidToken ? { kind: 'invalid', errorMessage } : { kind: 'error', errorMessage, link });
             },
         });
     }

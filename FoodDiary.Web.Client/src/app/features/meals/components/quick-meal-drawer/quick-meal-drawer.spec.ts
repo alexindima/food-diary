@@ -16,6 +16,7 @@ import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import { servingMassFromObservation, UNKNOWN_SERVING_MASS } from '../../lib/recipe-serving/recipe-display-amount';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
+import type { MealManualItemDialogResult } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 import { QuickMealDrawerComponent } from './quick-meal-drawer';
 
 const PRODUCT_AMOUNT = 150;
@@ -169,7 +170,13 @@ describe('QuickMealDrawerComponent edit', () => {
         const { component, quickService } = await setupComponentAsync([
             { key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT },
         ]);
-        mockEditDialogResult(createItemValue(MealSourceType.Product, product, null, PRODUCT_AMOUNT));
+        mockEditDialogResult({
+            sourceType: MealSourceType.Product,
+            product,
+            recipe: null,
+            amount: PRODUCT_AMOUNT,
+            recipeMass: UNKNOWN_SERVING_MASS,
+        });
 
         component['edit'](quickService.items()[0]);
         await flushPromisesAsync();
@@ -187,7 +194,7 @@ describe('QuickMealDrawerComponent edit', () => {
             { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS },
         ]);
         mealManageFacade.prepareRecipeItemAsync.mockResolvedValue(createPreparedRecipeItem());
-        mockEditDialogResult(createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS));
+        mockEditDialogResult(createRecipeDialogResult(RECIPE_GRAMS));
 
         component['edit'](quickService.items()[0]);
         await flushPromisesAsync();
@@ -343,7 +350,7 @@ describe('QuickMealDrawerComponent edit ownership', () => {
         component['edit'](original);
         await flushPromisesAsync();
         quickService.items.set([{ ...original, amount: UPDATED_RECIPE_SERVINGS }]);
-        closed.next(createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS));
+        closed.next(createRecipeDialogResult(RECIPE_GRAMS));
         await flushPromisesAsync();
 
         expect(quickService.updateItem).not.toHaveBeenCalled();
@@ -486,7 +493,7 @@ it('keeps a pending recipe edit when the user removes a different draft row', as
     expect(save.disabled).toBe(true);
 
     const updatedGrams = (RECIPE_GRAMS * UPDATED_RECIPE_SERVINGS) / RECIPE_SERVINGS;
-    closed.next(createItemValue(MealSourceType.Recipe, null, recipe, updatedGrams));
+    closed.next(createRecipeDialogResult(updatedGrams));
     closed.complete();
     await flushPromisesAsync();
     fixture.detectChanges();
@@ -576,7 +583,7 @@ async function flushPromisesAsync(): Promise<void> {
     await waitForAsyncTasksAsync();
 }
 
-function mockEditDialogResult(item: MealItemFormValues | null): void {
+function mockEditDialogResult(item: MealManualItemDialogResult | null): void {
     TestBed.inject(FdUiDialogService).open = vi.fn().mockReturnValue({ afterClosed: () => of(item), close: vi.fn() });
 }
 
@@ -591,14 +598,14 @@ function deferRecipeWeight(facade: MealManageFacadeMock): Subject<MealItemFormVa
 }
 
 function createPreparedRecipeItem(): MealItemFormValues {
-    return createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS);
+    return createRecipeDialogResult(RECIPE_GRAMS);
 }
 
 function mockPendingEditDialog(): {
-    closed: Subject<MealItemFormValues | null>;
+    closed: Subject<MealManualItemDialogResult | null>;
     close: ReturnType<typeof vi.fn>;
 } {
-    const closed = new Subject<MealItemFormValues | null>();
+    const closed = new Subject<MealManualItemDialogResult | null>();
     const close = vi.fn(() => {
         closed.next(null);
     });
@@ -606,17 +613,12 @@ function mockPendingEditDialog(): {
     return { closed, close };
 }
 
-function createItemValue(
-    sourceType: MealSourceType,
-    selectedProduct: Product | null,
-    selectedRecipe: Recipe | null,
-    amount: number,
-): MealItemFormValues {
+function createRecipeDialogResult(amount: number): MealManualItemDialogResult {
     return {
-        sourceType,
-        product: selectedProduct,
-        recipe: selectedRecipe,
+        sourceType: MealSourceType.Recipe,
+        product: null,
+        recipe,
         amount,
-        recipeMass: selectedRecipe === null ? UNKNOWN_SERVING_MASS : RECIPE_MASS,
+        recipeMass: RECIPE_MASS,
     };
 }

@@ -77,7 +77,11 @@ import {
 } from './meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
 import { MEAL_MANAGE_TOUR } from './meal-manage-tour';
-import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog';
+import {
+    MealManualItemDialogComponent,
+    type MealManualItemDialogData,
+    type MealManualItemDialogResult,
+} from './meal-manual-item-dialog/meal-manual-item-dialog';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
 
@@ -476,10 +480,11 @@ export class MealManageFormComponent implements UnsavedEditor {
     protected openManualItemDialog(index: number): void {
         const meal = this.meal();
         const item = this.items[index];
-        const dialog = this.fdDialogService.open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(
+        const dialog = this.fdDialogService.open<
             MealManualItemDialogComponent,
-            { preset: 'form', data: { item } },
-        );
+            MealManualItemDialogData,
+            MealManualItemDialogResult | null
+        >(MealManualItemDialogComponent, { preset: 'form', data: { item } });
         const closeDialog = (): void => {
             dialog.close(null);
         };

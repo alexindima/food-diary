@@ -88,6 +88,7 @@ describe('Quick meal product quantities in a mixed draft', () => {
         expect(productRow.querySelector('img')?.getAttribute('src')).toBe('assets/images/stubs/receipt.png');
         expect(productRow.querySelector('.quick-meal__meta')?.textContent).toContain(`${PRODUCT_PORTION_ML} GENERAL.UNITS.ML`);
 
+        productEdit.focus();
         productEdit.click();
         const dialog = await visibleEditorAsync();
         expect(amountInput(dialog).valueAsNumber).toBe(PRODUCT_PORTION_ML);
@@ -96,6 +97,9 @@ describe('Quick meal product quantities in a mixed draft', () => {
         await vi.waitFor(() => {
             fixture.detectChanges();
             expect(host.textContent).toContain(`${EDITED_PRODUCT_ML} GENERAL.UNITS.ML`);
+            expect(document.activeElement, 'Quick Meal Edit regains focus after saving the product').toBe(
+                host.querySelector(`button[aria-label="Edit ${PRODUCT.name}"]`),
+            );
         });
 
         draftSaveButton(host).click();
@@ -194,6 +198,7 @@ describe('Quick meal serving mass after a temporary lookup failure', () => {
             }),
         );
 
+        editButton(host).focus();
         editButton(host).click();
         const fallback = await visibleEditorAsync();
         expect(amountInput(fallback).getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
@@ -202,6 +207,7 @@ describe('Quick meal serving mass after a temporary lookup failure', () => {
         await vi.waitFor(() => {
             fixture.detectChanges();
             expect(editButton(host).disabled).toBe(false);
+            expect(document.activeElement).toBe(editButton(host));
         });
 
         editButton(host).click();

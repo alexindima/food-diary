@@ -186,9 +186,10 @@ describe('RecipeDetailComponent summary state', () => {
         expect(component['tabs'][1].value).toBe('cook');
     });
 
-    it('links each tab to its labelled panel while only the selected panel is visible', () => {
+    it('links tabs to their panels and selects exactly one with click and keyboard', () => {
         const host = fixture.nativeElement as HTMLElement;
         const tabs = [...host.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+        const activePanel = (): HTMLElement | null => host.querySelector('[role="tabpanel"]:not([hidden])');
         for (const tab of tabs) {
             const panel = host.querySelector<HTMLElement>(`[id="${tab.getAttribute('aria-controls')}"]`);
             expect(panel?.getAttribute('role')).toBe('tabpanel');
@@ -198,17 +199,18 @@ describe('RecipeDetailComponent summary state', () => {
         tabs[1].click();
         fixture.detectChanges();
         expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(1);
-        expect(host.querySelector('[role="tabpanel"]:not([hidden])')?.getAttribute('aria-labelledby')).toBe(tabs[1].id);
-    });
+        expect(activePanel()?.getAttribute('aria-labelledby')).toBe(tabs[1].id);
+        expect(activePanel()?.querySelector('fd-recipe-cook-mode')).not.toBeNull();
 
-    it('should change active tab', () => {
-        expect(component['activeTab']).toBe('summary');
+        tabs[1].focus();
+        tabs[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
 
-        component['onTabChange']('cook');
-        expect(component['activeTab']).toBe('cook');
-
-        component['onTabChange']('summary');
-        expect(component['activeTab']).toBe('summary');
+        expect(document.activeElement).toBe(tabs[0]);
+        expect(tabs[0].getAttribute('aria-selected')).toBe('true');
+        expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(1);
+        expect(activePanel()?.getAttribute('aria-labelledby')).toBe(tabs[0].id);
+        expect(activePanel()?.querySelector('fd-recipe-detail-summary')).not.toBeNull();
     });
 });
 

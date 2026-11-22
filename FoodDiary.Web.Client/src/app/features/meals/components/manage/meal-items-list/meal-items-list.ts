@@ -50,7 +50,7 @@ export class MealItemsListComponent {
                     index,
                     formItem: item,
                     imageUrl: this.getManualItemImageUrl(item),
-                    icon: this.getItemSourceIcon(item),
+                    icon: item.sourceType === MealSourceType.Recipe ? 'menu_book' : 'restaurant',
                     sourceName: this.getItemSourceName(item),
                     amountLabel: this.formatManualAmount(item),
                     caloriesLabel: formatMealManageMacro(totals.calories, 'GENERAL.UNITS.KCAL', this.translateService),
@@ -76,16 +76,6 @@ export class MealItemsListComponent {
         }
 
         return this.translateService.instant(isRecipe ? 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe' : 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product');
-    }
-
-    private getItemSourceIcon(item: MealItemFormValues): string {
-        if (item.sourceType === MealSourceType.Recipe && item.recipe !== null) {
-            return 'menu_book';
-        }
-        if (item.sourceType === MealSourceType.Product && item.product !== null) {
-            return 'restaurant';
-        }
-        return 'search';
     }
 
     private getManualItemTotals(item: MealItemFormValues): NutritionTotals {

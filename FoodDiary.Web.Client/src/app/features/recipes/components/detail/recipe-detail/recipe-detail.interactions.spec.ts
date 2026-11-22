@@ -123,6 +123,37 @@ it('allows a used recipe to pass its localized nested servings to the shopping l
     http.verify();
 });
 
+it('localizes the summary quantity of a nested recipe and keeps the authored amount text', async () => {
+    const stored = recipe();
+    const halfServing = 0.5;
+    const authoredAmount = '1/2 ч. л.';
+    stored.steps[0].ingredients = [
+        recipeIngredientFromStored({
+            id: 'cooked-rice-ingredient',
+            nestedRecipeId: 'cooked-rice',
+            nestedRecipeName: 'Cooked rice',
+            amount: halfServing,
+        }),
+        recipeIngredientFromStored({ id: 'salt-ingredient', textName: 'Salt', amountText: authoredAmount, amount: 0 }),
+    ];
+    const { fixture, host, http } = await renderDetailsAsync(stored);
+    http.expectOne({ method: 'GET', url: `${FAVORITES_API}/check/${RECIPE_ID}` }).flush(false);
+    const amounts = (): string[] =>
+        Array.from(
+            host.querySelectorAll('[role="tabpanel"]:not([hidden]) fd-recipe-detail-ingredient-preview .recipe-detail__list-row strong'),
+            amount => amount.textContent.replaceAll(/\s+/gu, ' ').trim(),
+        );
+
+    expect(amounts()).toEqual(['0.5 portions', authoredAmount]);
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('ru', { RECIPE_DETAIL: { SUMMARY: { SERVINGS_FEW: 'порции' } } });
+    await firstValueFrom(translate.use('ru'));
+    fixture.detectChanges();
+
+    expect(amounts()).toEqual(['0,5 порции', authoredAmount]);
+    http.verify();
+});
+
 it('favorites a public recipe once before repaint and cancels the obsolete status check', async () => {
     const shared = recipe({ isOwnedByCurrentUser: false, visibility: RecipeVisibility.Public });
     const { fixture, host, close, http } = await renderDetailsAsync(shared);

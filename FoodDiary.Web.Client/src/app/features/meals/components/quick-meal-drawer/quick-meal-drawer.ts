@@ -1,4 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    Injector,
+    input,
+    signal,
+    untracked,
+    viewChildren,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -23,7 +37,11 @@ import { recipeServingsFromInput } from '../../lib/recipe-serving/recipe-display
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from '../manage/meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions } from '../manage/meal-manage-lib/meal-manage-options.mapper';
-import { MealManualItemDialogComponent, type MealManualItemDialogData } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
+import {
+    MealManualItemDialogComponent,
+    type MealManualItemDialogData,
+    type MealManualItemDialogResult,
+} from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 
 type QuickMealItemView = {
     item: QuickMealItem;
@@ -41,7 +59,7 @@ type QuickMealToggleView = {
 
 type QuickMealEditOperation = {
     item: QuickMealItem;
-    dialogRef?: FdUiDialogRef<MealManualItemDialogComponent, MealItemFormValues | null>;
+    dialogRef?: FdUiDialogRef<MealManualItemDialogComponent, MealManualItemDialogResult | null>;
 };
 
 @Component({
@@ -57,8 +75,11 @@ export class QuickMealDrawerComponent {
     private readonly quickService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly mealManageFacade = inject(MealManageFacade);
+    private readonly editActions = viewChildren<FdUiButtonComponent>('editAction');
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
     private activeEdit: QuickMealEditOperation | undefined;
 
@@ -238,6 +259,7 @@ export class QuickMealDrawerComponent {
     }
 
     private async openEditDialogAsync(operation: QuickMealEditOperation): Promise<void> {
+        let focusKey = operation.item.key;
         try {
             const dialogItem = await this.createDialogItemAsync(operation.item);
             if (!this.isCurrentEdit(operation)) {
@@ -246,22 +268,44 @@ export class QuickMealDrawerComponent {
             operation.dialogRef = this.fdDialogService.open<
                 MealManualItemDialogComponent,
                 MealManualItemDialogData,
-                MealItemFormValues | null
+                MealManualItemDialogResult | null
             >(MealManualItemDialogComponent, { preset: 'form', data: { item: dialogItem } });
             const result = await firstValueFrom(operation.dialogRef.afterClosed());
             if (result === null || result === undefined || !this.isCurrentEdit(operation)) {
                 return;
             }
-            const updatedItem = this.toQuickMealItem(result);
-            if (updatedItem !== null) {
-                this.quickService.updateItem(operation.item.key, updatedItem);
+            const source = result.product ?? result.recipe;
+            if (source.id.length === 0) {
+                return;
             }
+            const updated = this.toQuickMealItem(result);
+            this.quickService.updateItem(operation.item.key, updated);
+            focusKey = updated.key;
         } finally {
             if (this.activeEdit === operation) {
                 this.activeEdit = undefined;
                 this.editingItemKey.set(null);
+                if (operation.dialogRef !== undefined) {
+                    this.restoreEditFocusAfterRender(focusKey);
+                }
             }
         }
+    }
+
+    private restoreEditFocusAfterRender(key: string): void {
+        afterNextRender(
+            () => {
+                if (this.activeEdit !== undefined || this.document.activeElement !== this.document.body) {
+                    return;
+                }
+
+                const index = this.items().findIndex(item => item.key === key);
+                if (index !== -1) {
+                    this.editActions().at(index)?.focus();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     private isCurrentEdit(operation: QuickMealEditOperation): boolean {
@@ -283,33 +327,21 @@ export class QuickMealDrawerComponent {
         return this.mealManageFacade.prepareRecipeItemAsync(item.recipe, recipeServingsFromStored(item.amount));
     }
 
-    private toQuickMealItem(item: MealItemFormValues): QuickMealItem | null {
-        const amount = item.amount ?? 0;
-
+    private toQuickMealItem(item: MealManualItemDialogResult): QuickMealItem {
         if (item.sourceType === MealSourceType.Product) {
-            const product = item.product;
-            if (product?.id === undefined || product.id.length === 0) {
-                return null;
-            }
-
             return {
-                key: `product-${product.id}`,
+                key: `product-${item.product.id}`,
                 type: 'product',
-                product,
-                amount,
+                product: item.product,
+                amount: item.amount,
             };
         }
 
-        const recipe = item.recipe;
-        if (recipe?.id === undefined || recipe.id.length === 0) {
-            return null;
-        }
-
         return {
-            key: `recipe-${recipe.id}`,
+            key: `recipe-${item.recipe.id}`,
             type: 'recipe',
-            recipe,
-            amount: recipeServingsFromInput(amount, item.recipeMass),
+            recipe: item.recipe,
+            amount: recipeServingsFromInput(item.amount, item.recipeMass),
         };
     }
 }

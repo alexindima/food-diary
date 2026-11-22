@@ -3915,7 +3915,7 @@
       "role": "Component",
       "selector": "fd-email-verification",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.ts",
-      "line": 24
+      "line": 28
     },
     {
       "name": "TelegramDiaryTransferComponent",
@@ -3936,7 +3936,7 @@
       "role": "Component",
       "selector": "fd-password-reset",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts",
-      "line": 49
+      "line": 50
     },
     {
       "name": "RequiredPasswordChangeComponent",
@@ -4433,7 +4433,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 155
+      "line": 166
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -5077,14 +5077,14 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 111
+      "line": 115
     },
     {
       "name": "MealManualItemDialogComponent",
       "role": "Component",
       "selector": "fd-meal-manual-item-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts",
-      "line": 48
+      "line": 53
     },
     {
       "name": "MealNutritionSidebarComponent",
@@ -5105,7 +5105,7 @@
       "role": "Component",
       "selector": "fd-quick-meal-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
-      "line": 54
+      "line": 72
     },
     {
       "name": "MealFavoritesPickerComponent",
@@ -6001,7 +6001,7 @@
       "role": "Component",
       "selector": "fd-recipe-detail-ingredient-preview",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "RecipeDetailActionResult",

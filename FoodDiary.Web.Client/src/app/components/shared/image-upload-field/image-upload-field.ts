@@ -193,7 +193,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onFileSelected(fileInput: HTMLInputElement): void {
-        void this.handleFilesAsync(Array.from(fileInput.files ?? []));
+        void this.handleFilesAsync(fileInput.files);
         fileInput.value = '';
     }
 
@@ -204,10 +204,11 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
         this.isDragging.set(false);
-        void this.handleFilesAsync(Array.from(event.dataTransfer?.files ?? []));
+        void this.handleFilesAsync(event.dataTransfer?.files);
     }
 
-    private async handleFilesAsync(files: File[]): Promise<void> {
+    private async handleFilesAsync(fileList: FileList | null | undefined): Promise<void> {
+        const files = Array.from(fileList ?? []);
         if (this.disabled() || this.isUploading() || files.length === 0) {
             return;
         }

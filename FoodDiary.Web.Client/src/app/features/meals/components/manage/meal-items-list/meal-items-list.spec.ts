@@ -236,12 +236,16 @@ describe('MealItemsListComponent archived sources without display names', () => 
     it('identifies both sources and keeps their original row actions after omitting an empty draft row', async () => {
         const recipeRow = createItemState({
             sourceType: MealSourceType.Recipe,
-            recipe: { ...createRecipe(), name: '  ' },
+            recipe: { ...createRecipe(), name: '  ', imageUrl: null },
             amount: RECIPE_AMOUNT_GRAMS,
             recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT),
         });
         const { component, fixture } = await setupComponentAsync({
-            items: [createItemState(), createItemState({ product: { ...createProduct(), name: '' }, amount: PRODUCT_AMOUNT }), recipeRow],
+            items: [
+                createItemState(),
+                createItemState({ product: { ...createProduct(), name: '', imageUrl: null }, amount: PRODUCT_AMOUNT }),
+                recipeRow,
+            ],
         });
         const edit = vi.fn();
         const remove = vi.fn<(rendered: MealItemFormValues) => void>();
@@ -259,6 +263,10 @@ describe('MealItemsListComponent archived sources without display names', () => 
         fixture.detectChanges();
 
         expect(sourceLabels()).toEqual(['Продукт', 'Рецепт']);
+        expect(rows.map(row => row.querySelector('.meal-manage__ai-summary-image fd-ui-icon')?.textContent.trim())).toEqual([
+            'restaurant',
+            'menu_book',
+        ]);
         expect(rows.map(row => row.querySelector('.meal-manage__ai-summary-amount')?.textContent.trim())).toEqual([
             '150 GENERAL.UNITS.G',
             '120 GENERAL.UNITS.G',

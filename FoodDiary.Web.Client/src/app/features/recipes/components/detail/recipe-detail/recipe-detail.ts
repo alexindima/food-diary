@@ -66,7 +66,7 @@ export class RecipeDetailComponent {
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
         { value: 'cook', labelKey: 'RECIPE_DETAIL.TABS.COOK' },
     ];
-    protected activeTab: 'summary' | 'cook' = 'summary';
+    protected activeTab = 'summary';
     protected readonly totalTime: number | null;
     protected readonly ingredientCount: number;
     protected readonly isDeleteDisabled: boolean;
@@ -113,12 +113,6 @@ export class RecipeDetailComponent {
 
     protected close(): void {
         this.recipeDetailFacade.close(this.recipe);
-    }
-
-    protected onTabChange(tab: string): void {
-        if (tab === 'summary' || tab === 'cook') {
-            this.activeTab = tab;
-        }
     }
 
     protected onEdit(): void {

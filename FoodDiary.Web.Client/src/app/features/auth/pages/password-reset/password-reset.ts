@@ -26,6 +26,7 @@ import { AuthDialogComponent } from '../../dialogs/auth-dialog/auth-dialog';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid';
+type ResetCredentials = Pick<ConfirmPasswordResetRequest, 'userId' | 'token'>;
 const ERROR_FIELDS = ['password', 'confirmPassword'] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
@@ -56,11 +57,11 @@ export class PasswordResetComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
-    protected readonly state = signal<ResetState>('ready');
+    private readonly resetCredentials = signal<ResetCredentials | null>(null);
+    protected readonly state = computed<ResetState>(() => (this.resetCredentials() === null ? 'invalid' : 'ready'));
     protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
-    protected readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
     private readonly languageVersion = signal(0);
     protected readonly fieldErrors = computed<FieldErrors>(() => {
         this.languageVersion();
@@ -96,7 +97,7 @@ export class PasswordResetComponent {
     );
 
     public constructor() {
-        this.resolveToken();
+        this.resolveResetCredentials();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -108,14 +109,8 @@ export class PasswordResetComponent {
 
     private async submitAsync(): Promise<void> {
         this.form().markAsTouched();
-        if (this.state() !== 'ready' || this.form().invalid() || this.isSubmitting()) {
-            return;
-        }
-
-        const { userId, token } = this.token();
-        if (userId === null || token === null || userId.length === 0 || token.length === 0) {
-            this.state.set('invalid');
-            this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
+        const credentials = this.resetCredentials();
+        if (credentials === null || this.form().invalid() || this.isSubmitting()) {
             return;
         }
 
@@ -123,8 +118,7 @@ export class PasswordResetComponent {
         this.errorMessage.set(null);
 
         const request = new ConfirmPasswordResetRequest({
-            userId,
-            token,
+            ...credentials,
             newPassword: this.formModel().password,
         });
 
@@ -135,7 +129,7 @@ export class PasswordResetComponent {
         } catch (error: unknown) {
             this.isSubmitting.set(false);
             if (getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
-                this.state.set('invalid');
+                this.resetCredentials.set(null);
                 this.formModel.set({ password: '', confirmPassword: '' });
                 this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
             } else {
@@ -163,21 +157,21 @@ export class PasswordResetComponent {
         };
     }
 
-    private resolveToken(): void {
+    private resolveResetCredentials(): void {
         const fragmentParams = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
         const queryParams = this.route.snapshot.queryParamMap;
         const userId = fragmentParams.get('userId') ?? this.resolveLegacyUserId(queryParams);
         const token = fragmentParams.get('token') ?? queryParams.get('token');
-        this.token.set({ userId, token });
 
         if (fragmentParams.has('token') || fragmentParams.has('userId')) {
             this.document.defaultView?.history.replaceState({}, '', this.document.location.pathname + this.document.location.search);
         }
 
         if (userId === null || token === null || userId.length === 0 || token.length === 0) {
-            this.state.set('invalid');
             this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
+            return;
         }
+        this.resetCredentials.set({ userId, token });
     }
 
     private resolveLegacyUserId(queryParams: ParamMap): string | null {

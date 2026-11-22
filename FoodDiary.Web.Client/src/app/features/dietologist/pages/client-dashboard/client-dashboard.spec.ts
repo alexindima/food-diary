@@ -163,7 +163,7 @@ describe('ClientDashboardComponent rendered period controls', () => {
     });
 });
 
-describe('ClientDashboardComponent rendered recommendation and task actions', () => {
+describe('ClientDashboardComponent rendered recommendation actions', () => {
     it('uses template text and keeps it editable after an archive failure and retry', () => {
         const template: RecommendationTemplate = {
             id: entityId<'recommendation-template'>('protein-guide'),
@@ -198,8 +198,10 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
         expect(draft?.value).toBe(template.text);
         expect(draft?.disabled).toBe(false);
     });
+});
 
-    it('deduplicates task cancellation before repaint and renders the cancelled status on retry', () => {
+describe('ClientDashboardComponent task cancellation', () => {
+    it('retries task cancellation without changing other task rows', () => {
         const task: ClientTask = {
             id: entityId<'client-task'>('check-lunch'),
             dietologistUserId: entityId<'user'>('diet-1'),
@@ -212,8 +214,9 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
             createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
             statusChangedAtUtc: null,
         };
+        const otherTask = { ...task, id: entityId<'client-task'>('check-breakfast'), title: 'Check breakfast' };
         const pending = new Subject<ClientTask>();
-        dietologistService.getTasksForClient.mockReturnValueOnce(of([task]));
+        dietologistService.getTasksForClient.mockReturnValueOnce(of([task, otherTask]));
         dietologistService.cancelTask.mockReturnValueOnce(pending).mockReturnValueOnce(of({ ...task, status: 'Cancelled' }));
         createComponent('client-1');
         const host = fixture.nativeElement as HTMLElement;
@@ -227,7 +230,7 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
 
         pending.error(new Error('temporarily unavailable'));
         fixture.detectChanges();
-        expect(host.textContent).toContain('CLIENT_TASKS.STATUS.OPEN');
+        expect(cancel.closest('article')?.textContent).toContain('CLIENT_TASKS.STATUS.OPEN');
         expect(toastService.error).toHaveBeenCalledExactlyOnceWith('CLIENT_TASKS.CHANGE_ERROR');
         expect(cancel.disabled).toBe(false);
         cancel.click();
@@ -235,7 +238,11 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
 
         expect(host.textContent).toContain('CLIENT_TASKS.STATUS.CANCELLED');
         expect(cancel.isConnected).toBe(false);
-        expect(dietologistService.cancelTask).toHaveBeenCalledTimes(2);
+        expect(dietologistService.cancelTask.mock.calls).toEqual([[task.id], [task.id]]);
+        const remainingCancel = dashboardButton('CLIENT_TASKS.CANCEL');
+        expect(remainingCancel.closest('article')?.textContent).toContain(otherTask.title);
+        expect(remainingCancel.closest('article')?.textContent).toContain('CLIENT_TASKS.STATUS.OPEN');
+        expect(remainingCancel.disabled).toBe(false);
     });
 });
 
@@ -953,6 +960,40 @@ describe('ClientDashboardComponent applied period ownership', () => {
             dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, lastDayOfNextWeek),
             page: 1,
         });
+    });
+});
+
+describe('ClientDashboardComponent calendar period navigation', () => {
+    beforeEach(() => vi.useFakeTimers({ toFake: ['Date'] }));
+    afterEach(() => vi.useRealTimers());
+
+    it('shifts inclusive periods by calendar days across the spring clock change', async () => {
+        const march = 2;
+        const firstDayOfCurrentWeek = 2;
+        const lastDayOfCurrentWeek = 8;
+        const firstDayOfNextWeek = 9;
+        const lastDayOfNextWeek = 15;
+        const midday = 12;
+        vi.setSystemTime(new Date(SELECTED_YEAR, march, lastDayOfCurrentWeek, midday));
+        createComponent('client-1');
+        const original = {
+            dateFrom: new Date(SELECTED_YEAR, march, firstDayOfCurrentWeek),
+            dateTo: new Date(SELECTED_YEAR, march, lastDayOfCurrentWeek),
+            page: 1,
+        };
+        expect(getLastDashboardPeriod()).toMatchObject(original);
+
+        dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD').click();
+        await fixture.whenStable();
+        expect(getLastDashboardPeriod()).toMatchObject({
+            dateFrom: new Date(SELECTED_YEAR, march, firstDayOfNextWeek),
+            dateTo: new Date(SELECTED_YEAR, march, lastDayOfNextWeek),
+            page: 1,
+        });
+
+        dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.PREVIOUS_PERIOD').click();
+        await fixture.whenStable();
+        expect(getLastDashboardPeriod()).toMatchObject(original);
     });
 });
 
