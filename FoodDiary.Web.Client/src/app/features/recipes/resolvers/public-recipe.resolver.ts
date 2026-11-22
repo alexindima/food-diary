@@ -18,8 +18,11 @@ export const publicRecipeResolver: ResolveFn<PublicRecipePageData> = route => {
         headers.set('Cache-Control', 'no-store');
         response.headers = headers;
     }
+    // The detail route ends in :id. Its paramMap can also contain a matrix parameter named id.
+    const [recipeSegment] = route.url.slice(-1);
+    const id = entityId<'recipe'>(recipeSegment.path);
     return inject(PublicRecipeService)
-        .getById(entityId<'recipe'>(route.paramMap.get('id') ?? ''))
+        .getById(id)
         .pipe(
             map(recipe => ({ ...publicRecipeSeo(recipe), recipe, error: null })),
             catchError((error: unknown) => {

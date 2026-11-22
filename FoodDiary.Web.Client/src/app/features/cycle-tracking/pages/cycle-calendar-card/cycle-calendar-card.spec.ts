@@ -92,8 +92,10 @@ describe('CycleCalendarCardComponent', () => {
         day.click();
         fixture.detectChanges();
 
-        expect(selected).toHaveBeenCalledExactlyOnceWith('2025-04-11');
         expect(day.getAttribute('aria-selected')).toBe('true');
+
+        day.click();
+        expect(selected.mock.calls).toEqual([['2025-04-11'], ['2025-04-11']]);
     });
 
     it('keeps logged days in the calendar when an older profile has no separate episode list', () => {

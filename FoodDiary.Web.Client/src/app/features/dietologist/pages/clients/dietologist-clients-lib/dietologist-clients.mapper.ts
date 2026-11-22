@@ -1,6 +1,5 @@
-import { formatDateValue } from '../../../../../shared/lib/local-date.utils';
-import { resolveAppLocale } from '../../../../../shared/lib/locale.constants';
 import type { ClientSummary } from '../../../../../shared/models/dietologist.data';
+import { formatDietologistDate } from '../../../lib/dietologist-date.utils';
 import type { ClientCardViewModel } from './dietologist-clients.types';
 
 const INITIALS_PART_LIMIT = 2;
@@ -10,7 +9,7 @@ export function buildClientCardViewModels(clients: ClientSummary[], language: st
         client,
         title: getClientTitle(client),
         initials: getClientInitials(client),
-        connectedDateLabel: formatClientConnectedDate(client.acceptedAtUtc, language),
+        connectedDateLabel: formatDietologistDate(client.acceptedAtUtc, language),
     }));
 }
 
@@ -29,12 +28,4 @@ export function getClientInitials(client: ClientSummary): string {
         .slice(0, INITIALS_PART_LIMIT)
         .map(value => value.trim().charAt(0).toUpperCase())
         .join('');
-}
-
-export function formatClientConnectedDate(value: string, language: string): string {
-    return (
-        formatDateValue(value, resolveAppLocale(language), {
-            dateStyle: 'medium',
-        }) ?? value
-    );
 }

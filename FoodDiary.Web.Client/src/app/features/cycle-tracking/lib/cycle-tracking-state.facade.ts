@@ -2,7 +2,6 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type Observable, of, type Subscription, switchMap } from 'rxjs';
 
-import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import {
     type BleedingEntry,
@@ -162,7 +161,7 @@ export class CycleTrackingStateFacade {
             return;
         }
 
-        const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()));
+        const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), new Date());
         if (range.dateFrom > range.dateTo) {
             this.nutritionLoad.reset();
             return;

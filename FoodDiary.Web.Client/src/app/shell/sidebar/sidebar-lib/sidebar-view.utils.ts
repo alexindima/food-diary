@@ -91,11 +91,7 @@ export function getSidebarMobileSheetRouteItems(
     }
 }
 
-export function focusFirstSidebarInteractiveElement(container?: HTMLElement | null): void {
-    if (container === null || container === undefined) {
-        return;
-    }
-
+export function focusFirstSidebarInteractiveElement(container: HTMLElement): void {
     const firstInteractive = container.querySelector<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
     firstInteractive?.focus();
 }

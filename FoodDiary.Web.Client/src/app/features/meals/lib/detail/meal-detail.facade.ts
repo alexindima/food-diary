@@ -1,17 +1,18 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { catchError, type Observable, of, Subject, switchMap, takeUntil, throwError } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import type { Meal } from '../../../../shared/models/meal.data';
-import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { entityId, type MealId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 
@@ -129,42 +130,40 @@ export class MealDetailFacade {
     }
 
     private removeFavorite(meal: Meal): void {
-        if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
-            this.favoriteMealService
-                .remove(entityId<'favorite-meal'>(this.favoriteMealId))
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe({
-                    next: () => {
-                        this.isFavorite.set(false);
-                        this.favoriteMealId = null;
-                        this.isFavoriteLoading.set(false);
-                    },
-                    error: () => {
-                        this.isFavoriteLoading.set(false);
-                    },
-                });
-            return;
-        }
+        const favoriteId = this.favoriteMealId;
+        const removal: Observable<void | null> =
+            favoriteId !== null && favoriteId.length > 0
+                ? this.favoriteMealService.remove(entityId<'favorite-meal'>(favoriteId)).pipe(
+                      catchError((error: unknown) => {
+                          if (!(error instanceof HttpErrorResponse) || error.status !== Number(HttpStatusCode.NotFound)) {
+                              return throwError(() => error);
+                          }
 
-        this.favoriteMealService
-            .getLookupPage()
-            .pipe(
-                switchMap(favorites => {
-                    const match = favorites.find(favorite => favorite.mealId === meal.id);
-                    return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: () => {
-                    this.isFavorite.set(false);
-                    this.favoriteMealId = null;
-                    this.isFavoriteLoading.set(false);
-                },
-                error: () => {
-                    this.isFavoriteLoading.set(false);
-                },
-            });
+                          this.favoriteMealId = null;
+                          return this.removeFavoriteByMealId(meal.id);
+                      }),
+                  )
+                : this.removeFavoriteByMealId(meal.id);
+
+        removal.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: () => {
+                this.isFavorite.set(false);
+                this.favoriteMealId = null;
+                this.isFavoriteLoading.set(false);
+            },
+            error: () => {
+                this.isFavoriteLoading.set(false);
+            },
+        });
+    }
+
+    private removeFavoriteByMealId(mealId: MealId): Observable<void | null> {
+        return this.favoriteMealService.getLookupPage().pipe(
+            switchMap(favorites => {
+                const match = favorites.find(favorite => favorite.mealId === mealId);
+                return match === undefined ? of(null) : this.favoriteMealService.remove(match.id);
+            }),
+        );
     }
 
     private hasFavoriteChanged(): boolean {

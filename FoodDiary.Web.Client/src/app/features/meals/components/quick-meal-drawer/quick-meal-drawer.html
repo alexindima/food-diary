@@ -102,7 +102,7 @@
                     [label]="'MEAL_MANAGE.MEAL_TYPE_LABEL' | translate"
                     [options]="mealTypeOptions()"
                     [value]="details().mealType ?? null"
-                    (valueChange)="updateMealType($event)"
+                    (optionSelected)="updateMealType($event.value)"
                 />
                 <fd-ui-button
                     class="quick-meal__details-toggle"

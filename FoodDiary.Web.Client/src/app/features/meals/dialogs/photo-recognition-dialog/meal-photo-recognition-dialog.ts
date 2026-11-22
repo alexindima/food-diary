@@ -18,6 +18,7 @@ import {
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
+    normalizeAiNutritionItemName,
     requiresAiNutritionRecalculation,
     resolveAiPhotoUnitKey,
     updateAiEditableItem,
@@ -337,20 +338,17 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private findVisionMatch(name: string | null | undefined): FoodVisionItem | null {
-        const normalized = this.normalizeItemName(name);
+        const normalized = normalizeAiNutritionItemName(name);
         if (normalized.length === 0) {
             return null;
         }
 
         return (
             this.results().find(
-                item => this.normalizeItemName(item.nameEn) === normalized || this.normalizeItemName(item.nameLocal) === normalized,
+                item =>
+                    normalizeAiNutritionItemName(item.nameEn) === normalized || normalizeAiNutritionItemName(item.nameLocal) === normalized,
             ) ?? null
         );
-    }
-
-    private normalizeItemName(value?: string | null): string {
-        return (value ?? '').trim().toLowerCase();
     }
 
     protected async onResumeRecognitionAsync(job: FoodRecognitionJob): Promise<void> {

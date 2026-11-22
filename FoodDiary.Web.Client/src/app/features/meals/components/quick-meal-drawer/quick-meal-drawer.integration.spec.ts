@@ -1,3 +1,4 @@
+import { provideLocationMocks } from '@angular/common/testing';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -7,6 +8,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
@@ -90,7 +92,7 @@ describe('Quick meal product quantities in a mixed draft', () => {
 
         productEdit.focus();
         productEdit.click();
-        const dialog = await visibleEditorAsync();
+        const dialog = await visibleEditorAsync(fixture);
         expect(amountInput(dialog).valueAsNumber).toBe(PRODUCT_PORTION_ML);
         setAmount(dialog, EDITED_PRODUCT_ML);
         editorAction(dialog, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
@@ -116,6 +118,52 @@ describe('Quick meal product quantities in a mixed draft', () => {
     });
 });
 
+describe('Quick meal focus while recipe details load', () => {
+    it('keeps the focus restored by the editor after moving it while the recipe details load', async () => {
+        const lookup = new Subject<RecipeLookup>();
+        const { fixture, lookupRecipe, createMeal } = await renderDrawerAsync();
+        lookupRecipe.mockReturnValue(lookup);
+        const host = fixture.nativeElement as HTMLElement;
+        const originalAmount = requiredElement(host.querySelector('.quick-meal__meta'), 'the recipe amount').textContent;
+        const edit = editButton(host);
+        const collapse = requiredElement(
+            host.querySelector<HTMLButtonElement>('button[aria-label="QUICK_MEAL.COLLAPSE"]'),
+            'the Quick Meal collapse button',
+        );
+
+        edit.focus();
+        edit.click();
+        fixture.detectChanges();
+        expect(lookupRecipe).toHaveBeenCalledExactlyOnceWith(RECIPE.id);
+        expect(edit.disabled).toBe(true);
+        expect(document.querySelector('fd-meal-manual-item-dialog')).toBeNull();
+        expect(collapse.disabled).toBe(false);
+        collapse.focus();
+        expect(document.activeElement).toBe(collapse);
+
+        lookup.next({
+            id: RECIPE.id,
+            servings: RECIPE_SERVINGS,
+            steps: [{ ingredients: [{ amount: GRAMS_PER_SERVING * RECIPE_SERVINGS, productBaseUnit: 'G' }] }],
+        });
+        lookup.complete();
+        const dialog = await visibleEditorAsync(fixture);
+        const cancel = editorAction(dialog, 'PRODUCT_MANAGE.CANCEL_BUTTON');
+        cancel.focus();
+        expect(document.activeElement).toBe(cancel);
+        cancel.click();
+
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(document.querySelector('fd-meal-manual-item-dialog')).toBeNull();
+            expect(edit.disabled).toBe(false);
+            expect(document.activeElement).toBe(collapse);
+        });
+        expect(host.querySelector('.quick-meal__meta')?.textContent).toBe(originalAmount);
+        expect(createMeal).not.toHaveBeenCalled();
+    });
+});
+
 describe('Quick meal quantity editing with the real dialog', () => {
     it('waits for recipe mass, edits in grams and only stores servings when saving the meal', async () => {
         const lookup = new Subject<RecipeLookup>();
@@ -136,7 +184,7 @@ describe('Quick meal quantity editing with the real dialog', () => {
             servings: RECIPE_SERVINGS,
             steps: [{ ingredients: [{ amount: GRAMS_PER_SERVING * RECIPE_SERVINGS, productBaseUnit: 'G' }] }],
         });
-        const dialog = await visibleEditorAsync();
+        const dialog = await visibleEditorAsync(fixture);
         expect(amountInput(dialog).valueAsNumber).toBe(INITIAL_SERVINGS * GRAMS_PER_SERVING);
         setAmount(dialog, EDITED_SERVINGS * GRAMS_PER_SERVING);
         editorAction(dialog, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
@@ -161,7 +209,7 @@ describe('Quick meal quantity editing with the real dialog', () => {
         createMeal.mockReturnValueOnce(throwError(() => new Error('Temporary save failure')));
         const host = fixture.nativeElement as HTMLElement;
         editButton(host).click();
-        const dialog = await visibleEditorAsync();
+        const dialog = await visibleEditorAsync(fixture);
         expect(amountInput(dialog).valueAsNumber).toBe(INITIAL_SERVINGS);
         setAmount(dialog, EDITED_SERVINGS);
         editorAction(dialog, 'PRODUCT_MANAGE.CANCEL_BUTTON').click();
@@ -200,7 +248,7 @@ describe('Quick meal serving mass after a temporary lookup failure', () => {
 
         editButton(host).focus();
         editButton(host).click();
-        const fallback = await visibleEditorAsync();
+        const fallback = await visibleEditorAsync(fixture);
         expect(amountInput(fallback).getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
         expect(amountInput(fallback).valueAsNumber).toBe(INITIAL_SERVINGS);
         editorAction(fallback, 'PRODUCT_MANAGE.CANCEL_BUTTON').click();
@@ -211,7 +259,7 @@ describe('Quick meal serving mass after a temporary lookup failure', () => {
         });
 
         editButton(host).click();
-        const recovered = await visibleEditorAsync();
+        const recovered = await visibleEditorAsync(fixture);
         expect(lookupRecipe.mock.calls).toEqual([[RECIPE.id], [RECIPE.id]]);
         expect(amountInput(recovered).valueAsNumber).toBe(INITIAL_SERVINGS * GRAMS_PER_SERVING);
         editorAction(recovered, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
@@ -247,7 +295,7 @@ describe('Quick meal with recipes that have no computable serving mass', () => {
         lookupRecipe.mockReturnValueOnce(of({ id: RECIPE.id, servings: RECIPE_SERVINGS, steps: [{ ingredients }] }));
 
         editButton(host).click();
-        const dialog = await visibleEditorAsync();
+        const dialog = await visibleEditorAsync(fixture);
         const amount = amountInput(dialog);
         expect(amount.getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
         expect(amount.valueAsNumber).toBe(INITIAL_SERVINGS);
@@ -275,7 +323,7 @@ describe('Quick meal with recipes that have no computable serving mass', () => {
         });
 
         editButton(host).click();
-        const reopened = await visibleEditorAsync();
+        const reopened = await visibleEditorAsync(fixture);
         expect(amountInput(reopened).getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
         expect(amountInput(reopened).valueAsNumber).toBe(editedServings);
         expect(lookupRecipe).toHaveBeenCalledExactlyOnceWith(RECIPE.id);
@@ -466,6 +514,7 @@ describe('Quick meal inline hunger and satiety', () => {
 describe('Meal type after changing the quick draft clock', () => {
     it.each([
         { choice: null, expected: 'BREAKFAST' },
+        { choice: 'LUNCH', expected: 'BREAKFAST' },
         { choice: 'DINNER', expected: 'DINNER' },
     ])('saves $expected at the new time with meal type choice $choice', async ({ choice, expected }) => {
         const localDate = '2026-05-14';
@@ -627,6 +676,7 @@ async function renderDrawerAsync(): Promise<{
         imports: [QuickMealDrawerComponent],
         providers: [
             provideRouter([]),
+            provideLocationMocks(),
             provideTranslateTesting(),
             { provide: AuthService, useValue: { isPremium: signal(false) } },
             { provide: MealService, useValue: { create: createMeal } },
@@ -656,11 +706,11 @@ function draftSaveButton(host: HTMLElement): HTMLButtonElement {
     return requiredElement(host.querySelector<HTMLButtonElement>('button[aria-label="QUICK_MEAL.SAVE_ARIA"]'), 'the draft save button');
 }
 
-async function visibleEditorAsync(): Promise<HTMLElement> {
-    return vi.waitFor(() => {
-        TestBed.tick();
-        return requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'), 'the quick meal editor');
-    });
+async function visibleEditorAsync(fixture: ComponentFixture<QuickMealDrawerComponent>): Promise<HTMLElement> {
+    await waitForAsyncTasksAsync();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'), 'the quick meal editor');
 }
 
 function amountInput(editor: HTMLElement): HTMLInputElement {

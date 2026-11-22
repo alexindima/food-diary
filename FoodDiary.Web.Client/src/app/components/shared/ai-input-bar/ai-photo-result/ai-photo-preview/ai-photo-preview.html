@@ -20,6 +20,7 @@
                 </button>
                 @if (annotationsVisible()) {
                     <div
+                        #annotationPane
                         class="ai-photo-result__annotations"
                         [style.--ai-photo-aspect-ratio]="imageAspectRatio()"
                         [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"

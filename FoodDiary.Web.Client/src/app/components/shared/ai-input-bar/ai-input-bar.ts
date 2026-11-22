@@ -393,6 +393,7 @@ export class AiInputBarComponent {
     }
 
     protected onPhotoPreparationFailed(): void {
+        this.photoSelection.set(null);
         this.photoIsPreparing.set(false);
         this.photoErrorKey.set('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED');
     }

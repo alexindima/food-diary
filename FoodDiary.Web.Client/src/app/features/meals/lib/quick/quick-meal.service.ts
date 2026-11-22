@@ -122,12 +122,16 @@ export class QuickMealService {
 
     public updateItem(key: string, item: QuickMealItem): void {
         this.itemsSignal.update(items => {
+            const originalIndex = items.findIndex(current => current.key === key);
+            if (originalIndex === -1) {
+                return items;
+            }
+
             const flashId = ++this.nextFlashId;
-            const withoutCurrent = items.filter(current => current.key !== key);
-            const existingIndex = withoutCurrent.findIndex(current => current.key === item.key);
+            const updated = items.filter(current => current.key !== key);
+            const existingIndex = updated.findIndex(current => current.key === item.key);
 
             if (existingIndex !== -1) {
-                const updated = [...withoutCurrent];
                 updated[existingIndex] = {
                     ...updated[existingIndex],
                     amount: updated[existingIndex].amount + item.amount,
@@ -136,14 +140,8 @@ export class QuickMealService {
                 return updated;
             }
 
-            const originalIndex = items.findIndex(current => current.key === key);
-            const updatedItem = { ...item, flashId };
-            if (originalIndex === -1) {
-                return [...withoutCurrent, updatedItem];
-            }
-
-            const insertIndex = Math.min(originalIndex, withoutCurrent.length);
-            return [...withoutCurrent.slice(0, insertIndex), updatedItem, ...withoutCurrent.slice(insertIndex)];
+            updated.splice(originalIndex, 0, { ...item, flashId });
+            return updated;
         });
     }
 

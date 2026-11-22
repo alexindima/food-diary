@@ -45,7 +45,14 @@
         >
             {{ 'RECIPE_MANAGE.IMPORT.PASTE_LINK' | translate }}
         </fd-ui-button>
-        <fd-ui-button type="button" icon="auto_fix_high" [loading]="facade.busy()" (click)="recognizeAsync()">
+        <fd-ui-button
+            type="button"
+            icon="auto_fix_high"
+            [disabled]="stepPhotosUploading()()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            [loading]="facade.busy()"
+            (click)="recognizeAsync()"
+        >
             {{ 'RECIPE_MANAGE.IMPORT.RECOGNIZE' | translate }}
         </fd-ui-button>
     </div>

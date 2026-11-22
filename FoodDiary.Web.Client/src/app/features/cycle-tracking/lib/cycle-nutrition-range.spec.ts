@@ -12,6 +12,7 @@ describe('cycle nutrition analysis range', () => {
         ['2020-01-01', '2024-03-01', '2023-03-02'],
         ['2020-01-01', '2026-03-29', '2025-03-29'],
     ])('uses a supported period for history starting %s through %s', (trackingStartDate, today, dateFrom) => {
-        expect(cycleNutritionRange(trackingStartDate, today)).toEqual({ dateFrom, dateTo: today });
+        const timeLateOnLocalDay = new Date(`${today}T23:55:00`);
+        expect(cycleNutritionRange(trackingStartDate, timeLateOnLocalDay)).toEqual({ dateFrom, dateTo: today });
     });
 });

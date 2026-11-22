@@ -646,6 +646,7 @@ describe('Meal recognition review route ownership', () => {
         const harness = await RouterTestingHarness.create(MEAL_URL);
         const editor = requireEditor(harness, 'fd-meal-edit');
         nativeEditorButton(editor, 'MEAL_MANAGE.ITEMS_AI_EDIT').click();
+        await vi.dynamicImportSettled();
         const review = await waitForRecognitionReviewAsync(harness, 'Broccoli');
 
         await harness.navigateByUrl(OTHER_URL);

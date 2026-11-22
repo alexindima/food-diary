@@ -3,7 +3,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
-import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
+import {
+    type FdUiImagePreviewDialogCollageImage,
+    FdUiImagePreviewDialogComponent,
+} from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit/menu';
 
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
@@ -35,7 +38,18 @@ export class ImageGalleryEditorComponent {
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);
-    protected readonly photoPreviews = computed(() => this.photos().map(({ url }) => (url !== null && url.trim().length > 0 ? url : null)));
+    protected readonly previewGallery = computed(() => {
+        const images: FdUiImagePreviewDialogCollageImage[] = [];
+        const thumbnails = this.photos().map(({ url }) => {
+            if (url === null || url.trim().length === 0) {
+                return null;
+            }
+            const thumbnail = { url, initialIndex: images.length };
+            images.push({ url });
+            return thumbnail;
+        });
+        return { images, thumbnails };
+    });
     protected readonly uploadAppearance = computed(() => {
         if (this.photos().length > 0) {
             return 'hidden';
@@ -43,19 +57,13 @@ export class ImageGalleryEditorComponent {
         return this.compact() ? 'compact' : 'preview';
     });
 
-    protected preview(index: number): void {
-        const previews = this.photoPreviews().flatMap((url, sourceIndex) => (url === null ? [] : [{ url, sourceIndex }]));
-        const initialIndex = previews.findIndex(preview => preview.sourceIndex === index);
-        if (initialIndex === -1) {
-            return;
-        }
-
+    protected preview(photoIndex: number, initialIndex: number, collageImages: readonly FdUiImagePreviewDialogCollageImage[]): void {
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
             width: 'var(--fd-size-dialog-media-width)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
-            restoreFocus: this.photoTriggers()[index]?.nativeElement.querySelector('button') ?? true,
-            data: { collageImages: previews.map(({ url }) => ({ url })), initialIndex },
+            restoreFocus: this.photoTriggers()[photoIndex]?.nativeElement.querySelector('button') ?? true,
+            data: { collageImages, initialIndex },
         });
     }
 
@@ -68,6 +76,9 @@ export class ImageGalleryEditorComponent {
     protected readonly maxPhotos = MAX_PHOTOS;
     protected readonly hasUploadError = signal(false);
     protected addBatch(photos: ImageSelection[]): void {
+        if (photos.length === 0) {
+            return;
+        }
         this.photos.set([...this.photos(), ...photos].slice(0, MAX_PHOTOS));
     }
     protected remove(photo: ImageSelection): void {

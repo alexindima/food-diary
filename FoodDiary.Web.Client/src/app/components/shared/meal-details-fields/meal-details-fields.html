@@ -7,8 +7,7 @@
         <fd-ui-date-input
             [size]="density() === 'compact' ? 'md' : 'lg'"
             [label]="'MEAL_DETAILS.DATE' | translate"
-            [value]="date()"
-            (valueChange)="onDateChange($event)"
+            [formField]="dateField"
         />
         <fd-ui-time-input
             [size]="density() === 'compact' ? 'md' : 'lg'"

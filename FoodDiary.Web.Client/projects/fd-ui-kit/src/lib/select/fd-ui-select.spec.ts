@@ -24,20 +24,20 @@ const TEST_OPTIONS: Array<FdUiSelectOption<string>> = [
     { value: 'cherry', label: 'Cherry' },
 ];
 
-type SelectTestContext = {
-    component: FdUiSelectComponent<string>;
-    fixture: ComponentFixture<FdUiSelectComponent<string>>;
+type SelectTestContext<T> = {
+    component: FdUiSelectComponent<T>;
+    fixture: ComponentFixture<FdUiSelectComponent<T>>;
     host: () => HTMLElement;
     requireElement: (selector: string) => HTMLElement;
 };
 
-async function setupSelectAsync(): Promise<SelectTestContext> {
+async function setupSelectAsync<T = string>(): Promise<SelectTestContext<T>> {
     await TestBed.configureTestingModule({
         imports: [FdUiSelectComponent],
         providers: [],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(FdUiSelectComponent<string>);
+    const fixture = TestBed.createComponent(FdUiSelectComponent<T>);
     const component = fixture.componentInstance;
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const requireElement = (selector: string): HTMLElement => {
@@ -179,6 +179,10 @@ describe('FdUiSelectComponent tab dismissal', () => {
 describe('FdUiSelectComponent rendering', () => {
     it('supports keyboard selection in text appearance without a visible label', async () => {
         const { fixture, component, requireElement, host } = await setupSelectAsync();
+        const modelChanged = vi.fn();
+        const optionSelected = vi.fn();
+        component.value.subscribe(modelChanged);
+        component.optionSelected.subscribe(optionSelected);
         fixture.componentRef.setInput('appearance', 'text');
         fixture.componentRef.setInput('ariaLabel', 'Sort recipes');
         fixture.componentRef.setInput('options', TEST_OPTIONS);
@@ -193,7 +197,11 @@ describe('FdUiSelectComponent rendering', () => {
         menu?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         fixture.detectChanges();
         expect(component.value()).toBe('apple');
+        expect(modelChanged).toHaveBeenCalledExactlyOnceWith('apple');
+        expect(optionSelected).toHaveBeenCalledExactlyOnceWith(TEST_OPTIONS[0]);
+        expect(modelChanged).toHaveBeenCalledBefore(optionSelected);
         expect(control.getAttribute('aria-expanded')).toBe('false');
+        expect(document.activeElement).toBe(control);
     });
     it('should render label', async () => {
         const { fixture, requireElement } = await setupSelectAsync();
@@ -243,6 +251,41 @@ describe('FdUiSelectComponent rendering', () => {
     });
 });
 
+describe('FdUiSelectComponent accepted option output', () => {
+    it('keeps repeat and parent writes quiet while emitting an explicit blank choice from the listbox', async () => {
+        const { component, fixture, requireElement } = await setupSelectAsync<string | null>();
+        const blankOption = { value: null, label: 'Any fruit' };
+        const optionSelected = vi.fn();
+        component.optionSelected.subscribe(optionSelected);
+        fixture.componentRef.setInput('options', [...TEST_OPTIONS, blankOption]);
+        fixture.componentRef.setInput('value', 'banana');
+        fixture.detectChanges();
+        expect(optionSelected).not.toHaveBeenCalled();
+
+        const control = requireElement('button[aria-haspopup="listbox"]');
+        const choose = (label: string): void => {
+            control.click();
+            fixture.detectChanges();
+            const options = document.querySelectorAll<HTMLButtonElement>('[role="listbox"] button[role="option"]');
+            const match = Array.from(options).find(option => option.textContent.trim() === label);
+            if (match === undefined) {
+                throw new Error(`Expected the rendered option "${label}".`);
+            }
+            match.click();
+            fixture.detectChanges();
+        };
+        choose('Banana');
+        expect(optionSelected).not.toHaveBeenCalled();
+        expect(component.touched()).toBe(true);
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+        expect(document.activeElement).toBe(control);
+
+        choose(blankOption.label);
+        expect(component.value()).toBeNull();
+        expect(optionSelected).toHaveBeenCalledExactlyOnceWith(blankOption);
+    });
+});
+
 describe('FdUiSelectComponent signal form control', () => {
     it('derives the current selection without waiting for an effect', async () => {
         const { component, fixture } = await setupSelectAsync();
@@ -279,18 +322,27 @@ describe('FdUiSelectComponent signal form control', () => {
     });
 
     it('should not select when disabled', async () => {
-        const { component, fixture } = await setupSelectAsync();
+        const { component, fixture, requireElement } = await setupSelectAsync();
+        const optionSelected = vi.fn();
+        component.optionSelected.subscribe(optionSelected);
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
 
+        requireElement('button[aria-haspopup="listbox"]').click();
+        fixture.detectChanges();
+        const option = document.querySelector<HTMLButtonElement>('[role="listbox"] button[role="option"]');
+        if (option === null) {
+            throw new Error('Expected an option in the listbox opened before disabling.');
+        }
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        component['onOptionSelect'](TEST_OPTIONS[0]);
+        option.click();
         fixture.detectChanges();
 
         expect(component['internalValue']()).toBeNull();
         expect(component.value()).toBeNull();
+        expect(optionSelected).not.toHaveBeenCalled();
     });
 
     it('should set disabled state from input', async () => {

@@ -123,7 +123,11 @@ function telegramBoundary(): TelegramBoundary {
     };
 }
 
-type BrowserBoundary = { [Method in 'open' | 'replaceCurrentUrl' | 'setInterval' | 'clearInterval']: Mock<BrowserWindowService[Method]> };
+type BrowserBoundary = {
+    [Method in 'open' | 'replaceCurrentUrl' | 'getPathname' | 'getSearch' | 'setInterval' | 'clearInterval']: Mock<
+        BrowserWindowService[Method]
+    >;
+};
 type UsersBoundary = Pick<UserFacade, 'user'> & { [Method in 'getInfo' | 'changePassword']: Mock<UserFacade[Method]> };
 type RealtimeBoundary = { [Method in 'connectAsync' | 'disconnectAsync']: Mock<EmailVerificationRealtimeService[Method]> };
 type AuthFlowBoundary = { [Method in 'login' | 'restoreAccount' | 'requestPasswordReset']: Mock<AuthFlowFacade[Method]> };
@@ -144,9 +148,14 @@ function configureAuthRoutes(authenticated = false, requiresPasswordChange = fal
         requestPasswordReset: vi.fn<AuthFlowFacade['requestPasswordReset']>(),
     };
     const telegramApi = telegramBoundary();
+    let browserUrl = new URL('https://fooddiary.test/');
     const browser: BrowserBoundary = {
         open: vi.fn<BrowserWindowService['open']>(),
-        replaceCurrentUrl: vi.fn<BrowserWindowService['replaceCurrentUrl']>(),
+        replaceCurrentUrl: vi.fn<BrowserWindowService['replaceCurrentUrl']>(nextUrl => {
+            browserUrl = new URL(nextUrl, browserUrl);
+        }),
+        getPathname: vi.fn<BrowserWindowService['getPathname']>(() => browserUrl.pathname),
+        getSearch: vi.fn<BrowserWindowService['getSearch']>(() => browserUrl.search),
         setInterval: vi.fn<BrowserWindowService['setInterval']>(),
         clearInterval: vi.fn<BrowserWindowService['clearInterval']>(),
     };

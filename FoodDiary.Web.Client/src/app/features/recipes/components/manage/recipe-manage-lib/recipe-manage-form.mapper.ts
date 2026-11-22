@@ -2,7 +2,6 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutriti
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../../../shared/models/recipe.data';
-import { isRecipeCategory } from '../../../../../shared/models/recipe-category';
 import { ingredientEditorSource } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import type { ProductId, RecipeId } from '../../../../../shared/models/semantics/entity-id';
@@ -110,7 +109,7 @@ export function buildRecipeDto(
         name: formValue.name,
         description: formValue.description ?? null,
         comment: formValue.comment ?? null,
-        category: isRecipeCategory(formValue.category) ? formValue.category : 'other',
+        category: formValue.category,
         imageUrl: formValue.imageUrl?.url ?? null,
         imageAssetId: formValue.imageUrl?.assetId ?? null,
         ...(formValue.images?.every(image => image.assetId !== null) === true

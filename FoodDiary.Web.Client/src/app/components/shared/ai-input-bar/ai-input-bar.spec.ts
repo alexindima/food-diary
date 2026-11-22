@@ -1649,6 +1649,7 @@ describe('AI input photo upload dismissal', () => {
     it('announces an upload error without analyzing the failed file and re-enables the camera after dismissal', async () => {
         const failedUpload = new Subject<ImageSelection>();
         const { fixture, aiFoodService } = await setupPhotoUploadPreviewAsync(failedUpload);
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
         const camera = selectRecognitionControl(fixture, 'button[aria-label="AI_INPUT_BAR.PHOTO_TITLE"]', HTMLButtonElement);
         selectPreviewImage(fixture, 'failed.gif');
         await waitForPhotoPreviewAsync('blob:food-preview');
@@ -1660,8 +1661,10 @@ describe('AI input photo upload dismissal', () => {
                 'IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED',
             );
         });
+        expect(revokePreview).toHaveBeenCalledExactlyOnceWith('blob:food-preview');
+        expect(document.querySelector('fd-ai-photo-result img')).toBeNull();
         expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
-        expect(photoPreviewButton('.ai-photo-result__submit-action button').disabled).toBe(true);
+        expect(document.querySelector('fd-ai-photo-result .ai-photo-result__submit-action button:not(:disabled)')).toBeNull();
         photoPreviewButton('button[aria-label="COMMON.CANCEL"]').click();
         TestBed.tick();
         expect(document.querySelector('fd-ai-photo-result')).toBeNull();

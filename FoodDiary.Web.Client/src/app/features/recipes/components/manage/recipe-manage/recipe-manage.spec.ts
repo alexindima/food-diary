@@ -121,6 +121,31 @@ describe('RecipeManageComponent form population', () => {
         expect(component['recipeFormModel']().name).toBe(UPDATED_RECIPE_NAME);
         expect(component['recipeFormModel']().cookTime).toBe(UPDATED_COOK_TIME);
     });
+
+    it('retains a typed draft when coalesced input updates return to the same recipe', async () => {
+        const { fixture } = await setupComponentAsync();
+        const storedRecipe = createRecipe({ name: 'Stored recipe' });
+        const draftName = 'My unsaved recipe';
+        const nameSelector = 'fd-recipe-basic-info fd-ui-input input';
+        fixture.componentRef.setInput('recipe', storedRecipe);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const nameInput = host.querySelector<HTMLInputElement>(nameSelector);
+        if (nameInput === null) {
+            throw new Error('Expected the rendered recipe name field');
+        }
+        expect(nameInput.value).toBe(storedRecipe.name);
+
+        nameInput.value = draftName;
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('recipe', createRecipe({ name: UPDATED_RECIPE_NAME }));
+        fixture.componentRef.setInput('recipe', storedRecipe);
+        fixture.detectChanges();
+
+        expect(host.querySelector<HTMLInputElement>(nameSelector)?.value).toBe(draftName);
+    });
 });
 
 describe('RecipeManageComponent language checks', () => {

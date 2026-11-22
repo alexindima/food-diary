@@ -71,7 +71,7 @@
         }
     }
     <p role="alert" class="fd-ui-body-sm" [hidden]="error() === null || needsConfirmation()">{{ error() ?? '' | translate }}</p>
-    <fd-ui-button variant="secondary" [fullWidth]="true" [loading]="busy()" [hidden]="step() === 'done'" (click)="keepSeparate.emit()">
+    <fd-ui-button variant="secondary" [fullWidth]="true" [loading]="busy()" [hidden]="step() === 'done'" (click)="onKeepSeparate()">
         {{ 'AUTH.TELEGRAM_DIARY.KEEP_SEPARATE' | translate }}
     </fd-ui-button>
 </div>

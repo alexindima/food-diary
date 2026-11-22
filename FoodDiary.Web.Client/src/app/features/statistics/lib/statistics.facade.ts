@@ -8,7 +8,6 @@ import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { developmentRequestContext } from '../../../shared/development/development-request-context';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
-import { parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import { capitalizeFirstLetter } from '../../../shared/lib/text-display.utils';
@@ -34,6 +33,7 @@ import { buildStatisticsExportRequest } from './statistics-export.mapper';
 import { mapStatistics } from './statistics-statistics.mapper';
 
 const MAX_STATISTICS_PERIOD_DAYS = 366;
+const CALENDAR_DATE_PREFIX_LENGTH = 10;
 
 @Injectable()
 export class StatisticsFacade {
@@ -43,7 +43,12 @@ export class StatisticsFacade {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
+    private dateLabelFormatterCache: {
+        locale: string;
+        range: StatisticsRange;
+        local: Intl.DateTimeFormat;
+        calendar: Intl.DateTimeFormat;
+    } | null = null;
     private lastLoadedRangeKey: string | null = null;
     public readonly appliedRange = signal<DateRange | null>(null);
     private readonly statisticsRequest = new RequestStateController<
@@ -264,24 +269,26 @@ export class StatisticsFacade {
         this.customRangeModel.set({ range: { start, end } });
     }
 
-    private formatDateLabel(date: Date): string {
-        const label = this.getDateLabelFormatter().format(date);
+    private formatDateLabel(date: Date, basis: 'local' | 'calendar' = 'local'): string {
+        const label = this.getDateLabelFormatter(basis).format(date);
 
         return this.selectedRange() === 'year' ? capitalizeFirstLetter(label) : label;
     }
 
-    private getDateLabelFormatter(): Intl.DateTimeFormat {
+    private getDateLabelFormatter(basis: 'local' | 'calendar'): Intl.DateTimeFormat {
         const locale = this.currentLocale();
         const range = this.selectedRange();
         if (this.dateLabelFormatterCache?.locale !== locale || this.dateLabelFormatterCache.range !== range) {
+            const options: Intl.DateTimeFormatOptions = range === 'year' ? { month: 'short' } : { month: 'short', day: 'numeric' };
             this.dateLabelFormatterCache = {
                 locale,
                 range,
-                formatter: new Intl.DateTimeFormat(locale, range === 'year' ? { month: 'short' } : { month: 'short', day: 'numeric' }),
+                local: new Intl.DateTimeFormat(locale, options),
+                calendar: new Intl.DateTimeFormat(locale, { ...options, timeZone: 'UTC' }),
             };
         }
 
-        return this.dateLabelFormatterCache.formatter;
+        return this.dateLabelFormatterCache[basis];
     }
 
     private resolveCurrentLocale(): string {
@@ -289,8 +296,7 @@ export class StatisticsFacade {
     }
 
     private formatSummaryLabel(dateString: string): string {
-        const date = parseLocalDateInputValue(dateString) ?? new Date(dateString);
-
-        return this.formatDateLabel(date);
+        const day = dateString.slice(0, CALENDAR_DATE_PREFIX_LENGTH);
+        return this.formatDateLabel(new Date(`${day}T00:00:00.000Z`), 'calendar');
     }
 }

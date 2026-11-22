@@ -10,8 +10,15 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
+import { CurrentLocalDayService } from '../../../../shared/platform/current-local-day.service';
 import type { FastingMessageViewModel, FastingProtocolPreview } from '../../lib/fasting-page.types';
-import { getFastingDurationDisplay, getNextCyclicDayLabelKey, isFastingEndedEarly } from '../../lib/fasting-session-state';
+import {
+    calculateFastingElapsedMs,
+    calculateFastingProgressPercent,
+    getFastingDurationDisplay,
+    getNextCyclicDayLabelKey,
+    isFastingEndedEarly,
+} from '../../lib/fasting-session-state';
 
 type RhythmDay = {
     dayKey: string;
@@ -41,6 +48,7 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
 export class FastingRedesignPreviewComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
+    private readonly today = inject(CurrentLocalDayService).today;
     private readonly languageVersion = signal(0);
 
     public readonly session = input.required<FastingSession | null>();
@@ -219,7 +227,7 @@ export class FastingRedesignPreviewComponent {
     });
     protected readonly rhythmDays = computed<RhythmDay[]>(() => {
         this.languageVersion();
-        return buildRhythmDays(this.history(), this.now(), (key, params) => this.translateService.instant(key, params));
+        return buildRhythmDays(this.history(), this.today(), (key, params) => this.translateService.instant(key, params));
     });
 
     public constructor() {
@@ -319,11 +327,7 @@ function buildRhythmDays(
 }
 
 function sessionTargetProgress(session: FastingSession): number {
-    if (session.endedAtUtc === null || session.plannedDurationHours <= 0) {
-        return 0;
-    }
-    const duration = new Date(session.endedAtUtc).getTime() - new Date(session.startedAtUtc).getTime();
-    return Math.min(COMPLETE_PROGRESS, Math.max(0, (duration / (session.plannedDurationHours * MS_PER_HOUR)) * COMPLETE_PROGRESS));
+    return calculateFastingProgressPercent(calculateFastingElapsedMs(session), session.plannedDurationHours * MS_PER_HOUR);
 }
 
 function buildRhythmDay(

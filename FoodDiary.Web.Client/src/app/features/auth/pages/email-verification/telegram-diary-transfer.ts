@@ -101,6 +101,13 @@ export class TelegramDiaryTransferComponent {
         }
     }
 
+    protected onKeepSeparate(): void {
+        if (this.busy() || this.step() === 'done') {
+            return;
+        }
+        this.keepSeparate.emit();
+    }
+
     protected continueToSignIn(): void {
         void this.auth.onLogoutAsync(true);
     }

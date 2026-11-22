@@ -36,10 +36,8 @@ export class CycleCalendarCardComponent {
         return this.buildMarkers();
     });
 
-    protected selectDate(date: Date | null): void {
-        if (date !== null) {
-            this.dateSelected.emit(this.toLocalDateKey(date));
-        }
+    protected selectDate(date: Date): void {
+        this.dateSelected.emit(this.toLocalDateKey(date));
     }
 
     private toLocalDateKey(date: Date): string {

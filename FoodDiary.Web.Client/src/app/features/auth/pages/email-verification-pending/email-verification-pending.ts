@@ -62,9 +62,6 @@ export class EmailVerificationPendingComponent {
                     this.invalidatePage();
                 }),
         );
-        if (!this.ensureCurrentOwner()) {
-            return;
-        }
         this.startResendCooldown();
         this.startRealtime();
         this.loadCurrentUser();

@@ -142,6 +142,8 @@ export type CyclicPresetOption = {
     label: string;
 };
 
+export type CyclicPresetSelection = 'custom' | `${number}:${number}`;
+
 export const CYCLIC_PRESETS: CyclicPresetOption[] = [
     { fastDays: 1, eatDays: 1, label: '1:1' },
     { fastDays: 1, eatDays: 2, label: '1:2' },

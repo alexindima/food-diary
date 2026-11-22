@@ -30,17 +30,18 @@ export function isFastingEndedEarly(session: FastingSession): boolean {
     return (
         session.status === 'Completed' &&
         session.endedAtUtc !== null &&
-        calculateFastingElapsedMs(session, new Date(session.endedAtUtc)) < session.plannedDurationHours * MS_PER_HOUR
+        calculateFastingElapsedMs(session) < session.plannedDurationHours * MS_PER_HOUR
     );
 }
 
-export function calculateFastingElapsedMs(session: FastingSession | null, now: Date): number {
+/** Pass a clock to include elapsed time for an active session. */
+export function calculateFastingElapsedMs(session: FastingSession | null, now?: Date): number {
     if (session === null) {
         return 0;
     }
 
     const start = new Date(session.startedAtUtc).getTime();
-    const end = session.endedAtUtc !== null ? new Date(session.endedAtUtc).getTime() : now.getTime();
+    const end = session.endedAtUtc !== null ? new Date(session.endedAtUtc).getTime() : (now?.getTime() ?? start);
     if (Number.isNaN(start) || Number.isNaN(end)) {
         return 0;
     }
@@ -67,10 +68,6 @@ export function calculateMaxReducibleFastingHours(session: FastingSession | null
 }
 
 export function getFastingSessionDurationHours(session: FastingSession): number {
-    if (session.endedAtUtc === null) {
-        return 0;
-    }
-
-    const elapsedMs = calculateFastingElapsedMs(session, new Date(session.endedAtUtc));
+    const elapsedMs = calculateFastingElapsedMs(session);
     return Math.round((elapsedMs / MS_PER_HOUR) * DURATION_ROUNDING_FACTOR) / DURATION_ROUNDING_FACTOR;
 }

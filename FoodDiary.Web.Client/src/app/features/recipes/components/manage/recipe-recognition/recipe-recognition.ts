@@ -31,6 +31,7 @@ export class RecipeRecognitionComponent {
     protected readonly clipboard = inject(RecipeClipboardSuggestion);
     public readonly sourceUrl = input.required<Signal<string>>();
     public readonly text = input('');
+    public readonly stepPhotosUploading = input<() => boolean>((): boolean => false);
     public readonly draftRecognized = output<RecipeImportResult>();
     public readonly sourceUrlSuggested = output<string>();
     public readonly busyChanged = output<boolean>();
@@ -74,6 +75,9 @@ export class RecipeRecognitionComponent {
     }
 
     protected async recognizeAsync(): Promise<void> {
+        if (this.stepPhotosUploading()()) {
+            return;
+        }
         this.reviewKeys.set([]);
         const recognition = this.facade.recognizeAsync(this.sourceUrl()(), this.text(), this.videoMode(), this.videoFile());
         // An admitted recognition holds the source through the first asynchronous access check.

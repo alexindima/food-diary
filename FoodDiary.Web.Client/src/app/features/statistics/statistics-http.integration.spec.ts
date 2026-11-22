@@ -166,18 +166,65 @@ it('shows a logged zero-calorie interval in the chart and leaves an empty interv
     http.verify();
 });
 
-function expectReportRequests(http: HttpTestingController): { report: TestRequest; weight: TestRequest; waist: TestRequest } {
+it('keeps the stored measurement date when the viewer time zone skipped that calendar day', async () => {
+    const from = '2011-12-29';
+    const measured = '2011-12-30';
+    const to = '2011-12-31';
+    const route = `/statistics?range=custom&dateFrom=${from}&dateTo=${to}`;
+    const http = configureReportHttp();
+    TestBed.inject(MeasurementSystemService).setSystem('metric');
+    const harness = await RouterTestingHarness.create(route);
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the Statistics route');
+    }
+    const requests = expectReportRequests(http, { from, to, quantizationDays: '1' });
+    const measurements = [
+        { date: from, weightKg: FIRST_WEIGHT },
+        { date: measured, weightKg: LAST_WEIGHT },
+    ];
+    const weight = measurements.map(({ date, weightKg }) => ({
+        startDate: `${date}T00:00:00Z`,
+        endDate: `${date}T00:00:00Z`,
+        averageWeightKg: weightKg,
+    }));
+    requests.report.flush({ nutrition: [], waist: [], weight } satisfies StatisticsSummaryHttpResponse);
+    requests.weight.flush(measurements);
+    requests.waist.flush([]);
+    harness.detectChanges();
+
+    expect(TestBed.inject(Router).url).toBe(route);
+    const body = requireElement(host, 'fd-statistics-body-trend-card');
+    expect(requireElement(body, '.fd-ui-stat-value').textContent).toContain('72.4');
+    expect(requireElement(body, '.statistics-body-trend-card__change').textContent).toMatch(/[−-]1\.8/u);
+    const plotted = body.querySelectorAll<HTMLElement>('.fd-ui-line-chart__point');
+    expect(plotted).toHaveLength(2);
+    expect(Number.parseFloat(plotted[0].style.left)).toBeLessThan(Number.parseFloat(plotted[1].style.left));
+    expect(Number.parseFloat(plotted[0].style.top)).toBeLessThan(Number.parseFloat(plotted[1].style.top));
+    expect(plotted[0].title).toMatch(/Dec\s*29: 74\.2/u);
+    expect(plotted[1].title).toMatch(/Dec\s*30: 72\.4/u);
+    const axis = requireElement(body, 'fd-ui-line-chart-x-axis');
+    expect(axis.textContent).toMatch(/Dec\s*29/u);
+    expect(axis.textContent).toMatch(/Dec\s*30/u);
+    expect(axis.textContent).not.toMatch(/Dec\s*31/u);
+    http.verify();
+});
+
+function expectReportRequests(
+    http: HttpTestingController,
+    { from = FROM_DAY, to = TO_DAY, quantizationDays = '2' } = {},
+): { report: TestRequest; weight: TestRequest; waist: TestRequest } {
     const report = http.expectOne(request => request.method === 'GET' && request.url === REPORT_API);
     const weight = http.expectOne(request => request.method === 'GET' && request.url === WEIGHT_API);
     const waist = http.expectOne(request => request.method === 'GET' && request.url === WAIST_API);
-    expect(report.request.params.get('dateFrom')).toBe(new Date(`${FROM_DAY}T00:00:00.000`).toISOString());
-    expect(report.request.params.get('dateTo')).toBe(new Date(`${TO_DAY}T23:59:59.999`).toISOString());
-    expect(report.request.params.get('bodyDateFrom')).toBe(FROM_DAY);
-    expect(report.request.params.get('bodyDateTo')).toBe(TO_DAY);
-    expect(report.request.params.get('quantizationDays')).toBe('2');
+    expect(report.request.params.get('dateFrom')).toBe(new Date(`${from}T00:00:00.000`).toISOString());
+    expect(report.request.params.get('dateTo')).toBe(new Date(`${to}T23:59:59.999`).toISOString());
+    expect(report.request.params.get('bodyDateFrom')).toBe(from);
+    expect(report.request.params.get('bodyDateTo')).toBe(to);
+    expect(report.request.params.get('quantizationDays')).toBe(quantizationDays);
     for (const entryRead of [weight, waist]) {
-        expect(entryRead.request.params.get('dateFrom')).toBe(FROM_DAY);
-        expect(entryRead.request.params.get('dateTo')).toBe(TO_DAY);
+        expect(entryRead.request.params.get('dateFrom')).toBe(from);
+        expect(entryRead.request.params.get('dateTo')).toBe(to);
         expect(entryRead.request.params.get('sort')).toBe('asc');
     }
     return { report, weight, waist };

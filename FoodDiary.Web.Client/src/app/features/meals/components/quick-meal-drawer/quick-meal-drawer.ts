@@ -24,7 +24,7 @@ import { firstValueFrom } from 'rxjs';
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import { normalizeMealType } from '../../../../shared/lib/meal-type.util';
+import type { MealTypeOption } from '../../../../shared/lib/meal-type.util';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { normalizeProductType } from '../../../../shared/lib/product-type.utils';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
@@ -212,11 +212,8 @@ export class QuickMealDrawerComponent {
         this.quickService.updateDetails({ preMealSatietyLevel: value });
     }
 
-    protected updateMealType(value: string | null): void {
-        const mealType = normalizeMealType(value);
-        if (mealType !== null) {
-            this.quickService.updateDetails({ mealType });
-        }
+    protected updateMealType(mealType: MealTypeOption): void {
+        this.quickService.updateDetails({ mealType });
     }
 
     protected updatePostMealSatietyLevel(value: number | null): void {
@@ -300,9 +297,7 @@ export class QuickMealDrawerComponent {
                 }
 
                 const index = this.items().findIndex(item => item.key === key);
-                if (index !== -1) {
-                    this.editActions().at(index)?.focus();
-                }
+                this.editActions()[index]?.focus();
             },
             { injector: this.injector },
         );

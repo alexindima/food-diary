@@ -240,8 +240,11 @@ describe('PushNotificationService subscription support', () => {
         expect(service.currentSubscriptionEndpoint()).toBeNull();
         await expect(service.ensureSubscriptionAsync()).resolves.toBe('unsupported');
     });
+});
 
-    it('keeps local push operations idle when service worker push is disabled', async () => {
+describe('PushNotificationService with disabled service workers', () => {
+    it('keeps local push operations idle', async () => {
+        const requestSubscription = vi.fn();
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             providers: [
@@ -253,7 +256,7 @@ describe('PushNotificationService subscription support', () => {
                         subscription: new Subject<PushSubscription | null>(),
                         pushSubscriptionChanges: new Subject(),
                         notificationClicks: new Subject(),
-                        requestSubscription: vi.fn(),
+                        requestSubscription,
                     },
                 },
                 { provide: AuthService, useValue: authService },
@@ -286,6 +289,8 @@ describe('PushNotificationService subscription support', () => {
         const endpoint = 'https://push.example.com/subscriptions/disabled-browser';
         await expect(disabledService.removeSubscriptionAsync(endpoint)).resolves.toBe(false);
         expect(disabledService.isBusy()).toBe(false);
+        expect(requestSubscription).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
         expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
     });
 });
@@ -308,11 +313,14 @@ describe('PushNotificationService subscription lifecycle', () => {
         expect(service.currentSubscriptionEndpoint()).toBe(subscription.endpoint);
     });
 
-    it('should keep an existing subscription created with the current public key', async () => {
-        const applicationServerKey = new TextEncoder().encode('old').buffer;
+    it('keeps the existing subscription when the configured key uses Base64URL', async () => {
+        // These bytes encode as +/8= in standard Base64.
+        const firstKeyByte = 0xfb;
+        const secondKeyByte = 0xff;
+        const applicationServerKey = Uint8Array.of(firstKeyByte, secondKeyByte).buffer;
         const subscription = createPushSubscription('https://push.example.com/subscriptions/current', applicationServerKey);
         confirmSubscriptionOwner(subscription, 'user-a');
-        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: 'b2xk' }));
+        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: '-_8' }));
         swPush.subscription = of(subscription);
 
         const result = await service.ensureSubscriptionAsync();
@@ -366,6 +374,11 @@ describe('PushNotificationService service worker renewal', () => {
         const old = createPushSubscription('https://push.example.com/subscriptions/before-renewal');
         const expiry = '2026-12-01T00:00:00.000Z';
         const renewed = createPushSubscription('https://push.example.com/subscriptions/renewed', null, Date.parse(expiry));
+        const keys = {
+            p256dh: 'BGsX0fLhLEJH-Lzm5WOkQPJ3A32BLeszoPShOUXYmMKWT-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU',
+            auth: 'ABEiM0RVZneImaq7zN3u_w',
+        };
+        vi.spyOn(renewed, 'toJSON').mockReturnValue({ endpoint: renewed.endpoint, expirationTime: renewed.expirationTime, keys });
         await beginWithConfirmedDeviceAsync(old);
 
         const removal = new Subject<void>();
@@ -380,7 +393,7 @@ describe('PushNotificationService service worker renewal', () => {
         await vi.advanceTimersByTimeAsync(0);
 
         expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledExactlyOnceWith(
-            expect.objectContaining({ endpoint: renewed.endpoint, expirationTime: expiry }),
+            expect.objectContaining({ endpoint: renewed.endpoint, expirationTime: expiry, keys }),
         );
         expect(service.currentSubscriptionEndpoint()).toBe(renewed.endpoint);
         expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: renewed.endpoint, userId: 'user-a' }));

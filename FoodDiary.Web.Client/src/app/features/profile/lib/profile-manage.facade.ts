@@ -48,6 +48,7 @@ export class ProfileManageFacade {
     private readonly telegram = inject(TelegramWebAppService);
     private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
     private readonly unlinkFlow = inject(TelegramUnlinkFlowService);
+    private lastNotificationPreferenceSave: NotificationPreferences | null = null;
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
@@ -151,7 +152,7 @@ export class ProfileManageFacade {
             .open(ChangePasswordDialogComponent, {
                 preset: 'form',
                 data: {
-                    hasPassword: this.user()?.hasPassword ?? true,
+                    hasPassword: hasProfilePassword(user),
                     ownerDestroyRef: this.destroyRef,
                 },
             })
@@ -252,6 +253,7 @@ export class ProfileManageFacade {
 
         try {
             const notificationPreferences = await firstValueFrom(this.notificationService.updateNotificationPreferences(preferences));
+            this.lastNotificationPreferenceSave = notificationPreferences;
             this.applyNotificationPreferences(notificationPreferences);
             this.clearGlobalError();
             return this.user();
@@ -274,6 +276,7 @@ export class ProfileManageFacade {
 
         this.profileRead?.unsubscribe();
         this.isSavingProfile.set(true);
+        const preferencesAtRequest = this.lastNotificationPreferenceSave;
         // A submitted update and its session check outlive ordinary Profile navigation.
         const sessionChange = merge(this.sessionEvents.authenticated$, this.sessionEvents.sessionEnded$).pipe(take(1)).subscribe();
         try {
@@ -286,7 +289,7 @@ export class ProfileManageFacade {
                 return false;
             }
 
-            this.user.set(user);
+            this.user.set(this.mergeNotificationChangesDuringSave(user, preferencesAtRequest));
             this.profileSavedVersion.update(version => version + 1);
             void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
             this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
@@ -306,6 +309,13 @@ export class ProfileManageFacade {
     public setDietologistRelationship(relationship: DietologistRelationship | null): void {
         this.dietologistRelationshipVersion++;
         this.dietologistRelationshipState.set(relationship);
+    }
+
+    private mergeNotificationChangesDuringSave(user: User, preferencesAtRequest: NotificationPreferences | null): User {
+        const latestPreferences = this.lastNotificationPreferenceSave;
+        return latestPreferences !== null && latestPreferences !== preferencesAtRequest
+            ? withNotificationPreferences(user, latestPreferences)
+            : user;
     }
 
     private loadUser(): void {
@@ -367,14 +377,7 @@ export class ProfileManageFacade {
             return;
         }
 
-        this.user.set({
-            ...current,
-            pushNotificationsEnabled: preferences.pushNotificationsEnabled,
-            fastingPushNotificationsEnabled: preferences.fastingPushNotificationsEnabled,
-            socialPushNotificationsEnabled: preferences.socialPushNotificationsEnabled,
-            fastingCheckInReminderHours: preferences.fastingCheckInReminderHours,
-            fastingCheckInFollowUpReminderHours: preferences.fastingCheckInFollowUpReminderHours,
-        });
+        this.user.set(withNotificationPreferences(current, preferences));
     }
 
     public refreshWebPushSubscriptions(): void {
@@ -421,4 +424,20 @@ export class ProfileManageFacade {
                 error: () => {},
             });
     }
+}
+
+export function hasProfilePassword(user: User | null): boolean {
+    // Require a current password until a loaded profile explicitly reports otherwise.
+    return user?.hasPassword ?? true;
+}
+
+function withNotificationPreferences(user: User, preferences: NotificationPreferences): User {
+    return {
+        ...user,
+        pushNotificationsEnabled: preferences.pushNotificationsEnabled,
+        fastingPushNotificationsEnabled: preferences.fastingPushNotificationsEnabled,
+        socialPushNotificationsEnabled: preferences.socialPushNotificationsEnabled,
+        fastingCheckInReminderHours: preferences.fastingCheckInReminderHours,
+        fastingCheckInFollowUpReminderHours: preferences.fastingCheckInFollowUpReminderHours,
+    };
 }

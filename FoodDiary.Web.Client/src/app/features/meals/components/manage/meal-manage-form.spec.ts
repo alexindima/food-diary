@@ -1899,6 +1899,10 @@ describe('Meal editor rendered nutrition modes', () => {
         fixture.detectChanges();
         expect(calories.value).toBe('280');
 
+        manual.click();
+        fixture.detectChanges();
+        expect(calories.value).toBe('280');
+
         automatic.click();
         fixture.detectChanges();
         expect(calories.readOnly).toBe(true);

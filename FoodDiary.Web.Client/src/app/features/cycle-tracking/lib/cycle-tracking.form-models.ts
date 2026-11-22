@@ -12,7 +12,7 @@ import {
 } from '../../../shared/models/cycle.data';
 
 export type StartCycleFormModel = {
-    trackingStartDate: string | null;
+    trackingStartDate: string;
     mode: CycleTrackingMode;
     averageCycleLength: number | null;
     averagePeriodLength: number | null;

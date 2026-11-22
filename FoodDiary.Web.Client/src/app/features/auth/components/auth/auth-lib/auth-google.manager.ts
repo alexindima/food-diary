@@ -42,7 +42,7 @@ export class AuthGoogleManager {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
     public readonly ready = signal<boolean>(false);
-    private readonly nativeReady = signal<boolean>(false);
+    private readonly nativePlugin = signal<SocialLoginPlugin | null>(null);
     private callback: ((credential: string) => void) | null = null;
     private nativeClickUnlisten: (() => void) | null = null;
     private nativeLoginInProgress = false;
@@ -61,12 +61,12 @@ export class AuthGoogleManager {
             return;
         }
 
-        const nativeReady = await this.tryInitializeNativeAsync(clientId);
+        const socialLogin = await this.tryInitializeNativeAsync(clientId);
         if (this.destroyRef.destroyed) {
             return;
         }
-        if (nativeReady) {
-            this.nativeReady.set(true);
+        if (socialLogin !== null) {
+            this.nativePlugin.set(socialLogin);
             this.ready.set(true);
             return;
         }
@@ -89,8 +89,9 @@ export class AuthGoogleManager {
             return;
         }
 
-        if (this.nativeReady()) {
-            this.renderNativeButton(mode, target);
+        const socialLogin = this.nativePlugin();
+        if (socialLogin !== null) {
+            this.renderNativeButton(mode, target, socialLogin);
             return;
         }
 
@@ -119,10 +120,10 @@ export class AuthGoogleManager {
         return resolveTranslateLanguage(this.translateService) === 'ru' ? 'ru' : 'en';
     }
 
-    private async tryInitializeNativeAsync(clientId: string): Promise<boolean> {
+    private async tryInitializeNativeAsync(clientId: string): Promise<SocialLoginPlugin | null> {
         const socialLogin = this.getSocialLoginPlugin();
         if (socialLogin === null) {
-            return false;
+            return null;
         }
 
         try {
@@ -131,13 +132,13 @@ export class AuthGoogleManager {
                     webClientId: clientId,
                 },
             });
-            return true;
+            return socialLogin;
         } catch {
-            return false;
+            return null;
         }
     }
 
-    private renderNativeButton(mode: AuthGoogleMode, target: HTMLElement): void {
+    private renderNativeButton(mode: AuthGoogleMode, target: HTMLElement, socialLogin: SocialLoginPlugin): void {
         this.nativeClickUnlisten?.();
         this.nativeClickUnlisten = null;
 
@@ -147,7 +148,7 @@ export class AuthGoogleManager {
         this.renderer.setProperty(button, 'textContent', this.getNativeButtonText(mode));
         this.renderer.appendChild(target, button);
         this.nativeClickUnlisten = this.renderer.listen(button, 'click', () => {
-            void this.loginNativeAsync();
+            void this.loginNativeAsync(socialLogin);
         });
     }
 
@@ -157,13 +158,8 @@ export class AuthGoogleManager {
         return this.translateService.instant(key);
     }
 
-    private async loginNativeAsync(): Promise<void> {
+    private async loginNativeAsync(socialLogin: SocialLoginPlugin): Promise<void> {
         if (this.nativeLoginInProgress) {
-            return;
-        }
-
-        const socialLogin = this.getSocialLoginPlugin();
-        if (socialLogin === null) {
             return;
         }
 

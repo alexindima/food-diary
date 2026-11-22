@@ -6,6 +6,7 @@ import {
     computed,
     DestroyRef,
     effect,
+    type EffectRef,
     inject,
     Injector,
     input,
@@ -489,14 +490,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             dialog.close(null);
         };
         const unregisterClose = this.destroyRef.onDestroy(closeDialog);
-        const closeOnMealChange = effect(
-            () => {
-                if (!this.isCurrentMeal(meal)) {
-                    untracked(closeDialog);
-                }
-            },
-            { injector: this.injector },
-        );
+        const closeOnMealChange = this.closeDialogOnMealChange(meal, closeDialog);
         const cleanup = (): void => {
             closeOnMealChange.destroy();
             unregisterClose();
@@ -558,16 +552,9 @@ export class MealManageFormComponent implements UnsavedEditor {
     private async editAiSessionAsync(session: MealAiSessionManageDto): Promise<void> {
         const meal = this.meal();
         const reviewScope = new AbortController();
-        const closeOnMealChange = effect(
-            () => {
-                if (!this.isCurrentMeal(meal)) {
-                    untracked(() => {
-                        reviewScope.abort();
-                    });
-                }
-            },
-            { injector: this.injector },
-        );
+        const closeOnMealChange = this.closeDialogOnMealChange(meal, () => {
+            reviewScope.abort();
+        });
         try {
             const updated = await this.mealManageFacade.openEditAiPhotoSessionDialogAsync(session, this.destroyRef, reviewScope.signal);
             if (updated === null || !this.isCurrentMeal(meal)) {
@@ -587,15 +574,10 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     // --- Nutrition mode (delegated from MealNutritionSidebarComponent events) ---
 
-    protected onNutritionModeChange(nextMode: string): void {
-        const resolvedMode: NutritionMode = nextMode === 'manual' ? 'manual' : 'auto';
-        if (this.nutritionMode() === resolvedMode) {
-            return;
-        }
-
+    protected onNutritionModeChange(nextMode: NutritionMode): void {
         this.mealSignalForm.isNutritionAutoCalculated().markAsDirty();
-        this.nutritionMode.set(resolvedMode);
-        const isAuto = resolvedMode === 'auto';
+        this.nutritionMode.set(nextMode);
+        const isAuto = nextMode === 'auto';
         this.patchMealFormModel({ isNutritionAutoCalculated: isAuto });
         if (!isAuto) {
             this.populateManualNutritionFromCurrentSummary();
@@ -854,6 +836,17 @@ export class MealManageFormComponent implements UnsavedEditor {
         } else {
             this.handleSubmitError();
         }
+    }
+
+    private closeDialogOnMealChange(meal: Meal | null, close: () => void): EffectRef {
+        return effect(
+            () => {
+                if (!this.isCurrentMeal(meal)) {
+                    untracked(close);
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     private isCurrentMeal(meal: Meal | null): boolean {

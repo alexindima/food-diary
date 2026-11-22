@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, model, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, model, output, viewChildren } from '@angular/core';
 
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
 
@@ -31,9 +31,10 @@ export type FdUiEmojiPickerSize = 'sm' | 'md';
     styleUrls: ['./fd-ui-emoji-picker.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FdUiEmojiPickerComponent {
-    public readonly options = input<FdUiEmojiPickerOption[]>([]);
-    public readonly selectedValue = model<FdUiEmojiPickerValue | null>(null);
+export class FdUiEmojiPickerComponent<Value extends FdUiEmojiPickerValue = FdUiEmojiPickerValue> {
+    public readonly options = input<Array<FdUiEmojiPickerOption<Value>>>([]);
+    public readonly selectedValue = model<Value | null>(null);
+    public readonly optionSelected = output<FdUiEmojiPickerOption<Value>>();
     public readonly ariaLabel = input<string | null>(null);
     public readonly size = input<FdUiEmojiPickerSize>('md');
     public readonly fullWidth = input(false);
@@ -56,27 +57,28 @@ export class FdUiEmojiPickerComponent {
         return classes.join(' ');
     });
 
-    private readonly tabStopValue = computed<FdUiEmojiPickerValue | null>(() => {
+    private readonly tabStopValue = computed<Value | null>(() => {
         const options = this.options();
         const selectedValue = this.selectedValue();
         const selectedOption = options.find(item => item.value === selectedValue && item.disabled !== true);
         return selectedOption?.value ?? options.find(item => item.disabled !== true)?.value ?? null;
     });
 
-    protected isSelected(value: FdUiEmojiPickerValue): boolean {
+    protected isSelected(value: Value): boolean {
         return this.selectedValue() === value;
     }
 
-    protected getTabIndex(value: FdUiEmojiPickerValue): number {
+    protected getTabIndex(value: Value): number {
         return this.tabStopValue() === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
     }
 
-    protected select(option: FdUiEmojiPickerOption): void {
+    protected select(option: FdUiEmojiPickerOption<Value>): void {
         if (option.disabled === true || option.value === this.selectedValue()) {
             return;
         }
 
         this.selectedValue.set(option.value);
+        this.optionSelected.emit(option);
     }
 
     protected navigateEmojiGrid(index: number, event: KeyboardEvent): void {
@@ -118,7 +120,7 @@ export class FdUiEmojiPickerComponent {
         }
     }
 
-    protected getOptionAriaLabel(option: FdUiEmojiPickerOption): string {
+    protected getOptionAriaLabel(option: FdUiEmojiPickerOption<Value>): string {
         return option.ariaLabel ?? option.label ?? String(option.value);
     }
 

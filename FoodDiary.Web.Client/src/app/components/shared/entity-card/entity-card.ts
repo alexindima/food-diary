@@ -90,7 +90,7 @@ export class EntityCardComponent {
         const prime = 16777619;
         let hash = offsetBasis;
         for (const character of key) {
-            hash = Math.imul(hash ^ (character.codePointAt(0) ?? 0), prime);
+            hash = Math.imul(hash ^ Number(character.codePointAt(0)), prime);
         }
         return `url("assets/images/card-backgrounds/${images[(hash >>> 0) % images.length]}.svg")`;
     });

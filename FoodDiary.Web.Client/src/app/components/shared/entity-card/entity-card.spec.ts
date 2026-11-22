@@ -84,6 +84,19 @@ describe('EntityCardComponent preview state', () => {
 });
 
 describe('EntityCardComponent computed view model', () => {
+    it('keeps stable decoration for the default and a Unicode key', async () => {
+        const { fixture } = await setupEntityCardAsync();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const background = host.querySelector<HTMLElement>('.entity-card__background');
+        expect(background?.style.maskImage).toContain('card-backgrounds/41004.svg');
+
+        fixture.componentRef.setInput('backgroundKey', 'Рагу🍲');
+        fixture.detectChanges();
+
+        expect(background?.style.maskImage).toContain('card-backgrounds/2026647.svg');
+    });
+
     it('limits collage images and normalizes quality score', async () => {
         const { component, fixture } = await setupEntityCardAsync();
         fixture.componentRef.setInput('collageImages', [

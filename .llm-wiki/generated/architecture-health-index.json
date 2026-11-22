@@ -3651,22 +3651,22 @@
       "inputs": [
         {
           "name": "cyclicPresetOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
+          "type": "Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>",
           "required": true
         },
         {
           "name": "selectedCyclicPresetValue",
-          "type": "string",
+          "type": "CyclicPresetSelection",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocol",
-          "type": "FastingProtocol",
+          "type": "IntermittentFastingProtocol",
           "required": true
         },
         {
@@ -3703,7 +3703,7 @@
       "outputs": [
         {
           "name": "cyclicPresetChange",
-          "type": "string"
+          "type": "CyclicPresetSelection"
         },
         {
           "name": "cyclicFastDaysChange",
@@ -3719,7 +3719,7 @@
         },
         {
           "name": "cyclicEatDayProtocolChange",
-          "type": "FastingProtocol"
+          "type": "IntermittentFastingProtocol"
         }
       ],
       "specPath": null
@@ -3795,12 +3795,12 @@
         },
         {
           "name": "cyclicPresetOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
+          "type": "Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>",
           "required": true
         },
         {
@@ -3810,12 +3810,12 @@
         },
         {
           "name": "selectedCyclicPresetValue",
-          "type": "string",
+          "type": "CyclicPresetSelection",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocol",
-          "type": "FastingProtocol",
+          "type": "IntermittentFastingProtocol",
           "required": true
         },
         {
@@ -3908,7 +3908,7 @@
         },
         {
           "name": "cyclicPresetChange",
-          "type": "string"
+          "type": "CyclicPresetSelection"
         },
         {
           "name": "cyclicFastDaysChange",
@@ -3928,7 +3928,7 @@
         },
         {
           "name": "cyclicEatDayProtocolChange",
-          "type": "FastingProtocol"
+          "type": "IntermittentFastingProtocol"
         }
       ],
       "specPath": null

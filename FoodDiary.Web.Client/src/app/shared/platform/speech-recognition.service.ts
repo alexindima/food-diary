@@ -1,6 +1,8 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
 
+import { getStringProperty } from '../lib/unknown-value.utils';
+
 export type SpeechRecognitionFailure = 'unsupported' | 'microphone-unavailable' | 'permission-denied' | 'network' | 'failed';
 
 @Service()
@@ -70,7 +72,7 @@ export class SpeechRecognitionService {
             return true;
         } catch (error: unknown) {
             this.finish();
-            onError?.(classifySpeechException(error));
+            onError?.(classifySpeechFailure(getStringProperty(error, 'name')));
             return false;
         }
     }
@@ -137,8 +139,8 @@ type SpeechRecognitionWindow = Window & {
     webkitSpeechRecognition?: SpeechRecognitionConstructorLike;
 };
 
-function classifySpeechFailure(error: string): SpeechRecognitionFailure {
-    const failures = new Map<string, SpeechRecognitionFailure>([
+function classifySpeechFailure(error: string | undefined): SpeechRecognitionFailure {
+    const failures = new Map<string | undefined, SpeechRecognitionFailure>([
         ['audio-capture', 'microphone-unavailable'],
         ['not-allowed', 'permission-denied'],
         ['service-not-allowed', 'permission-denied'],
@@ -149,9 +151,4 @@ function classifySpeechFailure(error: string): SpeechRecognitionFailure {
         ['NotReadableError', 'microphone-unavailable'],
     ]);
     return failures.get(error) ?? 'failed';
-}
-
-function classifySpeechException(error: unknown): SpeechRecognitionFailure {
-    const name = typeof error === 'object' && error !== null && 'name' in error && typeof error.name === 'string' ? error.name : '';
-    return classifySpeechFailure(name);
 }

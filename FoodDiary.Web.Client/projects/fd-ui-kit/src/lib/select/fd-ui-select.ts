@@ -61,6 +61,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<T | null>(null);
+    public readonly optionSelected = output<FdUiSelectOption<T>>();
     public readonly touched = model(false);
     protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
@@ -130,7 +131,10 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
             return;
         }
 
-        this.value.set(option.value);
+        if (!this.isEqual(this.value(), option.value)) {
+            this.value.set(option.value);
+            this.optionSelected.emit(option);
+        }
         this.touched.set(true);
         this.touch.emit();
         this.closeMenu();

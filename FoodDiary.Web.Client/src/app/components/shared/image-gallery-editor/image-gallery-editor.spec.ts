@@ -13,10 +13,14 @@ import { type ImageSelection, imageSelection } from '../../../shared/models/imag
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 import { ImageGalleryEditorComponent } from './image-gallery-editor';
 
-function getRemoveMenuButton(): HTMLButtonElement | undefined {
+function getPhotoMenuButton(label: string): HTMLButtonElement | undefined {
     return Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')).find(
-        button => button.textContent.trim() === 'IMAGE_UPLOAD_FIELD.REMOVE',
+        button => button.textContent.trim() === label && button.closest('[hidden]') === null,
     );
+}
+
+function getRemoveMenuButton(): HTMLButtonElement | undefined {
+    return getPhotoMenuButton('IMAGE_UPLOAD_FIELD.REMOVE');
 }
 
 describe('ImageGalleryEditorComponent upload errors', () => {
@@ -100,31 +104,55 @@ describe('ImageGalleryEditorComponent upload errors', () => {
 });
 
 describe('ImageGalleryEditorComponent preview focus', () => {
-    it.each([0, 1])('restores focus to photo %s instead of the disappearing menu item', index => {
-        const open = vi.fn();
-        TestBed.configureTestingModule({
-            imports: [ImageGalleryEditorComponent],
-            providers: [
-                provideTranslateTesting(),
-                provideRouter([]),
-                { provide: FdUiDialogService, useValue: { open } },
-                { provide: ImageUploadFacade, useValue: { upload: vi.fn() } },
-                { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
-            ],
-        });
-        const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
-        fixture.componentRef.setInput('photos', [
-            imageSelection('https://example.com/one.png', 'photo-1'),
-            imageSelection('https://example.com/two.png', 'photo-2'),
-        ]);
-        fixture.detectChanges();
-        const host = fixture.nativeElement as HTMLElement;
-        const trigger = host.querySelectorAll('.recognition-photos__preview button')[index];
+    it.each([
+        { index: 0, initialIndex: 0 },
+        { index: 2, initialIndex: 1 },
+    ])(
+        'opens photo $index at collage position $initialIndex and targets its original button for focus',
+        async ({ index, initialIndex }) => {
+            const open = vi.fn();
+            TestBed.configureTestingModule({
+                imports: [ImageGalleryEditorComponent],
+                providers: [
+                    provideTranslateTesting(),
+                    provideRouter([]),
+                    { provide: FdUiDialogService, useValue: { open } },
+                    { provide: ImageUploadFacade, useValue: { upload: vi.fn() } },
+                    { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
+                ],
+            });
+            const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
+            const first = imageSelection('https://example.com/one.png', 'photo-1');
+            const assetOnly = imageSelection(null, 'legacy-photo');
+            const last = imageSelection('https://example.com/two.png', 'photo-2');
+            const photos = [first, assetOnly, last];
+            fixture.componentRef.setInput('photos', photos);
+            fixture.componentRef.setInput('cover', first);
+            fixture.componentRef.setInput('disabled', true);
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            const trigger = host.querySelectorAll<HTMLButtonElement>('.recognition-photos__preview button')[index];
+            expect(trigger).toBeInstanceOf(HTMLButtonElement);
+            trigger.click();
 
-        fixture.componentInstance['preview'](index);
+            const viewLabel = 'PRODUCT_AI_DIALOG.VIEW_PHOTO';
+            await vi.waitFor(() => {
+                fixture.detectChanges();
+                expect(getPhotoMenuButton(viewLabel)?.disabled).toBe(false);
+            });
+            getPhotoMenuButton(viewLabel)?.click();
 
-        expect(open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ restoreFocus: trigger }));
-    });
+            expect(open).toHaveBeenCalledExactlyOnceWith(
+                expect.anything(),
+                expect.objectContaining({
+                    restoreFocus: trigger,
+                    data: { collageImages: [{ url: first.url }, { url: last.url }], initialIndex },
+                }),
+            );
+            expect(fixture.componentInstance.cover()).toEqual(first);
+            expect(fixture.componentInstance.photos()).toEqual(photos);
+        },
+    );
 });
 
 describe('Saved photo without a preview URL', () => {
@@ -156,6 +184,7 @@ describe('Saved photo without a preview URL', () => {
             fixture.detectChanges();
             expect(getRemoveMenuButton()?.disabled).toBe(true);
         });
+        expect(getPhotoMenuButton('PRODUCT_AI_DIALOG.VIEW_PHOTO')).toBeUndefined();
         getRemoveMenuButton()?.click();
         expect(fixture.componentInstance.cover()).toEqual(cover);
         expect(fixture.componentInstance.photos()).toEqual([cover, photo]);

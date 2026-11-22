@@ -1,14 +1,20 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, PLATFORM_ID, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject } from 'rxjs';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
+import { environment as taskEnvironment } from '../../../environments/environment.task';
+import { FIXTURE_USER_ID, userFixture } from '../../../testing/api-fixtures';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
+import type { AuthenticationHttpResponse } from '../../shared/api/sdk/generated/model/authentication-http-response';
 import { UserService } from '../../shared/api/user.service';
 import { decodeNotificationKind } from '../../shared/models/notification-kind';
 import { utcInstant } from '../../shared/models/semantics/date-value';
@@ -21,7 +27,7 @@ import { SidebarComponent } from './sidebar';
 class SidebarRouteFixture {}
 
 const user: User = {
-    id: entityId<'user'>('sidebar-account'),
+    id: entityId<'user'>(FIXTURE_USER_ID),
     email: 'sidebar@example.test',
     username: 'Alex',
     hasPassword: true,
@@ -56,11 +62,20 @@ type SidebarIntegrationContext = {
     router: Router;
 };
 
+async function restoreSidebarSessionAsync(session: AuthenticationHttpResponse): Promise<void> {
+    const http = TestBed.inject(HttpTestingController);
+    const restored = TestBed.inject(AuthService).restoreSessionAsync();
+    http.expectOne({ method: 'POST', url: `${environment.apiUrls.auth}/session` }).flush(session);
+    await restored;
+    http.verify();
+}
+
 async function setupSidebarAsync(
     options: {
         decision?: Subject<boolean>;
         productDecision?: Subject<boolean>;
         realDialogs?: boolean;
+        authSession?: AuthenticationHttpResponse;
         mediaQuery?: MediaQueryList;
         platformId?: 'browser' | 'server';
     } = {},
@@ -115,13 +130,18 @@ async function setupSidebarAsync(
                 { path: 'fasting', component: SidebarRouteFixture },
                 { path: 'profile', component: SidebarRouteFixture },
             ]),
-            { provide: AuthService, useValue: auth },
+            ...(options.authSession === undefined
+                ? [{ provide: AuthService, useValue: auth }]
+                : [provideHttpClient(), provideHttpClientTesting()]),
             { provide: UserService, useValue: { user: signal(user), clearUser: vi.fn(), getInfoSilently: vi.fn() } },
             { provide: DashboardService, useValue: { getSnapshotSilently: vi.fn(() => of(null)) } },
             { provide: NotificationService, useValue: notifications },
             ...(options.realDialogs === true ? [] : [{ provide: FdUiDialogService, useValue: { open } }]),
         ],
     }).compileComponents();
+    if (options.authSession !== undefined) {
+        await restoreSidebarSessionAsync(options.authSession);
+    }
     const router = TestBed.inject(Router);
     await router.navigateByUrl('/');
     const fixture = TestBed.createComponent(SidebarComponent);
@@ -247,6 +267,36 @@ describe('rendered sidebar account status', () => {
         expect(notifications.fetchUnreadCount).toHaveBeenCalledTimes(2);
         expect(notifications.ensureNotificationsLoaded).toHaveBeenCalledTimes(2);
     });
+});
+
+it('opens the relative task admin URL for the administrator restored from the API', async () => {
+    const originalAdminUrl = environment.adminAppUrl;
+    onTestFinished(() => {
+        environment.adminAppUrl = originalAdminUrl;
+        localStorage.clear();
+        sessionStorage.clear();
+    });
+    environment.adminAppUrl = taskEnvironment.adminAppUrl;
+    const openAdminWindow = vi.spyOn(window, 'open').mockReturnValue(null);
+    const { fixture } = await setupSidebarAsync({
+        authSession: {
+            user: userFixture({ username: user.username }),
+            roles: ['Admin'],
+            sessionId: '780e4ffa-c8cf-4b9b-827b-1bf084cb6d94',
+        },
+    });
+    const auth = TestBed.inject(AuthService);
+    expect(auth.isAdmin()).toBe(true);
+    expect(auth.getUserId()).toBe(FIXTURE_USER_ID);
+    const action = desktopElement(fixture, 'button.fd-ui-sidebar__link--danger');
+    expect(action.textContent).toContain('SIDEBAR.ADMIN_PANEL');
+    action.click();
+
+    expect(openAdminWindow).toHaveBeenCalledExactlyOnceWith(
+        `${window.location.origin}/admin#account=${FIXTURE_USER_ID}`,
+        '_blank',
+        'noopener',
+    );
 });
 
 describe('rendered sidebar menu and notification overlay', () => {

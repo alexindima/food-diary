@@ -126,7 +126,7 @@ export class TelegramAuthComponent {
 
     private async initializeAsync(): Promise<void> {
         const timeZoneId = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-        this.registrationModel.set({ timeZoneId: timeZoneId.length > 0 ? timeZoneId : 'UTC' });
+        this.registrationModel.set({ timeZoneId });
         this.timeZoneOptions.set(telegramTimeZoneOptions(this.registrationModel().timeZoneId, new Date()));
         const rawCode = this.route.snapshot.queryParamMap.get('code');
         const rawState = this.route.snapshot.queryParamMap.get('state');
@@ -134,14 +134,8 @@ export class TelegramAuthComponent {
         const denied = this.route.snapshot.queryParamMap.has('error');
         const isCallback = code !== null || state !== null || denied;
         if (isCallback) {
-            this.browser.replaceCurrentUrl('/auth/telegram');
-            if (await this.handleAccountCallbackAsync(code, state, denied)) {
+            if (await this.handleCallbackAsync(code, state, denied)) {
                 return;
-            }
-            if (code !== null && state !== null && !denied) {
-                await this.facade.exchangeAsync(code, state);
-            } else {
-                this.facade.errorKey.set('AUTH.TELEGRAM.CANCELLED');
             }
         } else {
             this.facade.restoreIntent();
@@ -156,11 +150,22 @@ export class TelegramAuthComponent {
         }
     }
 
-    private async handleAccountCallbackAsync(
-        code: TelegramOAuthCode | null,
-        state: TelegramOAuthState | null,
-        denied: boolean,
-    ): Promise<boolean> {
+    private clearCallbackUrl(): boolean {
+        const callbackPath = '/auth/telegram';
+        try {
+            this.browser.replaceCurrentUrl(callbackPath);
+            return this.browser.getPathname() === callbackPath && this.browser.getSearch() === '';
+        } catch {
+            return false;
+        }
+    }
+
+    private async handleCallbackAsync(code: TelegramOAuthCode | null, state: TelegramOAuthState | null, denied: boolean): Promise<boolean> {
+        if (!this.clearCallbackUrl()) {
+            this.facade.errorKey.set('AUTH.TELEGRAM.VERIFICATION_FAILED');
+            this.ready.set(true);
+            return true;
+        }
         const unlink = await this.unlinkFlow.handleCallbackAsync(code, state, denied);
         if (unlink === 'completed') {
             this.toast.success(this.translate.instant('USER_MANAGE.TELEGRAM_UNLINK_SUCCESS'));
@@ -168,8 +173,15 @@ export class TelegramAuthComponent {
             return true;
         }
         if (unlink === 'failed' || (await this.backupEmailFlow.handleCallbackAsync(code, state, denied))) {
-            await this.navigation.navigateToProfileAsync();
+            if (!this.destroyRef.destroyed) {
+                await this.navigation.navigateToProfileAsync();
+            }
             return true;
+        }
+        if (code !== null && state !== null && !denied) {
+            await this.facade.exchangeAsync(code, state);
+        } else {
+            this.facade.errorKey.set('AUTH.TELEGRAM.CANCELLED');
         }
         return false;
     }

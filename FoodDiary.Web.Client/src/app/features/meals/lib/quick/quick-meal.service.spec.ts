@@ -368,6 +368,26 @@ describe('QuickMealService draft boundaries', () => {
         service.removeItem('product-product-1');
         expect(service.items()).toEqual([expect.objectContaining({ recipe })]);
     });
+    it.each([
+        { target: 'the original product', changesSource: false },
+        { target: 'another product still in the draft', changesSource: true },
+    ])('ignores a late edit targeting $target once the edited row was removed', ({ changesSource }) => {
+        const remainingProduct = { ...product, id: entityId<'product'>('other-product'), name: 'Rice' };
+        service.addProduct(product);
+        service.addProduct(remainingProduct, CUSTOM_PRODUCT_AMOUNT);
+        service.removeItem(`product-${product.id}`);
+
+        const editedProduct = changesSource ? remainingProduct : product;
+        service.updateItem(`product-${product.id}`, {
+            key: `product-${editedProduct.id}`,
+            type: 'product',
+            product: editedProduct,
+            amount: CUSTOM_PRODUCT_AMOUNT,
+        });
+
+        expect(service.items()).toEqual([expect.objectContaining({ product: remainingProduct, amount: CUSTOM_PRODUCT_AMOUNT })]);
+    });
+
     it('does not save empty or preview drafts and resets preview on exit', () => {
         service.saveDraft();
         service.setPreviewItems([{ key: 'preview', type: 'product', product, amount: 1 }]);

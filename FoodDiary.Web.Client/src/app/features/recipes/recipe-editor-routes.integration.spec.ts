@@ -366,6 +366,87 @@ it.each([
     expect(host.querySelector('fd-recipe-step-card img')).toBeNull();
 });
 
+it('waits for a step photo before recognizing a replacement recipe from a link', async () => {
+    TestBed.overrideProvider(AuthService, {
+        useValue: { getUserId: (): string => 'recipe-editor-owner', isAuthenticated: signal(true), isPremium: signal(true) },
+    });
+    TestBed.overrideProvider(UserFacade, { useValue: { user: signal({ aiConsentAcceptedAt: 'accepted' }) } });
+    const harness = await RouterTestingHarness.create(ADD_RECIPE);
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the routed new recipe editor');
+    }
+    const sourceUrl = 'https://example.test/roasted-onion-soup';
+    const originalName = 'Tomato soup draft';
+    const importedName = 'Roasted onion soup';
+    typeText(openRecipeImportSource(harness), sourceUrl);
+    typeText(recipeName(harness), originalName);
+    typeText(recipeTextarea(host, 'fd-recipe-step-card textarea'), INITIAL_INSTRUCTIONS);
+    harness.detectChanges();
+
+    const recognize = recipeTextButton(host, 'RECIPE_MANAGE.IMPORT.RECOGNIZE');
+    const pendingPhoto = holdRecipePhotoConfirmationAsync(recipeGalleryFileInput(host, 'fd-recipe-step-card'));
+    // Selection starts the batch synchronously while the rendered button still has its previous state.
+    expect(recognize.isConnected).toBe(true);
+    expect(recognize.disabled).toBe(false);
+    recognize.click();
+
+    const { confirmation, assetId, fileUrl } = await pendingPhoto;
+    harness.detectChanges();
+    const form = host.querySelector('form.recipe-manage__form');
+    expect(form?.getAttribute('aria-busy')).toBe('true');
+    const disabledWhileUploading = recognize.disabled;
+    recognize.click();
+    await waitForAsyncTasksAsync();
+    const http = TestBed.inject(HttpTestingController);
+    const isRecipeImport = (request: { method: string; url: string }): boolean =>
+        request.method === 'POST' && request.url.endsWith('/ai/food/recipe-import');
+    const draft = { name: importedName, sourceUrl, ingredients: [], steps: [REVISED_INSTRUCTIONS] };
+    const prematureRequests = http.match(isRecipeImport);
+    for (const request of prematureRequests) {
+        request.flush(draft);
+    }
+    await waitForAsyncTasksAsync();
+    harness.detectChanges();
+
+    const wasCanceled = confirmation.cancelled;
+    if (!wasCanceled) {
+        confirmation.flush({ assetId, fileUrl });
+    }
+    await waitForAsyncTasksAsync();
+    harness.detectChanges();
+    const attachedPhoto = host.querySelector('fd-recipe-step-card fd-image-gallery-editor img')?.getAttribute('src');
+    expect({
+        disabledWhileUploading,
+        prematureRequestCount: prematureRequests.length,
+        wasCanceled,
+        activeRecipe: recipeName(harness).value,
+        attachedPhoto,
+    }).toEqual({
+        disabledWhileUploading: true,
+        prematureRequestCount: 0,
+        wasCanceled: false,
+        activeRecipe: originalName,
+        attachedPhoto: fileUrl,
+    });
+
+    expect(recognize.disabled).toBe(false);
+    recognize.click();
+    await waitForAsyncTasksAsync();
+    const request = http.expectOne(isRecipeImport);
+    expect(request.request.body).toEqual({ sourceUrl, text: null });
+    harness.detectChanges();
+    expect(recognize.closest('fieldset')?.disabled).toBe(true);
+    expect(recognize.closest('fieldset')?.hasAttribute('inert')).toBe(true);
+    request.flush(draft);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(recipeName(harness).value).toBe(importedName);
+        expect(recipeTextarea(host, 'fd-recipe-step-card textarea').value).toBe(REVISED_INSTRUCTIONS);
+        expect(host.querySelector('fd-recipe-step-card fd-image-gallery-editor img')).toBeNull();
+    });
+});
+
 it('keeps a new recipe draft when departure is cancelled and leaves only after discard', async () => {
     const harness = await RouterTestingHarness.create(ADD_RECIPE);
     const router = TestBed.inject(Router);
@@ -670,6 +751,29 @@ it('binds the resolved owned recipe to the lazy edit form', async () => {
     expect(TestBed.inject(Router).url).toBe(EDIT_RECIPE);
     expect(readRecipe).toHaveBeenCalledExactlyOnceWith(RECIPE.id, false);
     expect(recipeName(harness).value).toBe(RECIPE.name);
+});
+
+it('shows Other for a legacy recipe with no category and saves the selected category', async () => {
+    stubScrollIntoView();
+    const stored: Recipe = { ...confirmedRecipe(), language: 'en', category: null };
+    readRecipe.mockReturnValueOnce(of(stored));
+    updateRecipe.mockReturnValueOnce(of({ ...stored, category: 'desserts' }));
+    const harness = await RouterTestingHarness.create(EDIT_RECIPE);
+    const host = harness.routeNativeElement;
+    const category = getButton(host, 'fd-recipe-basic-info .recipe-basic-info__hero-field fd-ui-select button[aria-haspopup="listbox"]');
+
+    expect(category.textContent.trim()).toBe('RECIPE_CATEGORIES.other');
+    category.click();
+    harness.detectChanges();
+    const options = document.querySelector('[role="listbox"][aria-label="RECIPE_MANAGE.CATEGORY"]');
+    recipeTextButton(options, 'RECIPE_CATEGORIES.desserts').click();
+    harness.detectChanges();
+
+    expect(category.textContent.trim()).toBe('RECIPE_CATEGORIES.desserts');
+    getButton(host, 'button[type="submit"]').click();
+    await vi.waitFor(() => {
+        expect(updateRecipe).toHaveBeenCalledExactlyOnceWith(stored.id, expect.objectContaining({ category: 'desserts' }));
+    });
 });
 
 it('repairs a legacy recipe without steps and saves only after the required first step is filled', async () => {

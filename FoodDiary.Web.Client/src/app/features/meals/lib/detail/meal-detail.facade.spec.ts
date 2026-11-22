@@ -1,4 +1,5 @@
 import { DATE_PIPE_DEFAULT_OPTIONS, DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -216,7 +217,9 @@ describe('MealDetailFacade removal failures', () => {
         if (mode === 'lookup') {
             favoriteMealService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         } else {
-            favoriteMealService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
+            favoriteMealService.remove.mockReturnValueOnce(
+                throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })),
+            );
         }
         facade.toggleFavorite(meal);
         expect(facade.isFavorite()).toBe(true);
@@ -224,6 +227,7 @@ describe('MealDetailFacade removal failures', () => {
         facade.toggleFavorite(meal);
         expect(facade.isFavorite()).toBe(false);
         expect(facade.isFavoriteLoading()).toBe(false);
+        expect(favoriteMealService.getLookupPage).toHaveBeenCalledTimes(mode === 'known' ? 0 : 2);
     });
 });
 
@@ -249,5 +253,27 @@ describe('MealDetailFacade delayed favorite initialization', () => {
         facade.toggleFavorite(meal);
         TestBed.resetTestingModule();
         expect(response.observed).toBe(false);
+    });
+});
+
+describe('MealDetailFacade stale favorite lookup ownership', () => {
+    it('cancels reconciliation when the dialog is destroyed and admits only one removal while pending', () => {
+        const lookup = new Subject<FavoriteMeal[]>();
+        favoriteMealService.isFavorite.mockReturnValue(of(true));
+        favoriteMealService.remove.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.NotFound })));
+        favoriteMealService.getLookupPage.mockReturnValue(lookup);
+        facade.initialize({ ...meal, isFavorite: true, favoriteMealId: favoriteMeal.id });
+
+        facade.toggleFavorite(meal);
+        expect(lookup.observed).toBe(true);
+        expect(facade.isFavoriteLoading()).toBe(true);
+        facade.toggleFavorite(meal);
+        expect(favoriteMealService.remove).toHaveBeenCalledExactlyOnceWith(favoriteMeal.id);
+        expect(favoriteMealService.getLookupPage).toHaveBeenCalledOnce();
+
+        TestBed.resetTestingModule();
+        expect(lookup.observed).toBe(false);
+        lookup.next([{ ...favoriteMeal, id: entityId<'favorite-meal'>('replacement') }]);
+        expect(favoriteMealService.remove).toHaveBeenCalledTimes(1);
     });
 });

@@ -8,6 +8,8 @@ const MOBILE_WIDTH = 767;
 const MOBILE_BOUNDARY = 768;
 const FIRST_DESKTOP_WIDTH = 769;
 const VIEWPORT_HEIGHT = 900;
+const MOBILE_KEYBOARD_WIDTH = 390;
+const MOBILE_KEYBOARD_HEIGHT = 844;
 
 test('shows complete account menu labels with collapsed desktop navigation', async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -75,6 +77,90 @@ test('closes the desktop account menu when keyboard focus moves to the page', as
     await expect(viewport).toBeFocused();
 });
 
+test('restores the remounted mobile User button after cancelling a keyboard logout', async ({ page, baseURL }, testInfo) => {
+    if (baseURL === undefined) {
+        throw new Error('The keyboard logout test requires a local application origin.');
+    }
+    const origin = new URL(baseURL).origin;
+    const consoleErrors: string[] = [];
+    const pageErrors: string[] = [];
+    const externalRequests: string[] = [];
+    page.on('console', message => {
+        if (message.type() === 'error') {
+            consoleErrors.push(message.text());
+        }
+    });
+    page.on('pageerror', error => pageErrors.push(error.message));
+    await page.route('**/*', async route => {
+        const url = new URL(route.request().url());
+        if (url.origin === origin && !/^\/(api|hubs)\//u.test(url.pathname)) {
+            await route.continue();
+            return;
+        }
+        externalRequests.push(`${route.request().method()} ${url.origin}${url.pathname}`);
+        await route.abort('blockedbyclient');
+    });
+    let logouts = 0;
+    page.on('request', request => {
+        if (request.method() === 'POST' && new URL(request.url()).pathname === '/api/v1/auth/logout') {
+            logouts++;
+        }
+    });
+    const session = await openSidebarAtWidthAsync(page, MOBILE_KEYBOARD_WIDTH, MOBILE_KEYBOARD_HEIGHT);
+
+    const user = page.locator('fd-sidebar-mobile nav button[data-mobile-sheet="user"]');
+    await user.focus();
+    await expect(user).toBeFocused();
+    await user.press('Enter');
+    const sheet = page.locator('.sidebar-mobile__sheet');
+    const logout = sheet.locator('button.sidebar-mobile__sheet-logout');
+    await expect(logout).toBeVisible();
+    await logout.focus();
+    await expect(logout).toBeFocused();
+    await logout.press('Enter');
+
+    const confirmation = page.locator('fd-ui-confirm-dialog');
+    await expect(confirmation.getByText('Log out?', { exact: true })).toBeVisible();
+    await expect(sheet).toHaveCount(0);
+    await expect(user).toHaveAttribute('aria-expanded', 'false');
+    const backgroundIsInert = await user.evaluate(element => element.closest('[inert]') !== null);
+    expect(backgroundIsInert).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath('mobile-logout-confirmation.png') });
+
+    const cancel = confirmation.getByRole('button', { name: 'Cancel', exact: true });
+    await cancel.focus();
+    await expect(cancel).toBeFocused();
+    await cancel.press('Enter');
+
+    await expect(confirmation).toHaveCount(0);
+    await expect(user).toBeVisible();
+    const restored = await user.evaluate(element => ({
+        activeElement: document.activeElement?.tagName,
+        focusOnUser: document.activeElement === element,
+        backgroundIsInert: element.closest('[inert]') !== null,
+    }));
+    await testInfo.attach('mobile-logout-focus', {
+        body: JSON.stringify({
+            ...restored,
+            logouts,
+            externalRequests,
+            consoleErrors,
+            pageErrors,
+            unmatchedApi: session.unexpectedRequests,
+        }),
+        contentType: 'application/json',
+    });
+    await page.screenshot({ path: testInfo.outputPath('mobile-logout-cancelled.png') });
+    expect(logouts).toBe(0);
+    expect(restored.backgroundIsInert).toBe(false);
+    await expect(page).toHaveURL(/\/dashboard$/u);
+    await expect(user).toBeFocused();
+    expect(session.unexpectedRequests).toEqual([]);
+    expect(externalRequests).toEqual([]);
+    expect(consoleErrors).toEqual([]);
+    expect(pageErrors).toEqual([]);
+});
+
 test.describe('sidebar viewport transitions', () => {
     test('dismisses the desktop account menu at the mobile breakpoint', async ({ page }) => {
         await openSidebarAtWidthAsync(page, DESKTOP_WIDTH);
@@ -117,10 +203,11 @@ test.describe('sidebar viewport transitions', () => {
     });
 });
 
-async function openSidebarAtWidthAsync(page: Page, width: number): Promise<void> {
-    await page.setViewportSize({ width, height: VIEWPORT_HEIGHT });
+async function openSidebarAtWidthAsync(page: Page, width: number, height = VIEWPORT_HEIGHT): ReturnType<typeof installClientAuthApiAsync> {
+    await page.setViewportSize({ width, height });
     const session = await installClientAuthApiAsync(page, userFixture());
     session.authenticated = true;
     await page.goto('/dashboard');
     await expect(page.locator('fd-dashboard')).toBeVisible();
+    return session;
 }

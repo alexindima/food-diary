@@ -12,10 +12,15 @@ const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 
 describe('ProductEditComponent', () => {
-    it('defaults product input to null', () => {
-        const { component } = setupComponent();
+    it('allows departure when the real edit view has no product to render', async () => {
+        TestBed.configureTestingModule({ imports: [ProductEditComponent] });
+        const fixture = TestBed.createComponent(ProductEditComponent);
+        fixture.detectChanges();
 
-        expect(component['product']()).toBeNull();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(fixture.componentInstance.product()).toBeNull();
+        expect(host.querySelector('fd-product-manage-form')).toBeNull();
+        await expect(fixture.componentInstance.canLeaveAsync()).resolves.toBe(true);
     });
 
     it('accepts product input for edit form wrapper', () => {

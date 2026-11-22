@@ -250,9 +250,11 @@ describe('ImageUploadFieldComponent resizing selected photos', () => {
         } else {
             expect(fillRect).not.toHaveBeenCalled();
         }
-        expect(revokeObjectUrl).toHaveBeenCalledExactlyOnceWith(DECODE_URL);
+        expect(revokeObjectUrl.mock.calls).toEqual([[DECODE_URL], [PREVIEW_URL]]);
+
         fixture.destroy();
-        expect(revokeObjectUrl).toHaveBeenLastCalledWith(PREVIEW_URL);
+
+        expect(revokeObjectUrl).toHaveBeenCalledTimes(2);
     });
 
     it.each(['decode', 'export'] as const)('uploads the original photo after a %s failure', async stage => {
@@ -1428,6 +1430,53 @@ describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
         expect(imageUploadService.upload).not.toHaveBeenCalled();
         expect(preparationFailed).toHaveBeenCalledOnce();
         expect(revokePreview).toHaveBeenCalledExactlyOnceWith(PREVIEW_URL);
+    });
+});
+
+describe('ImageUploadFieldComponent crop selection during export', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('keeps the confirmed crop fixed while encoding and still lets the user cancel', async () => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { dialog, apply, surface } = await openCropperAsync(fixture, 'pressed-crop.png');
+        const selection = requireElement(surface, '[role="group"]', HTMLElement);
+        const cancel = requireElement(dialog, '.image-upload-field__cropper-actions fd-ui-button:first-child button', HTMLButtonElement);
+        const moveRight = (): void => {
+            selection.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+            fixture.detectChanges();
+        };
+        selection.focus();
+        const initialLeft = selection.style.left;
+        moveRight();
+        const confirmedLeft = selection.style.left;
+        expect(confirmedLeft).not.toBe(initialLeft);
+
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+        const toBlob = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(() => {});
+        Object.defineProperties(surface, { setPointerCapture: { value: vi.fn() }, releasePointerCapture: { value: vi.fn() } });
+        apply.click();
+        fixture.detectChanges();
+        expect(toBlob).toHaveBeenCalledOnce();
+        expect(apply.disabled).toBe(true);
+        expect(cancel.disabled).toBe(false);
+
+        selection.focus();
+        moveRight();
+        const afterKeyboard = selection.style.left;
+        const pointerId = 7;
+        selection.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId, clientX: 100, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId, clientX: 120, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointerup', { pointerId }));
+        fixture.detectChanges();
+        const afterPointer = selection.style.left;
+
+        cancel.click();
+        fixture.detectChanges();
+        toBlob.mock.calls[0][0](new Blob(['cancelled crop'], { type: 'image/png' }));
+
+        expect(dialog.open).toBe(false);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect({ afterKeyboard, afterPointer }).toEqual({ afterKeyboard: confirmedLeft, afterPointer: confirmedLeft });
     });
 });
 

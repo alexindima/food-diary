@@ -193,12 +193,8 @@ function createBrowserMocks(): {
     };
 }
 
-function createProfileProviders(
-    preferences: NotificationPreferences,
-    recordSubscription: ProfileNotificationBoundaries['recordSubscription'],
-    devices: WebPushSubscriptionItem[],
-): Provider[] {
-    const overview: UserProfileOverview = {
+function createProfileOverview(preferences: NotificationPreferences, devices: WebPushSubscriptionItem[]): UserProfileOverview {
+    return {
         user: {
             ...preferences,
             id: entityId<'user'>('profile-user'),
@@ -211,6 +207,14 @@ function createProfileProviders(
         webPushSubscriptions: devices,
         dietologistRelationship: null,
     };
+}
+
+function createProfileProviders(
+    preferences: NotificationPreferences,
+    recordSubscription: ProfileNotificationBoundaries['recordSubscription'],
+    devices: WebPushSubscriptionItem[],
+): Provider[] {
+    const overview = createProfileOverview(preferences, devices);
     return [
         { provide: UserService, useValue: { getOverview: (): ReturnType<UserService['getOverview']> => of(overview) } },
         { provide: ProfileMeasurementsService, useValue: { getLatest: () => of({ weightKg: null, waistCm: null }) } },
@@ -326,6 +330,47 @@ describe('Profile notification settings', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('.user-manage__form > .user-manage__error')).toBeNull();
         expect(account.updateNotificationPreferences.mock.calls).toEqual([[disabled], [disabled]]);
         expect(toast.info).toHaveBeenCalledExactlyOnceWith(`USER_MANAGE.NOTIFICATIONS_${category}_DISABLED_TOAST`);
+    });
+});
+
+describe('Profile and notification saves', () => {
+    it('keeps confirmed notification settings when an older profile save response arrives', async () => {
+        const overview = createProfileOverview(initialPreferences, knownDevices);
+        const profileSave = new Subject<UserProfileOverview['user']>();
+        const updateProfile = vi.fn<UserService['update']>().mockReturnValue(profileSave);
+        const { fixture, account } = setup(initialPreferences, knownDevices, [
+            {
+                provide: UserService,
+                useValue: { getOverview: (): ReturnType<UserService['getOverview']> => of(overview), update: updateProfile },
+            },
+        ]);
+        const firstName = element(fixture, '[data-user-field="firstName"] input');
+        if (!(firstName instanceof HTMLInputElement)) {
+            throw new TypeError('Expected an editable first name input');
+        }
+        firstName.value = 'New profile name';
+        firstName.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        notificationButton(fixture, 'fd-unsaved-changes-bar fd-ui-button:last-child button').click();
+        expect(updateProfile).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ firstName: 'New profile name' }));
+
+        const fasting = categorySwitch(fixture, 'FASTING');
+        fixture.detectChanges();
+        expect(fasting.disabled).toBe(false);
+        account.updateNotificationPreferences.mockReturnValueOnce(of({ ...initialPreferences, fastingPushNotificationsEnabled: false }));
+        fasting.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ fastingPushNotificationsEnabled: false });
+        expect(fasting.getAttribute('aria-checked')).toBe('false');
+
+        profileSave.next({ ...overview.user, firstName: 'New profile name' });
+        profileSave.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-unsaved-changes-bar')).toBeNull();
+        expect(firstName.value).toBe('New profile name');
+        expect(fasting.getAttribute('aria-checked')).toBe('false');
     });
 });
 
@@ -1179,6 +1224,41 @@ describe('Notification requests after leaving profile settings', () => {
         expect(toast.info).not.toHaveBeenCalled();
         expect(toast.success).not.toHaveBeenCalled();
     });
+});
+
+it('finishes an account reminder save without showing its Profile toast on the diary', async () => {
+    const { harness, profile, account, toast } = await setupRoutedProfileAsync();
+    expect(profile.isConnected).toBe(true);
+    const recordTiming = vi.spyOn(TestBed.inject(FrontendObservabilityService), 'recordFastingReminderTimingSaved');
+    const pending = new Subject<NotificationPreferences>();
+    account.updateNotificationPreferences.mockReturnValueOnce(pending);
+    const firstReminderHours = 16;
+    const followUpReminderHours = 24;
+    const request = { fastingCheckInReminderHours: firstReminderHours, fastingCheckInFollowUpReminderHours: followUpReminderHours };
+
+    const preset = Array.from(profile.querySelectorAll<HTMLButtonElement>('.user-manage__notifications-reminder-presets-list button')).find(
+        button => button.textContent.includes('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_PRESET_STEADY'),
+    );
+    expect(preset).toBeDefined();
+    preset?.click();
+    harness.detectChanges();
+    const save = profile.querySelector<HTMLButtonElement>('.user-manage__notifications-reminder-save button');
+    expect(save?.disabled).toBe(false);
+    save?.click();
+    expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith(request);
+    expect(pending.observed).toBe(true);
+    expect(toast.info).not.toHaveBeenCalled();
+
+    await harness.navigateByUrl('/diary', NotificationDepartureComponent);
+    expect(profile.isConnected).toBe(false);
+    expect(pending.observed).toBe(true);
+    pending.next({ ...initialPreferences, ...request });
+    pending.complete();
+    await waitForAsyncTasksAsync();
+
+    expect(harness.routeNativeElement?.textContent).toContain('Diary opened');
+    expect(recordTiming).toHaveBeenCalledExactlyOnceWith({ firstReminderHours, followUpReminderHours, source: 'preset', presetId: 'steady' });
+    expect(toast.info).not.toHaveBeenCalled();
 });
 
 describe('Current-device enrollment after navigating from profile', () => {

@@ -26,12 +26,12 @@
         </div>
 
         <div class="recipe-cook-mode__photos">
-            @for (photo of stepPhotos(); track $index) {
+            @for (photo of step.photos; track $index) {
                 <button
                     type="button"
                     class="recipe-cook-mode__photo"
                     [attr.aria-label]="'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate"
-                    (click)="previewPhoto($index)"
+                    (click)="previewPhoto($index, step.photos)"
                 >
                     <img class="recipe-cook-mode__image" [src]="photo" [alt]="step.title ?? recipe().name" />
                 </button>

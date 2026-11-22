@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -9,9 +9,9 @@ import { catchError, distinctUntilChanged, EMPTY, filter, finalize, map, type Ob
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
@@ -36,27 +36,6 @@ export class DietologistInvitationPageComponent {
     protected readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
-    protected readonly invitationView = computed<DietologistInvitationView | null>(() => {
-        this.currentLanguage();
-        const invitation = this.invitation();
-        if (invitation === null) {
-            return null;
-        }
-
-        const displayName = [invitation.clientFirstName, invitation.clientLastName]
-            .filter((value): value is string => value !== null && value.length > 0)
-            .join(' ')
-            .trim();
-
-        return {
-            invitation,
-            displayName:
-                displayName.length > 0
-                    ? displayName
-                    : (invitation.clientEmail ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT')),
-            expiresDateLabel: this.formatMediumDate(invitation.expiresAtUtc),
-        };
-    });
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -79,6 +58,22 @@ export class DietologistInvitationPageComponent {
                 this.invitation.set(invitation);
                 this.state.set(this.resolveState(invitation.status));
             });
+    }
+
+    protected describeInvitation(invitation: DietologistInvitationForCurrentUser): DietologistInvitationView {
+        const language = this.currentLanguage();
+        const displayName = [invitation.clientFirstName, invitation.clientLastName]
+            .filter((value): value is string => value !== null && value.length > 0)
+            .join(' ')
+            .trim();
+
+        return {
+            displayName:
+                displayName.length > 0
+                    ? displayName
+                    : (invitation.clientEmail ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT')),
+            expiresDateLabel: formatDietologistDate(invitation.expiresAtUtc, language),
+        };
     }
 
     protected accept(): void {
@@ -184,17 +179,6 @@ export class DietologistInvitationPageComponent {
         }
     }
 
-    private formatMediumDate(value: string): string {
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) {
-            return value;
-        }
-
-        return new Intl.DateTimeFormat(resolveAppLocale(this.currentLanguage()), {
-            dateStyle: 'medium',
-        }).format(date);
-    }
-
     private resolveCurrentLanguage(): string {
         const current = this.translateService.getCurrentLang() as string | null | undefined;
         if (current !== null && current !== undefined && current.length > 0) {
@@ -207,7 +191,6 @@ export class DietologistInvitationPageComponent {
 }
 
 type DietologistInvitationView = {
-    invitation: DietologistInvitationForCurrentUser;
     displayName: string;
     expiresDateLabel: string;
 };

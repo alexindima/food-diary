@@ -115,6 +115,8 @@ export class AiPhotoResultComponent {
     protected readonly isEditing = signal(false);
     protected readonly isDetailsExpanded = signal(false);
     protected readonly isPortraitImage = signal(false);
+    protected readonly hasOutsideCardSpace = signal(false);
+    private readonly useOutsideCardLayout = computed(() => this.isPortraitImage() && this.hasOutsideCardSpace());
     protected readonly annotationsVisible = signal(true);
     protected readonly selectedAnnotationId = signal<string | null>(null);
     protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
@@ -164,7 +166,7 @@ export class AiPhotoResultComponent {
                 },
             ];
         });
-        return optimizeAiPhotoAnnotationLayout(annotations, this.isPortraitImage());
+        return optimizeAiPhotoAnnotationLayout(annotations, this.useOutsideCardLayout());
     });
     protected readonly activeAnnotationId = computed(
         () =>

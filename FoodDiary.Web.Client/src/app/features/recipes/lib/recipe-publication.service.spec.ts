@@ -1,33 +1,35 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { ProductVisibility } from '../../../shared/models/product.data';
 import { type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { ProductPublicationService } from '../../products/contracts/product-publication';
 import { RecipePublicationService } from './recipe-publication.service';
 
+const data: RecipeDto = {
+    name: 'Recipe',
+    servings: 1,
+    visibility: RecipeVisibility.Public,
+    calculateNutritionAutomatically: true,
+    steps: [
+        {
+            description: 'Mix',
+            ingredients: [
+                { productId: 'private', amount: 150.5 },
+                { productId: 'public', amount: 100 },
+                { textName: 'Salt', amountText: 'to taste', amount: 0 },
+            ],
+        },
+    ],
+};
+
 describe('RecipePublicationService', () => {
     const products = { loadAsync: vi.fn(), publishAsync: vi.fn() };
     const dialogs = { open: vi.fn() };
-    const data: RecipeDto = {
-        name: 'Recipe',
-        servings: 1,
-        visibility: RecipeVisibility.Public,
-        calculateNutritionAutomatically: true,
-        steps: [
-            {
-                description: 'Mix',
-                ingredients: [
-                    { productId: 'private', amount: 150.5 },
-                    { productId: 'public', amount: 100 },
-                    { textName: 'Salt', amountText: 'to taste', amount: 0 },
-                ],
-            },
-        ],
-    };
     let service: RecipePublicationService;
     beforeEach(() => {
         vi.resetAllMocks();
@@ -40,17 +42,28 @@ describe('RecipePublicationService', () => {
             providers: [
                 { provide: ProductPublicationService, useValue: products },
                 { provide: FdUiDialogService, useValue: dialogs },
-                { provide: TranslateService, useValue: { instant: (): string => 'г', getCurrentLang: (): string => 'ru' } },
+                provideTranslateTesting({ fallbackLang: 'en' }),
             ],
         });
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { PRODUCT_AMOUNT_UNITS_SHORT: { G: 'g' } });
+        translate.setTranslation('ru', { PRODUCT_AMOUNT_UNITS_SHORT: { G: 'г' } });
         service = TestBed.inject(RecipePublicationService);
     });
 
-    it('replaces only private references and retains localized quantities', async () => {
+    it.each([
+        { language: 'ru', amountText: '150,5 г', scenario: 'the active Russian translation' },
+        { language: null, amountText: '150.5 g', scenario: 'the English fallback before language selection' },
+    ])('replaces only private references using $scenario', async ({ language, amountText }) => {
+        const translate = TestBed.inject(TranslateService);
+        if (language !== null) {
+            await firstValueFrom(translate.use(language));
+        }
+        expect(translate.getCurrentLang()).toBe(language);
         dialogs.open.mockReturnValue({ afterClosed: () => of('text') });
         const result = await service.prepareAsync(data);
         expect(result?.steps[0]?.ingredients).toEqual([
-            { textName: 'Йогурт', amountText: '150,5 г', amount: 0 },
+            { textName: 'Йогурт', amountText, amount: 0 },
             data.steps[0]?.ingredients[1],
             data.steps[0]?.ingredients[2],
         ]);

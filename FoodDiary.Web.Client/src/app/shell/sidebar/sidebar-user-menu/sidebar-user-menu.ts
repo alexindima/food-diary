@@ -1,16 +1,5 @@
 import { DOCUMENT, NgOptimizedImage, SlicePipe, UpperCasePipe } from '@angular/common';
-import {
-    afterNextRender,
-    ChangeDetectionStrategy,
-    Component,
-    effect,
-    ElementRef,
-    inject,
-    Injector,
-    input,
-    output,
-    viewChild,
-} from '@angular/core';
+import { afterRenderEffect, ChangeDetectionStrategy, Component, effect, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
@@ -30,7 +19,6 @@ import { focusFirstSidebarInteractiveElement, isSidebarRouterLinkActivation } fr
 export class SidebarUserMenuComponent {
     private readonly document = inject(DOCUMENT);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly injector = inject(Injector);
 
     public readonly user = input.required<User>();
     public readonly userPlanLabelKey = input.required<string>();
@@ -61,17 +49,11 @@ export class SidebarUserMenuComponent {
             });
         });
 
-        effect(() => {
-            if (!this.isOpen()) {
-                return;
+        afterRenderEffect(() => {
+            const menu = this.userMenuRef();
+            if (menu !== undefined) {
+                focusFirstSidebarInteractiveElement(menu.nativeElement);
             }
-
-            afterNextRender(
-                () => {
-                    focusFirstSidebarInteractiveElement(this.userMenuRef()?.nativeElement);
-                },
-                { injector: this.injector },
-            );
         });
     }
 

@@ -20,6 +20,7 @@ type EmojiPickerHarness = {
     component: FdUiEmojiPickerComponent;
     root: HTMLElement;
     changed: ReturnType<typeof vi.fn<(value: FdUiEmojiPickerValue | null) => void>>;
+    selected: ReturnType<typeof vi.fn<(option: FdUiEmojiPickerOption) => void>>;
 };
 
 let current: EmojiPickerHarness | undefined;
@@ -40,8 +41,10 @@ function createHarness(selected: FdUiEmojiPickerValue | null = null, options = O
     const root = fixture.nativeElement as HTMLElement;
     document.body.append(root);
     const changed = vi.fn<(value: FdUiEmojiPickerValue | null) => void>();
+    const selectedOption = vi.fn<(option: FdUiEmojiPickerOption) => void>();
     fixture.componentInstance.selectedValue.subscribe(changed);
-    current = { fixture, component: fixture.componentInstance, root, changed };
+    fixture.componentInstance.optionSelected.subscribe(selectedOption);
+    current = { fixture, component: fixture.componentInstance, root, changed, selected: selectedOption };
     return current;
 }
 
@@ -90,6 +93,8 @@ describe('FdUiEmojiPickerComponent rendered selection', () => {
         harness.fixture.detectChanges();
         expect(harness.component.selectedValue()).toBe('steady');
         expect(harness.changed).toHaveBeenCalledExactlyOnceWith('steady');
+        expect(harness.selected).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ value: 'steady', label: 'Steady' }));
+        expect(harness.changed).toHaveBeenCalledBefore(harness.selected);
         expectSelection(harness, target);
     });
 
@@ -114,6 +119,7 @@ describe('FdUiEmojiPickerComponent rendered selection', () => {
         harness.fixture.detectChanges();
         expectSelection(harness, radio(harness, 'High energy'));
         expect(harness.changed).not.toHaveBeenCalled();
+        expect(harness.selected).not.toHaveBeenCalled();
     });
 });
 
@@ -133,6 +139,7 @@ describe('FdUiEmojiPickerComponent arrow navigation', () => {
         expect(document.activeElement).toBe(selected);
         expect(harness.component.selectedValue()).toBe(value);
         expect(harness.changed).toHaveBeenCalledExactlyOnceWith(value);
+        expect(harness.selected).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ value }));
         expectSelection(harness, selected);
     });
 
@@ -200,6 +207,7 @@ describe('FdUiEmojiPickerComponent disabled and empty options', () => {
         pressKey(harness, disabled, 'Enter');
         expect(harness.component.selectedValue()).toBe('low');
         expect(harness.changed).not.toHaveBeenCalled();
+        expect(harness.selected).not.toHaveBeenCalled();
         expectSelection(harness, radio(harness, 'Low energy'));
     });
 

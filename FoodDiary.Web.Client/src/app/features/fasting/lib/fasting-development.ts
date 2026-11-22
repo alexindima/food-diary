@@ -6,6 +6,7 @@ import {
     MAX_FASTING_HOURS,
     MAX_INTERMITTENT_FAST_HOURS,
 } from '../../../shared/lib/fasting.constants';
+import { CYCLIC_PRESETS } from '../../../shared/models/fasting.data';
 import { extendedFastingHours, fastingCycleDays, fastingDailyWindow } from '../models/fasting-start-intent';
 import type { FastingFacade } from './fasting.facade';
 
@@ -57,6 +58,16 @@ function readSetup(input: unknown): FastingSetupDraft {
         fastingDailyWindow(hours);
     }
     return { mode, hours };
+}
+
+function applyCyclicSetup(facade: FastingFacade, { fastDays, eatDays, hours }: Extract<FastingSetupDraft, { mode: 'cyclic' }>): void {
+    if (CYCLIC_PRESETS.some(preset => preset.fastDays === fastDays && preset.eatDays === eatDays)) {
+        facade.setCyclicPreset(fastDays, eatDays);
+    } else {
+        facade.setCyclicFastDays(fastDays);
+        facade.setCyclicEatDays(eatDays);
+    }
+    facade.setCyclicEatDayFastHours(hours);
 }
 
 export function readFastingDevelopmentContext(facade: FastingFacade): unknown {
@@ -147,8 +158,7 @@ export function connectFastingDevelopmentSetup(facade: FastingFacade): void {
                 facade.selectProtocol('CustomIntermittent');
                 facade.setCustomIntermittentFastHours(hours);
             } else {
-                facade.setCyclicPreset(setup.fastDays, setup.eatDays);
-                facade.setCyclicEatDayFastHours(hours);
+                applyCyclicSetup(facade, setup);
             }
         },
         clearDraft: () => {

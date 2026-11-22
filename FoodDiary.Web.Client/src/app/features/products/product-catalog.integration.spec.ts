@@ -20,7 +20,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { filter, firstValueFrom, type Observable, of, Subject, tap, throwError } from 'rxjs';
-import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
+import { beforeAll, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -1462,13 +1462,17 @@ describe('Creating a product from the catalog', () => {
         const trigger = button(catalogRoot(harness), selector);
         expect(trigger.textContent).toContain(label);
 
+        const opened = firstValueFrom(
+            router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === '/products/add')),
+        );
         trigger.click();
-        await vi.waitFor(() => {
-            harness.detectChanges();
-            expect(router.url).toBe('/products/add');
-            expect(catalogRoot(harness).querySelector('fd-product-add')).not.toBeNull();
-        });
         expect(navigateToAdd).toHaveBeenCalledExactlyOnceWith();
+        await vi.dynamicImportSettled();
+        await opened;
+        harness.detectChanges();
+
+        expect(router.url).toBe('/products/add');
+        expect(catalogRoot(harness).querySelector('fd-product-add')).not.toBeNull();
         expect(products.deleteById).not.toHaveBeenCalled();
     });
 });
@@ -1826,67 +1830,73 @@ describe('Nested product creation owned by the catalogue picker', () => {
     });
 });
 
-it('keeps a legacy URL-only cover when saving an unrelated product edit on the real route', async () => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-    TestBed.overrideProvider(ProductService, { useFactory: () => new ProductService() });
-    const success = vi.fn<FdUiToastService['success']>();
-    TestBed.overrideProvider(FdUiToastService, { useValue: { success, error: vi.fn<FdUiToastService['error']>() } });
-    const { navigateToProducts } = configureRealCatalogDialogs();
-    navigateToProducts.mockResolvedValue(undefined);
-    const http = TestBed.inject(HttpTestingController);
-    onTestFinished(() => {
-        http.verify();
+describe('Product editor legacy cover on the real route', () => {
+    beforeAll(async () => {
+        await import('./pages/manage/product-edit/product-edit');
     });
-    const productId = 'be88a541-baa1-4731-9b17-a45da75d6fb3';
-    const legacyCover = 'https://images.example.test/external-olive-oil.jpg';
-    const loaded = {
-        ...makeProduct(productId, 'Imported olive oil'),
-        productType: ProductType.Other,
-        createdAt: '2026-05-01T00:00:00Z',
-        usageCount: 0,
-        imageUrl: legacyCover,
-        imageAssetId: null,
-        images: [],
-    } satisfies ProductHttpResponse;
-    const endpoint = `${environment.apiUrls.products}/${productId}`;
-    const opening = RouterTestingHarness.create(`/products/${productId}/edit`);
-    const read = await vi.waitFor(() => http.expectOne({ method: 'GET', url: endpoint }));
-    read.flush(loaded);
-    const harness = await opening;
-    const editor = catalogRoot(harness);
-    expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
-    const description = editor.querySelector<HTMLTextAreaElement>('.product-manage__description textarea');
-    if (description === null) {
-        throw new Error('Expected the editable product description');
-    }
-    const updatedDescription = 'Use this oil for roasting';
-    description.value = updatedDescription;
-    description.dispatchEvent(new Event('input', { bubbles: true }));
-    harness.detectChanges();
-    const submit = button(editor, 'button[type="submit"]');
-    expect(submit.disabled).toBe(false);
-    submit.click();
 
-    const update = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: endpoint }));
-    expect(update.request.body).toMatchObject({
-        description: updatedDescription,
-        imageUrl: legacyCover,
-        clearImageUrl: false,
-        imageAssetId: null,
-        clearImageAssetId: false,
+    it('keeps a legacy URL-only cover when saving an unrelated product edit on the real route', async () => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        TestBed.overrideProvider(ProductService, { useFactory: () => new ProductService() });
+        const success = vi.fn<FdUiToastService['success']>();
+        TestBed.overrideProvider(FdUiToastService, { useValue: { success, error: vi.fn<FdUiToastService['error']>() } });
+        const { navigateToProducts } = configureRealCatalogDialogs();
+        navigateToProducts.mockResolvedValue(undefined);
+        const http = TestBed.inject(HttpTestingController);
+        onTestFinished(() => {
+            http.verify();
+        });
+        const productId = 'be88a541-baa1-4731-9b17-a45da75d6fb3';
+        const legacyCover = 'https://images.example.test/external-olive-oil.jpg';
+        const loaded = {
+            ...makeProduct(productId, 'Imported olive oil'),
+            productType: ProductType.Other,
+            createdAt: '2026-05-01T00:00:00Z',
+            usageCount: 0,
+            imageUrl: legacyCover,
+            imageAssetId: null,
+            images: [],
+        } satisfies ProductHttpResponse;
+        const endpoint = `${environment.apiUrls.products}/${productId}`;
+        const opening = RouterTestingHarness.create(`/products/${productId}/edit`);
+        const read = await vi.waitFor(() => http.expectOne({ method: 'GET', url: endpoint }));
+        read.flush(loaded);
+        const harness = await opening;
+        const editor = catalogRoot(harness);
+        expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
+        const description = editor.querySelector<HTMLTextAreaElement>('.product-manage__description textarea');
+        if (description === null) {
+            throw new Error('Expected the editable product description');
+        }
+        const updatedDescription = 'Use this oil for roasting';
+        description.value = updatedDescription;
+        description.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        const submit = button(editor, 'button[type="submit"]');
+        expect(submit.disabled).toBe(false);
+        submit.click();
+
+        const update = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: endpoint }));
+        expect(update.request.body).toMatchObject({
+            description: updatedDescription,
+            imageUrl: legacyCover,
+            clearImageUrl: false,
+            imageAssetId: null,
+            clearImageAssetId: false,
+        });
+        expect(update.request.body).not.toHaveProperty('imageAssetIds');
+        update.flush({
+            ...loaded,
+            description: updatedDescription,
+            images: [{ imageAssetId: null, imageUrl: legacyCover }],
+        } satisfies ProductHttpResponse);
+        await vi.waitFor(() => {
+            expect(navigateToProducts).toHaveBeenCalledOnce();
+        });
+        harness.detectChanges();
+        expect(success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
+        expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
     });
-    expect(update.request.body).not.toHaveProperty('imageAssetIds');
-    update.flush({
-        ...loaded,
-        description: updatedDescription,
-        images: [{ imageAssetId: null, imageUrl: legacyCover }],
-    } satisfies ProductHttpResponse);
-    await vi.waitFor(() => {
-        expect(navigateToProducts).toHaveBeenCalledOnce();
-    });
-    harness.detectChanges();
-    expect(success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
-    expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
 });
 
 describe('Product editor gallery ownership across browser history', () => {

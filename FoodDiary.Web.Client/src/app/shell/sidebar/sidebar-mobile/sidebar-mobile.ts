@@ -53,7 +53,7 @@ export class SidebarMobileComponent {
     public readonly mobileAction = output<SidebarActionId>();
     public readonly routeSelected = output<SidebarRouteItem>();
 
-    private readonly mobileNav = viewChild<ElementRef<HTMLElement>>('mobileNav');
+    private readonly mobileNav = viewChild.required<ElementRef<HTMLElement>>('mobileNav');
     private lastOpenSheet: MobileSheetId = null;
     protected readonly sheetBottom = signal(0);
     protected readonly isFoodOpen = computed(() => this.mobileSheet() === 'food');
@@ -68,13 +68,10 @@ export class SidebarMobileComponent {
 
     public constructor() {
         afterRenderEffect(onCleanup => {
-            const nav = this.mobileNav()?.nativeElement;
+            const nav = this.mobileNav().nativeElement;
             const sheet = this.mobileSheet();
             const previousSheet = this.lastOpenSheet;
             this.lastOpenSheet = sheet;
-            if (nav === undefined) {
-                return;
-            }
             const update = (): void => {
                 this.sheetBottom.set(nav.getBoundingClientRect().height);
             };

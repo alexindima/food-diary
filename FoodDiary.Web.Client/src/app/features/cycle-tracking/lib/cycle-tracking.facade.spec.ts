@@ -400,13 +400,15 @@ describe('CycleTrackingFacade current cycle', () => {
         expect(cyclesService.create).toHaveBeenCalledOnce();
     });
 
-    it('marks start cycle form as touched when invalid', () => {
-        facade.startCycleModel.update(value => ({ ...value, trackingStartDate: null }));
+    it('marks the required tracking start date as touched and skips creation when it is blank', () => {
+        facade.startCycleModel.update(value => ({ ...value, trackingStartDate: '', cycleTrackingConsentGranted: true }));
 
         facade.startCycle();
 
         expect(cyclesService.create).not.toHaveBeenCalled();
-        expect(facade.startCycleForm.trackingStartDate().touched()).toBe(true);
+        const startDate = facade.startCycleForm.trackingStartDate();
+        expect(startDate.touched()).toBe(true);
+        expect(startDate.errors()).toContainEqual(expect.objectContaining({ kind: 'required' }));
     });
 });
 

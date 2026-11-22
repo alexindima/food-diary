@@ -5,7 +5,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, type MockInstance, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../../../testing/dom-testing';
@@ -88,7 +88,11 @@ class TelegramAuthDoubles {
         navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(undefined),
         navigateToRequiredPasswordChangeAsync: vi.fn().mockResolvedValue(undefined),
     };
-    public readonly browser = { replaceCurrentUrl: vi.fn() };
+    public readonly browser = {
+        replaceCurrentUrl: vi.fn(),
+        getPathname: vi.fn().mockReturnValue('/auth/telegram'),
+        getSearch: vi.fn().mockReturnValue(''),
+    };
     public readonly backupEmail = { handleCallbackAsync: vi.fn<() => Promise<boolean>>().mockResolvedValue(false) };
     public readonly telegram = { claimAutomaticSignInAsync: vi.fn().mockResolvedValue(false) };
 }
@@ -98,7 +102,11 @@ type TelegramAuthHarness = TelegramAuthDoubles & {
     root: HTMLElement;
 };
 
-function createHarness(query: Record<string, string | undefined> = {}, doubles = new TelegramAuthDoubles()): TelegramAuthHarness {
+function createHarness(
+    query: Record<string, string | undefined> = {},
+    doubles = new TelegramAuthDoubles(),
+    history: 'stub' | 'native' = 'stub',
+): TelegramAuthHarness {
     doubles.facade.clearIntent.mockImplementation(() => {
         doubles.facade.intent.set(null);
     });
@@ -113,7 +121,7 @@ function createHarness(query: Record<string, string | undefined> = {}, doubles =
             { provide: NavigationService, useValue: doubles.navigation },
             { provide: TelegramWebAppService, useValue: doubles.telegram },
             { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'ru' } },
-            { provide: BrowserWindowService, useValue: doubles.browser },
+            history === 'native' ? BrowserWindowService : { provide: BrowserWindowService, useValue: doubles.browser },
             { provide: TelegramBackupEmailFlowService, useValue: doubles.backupEmail },
             { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap(query) } } },
         ],
@@ -124,6 +132,18 @@ function createHarness(query: Record<string, string | undefined> = {}, doubles =
     const fixture = TestBed.createComponent(TelegramAuthComponent);
     fixture.detectChanges();
     return Object.assign(doubles, { fixture, root: fixture.nativeElement as HTMLElement });
+}
+
+function trackCallbackLocation(query: Record<string, string>): MockInstance<History['replaceState']> {
+    const originalUrl = window.location.href;
+    const originalState: unknown = window.history.state;
+    window.history.replaceState({}, '', `/auth/telegram?${new URLSearchParams(query).toString()}`);
+    const replace = vi.spyOn(window.history, 'replaceState');
+    onTestFinished(() => {
+        replace.mockRestore();
+        window.history.replaceState(originalState, '', originalUrl);
+    });
+    return replace;
 }
 
 async function settleAsync(harness: TelegramAuthHarness): Promise<void> {
@@ -355,14 +375,16 @@ describe('Telegram OAuth callbacks', () => {
     });
 
     it('cleans callback parameters before exchanging the code and loads configuration after exchange', async () => {
-        const harness = createHarness({ code: 'oauth-code', state: 'oauth-state' });
+        const query = { code: 'oauth-code', state: 'oauth-state' };
+        const replace = trackCallbackLocation(query);
+        const harness = createHarness(query, new TelegramAuthDoubles(), 'native');
         await settleAsync(harness);
-        expect(harness.browser.replaceCurrentUrl).toHaveBeenCalledExactlyOnceWith('/auth/telegram');
+        expect(replace).toHaveBeenCalledExactlyOnceWith({}, '', '/auth/telegram');
+        expect(window.location.pathname).toBe('/auth/telegram');
+        expect(window.location.search).toBe('');
         expect(harness.backupEmail.handleCallbackAsync).toHaveBeenCalledWith('oauth-code', 'oauth-state', false);
         expect(harness.facade.exchangeAsync).toHaveBeenCalledWith('oauth-code', 'oauth-state');
-        expect(harness.browser.replaceCurrentUrl.mock.invocationCallOrder[0]).toBeLessThan(
-            harness.backupEmail.handleCallbackAsync.mock.invocationCallOrder[0],
-        );
+        expect(replace.mock.invocationCallOrder[0]).toBeLessThan(harness.backupEmail.handleCallbackAsync.mock.invocationCallOrder[0]);
         expect(harness.facade.exchangeAsync.mock.invocationCallOrder[0]).toBeLessThan(
             harness.facade.loadConfigurationAsync.mock.invocationCallOrder[0],
         );
@@ -411,6 +433,37 @@ describe('Telegram OAuth callbacks', () => {
         expect(doubles.facade.restoreIntent).not.toHaveBeenCalled();
         expect(doubles.facade.loadConfigurationAsync).not.toHaveBeenCalled();
         expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Telegram callback URL recovery', () => {
+    it.each(['throws', 'returns unchanged'])('offers another sign-in method when browser History %s', async outcome => {
+        const query = { code: 'oauth-code', state: 'oauth-state' };
+        const replace = trackCallbackLocation(query);
+        const unclearedSearch = window.location.search;
+        replace.mockImplementationOnce(() => {
+            if (outcome === 'throws') {
+                throw new DOMException('History update refused', 'SecurityError');
+            }
+        });
+        const doubles = new TelegramAuthDoubles();
+        doubles.facade.configuration.set(null);
+        const harness = createHarness(query, doubles, 'native');
+
+        await settleAsync(harness);
+
+        expect(replace).toHaveBeenCalledExactlyOnceWith({}, '', '/auth/telegram');
+        expect(window.location.search).toBe(unclearedSearch);
+        expect(harness.facade.exchangeAsync).not.toHaveBeenCalled();
+        expect(harness.unlink.handleCallbackAsync).not.toHaveBeenCalled();
+        expect(harness.backupEmail.handleCallbackAsync).not.toHaveBeenCalled();
+        expect(harness.facade.loadConfigurationAsync).not.toHaveBeenCalled();
+        expect(harness.telegram.claimAutomaticSignInAsync).not.toHaveBeenCalled();
+        expect(harness.root.querySelector('[role="alert"]')?.textContent).toContain('AUTH.TELEGRAM.VERIFICATION_FAILED');
+        expect(harness.root.querySelector('[role="status"]')).toBeNull();
+
+        await clickAsync(harness, 'AUTH.TELEGRAM.OTHER_METHODS');
+        expect(harness.navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login');
     });
 });
 
@@ -501,6 +554,19 @@ describe('Telegram linking account labels', () => {
 });
 
 describe('Telegram registration', () => {
+    it('registers with the browser time zone when the rendered default is retained', async () => {
+        const timeZoneId = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const harness = await createIntentHarnessAsync();
+        const control = harness.root.querySelector<HTMLButtonElement>('fd-ui-select button[aria-haspopup="listbox"]');
+
+        expect(control?.textContent.trim()).toContain(`${timeZoneId.replaceAll('_', ' ')} (UTC`);
+        expect(harness.facade.completeAsync).not.toHaveBeenCalled();
+
+        await clickAsync(harness, 'AUTH.TELEGRAM.CREATE');
+
+        expect(harness.facade.completeAsync).toHaveBeenCalledExactlyOnceWith('register', 'ru', timeZoneId);
+    });
+
     it('uses the selected timezone for explicit registration', async () => {
         const harness = await createIntentHarnessAsync();
         const select = harness.fixture.debugElement.query(By.directive(FdUiSelectComponent))

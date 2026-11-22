@@ -1,5 +1,7 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
+import { provideLocationMocks } from '@angular/common/testing';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -9,6 +11,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
@@ -159,25 +162,33 @@ async function changeQuickMealAmountAsync(
     host: HTMLElement,
     amount: number,
 ): Promise<void> {
-    requiredElement(
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const edit = requiredElement(
         host.querySelector<HTMLButtonElement>('.quick-meal__item-action button[aria-label="QUICK_MEAL.EDIT_ITEM_NAMED"]'),
         'the edit action',
-    ).click();
-    const editor = await vi.waitFor(() => {
-        fixture.detectChanges();
-        return requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'), 'the amount editor');
-    });
+    );
+    expect(edit.disabled).toBe(false);
+    const opened = firstValueFrom(TestBed.inject(Dialog).afterOpened);
+    edit.click();
+    const dialogRef = await opened;
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const editor = requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'), 'the amount editor');
     const amountInput = requiredElement(editor.querySelector<HTMLInputElement>('input[type="number"]'), 'the amount input');
     amountInput.value = String(amount);
     amountInput.dispatchEvent(new Event('input', { bubbles: true }));
     fixture.detectChanges();
     const done = dialogButton(editor, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE');
     expect(done.disabled).toBe(false);
+    const closed = firstValueFrom(dialogRef.closed);
     done.click();
-    await vi.waitFor(() => {
-        fixture.detectChanges();
-        expect(host.querySelector('.quick-meal__meta')?.textContent).toContain(amount.toLocaleString('en'));
-    });
+    await closed;
+    await waitForAsyncTasksAsync();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(editor.isConnected).toBe(false);
+    expect(host.querySelector('.quick-meal__meta')?.textContent).toContain(amount.toLocaleString('en'));
 }
 
 function dialogButton(dialog: HTMLElement, label: string): HTMLButtonElement {
@@ -379,6 +390,7 @@ async function renderDrawerAsync(
         imports: [QuickMealDrawerComponent, MealManageFormComponent],
         providers: [
             provideRouter([]),
+            provideLocationMocks(),
             provideHttpClient(),
             provideHttpClientTesting(),
             provideTranslateTesting(),

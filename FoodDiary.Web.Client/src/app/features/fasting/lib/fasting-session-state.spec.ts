@@ -23,11 +23,17 @@ const ROUNDED_HOURS_2_3 = 2.3;
 describe('fasting session state', () => {
     it('calculates active and completed elapsed time and clamps invalid ranges', () => {
         const session = createSession();
+        const completed: FastingSession = {
+            ...session,
+            endedAtUtc: utcInstant('2026-04-12T08:00:00Z'),
+            isCompleted: true,
+            status: 'Completed',
+        };
 
         expect(calculateFastingElapsedMs(session, new Date('2026-04-12T10:00:00Z'))).toBe(HOURS_4 * MS_PER_HOUR);
-        expect(
-            calculateFastingElapsedMs({ ...session, endedAtUtc: utcInstant('2026-04-12T08:00:00Z') }, new Date('2026-04-12T12:00:00Z')),
-        ).toBe(HOURS_2 * MS_PER_HOUR);
+        expect(calculateFastingElapsedMs(session)).toBe(0);
+        expect(calculateFastingElapsedMs(completed, new Date('2026-04-12T12:00:00Z'))).toBe(HOURS_2 * MS_PER_HOUR);
+        expect(calculateFastingElapsedMs(completed)).toBe(HOURS_2 * MS_PER_HOUR);
         expect(calculateFastingElapsedMs({ ...session, startedAtUtc: utcInstant('invalid') }, new Date())).toBe(0);
         expect(calculateFastingElapsedMs(null, new Date())).toBe(0);
     });

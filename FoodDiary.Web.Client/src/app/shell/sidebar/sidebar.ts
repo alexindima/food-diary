@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { finalize, firstValueFrom } from 'rxjs';
 
 import {
@@ -35,6 +35,8 @@ import {
     isSidebarRouteItem,
 } from './sidebar-lib/sidebar-view.utils';
 import { SidebarMobileComponent } from './sidebar-mobile/sidebar-mobile';
+
+const MOBILE_USER_TRIGGER = 'fd-sidebar-mobile nav button[data-mobile-sheet="user"]';
 
 @Component({
     selector: 'fd-sidebar',
@@ -140,7 +142,7 @@ export class SidebarComponent {
         }
     }
 
-    protected onPrimaryAction(action: SidebarActionItem['action']): void {
+    protected onPrimaryAction(action: SidebarActionItem['action'], logoutFocusTarget: FdUiDialogConfig['restoreFocus'] = true): void {
         switch (action) {
             case 'openAdminPanel': {
                 this.openAdminPanel();
@@ -151,7 +153,7 @@ export class SidebarComponent {
                 break;
             }
             case 'logout': {
-                void this.logoutAsync();
+                void this.logoutAsync(logoutFocusTarget);
                 break;
             }
         }
@@ -159,7 +161,7 @@ export class SidebarComponent {
 
     protected onMobileAction(action: SidebarActionItem['action']): void {
         this.closeMobileMenus();
-        this.onPrimaryAction(action);
+        this.onPrimaryAction(action, MOBILE_USER_TRIGGER);
     }
 
     protected onRouteSelected(item: SidebarRouteItem): void {
@@ -224,7 +226,7 @@ export class SidebarComponent {
     }
 
     protected openAdminPanel(): void {
-        this.adminPanelLauncher.open(this.isAdmin());
+        this.adminPanelLauncher.open();
     }
 
     protected toggleMobileFood(trigger: HTMLElement): void {
@@ -250,8 +252,8 @@ export class SidebarComponent {
         focusTarget?.focus();
     }
 
-    protected async logoutAsync(): Promise<void> {
-        const confirmed = await this.confirmLogoutAsync();
+    protected async logoutAsync(restoreFocus: FdUiDialogConfig['restoreFocus'] = true): Promise<void> {
+        const confirmed = await this.confirmLogoutAsync(restoreFocus);
         if (!confirmed) {
             return;
         }
@@ -266,11 +268,12 @@ export class SidebarComponent {
         this.closeMobileMenus();
     }
 
-    private async confirmLogoutAsync(): Promise<boolean> {
+    private async confirmLogoutAsync(restoreFocus: FdUiDialogConfig['restoreFocus']): Promise<boolean> {
         const result = await firstValueFrom(
             this.dialogService
                 .open(FdUiConfirmDialogComponent, {
                     preset: 'confirm',
+                    restoreFocus,
                     data: {
                         title: this.translateService.instant('HEADER.LOGOUT_CONFIRM_TITLE'),
                         message: this.translateService.instant('HEADER.LOGOUT_CONFIRM_MESSAGE'),

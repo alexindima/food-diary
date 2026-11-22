@@ -100,7 +100,7 @@ export function normalizeItemsForNutrition(items: readonly FoodVisionItem[]): Fo
     return items.map(item => {
         const baseUnit = resolveAiMeasurementUnit(item.unit);
         const normalizedUnit = baseUnit === MeasurementUnit.PCS ? 'pcs' : baseUnit.toLowerCase();
-        const amount = getNumericValue(item.amount) * getUnitScale(item.unit);
+        const amount = item.amount * getUnitScale(item.unit);
         const normalizedAmount = amount > 0 ? amount : getDefaultBaseAmount(baseUnit);
 
         return {
@@ -132,7 +132,7 @@ export function resolveAiMeasurementUnit(unit?: string | null): MeasurementUnit 
 export function getRecognizedAmount(items: readonly FoodVisionItem[], unit: MeasurementUnit): number {
     const compatibleAmounts = items
         .filter(item => resolveAiMeasurementUnit(item.unit) === unit)
-        .map(item => getNumericValue(item.amount) * getUnitScale(item.unit))
+        .map(item => item.amount * getUnitScale(item.unit))
         .filter(amount => amount > 0);
 
     if (compatibleAmounts.length > 0) {
@@ -181,26 +181,17 @@ function getDefaultBaseAmount(unit: MeasurementUnit): number {
     return unit === MeasurementUnit.PCS ? 1 : DEFAULT_NUTRITION_BASE_AMOUNT;
 }
 
-function getNumericValue(value: number | string): number {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : 0;
-}
-
 export function buildProductLabelFormModel(label: ProductLabel): ProductAiRecognitionFormModel {
     return {
         name: label.name ?? '',
         brand: label.brand ?? '',
-        portionAmount: getOptionalNumericValue(label.baseAmount),
+        portionAmount: label.baseAmount,
         baseUnit: label.baseUnit === null ? null : resolveAiMeasurementUnit(label.baseUnit),
-        caloriesPerBase: getOptionalNumericValue(label.calories),
-        proteinsPerBase: getOptionalNumericValue(label.protein),
-        fatsPerBase: getOptionalNumericValue(label.fat),
-        carbsPerBase: getOptionalNumericValue(label.carbs),
-        fiberPerBase: getOptionalNumericValue(label.fiber),
-        alcoholPerBase: getOptionalNumericValue(label.alcohol),
+        caloriesPerBase: label.calories,
+        proteinsPerBase: label.protein,
+        fatsPerBase: label.fat,
+        carbsPerBase: label.carbs,
+        fiberPerBase: label.fiber,
+        alcoholPerBase: label.alcohol,
     };
-}
-
-function getOptionalNumericValue(value: number | null): number | null {
-    return value === null ? null : getNumericValue(value);
 }

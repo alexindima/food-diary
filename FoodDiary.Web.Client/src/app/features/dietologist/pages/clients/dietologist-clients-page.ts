@@ -20,8 +20,9 @@ import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '..
 import type { AttentionSignalId, UserId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { BulkRecommendationReviewComponent } from '../../dialogs/bulk-recommendation-review/bulk-recommendation-review';
+import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 import { DietologistFacade } from '../../lib/dietologist.facade';
-import { buildClientCardViewModels, formatClientConnectedDate } from './dietologist-clients-lib/dietologist-clients.mapper';
+import { buildClientCardViewModels } from './dietologist-clients-lib/dietologist-clients.mapper';
 import type { ClientCardViewModel } from './dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list/dietologist-clients-list';
 import { DIETOLOGIST_CLIENTS_TOUR } from './dietologist-clients-tour';
@@ -80,7 +81,7 @@ export class DietologistClientsPageComponent {
         const language = resolveTranslateLanguage(this.translateService);
         return this.attentionSignals().map(attentionSignal => ({
             ...attentionSignal,
-            detectedDateLabel: formatClientConnectedDate(attentionSignal.detectedAtUtc, language),
+            detectedDateLabel: formatDietologistDate(attentionSignal.detectedAtUtc, language),
         }));
     });
     protected readonly attentionLoading = signal(true);

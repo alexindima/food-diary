@@ -497,14 +497,11 @@ export class PushNotificationService {
     }
 
     private mapSubscription(subscription: PushSubscription): WebPushSubscriptionRequest {
-        const json = subscription.toJSON();
+        const { p256dh, auth } = { p256dh: '', auth: '', ...subscription.toJSON().keys };
         return {
             endpoint: subscription.endpoint,
             expirationTime: subscription.expirationTime !== null ? new Date(subscription.expirationTime).toISOString() : null,
-            keys: {
-                p256dh: json.keys?.['p256dh'] ?? '',
-                auth: json.keys?.['auth'] ?? '',
-            },
+            keys: { p256dh, auth },
             locale: this.localizationService.getCurrentLanguage(),
             userAgent: this.browserNotifications.getUserAgent(),
         };
@@ -620,12 +617,7 @@ export class PushNotificationService {
         }
 
         const binaryKey = Array.from(new Uint8Array(applicationServerKey), byte => String.fromCodePoint(byte)).join('');
-        const encodedPublicKey = this.document.defaultView?.btoa(binaryKey);
-        if (encodedPublicKey === undefined) {
-            return true;
-        }
-
-        const currentPublicKey = encodedPublicKey.replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+        const currentPublicKey = btoa(binaryKey).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
         const normalizedPublicKey = publicKey.replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
         return currentPublicKey === normalizedPublicKey;
     }

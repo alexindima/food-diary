@@ -168,8 +168,12 @@ describe('registered local WebMCP tools and account lifecycle', () => {
 });
 
 describe('registered local WebMCP build provenance', () => {
-    it('reports the task-emitted frontend source capture without inferring an API build', async () => {
+    it.each([
+        { build: 'versioned', buildVersion: 'task-preview', reportedVersion: 'task-preview' },
+        { build: 'unversioned', buildVersion: undefined, reportedVersion: null },
+    ])('reports $build frontend provenance without inferring an API build', async ({ buildVersion, reportedVersion }) => {
         const savedCapture = Object.getOwnPropertyDescriptor(environment, 'developmentBuild');
+        const savedVersion = environment.buildVersion;
         const sourceCapture = {
             revision: 'a'.repeat(GIT_REVISION_LENGTH),
             sourceFingerprint: 'b'.repeat(BUILD_FINGERPRINT_LENGTH),
@@ -178,6 +182,7 @@ describe('registered local WebMCP build provenance', () => {
         };
         try {
             environment.developmentBuild = sourceCapture;
+            environment.buildVersion = buildVersion;
             const { tools } = createPilot();
             await waitForRegistrationAsync();
 
@@ -186,12 +191,13 @@ describe('registered local WebMCP build provenance', () => {
                 provenance: { apiRuntimeStatus: 'not-observed' },
                 application: {
                     buildRevision: sourceCapture.revision,
-                    frontendBuild: { version: environment.buildVersion, availability: 'emitted', sourceCapture },
+                    frontendBuild: { version: reportedVersion, availability: 'emitted', sourceCapture },
                     apiRuntimeObservations: [],
                     requests: [],
                 },
             });
         } finally {
+            environment.buildVersion = savedVersion;
             if (savedCapture === undefined) {
                 delete environment.developmentBuild;
             } else {

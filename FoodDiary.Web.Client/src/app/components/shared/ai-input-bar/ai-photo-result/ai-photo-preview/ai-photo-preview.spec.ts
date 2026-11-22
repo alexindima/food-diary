@@ -70,6 +70,13 @@ function createAiPhotoPreview(): ComponentFixture<AiPhotoPreviewComponent> {
     return fixture;
 }
 
+function renderAfterResize(callbacks: ReadonlyArray<() => void>): void {
+    for (const callback of callbacks) {
+        callback();
+    }
+    TestBed.tick();
+}
+
 describe('AiPhotoPreviewComponent image geometry', () => {
     afterEach(() => {
         vi.restoreAllMocks();
@@ -79,8 +86,10 @@ describe('AiPhotoPreviewComponent image geometry', () => {
     /* eslint-disable @typescript-eslint/no-magic-numbers -- Independent pixel measurements reproduce the rendered card geometry. */
     it.each(['desktop', 'mobile'])('connects to the rendered %s card edge after rendering and resizing', async variant => {
         let frame = new DOMRect(200, 100, 600, 800);
+        let paneWidth = 830;
         let card = new DOMRect(8, 116, 180, 56);
         const resizeCallbacks: Array<() => void> = [];
+        const observe = vi.fn();
         const disconnect = vi.fn();
         vi.stubGlobal(
             'ResizeObserver',
@@ -88,11 +97,14 @@ describe('AiPhotoPreviewComponent image geometry', () => {
                 public constructor(callback: () => void) {
                     resizeCallbacks.push(callback);
                 }
-                public observe = vi.fn();
+                public observe = observe;
                 public disconnect = disconnect;
             },
         );
         vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+            if (this.classList.contains('ai-photo-result__annotations')) {
+                return new DOMRect(0, 100, paneWidth, 800);
+            }
             return this.classList.contains('ai-photo-result__annotation-frame') ? frame : card;
         });
         const annotation: AiPhotoAnnotation = {
@@ -112,26 +124,29 @@ describe('AiPhotoPreviewComponent image geometry', () => {
         fixture.componentRef.setInput('imageUrl', 'blob:local-preview');
         fixture.componentRef.setInput('annotations', [annotation]);
         fixture.componentRef.setInput('mobileAnnotations', [annotation]);
+        const outsideCardSpace = vi.fn<(fits: boolean) => void>();
+        fixture.componentInstance.outsideCardSpaceChanged.subscribe(outsideCardSpace);
         fixture.detectChanges();
         TestBed.tick();
         const host = fixture.nativeElement as HTMLElement;
         const connector = host.querySelector(`.ai-photo-result__annotation-connector-core.ai-photo-result__annotation-${variant}`);
 
+        expect(observe).toHaveBeenCalledWith(host.querySelector('.ai-photo-result__annotations'));
+        expect(outsideCardSpace).toHaveBeenLastCalledWith(false);
         expect(connector?.getAttribute('points'), 'connector must meet the actual card midpoint').toBe('50,18 -2,5.5');
+
+        paneWidth = 1000;
+        renderAfterResize(resizeCallbacks);
+        expect(outsideCardSpace).toHaveBeenLastCalledWith(true);
+        expect(connector?.getAttribute('points')).toBe('50,18 -2,5.5');
 
         frame = new DOMRect(100, 50, 300, 400);
         card = new DOMRect(4, 58, 90, 64);
-        resizeCallbacks.forEach(callback => {
-            callback();
-        });
-        TestBed.tick();
+        renderAfterResize(resizeCallbacks);
         expect(connector?.getAttribute('points')).toBe('50,18 -2,10');
         // A responsive card can temporarily have no layout while the preview remains mounted.
         card = new DOMRect();
-        resizeCallbacks.forEach(callback => {
-            callback();
-        });
-        TestBed.tick();
+        renderAfterResize(resizeCallbacks);
         expect(connector?.getAttribute('points')).toBe(annotation.connectorPath);
 
         fixture.componentRef.setInput('annotationsVisible', false);
@@ -204,10 +219,7 @@ describe('AiPhotoPreviewComponent with local translations', () => {
         expect(connector?.getAttribute('points')).toBe('50,18 -2,5.5');
 
         measuredCard = DOMRect.fromRect({ x: 8, y: 140, width: 180, height: 56 });
-        resizeCallbacks.forEach(callback => {
-            callback();
-        });
-        TestBed.tick();
+        renderAfterResize(resizeCallbacks);
         expect(connector?.getAttribute('points')).toBe('50,18 -2,8.5');
 
         const selected = vi.fn<(id: string) => void>();

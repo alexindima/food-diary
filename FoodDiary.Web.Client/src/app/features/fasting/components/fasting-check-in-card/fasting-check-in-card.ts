@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, type WritableSignal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
-import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { fdUiCoerceInputTextValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -53,18 +52,6 @@ export class FastingCheckInCardComponent {
     protected readonly symptomOptions = computed(() => this.translatedSymptomOptions().filter(option => option.value !== 'good'));
     protected readonly noSymptomsOptions = computed(() => this.translatedSymptomOptions().filter(option => option.value === 'good'));
 
-    protected setHungerLevel(value: FdUiEmojiPickerValue | null): void {
-        this.setNumericLevel(this.hungerLevel(), value);
-    }
-
-    protected setEnergyLevel(value: FdUiEmojiPickerValue | null): void {
-        this.setNumericLevel(this.energyLevel(), value);
-    }
-
-    protected setMoodLevel(value: FdUiEmojiPickerValue | null): void {
-        this.setNumericLevel(this.moodLevel(), value);
-    }
-
     protected setNotesValue(value: string | number | null): void {
         this.notes().set(fdUiCoerceInputTextValue(value));
     }
@@ -87,12 +74,6 @@ export class FastingCheckInCardComponent {
 
     protected setNoSymptoms(values: string[]): void {
         this.selectedSymptoms().set(values.includes('good') ? ['good'] : []);
-    }
-
-    private setNumericLevel(target: WritableSignal<number>, value: FdUiEmojiPickerValue | null): void {
-        if (typeof value === 'number') {
-            target.set(value);
-        }
     }
 
     private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): Array<FdUiEmojiPickerOption<number>> {

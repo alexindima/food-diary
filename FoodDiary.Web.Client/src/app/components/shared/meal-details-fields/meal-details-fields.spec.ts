@@ -22,6 +22,22 @@ async function setupMealDetailsFieldsAsync(): Promise<ComponentFixture<MealDetai
     return fixture;
 }
 
+function selectDraftDate(fixture: ComponentFixture<MealDetailsFieldsComponent>, date: string): void {
+    const host = fixture.nativeElement as HTMLElement;
+    const open = host.querySelector<HTMLButtonElement>('fd-ui-date-input button[aria-haspopup="dialog"]');
+    if (open === null) {
+        throw new Error('Expected the rendered meal date picker');
+    }
+    open.click();
+    fixture.detectChanges();
+
+    const day = document.querySelector<HTMLButtonElement>(`fd-ui-calendar button[data-date="${date}"]`);
+    if (day === null) {
+        throw new Error(`Expected the date ${date} in the rendered calendar`);
+    }
+    day.click();
+}
+
 describe('MealDetailsFieldsComponent satiety', () => {
     it('offers the shared calendar and time picker when editing a meal draft', async () => {
         const fixture = await setupMealDetailsFieldsAsync();
@@ -38,8 +54,7 @@ describe('MealDetailsFieldsComponent satiety', () => {
         fixture.detectChanges();
 
         const datePicker = fixture.debugElement.query(By.directive(FdUiDateInputComponent)).componentInstance as FdUiDateInputComponent;
-        datePicker.value.set('2026-05-18');
-        fixture.detectChanges();
+        selectDraftDate(fixture, '2026-05-18');
         expect(fixture.componentInstance.date()).toBe('2026-05-18');
         expect(changes).toEqual(['2026-05-18']);
 
@@ -63,10 +78,10 @@ describe('MealDetailsFieldsComponent satiety', () => {
 
     it('preserves calendar dates and local times from the shared pickers', async () => {
         const fixture = await setupMealDetailsFieldsAsync();
+        fixture.componentRef.setInput('date', '2024-02-28');
         fixture.detectChanges();
-        const datePicker = fixture.debugElement.query(By.directive(FdUiDateInputComponent)).componentInstance as FdUiDateInputComponent;
         const timePicker = fixture.debugElement.query(By.directive(FdUiTimeInputComponent)).componentInstance as FdUiTimeInputComponent;
-        datePicker.value.set('2024-02-29');
+        selectDraftDate(fixture, '2024-02-29');
         timePicker.value.set('23:55');
         fixture.detectChanges();
         expect(fixture.componentInstance.date()).toBe('2024-02-29');

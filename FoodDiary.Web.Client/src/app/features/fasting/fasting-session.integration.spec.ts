@@ -77,13 +77,17 @@ afterEach(() => {
     vi.useRealTimers();
 });
 
-async function renderFastingAsync(session: FastingSession | null, overview = makeOverview(session)): Promise<FastingFixture> {
+async function renderFastingAsync(
+    session: FastingSession | null,
+    overview = makeOverview(session),
+    systemTime = FIXTURE_TIME,
+): Promise<FastingFixture> {
     vi.stubGlobal(
         'matchMedia',
         vi.fn(() => ({ matches: false })),
     );
     vi.useFakeTimers({ toFake: ['Date'] });
-    vi.setSystemTime(new Date(FIXTURE_TIME));
+    vi.setSystemTime(new Date(systemTime));
     const api: FastingApiMocks = {
         getOverview: vi.fn<FastingService['getOverview']>().mockReturnValue(of(overview)),
         getOverviewStrict: vi.fn<FastingService['getOverviewStrict']>().mockReturnValue(of(overview)),
@@ -257,6 +261,29 @@ function getFastingPrompt(harness: RouterTestingHarness): HTMLElement {
     }
     return alert;
 }
+
+it('updates the weekly rhythm when the idle fasting route is visible again on Monday', async () => {
+    const completed = makeSession({
+        startedAtUtc: utcInstant(new Date('2026-05-24T06:00:00').toISOString()),
+        endedAtUtc: utcInstant(new Date('2026-05-24T22:00:00').toISOString()),
+        isCompleted: true,
+        status: 'Completed',
+    });
+    const { harness, api } = await renderFastingAsync(null, makeOverview(null, [completed]), '2026-05-24T23:59:00');
+    const page = pageRoot(harness);
+    const rhythmLabels = (): string[] => Array.from(page.querySelectorAll('.fasting-redesign__day strong'), day => day.textContent.trim());
+    expect(rhythmLabels()).toEqual(['-', '-', '-', '-', '-', '-', '16:8']);
+    expect(page.querySelectorAll('.fasting-redesign__history-row')).toHaveLength(1);
+
+    vi.setSystemTime(new Date('2026-05-25T00:01:00'));
+    document.dispatchEvent(new Event('visibilitychange'));
+    redraw(harness);
+
+    expect(rhythmLabels()).toEqual(['-', '-', '-', '-', '-', '-', '-']);
+    expect(page.querySelectorAll('.fasting-redesign__history-row')).toHaveLength(1);
+    expect(api.getOverview).toHaveBeenCalledOnce();
+    expect(api.getOverviewStrict).not.toHaveBeenCalled();
+});
 
 describe('Rendered fasting reminders stored on the device', () => {
     it('recovers the first reminder when browser storage contains corrupt JSON', async () => {
@@ -1794,6 +1821,40 @@ describe('Routed fasting development controls', () => {
         dialog.querySelector<HTMLButtonElement>('button[aria-label="COMMON.CLOSE"]')?.click();
         redraw(harness);
         expect(developmentScreens.has('fasting-setup')).toBe(false);
+    });
+
+    it('opens editable Custom controls for a developer cyclic draft outside the displayed presets', async () => {
+        const { harness, api, developmentScreens } = await renderFastingAsync(null);
+        api.start.mockReturnValueOnce(new Subject<FastingSession>());
+        const dialog = openIdleProtocolSettings(harness);
+        const setup = developmentScreens.get('fasting-setup');
+        if (setup?.fillDraft === undefined) {
+            throw new Error('Expected the fasting setup to expose draft editing');
+        }
+
+        const fastHours = CYCLIC_EAT_DAY_FAST_HOURS;
+        setup.fillDraft({ mode: 'cyclic', fastDays: CYCLIC_FAST_DAYS, eatDays: CYCLIC_EAT_DAYS, fastHours });
+        redraw(harness);
+        expect(getButton(dialog, '2:1').getAttribute('aria-checked')).toBe('true');
+
+        const customDays = { fastDays: 4, eatDays: 5 };
+        const editedFastDays = 6;
+        setup.fillDraft({ mode: 'cyclic', ...customDays, fastHours });
+        redraw(harness);
+        expect(getButton(dialog, 'FASTING.CUSTOM_CYCLE').getAttribute('aria-checked')).toBe('true');
+        enterNumber(dialog, 'FASTING.CYCLIC_FAST_DAYS_SHORT', editedFastDays, harness);
+        expect(api.start).not.toHaveBeenCalled();
+
+        getButton(dialog, 'FASTING.START_FAST').click();
+        expect(api.start).toHaveBeenCalledOnce();
+        const [intent] = api.start.mock.calls[0];
+        if (intent.planType !== 'Cyclic') {
+            throw new Error('Expected to start a cyclic fasting plan');
+        }
+        expect(intent.fastDays).toBe(editedFastDays);
+        expect(intent.eatDays).toBe(customDays.eatDays);
+        expect(intent.eatDayWindow.fastHours).toBe(fastHours);
+        expect(intent.eatDayWindow.eatingWindowHours).toBe(CYCLIC_EAT_DAY_WINDOW_HOURS);
     });
 });
 

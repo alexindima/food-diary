@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
+import { disabled, form, max, min, required, submit, validate } from '@angular/forms/signals';
 import { concatMap, filter, firstValueFrom, type Observable, of, take, takeUntil, tap } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
@@ -161,25 +161,13 @@ export class CycleSettingsFacade {
     }
 
     public startCycle(): void {
-        void this.startCycleAsync();
+        void submit(this.startCycleForm);
     }
 
     private async startCycleAsync(): Promise<void> {
-        if (this.state.isSavingCycle()) {
-            return;
-        }
-        if (this.startCycleForm().invalid()) {
-            this.startCycleForm().markAsTouched();
-            return;
-        }
-
         const formValue = this.startCycleModel();
-        const { trackingStartDate } = formValue;
-        if (trackingStartDate === null || trackingStartDate.length === 0) {
-            return;
-        }
         const payload: CreateCyclePayload = {
-            trackingStartDate: toCycleDateKey(trackingStartDate),
+            trackingStartDate: toCycleDateKey(formValue.trackingStartDate),
             mode: formValue.mode,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
             averagePeriodLength: formValue.averagePeriodLength ?? undefined,

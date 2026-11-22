@@ -246,13 +246,8 @@ export class MarketingAttributionService {
             return null;
         }
 
-        try {
-            const referrerUrl = new URL(referrer);
-            const currentHost = this.browserWindow.getHostname();
-            return currentHost !== null && referrerUrl.hostname === currentHost ? null : referrerUrl.hostname;
-        } catch {
-            return null;
-        }
+        const referrerHost = new URL(referrer).hostname;
+        return referrerHost === this.browserWindow.getHostname() ? null : referrerHost;
     }
 
     private getAnonymousId(): AnonymousVisitorId {

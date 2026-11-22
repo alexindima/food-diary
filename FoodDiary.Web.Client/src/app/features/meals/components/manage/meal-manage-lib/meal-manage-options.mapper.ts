@@ -3,6 +3,7 @@ import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { MEAL_TYPE_OPTIONS, type MealTypeOption } from '../../../../../shared/lib/meal-type.util';
+import type { NutritionMode } from './meal-manage.types';
 
 export type MealSatietyControlName = 'preMealSatietyLevel' | 'postMealSatietyLevel';
 
@@ -13,7 +14,7 @@ export function buildMealTypeSelectOptions(translateService: TranslateService): 
     }));
 }
 
-export function buildMealNutritionModeOptions(translateService: TranslateService): FdUiSegmentedToggleOption[] {
+export function buildMealNutritionModeOptions(translateService: TranslateService): Array<FdUiSegmentedToggleOption<NutritionMode>> {
     return [
         {
             value: 'auto',

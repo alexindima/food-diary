@@ -1,13 +1,14 @@
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { Product } from '../../../../../shared/models/product.data';
 import type { Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import type { RecipeCategory } from '../../../../../shared/models/recipe-category';
 
 export type RecipeFormValues = {
     language: string;
     name: string;
     description: string | null;
     comment: string | null;
-    category: string | null;
+    category: RecipeCategory;
     images?: ImageSelection[];
     imageUrl: ImageSelection | null;
     prepTime: number | null;

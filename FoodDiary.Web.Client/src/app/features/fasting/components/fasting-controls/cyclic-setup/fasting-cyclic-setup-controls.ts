@@ -3,8 +3,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
-import type { FastingProtocol } from '../../../../../shared/models/fasting.data';
+import type { CyclicPresetSelection } from '../../../../../shared/models/fasting.data';
 import { normalizeCyclicDays, normalizeIntermittentFastHours } from '../../../lib/fasting-input-normalization';
+import type { IntermittentFastingProtocol } from '../../../models/fasting-start-intent';
 
 @Component({
     selector: 'fd-fasting-cyclic-setup-controls',
@@ -20,10 +21,10 @@ export class FastingCyclicSetupControlsComponent {
     protected readonly normalizeCyclicDays = normalizeCyclicDays;
     protected readonly normalizeIntermittentFastHours = normalizeIntermittentFastHours;
 
-    public readonly cyclicPresetOptions = input.required<FdUiSegmentedToggleOption[]>();
-    public readonly cyclicEatDayProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<FastingProtocol>>>();
-    public readonly selectedCyclicPresetValue = input.required<string>();
-    public readonly cyclicEatDayProtocol = model.required<FastingProtocol>();
+    public readonly cyclicPresetOptions = input.required<Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>>();
+    public readonly cyclicEatDayProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>>();
+    public readonly selectedCyclicPresetValue = input.required<CyclicPresetSelection>();
+    public readonly cyclicEatDayProtocol = model.required<IntermittentFastingProtocol>();
     public readonly cyclicFastDays = input.required<number>();
     public readonly cyclicEatDays = input.required<number>();
     public readonly cyclicEatDayFastHours = input.required<number>();
@@ -31,7 +32,7 @@ export class FastingCyclicSetupControlsComponent {
     public readonly isCustomCyclicPresetSelected = input.required<boolean>();
     public readonly inlineCustomControls = input(false);
 
-    public readonly cyclicPresetChange = output<string>();
+    public readonly cyclicPresetChange = output<CyclicPresetSelection>();
     public readonly cyclicFastDaysChange = output<string | number>();
     public readonly cyclicEatDaysChange = output<string | number>();
     public readonly cyclicEatDayFastHoursChange = output<string | number>();

@@ -27,23 +27,16 @@ type CookModeIngredientView = {
 })
 export class RecipeCookModeComponent {
     private readonly dialogService = inject(FdUiDialogService);
-    protected readonly stepPhotos = computed(() => {
-        const step = this.currentStep();
-        if (step === null) {
-            return [];
-        }
-        if (step.images !== undefined && step.images.length > 0) {
-            return step.images.map(image => image.imageUrl);
-        }
-        return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
-    });
     public readonly recipe = input.required<Recipe>();
 
     protected readonly language = injectCurrentLanguage();
     protected readonly currentStepIndex = signal(0);
     protected readonly steps = computed(() => [...this.recipe().steps].sort((a, b) => a.stepNumber - b.stepNumber));
     protected readonly stepCount = computed(() => this.steps().length);
-    protected readonly currentStep = computed<RecipeStep | null>(() => this.steps()[this.currentStepIndex()] ?? null);
+    protected readonly currentStep = computed(() => {
+        const step = this.steps().at(this.currentStepIndex());
+        return step === undefined ? null : { ...step, photos: this.getStepPhotos(step) };
+    });
     protected readonly progressPercent = computed(() => {
         const count = this.stepCount();
         return count > 0 ? ((this.currentStepIndex() + 1) / count) * PERCENT_SCALE : 0;
@@ -55,10 +48,10 @@ export class RecipeCookModeComponent {
     protected readonly canGoNext = computed(() => this.currentStepIndex() < this.stepCount() - 1);
     protected readonly isDone = computed(() => this.stepCount() > 0 && !this.canGoNext());
 
-    protected previewPhoto(index: number): void {
+    protected previewPhoto(index: number, photos: readonly string[]): void {
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
-            data: { collageImages: this.stepPhotos().map(url => ({ url })), initialIndex: index },
+            data: { collageImages: photos.map(url => ({ url })), initialIndex: index },
         });
     }
 
@@ -72,6 +65,13 @@ export class RecipeCookModeComponent {
         if (this.canGoNext()) {
             this.currentStepIndex.update(index => index + 1);
         }
+    }
+
+    private getStepPhotos(step: RecipeStep): string[] {
+        if (step.images !== undefined && step.images.length > 0) {
+            return step.images.map(image => image.imageUrl);
+        }
+        return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
     }
 
     private buildIngredientViews(ingredients: readonly RecipeIngredient[]): CookModeIngredientView[] {

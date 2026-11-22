@@ -236,14 +236,13 @@
                     "options": {
                         "setupFiles": ["src/test-setup.ts"],
                         "isolate": true,
-                        "runnerConfig": "vitest.config.mjs"
+                        "runnerConfig": "vitest.client.config.mjs"
                     },
                     "configurations": {
                         "coverage": {
                             "coverage": true,
                             "coverageInclude": ["src/app/**/*.ts"],
                             "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts", "src/app/shared/api/sdk/generated/**"],
-                            "runnerConfig": "vitest.config.mjs",
                             "coverageThresholds": {
                                 "statements": 81,
                                 "lines": 80,

@@ -72,8 +72,34 @@ describe('GoalsFacade', () => {
     });
 
     registerLoadTests();
+    registerMacroProjectionTests();
     registerManualSaveTests();
 });
+
+function registerMacroProjectionTests(): void {
+    it.each([
+        { target: 15, value: 15, percent: 19, accent: 'var(--fd-color-primary-600)' },
+        { target: 40, value: 40, percent: 50, accent: 'var(--fd-color-green-500)' },
+        { target: 55, value: 55, percent: 69, accent: 'var(--fd-color-amber-500)' },
+        { target: 120, value: 80, percent: 100, accent: 'var(--fd-color-danger)' },
+    ])('retains inclusive fiber zones and the displayed gradient at $target g', ({ target, value, percent, accent }) => {
+        goalsService.getGoalsStrict.mockReturnValueOnce(of({ fiberTarget: target, calorieCyclingEnabled: false } satisfies GoalsResponse));
+        facade.initialize();
+
+        const fiber = facade.macroStates().find(macro => macro.key === 'fiber');
+        expect(fiber).toMatchObject({
+            value,
+            percent,
+            accent,
+            gradient:
+                'linear-gradient(90deg, ' +
+                'color-mix(in srgb, var(--fd-color-primary-600) 16%, transparent) 0% 18.75%, ' +
+                'color-mix(in srgb, var(--fd-color-green-500) 16%, transparent) 18.75% 50%, ' +
+                'color-mix(in srgb, var(--fd-color-amber-500) 16%, transparent) 50% 68.75%, ' +
+                'color-mix(in srgb, var(--fd-color-danger) 16%, transparent) 68.75% 100%)',
+        });
+    });
+}
 
 function registerLoadTests(): void {
     describe('loading', () => {

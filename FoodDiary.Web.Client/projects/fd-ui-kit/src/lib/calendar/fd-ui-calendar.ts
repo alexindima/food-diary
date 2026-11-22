@@ -11,6 +11,7 @@ import {
     input,
     LOCALE_ID,
     model,
+    output,
     signal,
     untracked,
 } from '@angular/core';
@@ -88,6 +89,7 @@ export class FdUiCalendarComponent {
     private pendingFocusDate: Date | null = null;
 
     public readonly value = model<Date | null>(null);
+    public readonly dateSelected = output<Date>();
     public readonly displayMonth = model<Date | null>(null);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
@@ -206,6 +208,7 @@ export class FdUiCalendarComponent {
         }
         this.activeDate.set(normalized);
         this.value.set(normalized);
+        this.dateSelected.emit(normalized);
     }
 
     protected showPreviousMonth(): void {

@@ -41,6 +41,7 @@ import {
     fastingCycleDays,
     fastingDailyWindow,
     type FastingStartIntent,
+    type IntermittentFastingProtocol,
     intermittentFastingStart,
     isExtendedFastingProtocol,
     isIntermittentFastingProtocol,
@@ -96,7 +97,7 @@ export class FastingFacade {
     public readonly selectedProtocol = signal<FastingProtocol>('Fast16Eat8');
     public readonly customHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
     public readonly customIntermittentFastHours = signal(DEFAULT_INTERMITTENT_FAST_HOURS);
-    public readonly cyclicEatDayProtocol = signal<FastingProtocol>('Fast16Eat8');
+    public readonly cyclicEatDayProtocol = signal<IntermittentFastingProtocol>('Fast16Eat8');
     public readonly cyclicFastDays = signal(1);
     public readonly cyclicEatDays = signal(1);
     public readonly cyclicUsesCustomPreset = signal(false);
@@ -221,25 +222,21 @@ export class FastingFacade {
 
     public endFasting(): void {
         this.trackRequest(this.isEnding, this.fastingService.end(), session => {
-            if (session.endedAtUtc !== null) {
-                this.applyCompletedSessionUpdate(session);
-                this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
-                    sessionId: session.id,
-                    protocol: session.protocol,
-                    planType: session.planType,
-                    status: session.status,
-                    plannedDurationHours: session.plannedDurationHours,
-                    actualDurationHours: getFastingSessionDurationHours(session),
-                    hadCheckIn: session.checkInAtUtc !== null,
-                    ...this.getReminderTelemetryDetails(),
-                });
-                this.clearPromptStateForSession(session.id);
-                this.resetDraftState();
-                this.refreshOverview();
-            } else {
-                this.applyCurrentSessionUpdate(session);
-                this.refreshOverview();
-            }
+            // A successful End request returns a terminal occurrence.
+            this.applyCompletedSessionUpdate(session);
+            this.frontendObservability.recordFastingLifecycleEvent('session.completed', {
+                sessionId: session.id,
+                protocol: session.protocol,
+                planType: session.planType,
+                status: session.status,
+                plannedDurationHours: session.plannedDurationHours,
+                actualDurationHours: getFastingSessionDurationHours(session),
+                hadCheckIn: session.checkInAtUtc !== null,
+                ...this.getReminderTelemetryDetails(),
+            });
+            this.clearPromptStateForSession(session.id);
+            this.resetDraftState();
+            this.refreshOverview();
         });
     }
 
@@ -288,17 +285,14 @@ export class FastingFacade {
         this.cyclicEatDays.set(this.clampCyclicDays(days));
     }
 
-    public selectCyclicEatDayProtocol(protocol: FastingProtocol): void {
+    public selectCyclicEatDayProtocol(protocol: IntermittentFastingProtocol): void {
         this.cyclicEatDayProtocol.set(protocol);
 
         if (protocol === 'CustomIntermittent') {
             return;
         }
 
-        const preset = FASTING_PROTOCOLS.find(item => item.value === protocol && item.category === 'intermittent');
-        if (preset !== undefined) {
-            this.cyclicEatDayFastHours.set(this.clampIntermittentFastHours(preset.hours));
-        }
+        this.cyclicEatDayFastHours.set(this.clampIntermittentFastHours(FASTING_PROTOCOL_CATALOG[protocol].hours));
     }
 
     public setCyclicEatDayFastHours(hours: number): void {

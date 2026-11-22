@@ -5,7 +5,7 @@
             [options]="mealTypeOptions()"
             [value]="selectedMealType()"
             [disabled]="busy()"
-            (valueChange)="changeMealType($event)"
+            (optionSelected)="selectedMealType.set($event.value)"
         />
         <fd-ui-input [label]="'MEAL_FAVORITES.SEARCH' | translate" [maxLength]="200" [disabled]="busy()" (valueChange)="search($event)" />
         <div aria-live="polite" [hidden]="!facade.loading() && !facade.failed() && facade.items().length > 0">

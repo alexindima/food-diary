@@ -238,6 +238,49 @@ describe('Telegram diary transfer through the verification route', () => {
     });
 });
 
+describe('Telegram diary transfer decision ownership', () => {
+    it('keeps the confirmed transfer when Keep Separate is clicked before the pending state renders', async () => {
+        const { auth, harness } = await openVerificationAsync();
+        verificationControl(harness, 'AUTH.TELEGRAM_DIARY.SIGN_IN').click();
+        harness.detectChanges();
+        submitInlineLogin(harness);
+        await expectVerificationTextAsync(harness, 'AUTH.TELEGRAM_DIARY.REVIEW');
+
+        const radios = verificationPage(harness).querySelectorAll<HTMLInputElement>('input[type="radio"]');
+        expect(radios).toHaveLength(2);
+        radios[0].click();
+        harness.detectChanges();
+        const confirm = verificationControl(harness, 'AUTH.TELEGRAM_DIARY.MERGE');
+        const keepSeparate = verificationControl(harness, 'AUTH.TELEGRAM_DIARY.KEEP_SEPARATE');
+        const pending = new Subject<TelegramDiaryPreview>();
+        auth.transferTelegramDiary.mockReturnValueOnce(pending);
+
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+        expect(pending.observed).toBe(true);
+        expect(keepSeparate.disabled).toBe(false);
+        keepSeparate.click();
+        harness.detectChanges();
+
+        const page = verificationPage(harness);
+        expect({
+            transferVisible: page.querySelector('fd-telegram-diary-transfer') !== null,
+            transferPending: pending.observed,
+            cancelledMessage: page.textContent.includes('AUTH.TELEGRAM_DIARY.CANCELLED'),
+        }).toEqual({ transferVisible: true, transferPending: true, cancelledMessage: false });
+        expect(keepSeparate.disabled).toBe(true);
+        expect(auth.transferTelegramDiary.mock.calls).toEqual([
+            [TICKET, undefined],
+            [TICKET, false],
+        ]);
+
+        pending.next(PREVIEW);
+        pending.complete();
+        await expectVerificationTextAsync(harness, 'AUTH.TELEGRAM_DIARY.DONE');
+        expect(keepSeparate.closest('[hidden]')).not.toBeNull();
+    });
+});
+
 describe('Telegram diary transfer review', () => {
     it('offers to connect an empty diary and retries a temporary confirmation error with the email goals', async () => {
         const { auth, harness } = await openVerificationAsync();

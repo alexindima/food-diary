@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, model, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -45,7 +45,7 @@ export class MealNutritionSidebarComponent {
 
     public readonly mealForm = input.required<FieldTree<MealFormValues>>();
     public readonly macroBarState = input.required<MacroBarState>();
-    public readonly nutritionMode = input.required<NutritionMode>();
+    public readonly nutritionMode = model.required<NutritionMode>();
     public readonly nutritionWarning = input.required<CalorieMismatchWarning | null>();
     public readonly caloriesError = input.required<string | null>();
     public readonly macrosError = input.required<string | null>();
@@ -55,7 +55,6 @@ export class MealNutritionSidebarComponent {
     public readonly submitDisabled = input(false);
     public readonly globalError = input.required<string | null>();
 
-    public readonly nutritionModeChange = output<string>();
     public readonly cancelRequested = output();
     protected readonly maxCalories = MANUAL_NUTRITION_MAX_CALORIES;
     protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
@@ -103,8 +102,8 @@ export class MealNutritionSidebarComponent {
         });
     }
 
-    protected onNutritionModeChange(nextMode: string): void {
-        this.nutritionModeChange.emit(nextMode);
+    protected onNutritionModeChange(nextMode: NutritionMode): void {
+        this.nutritionMode.set(nextMode);
     }
 
     protected onCancel(): void {

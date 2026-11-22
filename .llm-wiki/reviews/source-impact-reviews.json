@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "0a63480dcc45ea19b7df3e04af427ecf73e0db0daa21329bd56f8b5667a5e72d",
-          "reviewReason": "Updated minimums on the existing Admin coverage target while retaining the same 202 source paths. Verified the current Angular project discovery, startup entry points, and coverage selection for Admin and fd-ui-kit."
+          "sha256": "a83c92697bc15f7bd2633aac69d2f266a45cd45886a2722854f6f663e69afc6f",
+          "reviewReason": "The client test target now selects a client-specific Vitest config. Project roots, feature discovery, and the frontend-index inputs described on this page retain their existing semantics."
         }
       ],
-      "reason": "Updated minimums on the existing Admin coverage target while retaining the same 202 source paths. Verified the current Angular project discovery, startup entry points, and coverage selection for Admin and fd-ui-kit.",
-      "baseRef": "500547d99",
-      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T19:41:23.2424447Z"
+      "reason": "The client test target now selects a client-specific Vitest config. Project roots, feature discovery, and the frontend-index inputs described on this page retain their existing semantics.",
+      "baseRef": "HEAD",
+      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
+      "reviewedAtUtc": "2026-11-22T12:21:23.3561324Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "0a63480dcc45ea19b7df3e04af427ecf73e0db0daa21329bd56f8b5667a5e72d",
-          "reviewReason": "The Admin and fd-ui-kit coverage thresholds belong to the existing unit test targets. Project and target inventory matches the current Angular configuration."
+          "sha256": "a83c92697bc15f7bd2633aac69d2f266a45cd45886a2722854f6f663e69afc6f",
+          "reviewReason": "The Angular workspace changes only the client test runner config. The project catalog and documented build targets are unaffected by the coverage-provider callback."
         }
       ],
-      "reason": "The Admin and fd-ui-kit coverage thresholds belong to the existing unit test targets. Project and target inventory matches the current Angular configuration.",
-      "baseRef": "500547d99",
-      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T19:41:23.5347489Z"
+      "reason": "The Angular workspace changes only the client test runner config. The project catalog and documented build targets are unaffected by the coverage-provider callback.",
+      "baseRef": "HEAD",
+      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
+      "reviewedAtUtc": "2026-11-22T12:21:23.6995624Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -978,14 +978,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "7d696d62e87daa60399e863cdf2a3abb603c162ccf9eaad88ff4af162ffde104",
-          "reviewReason": "The package repairs align the Stylelint peer group and make the SCSS glob shell-safe. Browser and screenshot commands are unchanged. The eight reformatted templates retain identical parsed Angular trees and overridden padding declarations were removed."
+          "sha256": "7cd8463466e027b0579b86e3d79d2064007b0d93c8cfe6e74f01441d1098c2b1",
+          "reviewReason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change."
         }
       ],
-      "reason": "The package repairs align the Stylelint peer group and make the SCSS glob shell-safe. Browser and screenshot commands are unchanged. The eight reformatted templates retain identical parsed Angular trees and overridden padding declarations were removed.",
+      "reason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change.",
       "baseRef": "HEAD",
-      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
-      "reviewedAtUtc": "2026-11-16T14:27:09.9451138Z"
+      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
+      "reviewedAtUtc": "2026-11-22T13:35:22.2130598Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

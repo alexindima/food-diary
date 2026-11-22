@@ -4,8 +4,9 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
-import type { FastingMode, FastingProtocol } from '../../../../../shared/models/fasting.data';
+import type { CyclicPresetSelection, FastingMode, FastingProtocol } from '../../../../../shared/models/fasting.data';
 import { normalizeFastingHours, normalizeIntermittentFastHours } from '../../../lib/fasting-input-normalization';
+import type { IntermittentFastingProtocol } from '../../../models/fasting-start-intent';
 import { FastingCyclicSetupControlsComponent } from '../cyclic-setup/fasting-cyclic-setup-controls';
 
 @Component({
@@ -26,11 +27,11 @@ export class FastingSetupControlsComponent {
     public readonly selectedMode = input.required<FastingMode>();
     public readonly intermittentProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<FastingProtocol>>>();
     public readonly extendedProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<FastingProtocol>>>();
-    public readonly cyclicPresetOptions = input.required<FdUiSegmentedToggleOption[]>();
-    public readonly cyclicEatDayProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<FastingProtocol>>>();
+    public readonly cyclicPresetOptions = input.required<Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>>();
+    public readonly cyclicEatDayProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>>();
     public readonly selectedProtocol = input.required<FastingProtocol>();
-    public readonly selectedCyclicPresetValue = input.required<string>();
-    public readonly cyclicEatDayProtocol = model.required<FastingProtocol>();
+    public readonly selectedCyclicPresetValue = input.required<CyclicPresetSelection>();
+    public readonly cyclicEatDayProtocol = model.required<IntermittentFastingProtocol>();
     public readonly customIntermittentFastHours = input.required<number>();
     public readonly customIntermittentEatingWindowHours = input.required<number>();
     public readonly customHours = input.required<number>();
@@ -50,7 +51,7 @@ export class FastingSetupControlsComponent {
     public readonly protocolChange = output<FastingProtocol>();
     public readonly customIntermittentFastHoursChange = output<string | number>();
     public readonly customHoursChange = output<string | number>();
-    public readonly cyclicPresetChange = output<string>();
+    public readonly cyclicPresetChange = output<CyclicPresetSelection>();
     public readonly cyclicFastDaysChange = output<string | number>();
     public readonly cyclicEatDaysChange = output<string | number>();
     public readonly cyclicEatDayFastHoursChange = output<string | number>();

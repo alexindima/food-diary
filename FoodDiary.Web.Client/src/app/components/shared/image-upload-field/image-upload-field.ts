@@ -121,20 +121,23 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected readonly selection = signal<ImageSelection>(imageSelection(null, null));
     protected readonly isUploading = signal(false);
+    private readonly isInputBlocked = computed(() => this.disabled() || this.isUploading());
     protected readonly isDragging = linkedSignal({
-        source: () => this.disabled() || this.isUploading(),
+        source: this.isInputBlocked,
         computation: () => false,
     });
     protected readonly error = signal<string | null>(null);
     protected readonly isCropping = signal(false);
     protected readonly isProcessingCrop = signal(false);
-    protected readonly canConfirmCrop = computed(
-        () => this.cropImageBounds() !== null && this.cropSelection() !== null && !this.isProcessingCrop(),
-    );
-
     protected readonly cropPreviewUrl = signal<string | null>(null);
     protected readonly cropImageBounds = signal<CropRect | null>(null);
     protected readonly cropSelection = signal<CropRect | null>(null);
+    private readonly editableCropGeometry = computed(() => {
+        const bounds = this.cropImageBounds();
+        const selection = this.cropSelection();
+        return bounds !== null && selection !== null && !this.isProcessingCrop() ? { bounds, selection } : null;
+    });
+    protected readonly canConfirmCrop = computed(() => this.editableCropGeometry() !== null);
     private originalFile: File | null = null;
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
@@ -200,7 +203,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected onDrop(event: DragEvent): void {
         event.preventDefault();
         event.stopPropagation();
-        if (this.disabled() || this.isUploading()) {
+        if (this.isInputBlocked()) {
             return;
         }
         this.isDragging.set(false);
@@ -208,15 +211,15 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private async handleFilesAsync(fileList: FileList | null | undefined): Promise<void> {
-        const files = Array.from(fileList ?? []);
-        if (this.disabled() || this.isUploading() || files.length === 0) {
+        if (this.isInputBlocked() || fileList?.length === undefined || fileList.length === 0) {
             return;
         }
+        const files = Array.from(fileList);
         if (this.requireHealthConsent()) {
             const revision = ++this.uploadRevision;
             const privacy = this.injector.get(PrivacyConsentFacade);
             const allowed = await privacy.ensureHealthConsentAsync(true);
-            if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
+            if (!this.isCurrentUpload(revision) || this.isInputBlocked()) {
                 return;
             }
             if (!allowed) {
@@ -310,7 +313,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected onDragOver(event: DragEvent): void {
         event.preventDefault();
-        if (this.disabled() || this.isUploading()) {
+        if (this.isInputBlocked()) {
             return;
         }
         this.isDragging.set(true);
@@ -367,9 +370,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onCropPointerDown(event: PointerEvent, mode: CropInteractionMode): void {
-        const selection = this.cropSelection();
-        const bounds = this.cropImageBounds();
-        if (selection === null || bounds === null) {
+        const geometry = this.editableCropGeometry();
+        if (geometry === null) {
             return;
         }
 
@@ -382,7 +384,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             pointerId: event.pointerId,
             startX: event.clientX,
             startY: event.clientY,
-            startRect: { ...selection },
+            startRect: { ...geometry.selection },
         };
     }
 
@@ -421,9 +423,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onCropKeydown(event: KeyboardEvent): void {
-        const selection = this.cropSelection();
-        const bounds = this.cropImageBounds();
-        if (selection === null || bounds === null) {
+        const geometry = this.editableCropGeometry();
+        if (geometry === null) {
             return;
         }
 
@@ -440,7 +441,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
 
         event.preventDefault();
-        this.cropSelection.set(moveCropSelection(selection, bounds, delta.dx, delta.dy));
+        this.cropSelection.set(moveCropSelection(geometry.selection, geometry.bounds, delta.dx, delta.dy));
     }
 
     protected cancelCrop(): void {
@@ -452,17 +453,37 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected confirmCrop(): void {
-        this.confirmCropInternal();
+        const geometry = this.editableCropGeometry();
+        const originalFile = this.originalFile;
+        const image = this.cropImageElement;
+        if (originalFile === null || geometry === null || image === null) {
+            return;
+        }
+
+        this.isProcessingCrop.set(true);
+        this.endCropInteraction(this.cropSurfaceRef()?.nativeElement);
+        try {
+            const canvas = this.createCropUploadCanvas(geometry.selection, geometry.bounds, image);
+            if (canvas === null) {
+                this.failCrop('PROCESSING_FAILED');
+                return;
+            }
+            canvas.toBlob(blob => {
+                this.completeCropUpload(blob, originalFile);
+            }, originalFile.type);
+        } catch {
+            this.failCrop('PROCESSING_FAILED');
+        }
     }
 
     public openFilePicker(): void {
-        if (!this.disabled() && !this.isUploading()) {
+        if (!this.isInputBlocked()) {
             this.fileInputRef()?.nativeElement.click();
         }
     }
 
     protected onZoneClick(fileInput: HTMLInputElement): void {
-        if (this.disabled() || this.isUploading() || this.selection().url !== null) {
+        if (this.isInputBlocked() || this.selection().url !== null) {
             return;
         }
         fileInput.click();
@@ -481,7 +502,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected onDeleteClick(event: Event): void {
         event.stopPropagation();
-        if (this.disabled() || this.isUploading()) {
+        if (this.isInputBlocked()) {
             return;
         }
         this.clearImage();
@@ -609,7 +630,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private uploadFile(file: File, revision = this.uploadRevision): void {
-        if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
+        if (!this.isCurrentUpload(revision) || this.isInputBlocked()) {
             return;
         }
 
@@ -635,6 +656,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             )
             .subscribe({
                 next: selection => {
+                    this.clearPreparationPreview();
                     this.selection.set(selection);
                     this.value.set(selection);
                     this.touched.set(true);
@@ -666,12 +688,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     private emitPreparationPreview(file: File): void {
         this.clearPreparationPreview();
-        const urlApi = this.document.defaultView?.URL;
-        if (urlApi === undefined) {
-            return;
-        }
-
-        this.pendingPreviewUrl = urlApi.createObjectURL(file);
+        this.pendingPreviewUrl = URL.createObjectURL(file);
         this.imagePreparationStarted.emit(this.pendingPreviewUrl);
     }
 
@@ -680,31 +697,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
 
-        this.document.defaultView?.URL.revokeObjectURL(this.pendingPreviewUrl);
+        URL.revokeObjectURL(this.pendingPreviewUrl);
         this.pendingPreviewUrl = null;
-    }
-
-    private confirmCropInternal(): void {
-        const selection = this.cropSelection();
-        const bounds = this.cropImageBounds();
-        const originalFile = this.originalFile;
-        if (originalFile === null || selection === null || bounds === null || this.cropImageElement === null || !this.canConfirmCrop()) {
-            return;
-        }
-
-        this.isProcessingCrop.set(true);
-        try {
-            const canvas = this.createCropUploadCanvas(selection, bounds, this.cropImageElement);
-            if (canvas === null) {
-                this.failCrop('PROCESSING_FAILED');
-                return;
-            }
-            canvas.toBlob(blob => {
-                this.completeCropUpload(blob, originalFile);
-            }, originalFile.type);
-        } catch {
-            this.failCrop('PROCESSING_FAILED');
-        }
     }
 
     private createCropUploadCanvas(selection: CropRect, bounds: CropRect, image: HTMLImageElement): HTMLCanvasElement | null {
@@ -802,10 +796,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         });
     }
 
-    private endCropInteraction(surface: HTMLDivElement): void {
+    private endCropInteraction(surface: HTMLDivElement | undefined): void {
         const interaction = this.cropInteraction;
         this.cropInteraction = null;
-        if (interaction !== null && surface.hasPointerCapture(interaction.pointerId)) {
+        if (interaction !== null && surface?.hasPointerCapture(interaction.pointerId) === true) {
             surface.releasePointerCapture(interaction.pointerId);
         }
     }

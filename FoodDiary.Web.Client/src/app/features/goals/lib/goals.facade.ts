@@ -19,15 +19,20 @@ type MacroZone = {
     color: string;
 };
 
-type MacroItem = {
+type MacroZones = [blue: MacroZone, green: MacroZone, orange: MacroZone, red: MacroZone];
+
+type MacroConfig = {
     key: MacroKey;
     labelKey: string;
     unit: string;
     max: number;
+    blueTo: number;
     greenFrom: number;
     greenTo: number;
-    zones: MacroZone[];
+    orangeTo: number;
 };
+
+type MacroItem = Omit<MacroConfig, 'blueTo' | 'orangeTo'> & { zones: MacroZones };
 
 export type MacroPresetKey = 'custom' | 'balancedGym' | 'classic' | 'lowCarb' | 'highCarb' | 'endurance';
 
@@ -89,64 +94,58 @@ export class GoalsFacade {
     private readonly colorOrange = 'var(--fd-color-amber-500)';
     private readonly colorRed = 'var(--fd-color-danger)';
 
-    private readonly macroConfigs: MacroItem[] = [
-        {
-            key: 'protein',
-            labelKey: 'GOALS_PAGE.MACROS.PROTEIN',
-            unit: 'g',
-            max: 220,
-            greenFrom: 80,
-            greenTo: 130,
-            zones: [
-                { from: 0, to: 60, color: this.colorBlue },
-                { from: 60, to: 130, color: this.colorGreen },
-                { from: 130, to: 180, color: this.colorOrange },
-                { from: 180, to: 220, color: this.colorRed },
-            ],
-        },
-        {
-            key: 'fats',
-            labelKey: 'GOALS_PAGE.MACROS.FATS',
-            unit: 'g',
-            max: 160,
-            greenFrom: 55,
-            greenTo: 90,
-            zones: [
-                { from: 0, to: 45, color: this.colorBlue },
-                { from: 45, to: 90, color: this.colorGreen },
-                { from: 90, to: 130, color: this.colorOrange },
-                { from: 130, to: 160, color: this.colorRed },
-            ],
-        },
-        {
-            key: 'carbs',
-            labelKey: 'GOALS_PAGE.MACROS.CARBS',
-            unit: 'g',
-            max: 480,
-            greenFrom: 200,
-            greenTo: 300,
-            zones: [
-                { from: 0, to: 150, color: this.colorBlue },
-                { from: 150, to: 300, color: this.colorGreen },
-                { from: 300, to: 400, color: this.colorOrange },
-                { from: 400, to: 480, color: this.colorRed },
-            ],
-        },
-        {
-            key: 'fiber',
-            labelKey: 'GOALS_PAGE.MACROS.FIBER',
-            unit: 'g',
-            max: 80,
-            greenFrom: 25,
-            greenTo: 40,
-            zones: [
-                { from: 0, to: 15, color: this.colorBlue },
-                { from: 15, to: 40, color: this.colorGreen },
-                { from: 40, to: 55, color: this.colorOrange },
-                { from: 55, to: 80, color: this.colorRed },
-            ],
-        },
-    ];
+    private readonly macroConfigs = (
+        [
+            {
+                key: 'protein',
+                labelKey: 'GOALS_PAGE.MACROS.PROTEIN',
+                unit: 'g',
+                max: 220,
+                blueTo: 60,
+                greenFrom: 80,
+                greenTo: 130,
+                orangeTo: 180,
+            },
+            {
+                key: 'fats',
+                labelKey: 'GOALS_PAGE.MACROS.FATS',
+                unit: 'g',
+                max: 160,
+                blueTo: 45,
+                greenFrom: 55,
+                greenTo: 90,
+                orangeTo: 130,
+            },
+            {
+                key: 'carbs',
+                labelKey: 'GOALS_PAGE.MACROS.CARBS',
+                unit: 'g',
+                max: 480,
+                blueTo: 150,
+                greenFrom: 200,
+                greenTo: 300,
+                orangeTo: 400,
+            },
+            {
+                key: 'fiber',
+                labelKey: 'GOALS_PAGE.MACROS.FIBER',
+                unit: 'g',
+                max: 80,
+                blueTo: 15,
+                greenFrom: 25,
+                greenTo: 40,
+                orangeTo: 55,
+            },
+        ] satisfies MacroConfig[]
+    ).map(({ blueTo, orangeTo, ...config }): MacroItem => ({
+        ...config,
+        zones: [
+            { from: 0, to: blueTo, color: this.colorBlue },
+            { from: blueTo, to: config.greenTo, color: this.colorGreen },
+            { from: config.greenTo, to: orangeTo, color: this.colorOrange },
+            { from: orangeTo, to: config.max, color: this.colorRed },
+        ],
+    }));
 
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
@@ -172,7 +171,7 @@ export class GoalsFacade {
             const rawValue = this.macroValues()[cfg.key];
             const value = this.clampValue(rawValue, cfg.max);
             const percent = Math.min(PERCENT_MULTIPLIER, Math.max(0, Math.round((value / cfg.max) * PERCENT_MULTIPLIER)));
-            const accent = this.pickZoneColor(cfg, value);
+            const accent = this.pickZoneColor(cfg.zones, value);
             const gradient = this.buildZoneGradient(cfg);
             const shortfall = Math.max(0, Math.ceil(cfg.greenFrom - value));
             const inRange = value >= cfg.greenFrom && value <= cfg.greenTo;
@@ -285,9 +284,14 @@ export class GoalsFacade {
         return clampGoalValue(value, max);
     }
 
-    private pickZoneColor(cfg: MacroItem, value: number): string {
-        const zone = cfg.zones.find(item => value >= item.from && value <= item.to);
-        return zone?.color ?? this.colorGreen;
+    private pickZoneColor([blue, green, orange, red]: MacroZones, value: number): string {
+        if (value <= blue.to) {
+            return blue.color;
+        }
+        if (value > orange.to) {
+            return red.color;
+        }
+        return value > green.to ? orange.color : green.color;
     }
 
     private buildZoneGradient(cfg: MacroItem): string {

@@ -3,15 +3,16 @@
         <h1 class="fd-ui-title-md">{{ 'DIETOLOGIST_INVITATION.TITLE' | translate }}</h1>
         @if (state() === 'loading') {
             <p class="dietologist-invitation__description fd-ui-body-sm">{{ 'DIETOLOGIST_INVITATION.LOADING' | translate }}</p>
-        } @else if (state() === 'ready' && invitationView(); as currentInvitation) {
+        } @else if (state() === 'ready' && invitation(); as currentInvitation) {
+            @let invitationView = describeInvitation(currentInvitation);
             <p class="dietologist-invitation__description fd-ui-body-sm">
                 {{
                     'DIETOLOGIST_INVITATION.DESCRIPTION'
-                        | translate: { name: currentInvitation.displayName, email: currentInvitation.invitation.clientEmail }
+                        | translate: { name: invitationView.displayName, email: currentInvitation.clientEmail }
                 }}
             </p>
             <p class="dietologist-invitation__meta fd-ui-caption">
-                {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: currentInvitation.expiresDateLabel } }}
+                {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: invitationView.expiresDateLabel } }}
             </p>
             <fd-ui-form-error [error]="errorMessage()" />
             <div class="dietologist-invitation__actions fd-row fd-wrap fd-gap-sm">

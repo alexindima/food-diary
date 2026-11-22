@@ -261,7 +261,9 @@ export class UserManageNotificationsFacade {
             source: activePresetId !== null ? 'preset' : 'manual',
             presetId: activePresetId ?? undefined,
         });
-        this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
+        if (this.isViewActive()) {
+            this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
+        }
     }
 
     public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {

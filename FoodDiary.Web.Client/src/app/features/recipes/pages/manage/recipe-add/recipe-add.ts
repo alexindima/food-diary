@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 
-import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
+import { canLeaveEditor, type UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { RecipeManageComponent } from '../../../components/manage/recipe-manage/recipe-manage';
 
 @Component({
@@ -15,6 +15,6 @@ export class RecipeAddComponent implements UnsavedEditor {
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
     public async canLeaveAsync(): Promise<boolean> {
-        return this.editor()?.canLeaveAsync() ?? true;
+        return canLeaveEditor(this.editor());
     }
 }

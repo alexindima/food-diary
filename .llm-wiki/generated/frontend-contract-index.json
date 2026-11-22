@@ -3,11 +3,11 @@
   "summary": {
     "components": 509,
     "componentsWithoutDirectSpecs": 122,
-    "inputs": 1679,
-    "outputs": 556,
+    "inputs": 1680,
+    "outputs": 560,
     "apiCalls": 335,
     "templatesWithTranslations": 369,
-    "translationKeys": 2272,
+    "translationKeys": 2271,
     "consumerEdges": 1332,
     "consumedComponents": 326,
     "unconsumedComponents": 182
@@ -4056,22 +4056,22 @@
       "inputs": [
         {
           "name": "cyclicPresetOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
+          "type": "Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>",
           "required": true
         },
         {
           "name": "selectedCyclicPresetValue",
-          "type": "string",
+          "type": "CyclicPresetSelection",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocol",
-          "type": "FastingProtocol",
+          "type": "IntermittentFastingProtocol",
           "required": true
         },
         {
@@ -4108,7 +4108,7 @@
       "outputs": [
         {
           "name": "cyclicPresetChange",
-          "type": "string"
+          "type": "CyclicPresetSelection"
         },
         {
           "name": "cyclicFastDaysChange",
@@ -4124,7 +4124,7 @@
         },
         {
           "name": "cyclicEatDayProtocolChange",
-          "type": "FastingProtocol"
+          "type": "IntermittentFastingProtocol"
         }
       ],
       "specPath": null
@@ -4495,12 +4495,12 @@
         },
         {
           "name": "cyclicPresetOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
+          "type": "Array<FdUiSegmentedToggleOption<IntermittentFastingProtocol>>",
           "required": true
         },
         {
@@ -4510,12 +4510,12 @@
         },
         {
           "name": "selectedCyclicPresetValue",
-          "type": "string",
+          "type": "CyclicPresetSelection",
           "required": true
         },
         {
           "name": "cyclicEatDayProtocol",
-          "type": "FastingProtocol",
+          "type": "IntermittentFastingProtocol",
           "required": true
         },
         {
@@ -4608,7 +4608,7 @@
         },
         {
           "name": "cyclicPresetChange",
-          "type": "string"
+          "type": "CyclicPresetSelection"
         },
         {
           "name": "cyclicFastDaysChange",
@@ -4628,7 +4628,7 @@
         },
         {
           "name": "cyclicEatDayProtocolChange",
-          "type": "FastingProtocol"
+          "type": "IntermittentFastingProtocol"
         }
       ],
       "specPath": null
@@ -5252,6 +5252,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "dateSelected",
+          "type": "Date"
+        },
         {
           "name": "valueChange",
           "type": "Date | null"
@@ -5919,12 +5923,12 @@
       "inputs": [
         {
           "name": "options",
-          "type": "FdUiEmojiPickerOption[]",
+          "type": "Array<FdUiEmojiPickerOption<Value>>",
           "required": false
         },
         {
           "name": "selectedValue",
-          "type": "FdUiEmojiPickerValue | null",
+          "type": "Value | null",
           "required": false
         },
         {
@@ -5955,8 +5959,12 @@
       ],
       "outputs": [
         {
+          "name": "optionSelected",
+          "type": "FdUiEmojiPickerOption<Value>"
+        },
+        {
           "name": "selectedValueChange",
-          "type": "FdUiEmojiPickerValue | null"
+          "type": "Value | null"
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.spec.ts"
@@ -7564,6 +7572,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "optionSelected",
+          "type": "FdUiSelectOption<T>"
+        },
         {
           "name": "touch",
           "type": ""
@@ -9857,12 +9869,12 @@
       ],
       "outputs": [
         {
-          "name": "nutritionModeChange",
-          "type": "string"
-        },
-        {
           "name": "cancelRequested",
           "type": ""
+        },
+        {
+          "name": "nutritionModeChange",
+          "type": "NutritionMode"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.spec.ts"
@@ -12902,6 +12914,11 @@
           "name": "text",
           "type": "",
           "required": false
+        },
+        {
+          "name": "stepPhotosUploading",
+          "type": "() => boolean",
+          "required": false
         }
       ],
       "outputs": [
@@ -13654,6 +13671,10 @@
         },
         {
           "name": "imageOrientationChanged",
+          "type": "boolean"
+        },
+        {
+          "name": "outsideCardSpaceChanged",
           "type": "boolean"
         }
       ],
@@ -25187,6 +25208,7 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND",
         "RECIPE_MANAGE.IMPORT.CLIPBOARD_HINT",
         "RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL",
@@ -25718,7 +25740,6 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
       "keys": [
-        "DISABLED_HINTS.IMAGE_REQUIRED",
         "DISABLED_HINTS.OPERATION_BUSY",
         "IMAGE_UPLOAD_FIELD.REMOVE",
         "PRODUCT_AI_DIALOG.ADD_PHOTOS",
@@ -27590,7 +27611,8 @@
       "outputsHandled": [
         "annotationSelected",
         "annotationsToggled",
-        "imageOrientationChanged"
+        "imageOrientationChanged",
+        "outsideCardSpaceChanged"
       ]
     },
     {
@@ -33896,7 +33918,7 @@
         "max"
       ],
       "outputsHandled": [
-        "valueChange"
+        "dateSelected"
       ]
     },
     {
@@ -35168,12 +35190,9 @@
       "occurrences": 1,
       "inputsUsed": [
         "label",
-        "size",
-        "value"
+        "size"
       ],
-      "outputsHandled": [
-        "valueChange"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "FdUiDateInputComponent",
@@ -36377,7 +36396,7 @@
         "size"
       ],
       "outputsHandled": [
-        "selectedValueChange"
+        "optionSelected"
       ]
     },
     {
@@ -41465,7 +41484,7 @@
         "value"
       ],
       "outputsHandled": [
-        "valueChange"
+        "optionSelected"
       ]
     },
     {
@@ -41482,7 +41501,7 @@
         "value"
       ],
       "outputsHandled": [
-        "valueChange"
+        "optionSelected"
       ]
     },
     {
@@ -45474,6 +45493,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "sourceUrl",
+        "stepPhotosUploading",
         "text"
       ],
       "outputsHandled": [

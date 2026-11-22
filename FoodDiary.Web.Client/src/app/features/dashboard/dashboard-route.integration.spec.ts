@@ -2,7 +2,7 @@ import { registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import localeRu from '@angular/common/locales/ru';
-import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router, type Routes } from '@angular/router';
@@ -1300,14 +1300,13 @@ describe('Dashboard TDEE goal request ownership', () => {
         expect(saving.observed).toBe(true);
 
         button(card, 'TDEE_CARD.TITLE').click();
-        const dialog = await vi.waitFor(() => {
-            redraw(harness);
-            const mounted = document.querySelector(dialogSelector);
-            if (mounted === null) {
-                throw new Error('Expected to open the TDEE details dialog while the card saves');
-            }
-            return mounted;
-        });
+        await vi.dynamicImportSettled();
+        await harness.fixture.whenStable();
+        redraw(harness);
+        const dialog = document.querySelector(dialogSelector);
+        if (dialog === null) {
+            throw new Error('Expected to open the TDEE details dialog while the card saves');
+        }
         const dialogApply = [...dialog.querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button')].find(control =>
             control.textContent.trim().endsWith(apply),
         );
@@ -1328,6 +1327,26 @@ describe('Dashboard TDEE goal request ownership', () => {
         expect(refreshSnapshot).toHaveBeenCalledOnce();
         expect(updateGoal).toHaveBeenCalledOnce();
     });
+});
+
+it('does not open TDEE details after Dashboard destruction during its lazy import', async () => {
+    const target = 1950;
+    const { harness, dialogs, updateGoal, refreshSnapshot } = await renderDashboardAsync(dashboardSnapshotWithTdee(target));
+    const open = vi.spyOn(dialogs, 'open');
+    const routeOwner = harness.routeDebugElement?.injector.get(DestroyRef);
+    const card = element(harness, 'fd-dashboard-tdee-block');
+    expect(routeOwner?.destroyed).toBe(false);
+
+    button(card, 'TDEE_CARD.TITLE').click();
+    harness.fixture.destroy();
+    expect(routeOwner?.destroyed).toBe(true);
+    await import('./dialogs/tdee-insight-dialog/tdee-insight-dialog');
+    await vi.dynamicImportSettled();
+
+    expect(open).not.toHaveBeenCalled();
+    expect(document.querySelector('fd-tdee-insight-dialog')).toBeNull();
+    expect(updateGoal).not.toHaveBeenCalled();
+    expect(refreshSnapshot).not.toHaveBeenCalled();
 });
 
 it('closes the open TDEE dialog without writing a calorie goal already saved from the card', async () => {

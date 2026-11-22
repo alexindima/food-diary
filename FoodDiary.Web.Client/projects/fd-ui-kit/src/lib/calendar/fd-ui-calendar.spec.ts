@@ -164,6 +164,8 @@ function registerKeyboardContractTests(): void {
             ['End', '2025-03-16'],
             ['PageUp', '2025-02-15'],
         ])('moves the active date with %s and does not change selection until activation', (key, date) => {
+            const dateSelected = vi.fn<(selected: Date) => void>();
+            component.dateSelected.subscribe(dateSelected);
             component.value.set(MARCH_DATE);
             fixture.detectChanges();
             const original = requireElement('[data-date="2025-03-15"]');
@@ -177,10 +179,12 @@ function registerKeyboardContractTests(): void {
             expect(target.getAttribute('tabindex')).toBe('0');
             expect(document.activeElement).toBe(target);
             expect(component.value()).toEqual(MARCH_DATE);
+            expect(dateSelected).not.toHaveBeenCalled();
             target.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
             fixture.detectChanges();
             expect(target.getAttribute('aria-selected')).toBe('true');
             expect(component.value()).toEqual(new Date(`${date}T00:00:00`));
+            expect(dateSelected).toHaveBeenCalledExactlyOnceWith(new Date(`${date}T00:00:00`));
         });
 
         it('lets Tab propagate and keeps the selected day when leaving the grid', () => {
@@ -233,13 +237,16 @@ function registerWeekSelectionTests(): void {
             expect(host().querySelectorAll('button[data-date][tabindex="0"]')).toHaveLength(1);
         });
         it('normalizes the selected value to Monday and highlights the whole week', () => {
+            const dateSelected = vi.fn<(selected: Date) => void>();
+            component.dateSelected.subscribe(dateSelected);
             fixture.componentRef.setInput('selectionMode', 'week');
             fixture.detectChanges();
 
-            component['selectDate'](MARCH_DATE);
+            requireElement('[data-date="2025-03-15"]').click();
             fixture.detectChanges();
 
             expect(component.value()?.getDate()).toBe(MIN_DAY);
+            expect(dateSelected).toHaveBeenCalledExactlyOnceWith(new Date(TEST_YEAR, MARCH_INDEX, MIN_DAY));
             expect(host().querySelectorAll('.fd-ui-calendar__day--week-selected').length).toBe(WEEK_DAYS_COUNT);
         });
 
@@ -308,16 +315,22 @@ function registerRenderTests(): void {
 function registerSelectionTests(): void {
     describe('selection', () => {
         it('should select enabled date and mark it selected', () => {
-            component['selectDate'](MARCH_DATE);
+            const modelChanged = vi.fn();
+            const dateSelected = vi.fn();
+            component.value.subscribe(modelChanged);
+            component.dateSelected.subscribe(dateSelected);
+            const selected = requireElement('[data-date="2025-03-15"]');
+            selected.click();
             fixture.detectChanges();
 
             expect(component.value()?.getFullYear()).toBe(TEST_YEAR);
             expect(component.value()?.getMonth()).toBe(MARCH_INDEX);
             expect(component.value()?.getDate()).toBe(TEST_DAY);
 
-            const selected = requireElement('[data-date="2025-03-15"]');
             expect(selected.classList).toContain('fd-ui-calendar__day--selected');
             expect(selected.getAttribute('aria-selected')).toBe('true');
+            expect(dateSelected).toHaveBeenCalledExactlyOnceWith(MARCH_DATE);
+            expect(modelChanged).toHaveBeenCalledBefore(dateSelected);
         });
 
         it('should ignore date earlier than min', () => {
@@ -330,6 +343,8 @@ function registerSelectionTests(): void {
         });
 
         it('should disable dates outside configured range', () => {
+            const dateSelected = vi.fn<(selected: Date) => void>();
+            component.dateSelected.subscribe(dateSelected);
             fixture.componentRef.setInput('min', new Date(TEST_YEAR, MARCH_INDEX, MIN_DAY));
             fixture.componentRef.setInput('max', new Date(TEST_YEAR, MARCH_INDEX, MAX_DAY));
             fixture.detectChanges();
@@ -341,6 +356,9 @@ function registerSelectionTests(): void {
             expect(beforeMin.disabled).toBe(true);
             expect(inRange.disabled).toBe(false);
             expect(afterMax.disabled).toBe(true);
+            beforeMin.click();
+            afterMax.click();
+            expect(dateSelected).not.toHaveBeenCalled();
         });
     });
 }

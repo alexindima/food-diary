@@ -79,12 +79,6 @@ export class MealFavoritesPickerComponent {
 
     private readonly searches = new Subject<string>();
 
-    protected changeMealType(value: MealTypeOption | null): void {
-        if (value !== null) {
-            this.selectedMealType.set(value);
-        }
-    }
-
     public constructor() {
         this.facade.load();
         const busyChanges = toObservable(this.busy);

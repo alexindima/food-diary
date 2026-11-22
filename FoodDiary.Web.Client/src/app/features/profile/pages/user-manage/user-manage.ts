@@ -37,7 +37,7 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
 import { ProfileDietologistFacade } from '../../lib/profile-dietologist.facade';
-import { ProfileManageFacade } from '../../lib/profile-manage.facade';
+import { hasProfilePassword, ProfileManageFacade } from '../../lib/profile-manage.facade';
 import type {
     DietologistPermissionChange,
     DietologistPermissionControlName,
@@ -152,7 +152,7 @@ export class UserManageComponent {
     protected readonly hasLoadedProfile = computed(() => this.facade.user() !== null);
     protected readonly isSavingProfile = this.facade.isSavingProfile;
     protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().includes(true));
-    protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
+    protected readonly hasPassword = computed(() => hasProfilePassword(this.facade.user()));
     protected readonly hasGoogleIdentity = computed(() => this.facade.user()?.hasGoogleIdentity ?? false);
     protected readonly hasTelegramIdentity = computed(() => this.facade.user()?.hasTelegramIdentity ?? false);
     protected readonly canUnlinkTelegram = computed(() => {
@@ -357,18 +357,15 @@ export class UserManageComponent {
         }
     }
 
-    protected startUserManageTour(force = true): void {
+    protected startUserManageTour(formElement: HTMLFormElement): void {
         const tour = this.localizedTour.build(USER_MANAGE_TOUR);
-        const formElement = this.userFormElement()?.nativeElement;
-        if (formElement !== undefined && this.isBrowser) {
-            for (const step of tour.steps) {
-                const section = formElement.querySelector(step.target)?.closest('details');
-                if (section !== null && section !== undefined) {
-                    this.renderer.setProperty(section, 'open', true);
-                }
+        for (const step of tour.steps) {
+            const section = formElement.querySelector(step.target)?.closest('details');
+            if (section !== null && section !== undefined) {
+                this.renderer.setProperty(section, 'open', true);
             }
         }
-        this.tourService.start(tour, { force });
+        this.tourService.start(tour, { force: true });
     }
 
     protected onUserFormInput(event: Event): void {

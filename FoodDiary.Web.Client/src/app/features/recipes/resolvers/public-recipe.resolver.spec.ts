@@ -1,13 +1,17 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { RESPONSE_INIT } from '@angular/core';
+import { Component, RESPONSE_INIT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, convertToParamMap, provideRouter, Router } from '@angular/router';
-import { firstValueFrom, isObservable, of, throwError } from 'rxjs';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PublicRecipeService } from '../api/public-recipe.service';
 import { publicRecipeFixture } from '../lib/public-recipe.test-helper';
 import { publicRecipeResolver } from './public-recipe.resolver';
+
+@Component({ template: '' })
+class RecipeRouteOutlet {}
 
 describe('public recipe resolution', () => {
     const api = { getById: vi.fn() };
@@ -15,16 +19,16 @@ describe('public recipe resolution', () => {
     beforeEach(() => {
         response = {};
         TestBed.configureTestingModule({
-            providers: [provideRouter([]), { provide: PublicRecipeService, useValue: api }, { provide: RESPONSE_INIT, useValue: response }],
+            providers: [
+                provideRouter([{ path: ':id', component: RecipeRouteOutlet, resolve: { recipe: publicRecipeResolver } }]),
+                { provide: PublicRecipeService, useValue: api },
+                { provide: RESPONSE_INIT, useValue: response },
+            ],
         });
     });
     async function resolveAsync(): Promise<unknown> {
-        const route = new ActivatedRouteSnapshot();
-        Object.defineProperty(route, 'paramMap', { value: convertToParamMap({ id: 'recipe' }) });
-        const result = await TestBed.runInInjectionContext(async () =>
-            publicRecipeResolver(route, TestBed.inject(Router).routerState.snapshot),
-        );
-        return isObservable(result) ? firstValueFrom(result) : result;
+        await RouterTestingHarness.create('/recipe');
+        return TestBed.inject(Router).routerState.snapshot.root.firstChild?.data['recipe'];
     }
     it('returns content and metadata for SSR without caching', async () => {
         api.getById.mockReturnValue(of(publicRecipeFixture()));

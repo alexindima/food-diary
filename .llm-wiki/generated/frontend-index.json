@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2916,
+    "typescriptFiles": 2918,
     "symbols": 875,
     "routes": 113,
     "features": 46,
-    "specs": 956,
+    "specs": 957,
     "localeFiles": 5,
     "roles": {
       "Component": 499,
@@ -1004,6 +1004,7 @@
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-item-preview/meal-detail-item-preview.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail-favorite.integration.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/favorite-meal-row/favorite-meal-row.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.spec.ts",
@@ -1780,7 +1781,7 @@
       "role": "Component",
       "selector": "fd-ui-calendar",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "line": 78
+      "line": 79
     },
     {
       "name": "FdUiCardActionsDirective",
@@ -3313,7 +3314,7 @@
       "role": "Component",
       "selector": "fd-ai-photo-preview",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "AiPhotoResultActionsComponent",
@@ -3516,7 +3517,7 @@
       "role": "Component",
       "selector": "fd-image-gallery-editor",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
-      "line": 28
+      "line": 31
     },
     {
       "name": "ImageUploadFieldComponent",
@@ -3544,14 +3545,14 @@
       "role": "Component",
       "selector": "fd-meal-details-fields",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "MealSatietyFieldsComponent",
       "role": "Component",
       "selector": "fd-meal-satiety-fields",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.ts",
-      "line": 17
+      "line": 16
     },
     {
       "name": "MealsPreviewEntryComponent",
@@ -4006,7 +4007,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking-state.facade.ts",
-      "line": 27
+      "line": 26
     },
     {
       "name": "CycleTrackingFacade",
@@ -4503,7 +4504,7 @@
       "role": "Component",
       "selector": "fd-dietologist-clients-page",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "DietologistInvitationPageComponent",
@@ -4573,7 +4574,7 @@
       "role": "Component",
       "selector": "fd-fasting-check-in-card",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.ts",
-      "line": 24
+      "line": 23
     },
     {
       "name": "FastingCheckInChartComponent",
@@ -4608,21 +4609,21 @@
       "role": "Component",
       "selector": "fd-fasting-cyclic-setup-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/cyclic-setup/fasting-cyclic-setup-controls.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "FastingControlsComponent",
       "role": "Component",
       "selector": "fd-fasting-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
-      "line": 63
+      "line": 66
     },
     {
       "name": "FastingSetupControlsComponent",
       "role": "Component",
       "selector": "fd-fasting-setup-controls",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/setup/fasting-setup-controls.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "FastingEndConfirmDialogComponent",
@@ -4685,7 +4686,7 @@
       "role": "Component",
       "selector": "fd-fasting-redesign-preview",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "line": 41
+      "line": 48
     },
     {
       "name": "FastingSafetyDialogComponent",
@@ -4720,7 +4721,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "line": 66
+      "line": 67
     },
     {
       "name": "FastingDailyWindow",
@@ -4790,7 +4791,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts",
-      "line": 80
+      "line": 85
     },
     {
       "name": "GoalsCyclingDayComponent",
@@ -5077,7 +5078,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 115
+      "line": 116
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -5133,7 +5134,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "line": 99
+      "line": 100
     },
     {
       "name": "MealPhotoResultActionsComponent",
@@ -5175,7 +5176,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/detail/meal-detail.facade.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "MealFavoritesPickerFacade",
@@ -7653,7 +7654,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/platform/speech-recognition.service.ts",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ViewportService",
@@ -7814,7 +7815,7 @@
       "role": "Component",
       "selector": "fd-sidebar-user-menu",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-user-menu/sidebar-user-menu.ts",
-      "line": 30
+      "line": 19
     },
     {
       "name": "SidebarFacade",
@@ -7828,7 +7829,7 @@
       "role": "Component",
       "selector": "fd-sidebar",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.ts",
-      "line": 46
+      "line": 48
     }
   ],
   "routes": [

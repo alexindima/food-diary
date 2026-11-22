@@ -196,7 +196,7 @@ export class HeaderActionsOverflowComponent {
         const textLabel = labelSource.textContent.trim();
         const titleLabel = target.getAttribute('title')?.trim();
 
-        return this.firstNonEmpty(metadataLabel, ariaLabel, textLabel, titleLabel) ?? '';
+        return this.firstNonEmpty('', metadataLabel, ariaLabel, textLabel, titleLabel);
     }
 
     private getActionIcon(target: HTMLElement): string | null {
@@ -205,7 +205,7 @@ export class HeaderActionsOverflowComponent {
         const glyphElement = target.querySelector<HTMLElement>('.fd-ui-icon__glyph');
         const glyph = glyphElement?.textContent.trim();
 
-        return this.firstNonEmpty(metadataIcon, glyph) ?? null;
+        return this.firstNonEmpty(null, metadataIcon, glyph);
     }
 
     private getDisabledReason(target: HTMLElement): string | null {
@@ -214,12 +214,16 @@ export class HeaderActionsOverflowComponent {
         }
 
         return this.firstNonEmpty(
+            null,
             target.getAttribute('title')?.trim(),
             target.closest<HTMLElement>('[title]')?.getAttribute('title')?.trim(),
         );
     }
 
-    private firstNonEmpty(...values: ReadonlyArray<string | null | undefined>): string | null {
-        return values.find(value => value !== null && value !== undefined && value.length > 0) ?? null;
+    private firstNonEmpty<Fallback extends string | null>(
+        fallback: Fallback,
+        ...values: ReadonlyArray<string | null | undefined>
+    ): string | Fallback {
+        return values.find(value => value !== null && value !== undefined && value.length > 0) ?? fallback;
     }
 }

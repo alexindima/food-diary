@@ -7,6 +7,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { CurrentLocalDayService } from '../../../../shared/platform/current-local-day.service';
 import type { FastingProtocolPreview } from '../../lib/fasting-page.types';
 import { FastingRedesignPreviewComponent } from './fasting-redesign-preview';
 
@@ -14,6 +15,7 @@ const INTERMITTENT_HOURS = 16;
 const SELECTED_INTERMITTENT_PROTOCOL = { mode: 'intermittent', durationHours: INTERMITTENT_HOURS } satisfies FastingProtocolPreview;
 const TEST_PROGRESS_PERCENT = 6.25;
 const TUESDAY_AFTERNOON = '2026-08-11T18:00:00';
+const TUESDAY_LOCAL_DAY = { provide: CurrentLocalDayService, useValue: { today: (): Date => new Date(TUESDAY_AFTERNOON) } };
 const TUESDAY_MORNING_START = '2026-08-11T09:00:00';
 const TUESDAY_MORNING_END = '2026-08-11T10:00:00';
 const TUESDAY_MIDDAY_START = '2026-08-11T11:00:00';
@@ -36,6 +38,7 @@ describe('FastingRedesignPreviewComponent', () => {
         await TestBed.configureTestingModule({
             imports: [FastingRedesignPreviewComponent],
             providers: [
+                TUESDAY_LOCAL_DAY,
                 {
                     provide: TranslateService,
                     useValue: {
@@ -477,7 +480,7 @@ describe('FastingRedesignPreviewComponent active management action', () => {
 it('keeps completed daily progress while another session in the history is still active', async () => {
     await TestBed.configureTestingModule({
         imports: [FastingRedesignPreviewComponent],
-        providers: [provideTranslateTesting()],
+        providers: [provideTranslateTesting(), TUESDAY_LOCAL_DAY],
     }).compileComponents();
 
     const active = createSession({ startedAtUtc: utcInstant(new Date(TUESDAY_AFTERNOON_START).toISOString()) });

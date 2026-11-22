@@ -13,6 +13,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import {
+    canFitOutsideAiPhotoCards,
     evaluateAiPhotoAnnotationLayout,
     fitAiPhotoAnnotationLayout,
     resolveAiPhotoAnnotationConnectorPath,
@@ -34,6 +35,7 @@ const FRAME_PERCENT = 100;
 })
 export class AiPhotoPreviewComponent {
     private readonly expandedAnnotationLimit = 6;
+    private readonly annotationPane = viewChild.required<ElementRef<HTMLElement>>('annotationPane');
     private readonly annotationFrame = viewChild<ElementRef<HTMLElement>>('annotationFrame');
     private readonly desktopCards = viewChildren<ElementRef<HTMLButtonElement>>('desktopCard');
     private readonly mobileCards = viewChildren<ElementRef<HTMLButtonElement>>('mobileCard');
@@ -51,6 +53,7 @@ export class AiPhotoPreviewComponent {
     public readonly annotationsToggled = output();
     public readonly annotationSelected = output<string>();
     public readonly imageOrientationChanged = output<boolean>();
+    public readonly outsideCardSpaceChanged = output<boolean>();
     protected readonly imageAspectRatio = signal(DEFAULT_IMAGE_ASPECT_RATIO);
     protected readonly desktopConnectorPaths = signal<ReadonlyMap<string, string>>(new Map());
     protected readonly mobileConnectorPaths = signal<ReadonlyMap<string, string>>(new Map());
@@ -84,6 +87,8 @@ export class AiPhotoPreviewComponent {
 
     public constructor() {
         afterRenderEffect(onCleanup => {
+            // A newly decoded image can resize the frame even without a ResizeObserver.
+            this.imageAspectRatio();
             const frame = this.annotationFrame()?.nativeElement;
             const desktopCards = this.desktopCards().map(card => card.nativeElement);
             const mobileCards = this.mobileCards().map(card => card.nativeElement);
@@ -92,15 +97,18 @@ export class AiPhotoPreviewComponent {
             if (frame === undefined) {
                 return;
             }
+            const pane = this.annotationPane().nativeElement;
             const update = (): void => {
-                this.desktopConnectorPaths.set(this.measureConnectorPaths(frame, desktopCards, desktopAnnotations));
-                this.mobileConnectorPaths.set(this.measureConnectorPaths(frame, mobileCards, mobileAnnotations));
+                const bounds = frame.getBoundingClientRect();
+                this.outsideCardSpaceChanged.emit(canFitOutsideAiPhotoCards(bounds.width, pane.getBoundingClientRect().width));
+                this.desktopConnectorPaths.set(this.measureConnectorPaths(bounds, desktopCards, desktopAnnotations));
+                this.mobileConnectorPaths.set(this.measureConnectorPaths(bounds, mobileCards, mobileAnnotations));
             };
             update();
             const Observer = frame.ownerDocument.defaultView?.ResizeObserver;
             if (Observer !== undefined) {
                 const observer = new Observer(update);
-                for (const element of [frame, ...desktopCards, ...mobileCards]) {
+                for (const element of [pane, frame, ...desktopCards, ...mobileCards]) {
                     observer.observe(element);
                 }
                 onCleanup(() => {
@@ -111,11 +119,10 @@ export class AiPhotoPreviewComponent {
     }
 
     private measureConnectorPaths(
-        frame: HTMLElement,
+        bounds: DOMRectReadOnly,
         cards: readonly HTMLButtonElement[],
         annotations: readonly AiPhotoAnnotation[],
     ): ReadonlyMap<string, string> {
-        const bounds = frame.getBoundingClientRect();
         const paths = new Map<string, string>();
         if (bounds.width === 0 || bounds.height === 0) {
             return paths;

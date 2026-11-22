@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateInputComponent, FdUiTimeInputComponent } from 'fd-ui-kit';
 
@@ -9,7 +10,7 @@ const DEFAULT_COMMENT_ROWS = 3;
 
 @Component({
     selector: 'fd-meal-details-fields',
-    imports: [TranslatePipe, FdUiDateInputComponent, FdUiTimeInputComponent, MealSatietyFieldsComponent],
+    imports: [TranslatePipe, FormField, FdUiDateInputComponent, FdUiTimeInputComponent, MealSatietyFieldsComponent],
     templateUrl: './meal-details-fields.html',
     styleUrls: ['./meal-details-fields.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,11 +26,7 @@ export class MealDetailsFieldsComponent {
     public readonly density = input<'compact' | 'regular'>('compact');
     public readonly satietyLayout = input<'stacked' | 'columns'>('stacked');
 
-    protected onDateChange(value: string | Date | null): void {
-        if (typeof value === 'string') {
-            this.date.set(value);
-        }
-    }
+    protected readonly dateField = form(this.date);
 
     protected onTimeChange(value: string | null): void {
         this.time.set(value ?? '');

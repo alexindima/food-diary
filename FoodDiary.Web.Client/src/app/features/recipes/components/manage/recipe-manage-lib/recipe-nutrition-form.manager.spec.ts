@@ -61,7 +61,7 @@ describe('RecipeNutritionFormManager initialization', () => {
 });
 
 describe('RecipeNutritionFormManager manual mode', () => {
-    it('converts manual nutrition between recipe and portion scale', () => {
+    it('converts manual nutrition between scales without rescaling a repeated portion selection', () => {
         const form = createRecipeFormState();
         form.patchValue({
             calculateNutritionAutomatically: false,
@@ -76,6 +76,7 @@ describe('RecipeNutritionFormManager manual mode', () => {
         const operations = createOperations();
         const manager = new RecipeNutritionFormManager(form, operations);
 
+        manager.onNutritionScaleModeChange('portion');
         manager.onNutritionScaleModeChange('portion');
 
         expect(manager.nutritionScaleMode).toBe('portion');

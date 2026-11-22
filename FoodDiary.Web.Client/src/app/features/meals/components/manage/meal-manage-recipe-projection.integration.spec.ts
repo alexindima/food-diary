@@ -134,11 +134,13 @@ describe('Independent recipe quantity drafts', () => {
             const drawerHost = drawer.nativeElement as HTMLElement;
             drawer.detectChanges();
             requiredElement(drawerHost.querySelector<HTMLButtonElement>('button[aria-label="QUICK_MEAL.EDIT_ITEM_NAMED"]')).click();
-            const modal = await vi.waitFor(() => {
+            const { modal, amount } = await vi.waitFor(() => {
                 TestBed.tick();
-                return requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'));
+                const dialog = requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'));
+                const amountInput = requiredElement(dialog.querySelector<HTMLInputElement>('input[type="number"]'));
+                return { modal: dialog, amount: amountInput };
             });
-            expect(requiredElement(modal.querySelector<HTMLInputElement>('input[type="number"]')).valueAsNumber).toBe(nextAmount);
+            expect(amount.valueAsNumber).toBe(nextAmount);
             expect(lookup.mock.calls).toEqual(needsSecondLookup ? [[SOUP.id], [SOUP.id]] : [[SOUP.id]]);
             const cancel = Array.from(modal.querySelectorAll('button')).find(
                 button => button.textContent.trim() === 'PRODUCT_MANAGE.CANCEL_BUTTON',

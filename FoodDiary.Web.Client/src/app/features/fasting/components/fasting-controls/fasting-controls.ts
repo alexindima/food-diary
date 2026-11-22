@@ -18,14 +18,17 @@ import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {
     CYCLIC_PRESETS,
+    type CyclicPresetSelection,
     FASTING_PROTOCOL_CATALOG,
     FASTING_PROTOCOLS,
     type FastingMode,
     type FastingProtocol,
+    type FastingProtocolOption,
     type FastingSession,
 } from '../../../../shared/models/fasting.data';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FASTING_HARD_STOP_THRESHOLD_HOURS, FASTING_WARNING_THRESHOLD_HOURS } from '../../lib/fasting-page.constants';
+import { type IntermittentFastingProtocol, isIntermittentFastingProtocol } from '../../models/fasting-start-intent';
 import {
     FastingEndConfirmDialogComponent,
     type FastingEndConfirmDialogData,
@@ -100,8 +103,10 @@ export class FastingControlsComponent {
         const session = this.currentSession();
         return session?.planType === 'Extended' && this.isActive() ? session : null;
     });
-    protected readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
-    protected readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
+    protected readonly intermittentProtocols = FASTING_PROTOCOLS.filter(
+        (protocol): protocol is FastingProtocolOption & { value: IntermittentFastingProtocol } =>
+            isIntermittentFastingProtocol(protocol.value),
+    );
     protected readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
     protected readonly cyclicPresets = CYCLIC_PRESETS;
     protected readonly customIntermittentEatingWindowHours = computed(() =>
@@ -150,12 +155,12 @@ export class FastingControlsComponent {
     );
     protected readonly intermittentProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.intermittentProtocols));
     protected readonly extendedProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.extendedProtocols));
-    protected readonly cyclicEatDayProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.cyclicEatDayProtocols));
-    protected readonly cyclicPresetOptions = computed(() => {
+    protected readonly cyclicEatDayProtocolOptions = this.intermittentProtocolOptions;
+    protected readonly cyclicPresetOptions = computed<Array<FdUiSegmentedToggleOption<CyclicPresetSelection>>>(() => {
         this.currentLanguage();
 
         return [
-            ...this.cyclicPresets.map<FdUiSegmentedToggleOption>(preset => ({
+            ...this.cyclicPresets.map<FdUiSegmentedToggleOption<CyclicPresetSelection>>(preset => ({
                 label: preset.label,
                 value: this.getCyclicPresetSelectionValue(preset.fastDays, preset.eatDays),
             })),
@@ -165,7 +170,7 @@ export class FastingControlsComponent {
             },
         ];
     });
-    protected readonly selectedCyclicPresetValue = computed(() => {
+    protected readonly selectedCyclicPresetValue = computed<CyclicPresetSelection>(() => {
         if (this.isCustomCyclicPresetSelected()) {
             return 'custom';
         }
@@ -224,21 +229,14 @@ export class FastingControlsComponent {
         }
     }
 
-    protected onCyclicPresetChange(value: string): void {
+    protected onCyclicPresetChange(value: CyclicPresetSelection): void {
         if (value === 'custom') {
             this.facade.selectCustomCyclicPreset();
             return;
         }
 
         const [fastDaysRaw, eatDaysRaw] = value.split(CYCLIC_PRESET_SEPARATOR);
-        const fastDays = Number.parseInt(fastDaysRaw, 10);
-        const eatDays = Number.parseInt(eatDaysRaw, 10);
-
-        if (Number.isNaN(fastDays) || Number.isNaN(eatDays)) {
-            return;
-        }
-
-        this.facade.setCyclicPreset(fastDays, eatDays);
+        this.facade.setCyclicPreset(Number.parseInt(fastDaysRaw, 10), Number.parseInt(eatDaysRaw, 10));
     }
 
     protected onCyclicFastDaysChange(value: string | number): void {
@@ -255,7 +253,7 @@ export class FastingControlsComponent {
         }
     }
 
-    protected onCyclicEatDayProtocolChange(protocol: FastingProtocol): void {
+    protected onCyclicEatDayProtocolChange(protocol: IntermittentFastingProtocol): void {
         this.facade.selectCyclicEatDayProtocol(protocol);
     }
 
@@ -392,7 +390,7 @@ export class FastingControlsComponent {
         }));
     }
 
-    private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): string {
+    private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): `${number}:${number}` {
         return `${fastDays}${CYCLIC_PRESET_SEPARATOR}${eatDays}`;
     }
 

@@ -90,7 +90,11 @@ describe('UserManageComponent guided tour', () => {
             return true;
         });
 
-        component['startUserManageTour']();
+        const help = host.querySelector('[data-tour-id="user-manage-tour-help"] button');
+        if (!(help instanceof HTMLButtonElement)) {
+            throw new Error('Expected the native Profile Help button');
+        }
+        help.click();
 
         expect(start).toHaveBeenCalledWith(expect.objectContaining({ id: 'user-manage' }), { force: true });
     });

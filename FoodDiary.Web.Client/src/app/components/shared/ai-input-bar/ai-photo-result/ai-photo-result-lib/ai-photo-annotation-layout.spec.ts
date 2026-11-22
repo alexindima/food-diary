@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    canFitOutsideAiPhotoCards,
     evaluateAiPhotoAnnotationLayout,
     fitAiPhotoAnnotationLayout,
     optimizeAiPhotoAnnotationLayout,
@@ -54,8 +55,8 @@ const SCENARIOS: ReadonlyArray<ReadonlyArray<readonly [number, number]>> = [
 /* eslint-enable @typescript-eslint/no-magic-numbers -- End of geometry fixture coordinates. */
 const SCENARIO_CASES = SCENARIOS.map(points => [points] as const);
 const FRAME_SIZE = 100;
-const PORTRAIT_STAGE_LEFT = -72;
-const PORTRAIT_STAGE_RIGHT = 172;
+const PORTRAIT_STAGE_LEFT = -36;
+const PORTRAIT_STAGE_RIGHT = 136;
 const PORTRAIT_STAGE_PADDING = 4;
 const PORTRAIT_TOGGLE_RESERVED_X = 130;
 const PORTRAIT_TOGGLE_RESERVED_BOTTOM = 18;
@@ -100,6 +101,17 @@ function createOversizedAnnotations(): AiPhotoAnnotation[] {
         ),
     );
 }
+
+describe('AI photo portrait side space', () => {
+    it.each([
+        { name: 'a hidden image frame', frame: 0, pane: 984, fits: false },
+        { name: 'a pane one pixel too narrow', frame: 600, pane: 983, fits: false },
+        { name: 'a pane with exactly enough space', frame: 600, pane: 984, fits: true },
+    ])('detects whether outside cards fit for $name', ({ frame, pane, fits }) => {
+        expect(canFitOutsideAiPhotoCards(frame, pane)).toBe(fits);
+    });
+});
+
 describe('AI photo annotation layout', () => {
     it.each(SCENARIO_CASES)('keeps cards within the image and avoids card overlaps', points => {
         const layout = optimizeAiPhotoAnnotationLayout(createAnnotations(points));
@@ -126,6 +138,21 @@ describe('AI photo annotation layout', () => {
         const annotations = createAnnotations(SCENARIOS[0]);
 
         expect(optimizeAiPhotoAnnotationLayout(annotations)).toEqual(optimizeAiPhotoAnnotationLayout(annotations));
+    });
+
+    it('keeps foods in their original order after assigning card positions', () => {
+        const edge = 12;
+        const center = 50;
+        const annotations = createAnnotations([
+            [edge, edge],
+            [center, center],
+            [FRAME_SIZE - edge, edge],
+        ]);
+
+        const layout = optimizeAiPhotoAnnotationLayout(annotations);
+
+        expect(layout.map(annotation => annotation.id)).toEqual(annotations.map(annotation => annotation.id));
+        expect(evaluateAiPhotoAnnotationLayout(layout).cardOverlaps).toBe(0);
     });
 
     it('places portrait annotation cards outside the photo bounds with stage padding', () => {

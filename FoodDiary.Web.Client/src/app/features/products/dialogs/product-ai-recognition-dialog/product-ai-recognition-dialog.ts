@@ -79,7 +79,8 @@ export class ProductAiRecognitionDialogComponent {
             photo => (photo.url?.trim().length ?? 0) > 0 || (photo.assetId?.trim().length ?? 0) > 0,
         ),
     );
-    protected readonly cover = signal<ImageSelection | null>(this.photos()[0] ?? null);
+    private readonly defaultCover = computed(() => this.photos()[0] ?? null);
+    protected readonly cover = signal<ImageSelection | null>(this.defaultCover());
     protected readonly productLabel = signal<ProductLabel | null>(null);
     protected readonly hasResult = computed(() => this.productLabel() !== null || this.nutrition() !== null);
     private readonly uploadedAssetIds = computed(() =>
@@ -231,7 +232,7 @@ export class ProductAiRecognitionDialogComponent {
 
         const result = buildProductAiRecognitionResult({
             model,
-            selection: this.useAsCover() ? (this.cover() ?? this.photos().at(0) ?? null) : null,
+            selection: this.useAsCover() ? (this.cover() ?? this.defaultCover()) : null,
             description: null,
         });
 

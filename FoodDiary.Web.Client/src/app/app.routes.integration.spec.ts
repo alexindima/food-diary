@@ -227,6 +227,35 @@ describe('Application router not-found recovery', () => {
     });
 });
 
+it('uses the recipe path ID when a bookmark also contains an id matrix parameter', async () => {
+    const { navigation } = setupRouting();
+    const http = TestBed.inject(HttpTestingController);
+    const harness = await RouterTestingHarness.create();
+    const detailApi = `${environment.apiUrls.recipes}/public`;
+    const recipeId = '8181a5a2-8ded-4960-92be-0d51cb4f37df';
+    const matrixId = '84fd02e3-9de4-401e-bb9c-781b98578d4e';
+    const recipe = {
+        id: recipeId,
+        name: 'Roasted tomato soup',
+        images: [],
+        servings: 2,
+        missingIngredientCount: 0,
+        steps: [],
+    };
+
+    const pending = harness.navigateByUrl(`/explore/${recipeId};id=${matrixId}`);
+    const detailRequest = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'GET' && request.url.startsWith(`${detailApi}/`)),
+    );
+    detailRequest.flush(recipe);
+    await pending;
+
+    expect(detailRequest.request.url, 'Public recipe detail must use the path ID').toBe(`${detailApi}/${recipeId}`);
+    expect(renderedRoute(harness).querySelector('h1')?.textContent.trim()).toBe(recipe.name);
+    expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+    http.verify();
+});
+
 describe('Application router guest recipe catalog', () => {
     it('renders a missing recipe bookmark and returns to the filtered catalog through Back', async () => {
         const { navigation, privacy } = setupRouting();

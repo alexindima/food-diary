@@ -97,7 +97,7 @@ describe('MealNutritionSidebarComponent actions', () => {
         const { component } = await setupComponentAsync();
         const modeHandler = vi.fn();
         const cancelHandler = vi.fn();
-        component['nutritionModeChange'].subscribe(modeHandler);
+        component.nutritionMode.subscribe(modeHandler);
         component['cancelRequested'].subscribe(cancelHandler);
 
         component['onNutritionModeChange']('manual');

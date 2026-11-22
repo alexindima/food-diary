@@ -29,6 +29,7 @@ import {
 } from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
 import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
+import type { IntermittentFastingProtocol } from '../../models/fasting-start-intent';
 import { FastingPageComponent } from './fasting-page';
 
 const SESSION_CHECK_INS_BEYOND_PAGE_SIZE = 6;
@@ -676,7 +677,7 @@ type FastingFacadeMock = {
     selectedProtocol: WritableSignal<FastingProtocol>;
     customHours: ReturnType<typeof signal<number>>;
     customIntermittentFastHours: ReturnType<typeof signal<number>>;
-    cyclicEatDayProtocol: WritableSignal<FastingProtocol>;
+    cyclicEatDayProtocol: WritableSignal<IntermittentFastingProtocol>;
     cyclicFastDays: ReturnType<typeof signal<number>>;
     cyclicEatDays: ReturnType<typeof signal<number>>;
     cyclicUsesCustomPreset: ReturnType<typeof signal<boolean>>;
@@ -796,7 +797,7 @@ function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof cr
         selectedProtocol: signal<FastingProtocol>('Fast16Eat8'),
         customHours: signal(DEFAULT_SESSION_HOURS),
         customIntermittentFastHours: signal(DEFAULT_SESSION_HOURS),
-        cyclicEatDayProtocol: signal<FastingProtocol>('Fast16Eat8'),
+        cyclicEatDayProtocol: signal<IntermittentFastingProtocol>('Fast16Eat8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),

@@ -13,6 +13,7 @@ import type { FastingMode, FastingProtocol, FastingSession } from '../../../../s
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FastingFacade } from '../../lib/fasting.facade';
+import type { IntermittentFastingProtocol } from '../../models/fasting-start-intent';
 import { FastingEndConfirmDialogComponent } from '../fasting-end-confirm-dialog/fasting-end-confirm-dialog';
 import { FastingSafetyDialogComponent } from '../fasting-safety-dialog/fasting-safety-dialog';
 import { FastingControlsComponent } from './fasting-controls';
@@ -186,7 +187,7 @@ describe('FastingControlsComponent rendered configuration', () => {
         facade.selectCustomCyclicPreset.mockImplementation(() => {
             facade.cyclicUsesCustomPreset.set(true);
         });
-        facade.selectCyclicEatDayProtocol.mockImplementation((protocol: FastingProtocol) => {
+        facade.selectCyclicEatDayProtocol.mockImplementation((protocol: IntermittentFastingProtocol) => {
             facade.cyclicEatDayProtocol.set(protocol);
         });
         fixture.detectChanges();
@@ -544,7 +545,7 @@ type FastingFacadeMock = {
     selectedProtocol: WritableSignal<FastingProtocol>;
     customHours: WritableSignal<number>;
     customIntermittentFastHours: WritableSignal<number>;
-    cyclicEatDayProtocol: WritableSignal<FastingProtocol>;
+    cyclicEatDayProtocol: WritableSignal<IntermittentFastingProtocol>;
     cyclicFastDays: WritableSignal<number>;
     cyclicEatDays: WritableSignal<number>;
     cyclicUsesCustomPreset: WritableSignal<boolean>;
@@ -618,7 +619,7 @@ function createFacadeSignals(): Omit<FastingFacadeMock, keyof ReturnType<typeof 
         selectedProtocol: signal<FastingProtocol>('Fast16Eat8'),
         customHours: signal(INTERMITTENT_FAST_HOURS),
         customIntermittentFastHours: signal(INTERMITTENT_FAST_HOURS),
-        cyclicEatDayProtocol: signal<FastingProtocol>('Fast16Eat8'),
+        cyclicEatDayProtocol: signal<IntermittentFastingProtocol>('Fast16Eat8'),
         cyclicFastDays: signal(1),
         cyclicEatDays: signal(1),
         cyclicUsesCustomPreset: signal(false),

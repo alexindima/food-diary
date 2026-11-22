@@ -16,7 +16,7 @@ type LayoutCandidate = {
 };
 
 type SearchState = {
-    assignments: ReadonlyMap<string, LayoutCandidate>;
+    assignments: readonly LayoutCandidate[];
     occupiedSlots: ReadonlySet<number>;
     cost: number;
 };
@@ -40,6 +40,7 @@ const PORTRAIT_STAGE_RIGHT = 136;
 const PORTRAIT_STAGE_PADDING = 4;
 const PORTRAIT_LEFT_CARD_X = PORTRAIT_STAGE_LEFT + PORTRAIT_STAGE_PADDING;
 const PORTRAIT_RIGHT_CARD_X = PORTRAIT_STAGE_RIGHT - PORTRAIT_STAGE_PADDING - PORTRAIT_CARD_WIDTH;
+const PORTRAIT_LAYOUT_WIDTH = PORTRAIT_RIGHT_CARD_X + PORTRAIT_CARD_WIDTH - PORTRAIT_LEFT_CARD_X;
 const PORTRAIT_TOGGLE_RESERVED_AREA: Rect = { x: 130, y: 0, width: 42, height: 18 };
 const CARD_EDGE_GAP = 2;
 const SIDE_SLOT_COUNT = 5;
@@ -64,6 +65,10 @@ const WEIGHT_CONNECTOR_PRODUCT_PROXIMITY = 4_000;
 const WEIGHT_DISTANCE = 1;
 const WEIGHT_SIDE_PREFERENCE = 0.35;
 
+export function canFitOutsideAiPhotoCards(frameWidth: number, paneWidth: number): boolean {
+    return frameWidth > 0 && paneWidth * FRAME_SIZE >= frameWidth * PORTRAIT_LAYOUT_WIDTH;
+}
+
 export function optimizeAiPhotoAnnotationLayout(
     annotations: readonly AiPhotoAnnotation[],
     allowCardsOutsidePhoto = false,
@@ -85,21 +90,22 @@ export function optimizeAiPhotoAnnotationLayout(
         });
     }
 
-    const ordered = [...annotations].sort(compareByConstraint);
-    let beam: SearchState[] = [{ assignments: new Map(), occupiedSlots: new Set(), cost: 0 }];
+    const ordered = annotations
+        .map((annotation, index) => ({ annotation, index }))
+        .sort((left, right) => compareByConstraint(left.annotation, right.annotation));
+    let beam: SearchState[] = [{ assignments: [], occupiedSlots: new Set(), cost: 0 }];
 
-    for (const annotation of ordered) {
+    for (const { annotation } of ordered) {
+        const candidates = slots.map(slot => createCandidate(annotation, slot, annotations, allowCardsOutsidePhoto));
         const next: SearchState[] = [];
         for (const state of beam) {
-            for (const [slotIndex, slot] of slots.entries()) {
+            for (const [slotIndex, candidate] of candidates.entries()) {
                 if (state.occupiedSlots.has(slotIndex)) {
                     continue;
                 }
 
-                const candidate = createCandidate(annotation, slot, annotations, allowCardsOutsidePhoto);
                 const pairCost = calculatePairCost(candidate, state.assignments);
-                const assignments = new Map(state.assignments);
-                assignments.set(annotation.id, candidate);
+                const assignments = [...state.assignments, candidate];
                 const occupiedSlots = new Set(state.occupiedSlots);
                 occupiedSlots.add(slotIndex);
                 next.push({
@@ -120,14 +126,12 @@ export function optimizeAiPhotoAnnotationLayout(
         return [...annotations];
     }
 
-    return annotations.map(annotation => {
-        const candidate = best.assignments.get(annotation.id);
-        if (candidate === undefined) {
-            return annotation;
-        }
-
-        return positionAnnotation(annotation, candidate);
+    const positioned = [...annotations];
+    best.assignments.forEach((candidate, order) => {
+        const { annotation, index } = ordered[order];
+        positioned[index] = positionAnnotation(annotation, candidate);
     });
+    return positioned;
 }
 
 function positionAnnotation(annotation: AiPhotoAnnotation, candidate: LayoutCandidate): AiPhotoAnnotation {
@@ -310,9 +314,9 @@ function createCandidate(
     };
 }
 
-function calculatePairCost(candidate: LayoutCandidate, assignments: ReadonlyMap<string, LayoutCandidate>): number {
+function calculatePairCost(candidate: LayoutCandidate, assignments: readonly LayoutCandidate[]): number {
     let cost = 0;
-    for (const existing of assignments.values()) {
+    for (const existing of assignments) {
         if (rectsOverlap(candidate.card, existing.card)) {
             cost += WEIGHT_CARD_OVERLAP;
         }

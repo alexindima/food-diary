@@ -246,12 +246,8 @@ export class ShoppingListPageComponent {
     }
 
     protected deleteListById(listId: ShoppingListId): void {
-        if (!this.canDeleteList()) {
-            return;
-        }
-
         const list = this.lists().find(entry => entry.id === listId);
-        if (list === undefined) {
+        if (list === undefined || !this.canDeleteList()) {
             return;
         }
 

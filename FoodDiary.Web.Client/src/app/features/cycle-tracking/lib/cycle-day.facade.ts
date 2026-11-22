@@ -122,14 +122,11 @@ export class CycleDayFacade {
             return null;
         }
 
-        if (this.dayForm().invalid()) {
-            this.dayForm().markAsTouched();
-            return null;
-        }
-
         const formValue = this.dayModel();
         const date = formValue.date;
-        if (date === null || date.length === 0) {
+        const dayForm = this.dayForm();
+        if (date === null || date.length === 0 || dayForm.invalid()) {
+            dayForm.markAsTouched();
             return null;
         }
 
@@ -388,14 +385,10 @@ export class CycleDayFacade {
             )
             .subscribe({
                 next: cycle => {
-                    if (this.state.cycle()?.id === profileId) {
-                        this.state.acceptProfileWrite(cycle);
-                    }
+                    this.state.acceptProfileWrite(cycle);
                 },
                 error: () => {
-                    if (this.state.cycle()?.id === profileId) {
-                        this.state.periodStartError.set('CYCLE_TRACKING.CONFIRM_PERIOD_START_FAILED');
-                    }
+                    this.state.periodStartError.set('CYCLE_TRACKING.CONFIRM_PERIOD_START_FAILED');
                 },
             });
     }

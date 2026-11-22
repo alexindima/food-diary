@@ -1,7 +1,8 @@
 <div class="recognition-photos recognition-photos--editor" [class.recognition-photos--compact]="compact()">
     <div class="recognition-photos__strip">
+        @let gallery = previewGallery();
         @for (photo of photos(); track photo.assetId ?? photo.url) {
-            @let previewUrl = photoPreviews()[$index];
+            @let thumbnail = gallery.thumbnails[$index];
             <div class="recognition-photos__item" [class.recognition-photos__item--scanning]="scanning() && $first">
                 <fd-ui-button
                     #photoTrigger
@@ -11,21 +12,19 @@
                     [fdUiMenuTrigger]="photoMenu"
                 >
                     <img
-                        [attr.src]="previewUrl"
+                        [attr.src]="thumbnail?.url"
                         [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`"
-                        [hidden]="previewUrl === null"
+                        [hidden]="thumbnail === null"
                     />
-                    <span aria-hidden="true" [hidden]="previewUrl !== null"><fd-ui-icon name="image" /></span>
+                    <span aria-hidden="true" [hidden]="thumbnail !== null"><fd-ui-icon name="image" /></span>
                 </fd-ui-button>
                 <span class="recognition-photos__cover-label" [hidden]="!$first">{{ 'PRODUCT_AI_DIALOG.COVER_SELECTED' | translate }}</span>
                 <fd-ui-menu #photoMenu>
-                    <fd-ui-menu-item
-                        [disabled]="previewUrl === null"
-                        [disabledReason]="'DISABLED_HINTS.IMAGE_REQUIRED' | translate"
-                        [hidden]="previewUrl === null"
-                        (itemClick)="preview($index)"
-                        >{{ 'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate }}</fd-ui-menu-item
-                    >
+                    @if (thumbnail !== null) {
+                        <fd-ui-menu-item (itemClick)="preview($index, thumbnail.initialIndex, gallery.images)">
+                            {{ 'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate }}
+                        </fd-ui-menu-item>
+                    }
                     @if (!$first) {
                         <fd-ui-menu-item
                             [disabled]="disabled() || uploading()"

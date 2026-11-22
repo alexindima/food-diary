@@ -658,6 +658,82 @@ it.each(['before redraw', 'during upload'] as const)('keeps Apply from omitting 
     expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ images: [primary, additional] }));
 });
 
+it('keeps the reviewed product and primary photo when an additional photo upload fails', async () => {
+    const primary = imageSelection('https://images.example.test/oat-label.jpg', 'label-photo');
+    const upload = new Subject<ImageSelection>();
+    const wizard = await openWizardAsync({ initialPhotos: [primary] });
+    wizard.uploadImage.mockReturnValue(upload);
+    wizard.analyzeFoodImage.mockReturnValue(
+        of({
+            items: [],
+            productLabel: {
+                name: 'Oat milk',
+                brand: null,
+                baseAmount: 100,
+                baseUnit: 'ml',
+                calories: 45,
+                protein: 1,
+                fat: 2,
+                carbs: 6,
+                fiber: null,
+                alcohol: null,
+                notes: null,
+            },
+        }),
+    );
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+    const name = requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement);
+    const reviewedName = 'Unsweetened oat milk';
+    name.value = reviewedName;
+    name.dispatchEvent(new Event('input', { bubbles: true }));
+    wizard.detectChanges();
+    const apply = action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY');
+    expect(apply.disabled).toBe(false);
+
+    const decoded = document.createElement('img');
+    const photoSize = 320;
+    Object.defineProperties(decoded, { naturalWidth: { value: photoSize }, naturalHeight: { value: photoSize } });
+    vi.stubGlobal('Image', function decodeSelectedPhoto(): HTMLImageElement {
+        return decoded;
+    });
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:failed-additional-photo');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    onTestFinished(() => {
+        createUrl.mockRestore();
+        revokeUrl.mockRestore();
+    });
+
+    requiredElement(wizard.host, '.recognition-photos__empty button', HTMLButtonElement).click();
+    const picker = requiredElement(wizard.host, 'fd-image-upload-field input[type="file"]', HTMLInputElement);
+    const file = new File(['oat ingredients'], 'ingredients.png', { type: 'image/png' });
+    Object.defineProperty(picker, 'files', { value: [file] });
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    decoded.dispatchEvent(new Event('load'));
+    await vi.waitFor(() => {
+        expect(wizard.uploadImage).toHaveBeenCalledExactlyOnceWith(file);
+        expect(upload.observed).toBe(true);
+    });
+    wizard.detectChanges();
+    expect(apply.disabled).toBe(true);
+
+    upload.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
+    await vi.waitFor(() => {
+        wizard.detectChanges();
+        expect(wizard.host.querySelector('fd-image-upload-field [role="alert"]')?.textContent).toContain(
+            'IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED',
+        );
+    });
+
+    expect(recognitionPhotoUrls(wizard)).toEqual([primary.url]);
+    expect(name.isConnected).toBe(true);
+    expect(name.value).toBe(reviewedName);
+    expect(apply.disabled).toBe(false);
+    expect(wizard.analyzeFoodImage).toHaveBeenCalledOnce();
+    apply.click();
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ name: reviewedName, images: [primary] }));
+});
+
 it('cancels a two-photo upload after the first photo finishes when the wizard closes', async () => {
     const initialPhoto = imageSelection('https://images.example.test/label.jpg', 'label-photo');
     const firstSelection = imageSelection('https://images.example.test/ingredients.jpg', 'ingredients-photo');

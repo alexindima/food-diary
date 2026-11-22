@@ -350,6 +350,10 @@ Use `appearance="text"` with `ariaLabel` and no visible `label` for compact tool
 - `fillColor?: string | null`
 - `options?: FdUiSelectOption<T>[]`
 
+**Outputs**
+
+- `optionSelected: FdUiSelectOption<T>` emits the original option after a user selection changes the value model. The option can carry a null value when the options explicitly allow it. Reselecting the current value or writing a parent value does not emit this event.
+
 **CSS variables**
 
 - `--fd-select-height`
@@ -381,6 +385,10 @@ Inline calendar primitive for custom date pickers and date popovers.
 - `max?: Date | null`
 - `weekStartsOn?: 0 | 1`
 - `markers?: readonly { date: string; tone: 'brand' | 'danger' | 'warning'; label: string }[]` (visual dots with labels included in each date's accessible name; identical markers on one date are coalesced)
+
+**Outputs**
+
+- `dateSelected: Date` emits the accepted local day after the selection model updates. Week mode emits the existing normalized week start. Parent value changes and disabled dates do not emit this event.
 
 #### `fd-ui-date-input`
 
@@ -789,18 +797,24 @@ Compact emoji-based single-choice picker.
 
 **Inputs**
 
-- `options?: FdUiEmojiPickerOption[]`
-- `selectedValue?: string | number | null`
+- `options?: FdUiEmojiPickerOption<Value>[]`
+- `selectedValue?: Value | null` (model with `selectedValueChange`)
 - `ariaLabel?: string | null`
 - `size?: 'sm' | 'md'`
 - `fullWidth?: boolean`
 - `showLabels?: boolean`
 - `showDescriptions?: boolean`
 
+`Value` is inferred from the option values and selected model. It can be numeric, textual, or their union.
+
+**Outputs**
+
+- `optionSelected: FdUiEmojiPickerOption<Value>` emits the accepted option after the model updates. Pointer and keyboard selection both emit this event. Disabled options, repeat selections, and changes supplied by the parent do not emit it.
+
 **Types**
 
 ```ts
-export interface FdUiEmojiPickerOption<T = string | number> {
+export interface FdUiEmojiPickerOption<T extends string | number = string | number> {
     value: T;
     emoji: string;
     label?: string;

@@ -390,6 +390,9 @@ export class DashboardFacade {
 
     public async openTdeeDetailsAsync(): Promise<TdeeInsightDialogAction | undefined> {
         const { TdeeInsightDialogComponent } = await import('../dialogs/tdee-insight-dialog/tdee-insight-dialog');
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         return firstValueFrom(
             this.dialogService
                 .open<TdeeInsightDialogComponentType, TdeeInsightDialogData, TdeeInsightDialogAction | undefined>(

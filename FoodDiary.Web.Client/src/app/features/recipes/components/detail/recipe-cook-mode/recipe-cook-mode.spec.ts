@@ -19,7 +19,7 @@ describe('RecipeCookModeComponent', () => {
             { imageAssetId: 'photo-1', imageUrl: '/first.jpg' },
             { imageAssetId: 'photo-2', imageUrl: '/second.jpg' },
         ];
-        const { component, fixture, open } = setupComponent(recipe);
+        const { fixture, open } = setupComponent(recipe);
         const root = fixture.nativeElement as HTMLElement;
         const photos = root.querySelectorAll<HTMLButtonElement>('.recipe-cook-mode__photo');
         expect(photos).toHaveLength(2);
@@ -28,8 +28,11 @@ describe('RecipeCookModeComponent', () => {
             size: 'lg',
             data: { collageImages: [{ url: '/first.jpg' }, { url: '/second.jpg' }], initialIndex: 1 },
         });
-        component['nextStep']();
+        const next = root.querySelector<HTMLButtonElement>('.recipe-cook-mode__actions fd-ui-button:last-child button');
+        expect(next?.disabled).toBe(false);
+        next?.click();
         fixture.detectChanges();
+        expect(root.querySelector('.recipe-cook-mode__instruction')?.textContent).toContain('Bake');
         expect(root.querySelectorAll('.recipe-cook-mode__photo')).toHaveLength(0);
     });
 

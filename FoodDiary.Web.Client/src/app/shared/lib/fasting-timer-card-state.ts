@@ -70,10 +70,7 @@ function buildIntermittentCycleState(
     input: FastingTimerCardComputedStateInput & { session: FastingSession },
 ): FastingTimerCardComputedState {
     const { session, elapsedMs } = input;
-    const fastHours = Math.max(
-        1,
-        session.initialPlannedDurationHours > 0 ? session.initialPlannedDurationHours : session.plannedDurationHours,
-    );
+    const fastHours = Math.max(1, session.initialPlannedDurationHours);
     const eatingHours = Math.max(1, HOURS_PER_DAY - fastHours);
     const cycleLengthMs = (fastHours + eatingHours) * MS_PER_HOUR;
     const cycleDay = Math.floor(elapsedMs / cycleLengthMs) + 1;

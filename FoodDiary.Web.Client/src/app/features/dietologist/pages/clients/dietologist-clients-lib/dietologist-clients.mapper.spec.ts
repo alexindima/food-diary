@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildClientCardViewModels, formatClientConnectedDate, getClientInitials, getClientTitle } from './dietologist-clients.mapper';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { formatDietologistDate } from '../../../lib/dietologist-date.utils';
+import { buildClientCardViewModels, getClientInitials, getClientTitle } from './dietologist-clients.mapper';
 import { createClient, VALID_CLIENT_ACCEPTED_AT_UTC } from './dietologist-clients.test-data';
 
 describe('dietologist clients mapper', () => {
@@ -22,7 +24,7 @@ describe('dietologist clients mapper', () => {
     });
 
     it('keeps invalid dates unchanged', () => {
-        expect(formatClientConnectedDate('not-a-date', 'en')).toBe('not-a-date');
+        expect(formatDietologistDate(utcInstant('not-a-date'), 'en')).toBe('not-a-date');
     });
 
     it('builds client card view models', () => {

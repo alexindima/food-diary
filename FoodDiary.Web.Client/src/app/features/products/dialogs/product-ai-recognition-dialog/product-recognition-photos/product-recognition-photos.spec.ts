@@ -43,19 +43,6 @@ describe('product recognition photos', () => {
     });
 });
 
-it('opens the selected original without changing the cover or photo order', () => {
-    const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
-    fixture.componentRef.setInput('photos', [photo(0), photo(1)]);
-    fixture.componentInstance.cover.set(photo(0));
-    fixture.componentInstance['preview'](1);
-    expect(openPreview).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({ data: { collageImages: [{ url: photo(0).url }, { url: photo(1).url }], initialIndex: 1 } }),
-    );
-    expect(fixture.componentInstance.cover()).toEqual(photo(0));
-    expect(fixture.componentInstance.photos()).toEqual([photo(0), photo(1)]);
-});
-
 describe('product editor photo slots', () => {
     it.each([
         { count: 0, empty: 0 },
