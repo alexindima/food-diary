@@ -43,6 +43,26 @@ const publicTranslationAssets: HttpInterceptorFn = (request, next) =>
     request.method === 'GET' && request.url.startsWith('./assets/i18n/') ? of(new HttpResponse({ body: {} })) : next(request);
 
 describe('Public landing meal demo', () => {
+    it('blocks editing and saving the sample until sign-in without requesting the sample recipe', async () => {
+        const { harness, root } = await renderLandingAsync('/');
+        const draft = requiredElement(root, '.landing-tour-block__draft', HTMLElement);
+        const recipeRow = requiredElement(draft, '.quick-meal__item:last-child', HTMLElement);
+        expect(itemNames(recipeRow)).toEqual(['Breakfast bowl']);
+
+        const edit = requiredElement(recipeRow, 'button[aria-label="QUICK_MEAL.EDIT_ITEM_NAMED"]', HTMLButtonElement);
+        const save = requiredElement(draft, saveDraft, HTMLButtonElement);
+        edit.click();
+        save.click();
+        harness.detectChanges();
+
+        const http = TestBed.inject(HttpTestingController);
+        http.expectNone(request => request.method === 'GET' && request.url.endsWith('/recipes/preview-bowl'));
+        expect(edit.disabled).toBe(true);
+        expect(save.disabled).toBe(true);
+        expect(itemNames(draft)).toEqual(['Greek yogurt', 'Oat granola', 'Breakfast bowl']);
+        http.verify();
+    });
+
     it('adds a product and a recipe to a cleared sample without persisting it', async () => {
         const { harness, root } = await renderLandingAsync('/');
         const draft = requiredElement(root, '.landing-tour-block__draft', HTMLElement);

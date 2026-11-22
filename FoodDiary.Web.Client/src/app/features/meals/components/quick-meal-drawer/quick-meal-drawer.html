@@ -71,7 +71,7 @@
                                     variant="secondary"
                                     fill="text"
                                     icon="edit"
-                                    [disabled]="isSaving() || editingItemKey() !== null"
+                                    [disabled]="!allowEditAndSave() || isSaving() || editingItemKey() !== null"
                                     [loading]="editingItemKey() === itemView.item.key"
                                     [fdUiHint]="'QUICK_MEAL.EDIT' | translate"
                                     [ariaLabel]="'QUICK_MEAL.EDIT_ITEM_NAMED' | translate: { name: itemView.name }"
@@ -141,7 +141,7 @@
                     [fullWidth]="true"
                     [ariaLabel]="'QUICK_MEAL.SAVE_ARIA' | translate"
                     [loading]="isSaving()"
-                    [disabled]="editingItemKey() !== null"
+                    [disabled]="!allowEditAndSave() || editingItemKey() !== null"
                     [disabledReason]="editingItemKey() !== null ? ('COMMON.LOADING' | translate) : null"
                     (click)="save()"
                 >

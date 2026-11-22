@@ -1,6 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -202,6 +204,31 @@ it('keeps free-form ingredient quantities as written while navigating cooking st
 
     expect(root.querySelector('.recipe-cook-mode__instruction')?.textContent.trim()).toBe('Mix');
     expect(ingredientAmounts()).toEqual(['to taste', '', '0.5 RECIPE_DETAIL.SUMMARY.SERVINGS_FEW']);
+});
+
+it('localizes fractional linked servings while retaining the authored free-form amount', async () => {
+    const recipe = createRecipe();
+    const halfServing = 0.5;
+    const writtenAmount = '1/2 ч. л.';
+    recipe.steps[0].ingredients = [
+        recipeIngredientFromStored({ id: 'sauce', nestedRecipeId: 'sauce', nestedRecipeName: 'Sauce', amount: halfServing }),
+        recipeIngredientFromStored({ id: 'salt', textName: 'Salt', amountText: writtenAmount, amount: 0 }),
+    ];
+    const { fixture } = setupComponent(recipe);
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { RECIPE_DETAIL: { SUMMARY: { SERVINGS_FEW: 'servings' } } });
+    translate.setTranslation('ru', { RECIPE_DETAIL: { SUMMARY: { SERVINGS_FEW: 'порции' } } });
+    const root = fixture.nativeElement as HTMLElement;
+    const amounts = (): string[] =>
+        Array.from(root.querySelectorAll('.recipe-cook-mode__ingredient-row strong'), amount => amount.textContent.trim());
+
+    await firstValueFrom(translate.use('en'));
+    fixture.detectChanges();
+    expect(amounts()).toEqual(['0.5 servings', writtenAmount]);
+
+    await firstValueFrom(translate.use('ru'));
+    fixture.detectChanges();
+    expect(amounts()).toEqual(['0,5 порции', writtenAmount]);
 });
 
 describe('RecipeCookModeComponent boundaries', () => {

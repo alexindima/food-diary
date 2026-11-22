@@ -3992,7 +3992,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-factor.facade.ts",
-      "line": 23
+      "line": 26
     },
     {
       "name": "CycleSettingsFacade",
@@ -5539,7 +5539,7 @@
       "role": "Component",
       "selector": "fd-product-favorites-picker",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "ProductListDialogContentComponent",
@@ -5994,7 +5994,7 @@
       "role": "Component",
       "selector": "fd-recipe-cook-mode",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "line": 26
+      "line": 28
     },
     {
       "name": "RecipeDetailIngredientPreviewComponent",
@@ -6183,7 +6183,7 @@
       "role": "Component",
       "selector": "fd-recipe-favorites-picker",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "RecipeLanguageDialogComponent",
@@ -8403,8 +8403,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4230,
-      "russianProperties": 4230,
+      "englishProperties": 4231,
+      "russianProperties": 4231,
       "countsMatch": true
     },
     {

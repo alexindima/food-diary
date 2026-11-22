@@ -290,4 +290,17 @@ describe('PWA promotion lifecycle and cross-tab state', () => {
         expect(storage.getJson).not.toHaveBeenCalled();
         expect(storage.setJson).not.toHaveBeenCalled();
     });
+
+    it('keeps promotion inactive when the browser document has no owning window', () => {
+        const detachedDocument = document.implementation.createHTMLDocument();
+        TestBed.overrideProvider(DOCUMENT, { useValue: detachedDocument });
+        const service = start();
+        stable.next(true);
+        detachedDocument.dispatchEvent(new Event('visibilitychange'));
+
+        expect(service.shouldShowBanner()).toBe(false);
+        expect(stable.observed).toBe(false);
+        expect(storage.getJson).not.toHaveBeenCalled();
+        expect(storage.setJson).not.toHaveBeenCalled();
+    });
 });

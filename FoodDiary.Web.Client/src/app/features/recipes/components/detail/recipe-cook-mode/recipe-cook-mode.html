@@ -52,8 +52,12 @@
                 </h4>
                 @for (ingredient of ingredients(); track $index) {
                     <div class="recipe-cook-mode__ingredient-row">
+                        @let amount = ingredient.amount;
                         <span class="fd-ui-body-sm">{{ ingredient.name || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}</span>
-                        <strong class="fd-ui-body-sm"> {{ ingredient.amount }} {{ ingredient.unitKey | translate }} </strong>
+                        <strong class="fd-ui-body-sm">
+                            {{ typeof amount === 'number' ? (amount | localizedNumber: language() : 0 : 20) : amount }}
+                            {{ ingredient.unitKey | translate }}
+                        </strong>
                     </div>
                 }
             </section>

@@ -3,11 +3,11 @@
   "summary": {
     "components": 509,
     "componentsWithoutDirectSpecs": 122,
-    "inputs": 1678,
+    "inputs": 1679,
     "outputs": 556,
     "apiCalls": 335,
     "templatesWithTranslations": 369,
-    "translationKeys": 2271,
+    "translationKeys": 2272,
     "consumerEdges": 1332,
     "consumedComponents": 326,
     "unconsumedComponents": 182
@@ -10121,6 +10121,11 @@
         {
           "name": "layout",
           "type": "'fixed' | 'inline'",
+          "required": false
+        },
+        {
+          "name": "allowEditAndSave",
+          "type": "",
           "required": false
         }
       ],
@@ -24454,6 +24459,7 @@
       "keys": [
         "PRODUCT_MANAGE.CANCEL_BUTTON",
         "PRODUCT_MANAGE.DELETE_BUTTON",
+        "PRODUCT_MANAGE.MIXED_LEGACY_GALLERY",
         "PRODUCT_MANAGE.PHOTO_IMPORT_LIMIT",
         "PRODUCT_MANAGE.START_TOUR"
       ]
@@ -32433,6 +32439,7 @@
         "appearance",
         "ariaLabel",
         "disabled",
+        "disabledReason",
         "fill",
         "fullWidth",
         "icon",
@@ -45240,6 +45247,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
       "occurrences": 1,
       "inputsUsed": [
+        "allowEditAndSave",
         "forceShow",
         "layout"
       ],

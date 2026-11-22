@@ -7,6 +7,7 @@ import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    type CycleFactorType,
     type CycleResponse,
     type UpsertCycleFactorPayload,
 } from '../../../shared/models/cycle.data';
@@ -18,6 +19,8 @@ import { MAX_CYCLE_NOTES_LENGTH } from './cycle-tracking.config';
 import type { CycleFactorFormModel } from './cycle-tracking.form-models';
 import { getCycleNotesLength, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
 import { CycleTrackingStateFacade } from './cycle-tracking-state.facade';
+
+type CycleFactorSaveDraft = CycleFactorFormModel & { type: CycleFactorType; startDate: string };
 
 @Injectable()
 export class CycleFactorFacade {
@@ -52,20 +55,23 @@ export class CycleFactorFacade {
     });
 
     public async submitFactorAsync(): Promise<boolean> {
-        return submit(this.factorForm, async () => this.saveFactorAsync());
+        return submit(this.factorForm, async () => {
+            const { type, startDate, endDate, notes } = this.factorModel();
+            if (type === null || startDate === null || startDate.length === 0) {
+                return;
+            }
+
+            await this.saveFactorAsync({ type, startDate, endDate, notes });
+        });
     }
 
-    private async saveFactorAsync(): Promise<void> {
+    private async saveFactorAsync(draft: CycleFactorSaveDraft): Promise<void> {
         const currentCycle = this.state.cycle();
         if (currentCycle === null || currentCycle.id.length === 0 || this.state.isProfileMutationPending()) {
             return;
         }
 
-        const payload = this.buildFactorPayload(this.factorModel());
-        if (payload === null) {
-            return;
-        }
-
+        const payload = this.buildFactorPayload(draft);
         this.state.factorError.set(null);
         this.state.isSavingFactor.set(true);
         try {
@@ -95,10 +101,7 @@ export class CycleFactorFacade {
         }
     }
 
-    private buildFactorPayload(formValue: CycleFactorFormModel): UpsertCycleFactorPayload | null {
-        if (formValue.type === null || formValue.startDate === null || formValue.startDate.length === 0) {
-            return null;
-        }
+    private buildFactorPayload(formValue: CycleFactorSaveDraft): UpsertCycleFactorPayload {
         const notes = toOptionalCycleText(formValue.notes);
         const factorId = this.state.editingFactorId();
         return {
@@ -107,7 +110,7 @@ export class CycleFactorFacade {
             startDate: calendarDate(toCycleDateKey(formValue.startDate)),
             endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : calendarDate(toCycleDateKey(formValue.endDate)),
             notes,
-            clearNotes: this.state.editingFactorId() !== null && notes === undefined,
+            clearNotes: factorId !== null && notes === undefined,
         };
     }
 

@@ -1,7 +1,7 @@
 import { BrowserPlatformLocation, Location, PlatformLocation } from '@angular/common';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GuardsCheckEnd, NavigationEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -296,6 +296,29 @@ describe('Premium returned transaction URL cleanup', () => {
         expect(openWidget).toHaveBeenCalledOnce();
         expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
         expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
+
+describe('Premium canceled checkout return', () => {
+    it.each([
+        { platform: 'browser', expectedUrl: PREMIUM_ROUTE },
+        { platform: 'server', expectedUrl: `${PREMIUM_ROUTE}?checkout=canceled` },
+    ])('renders the canceled checkout on the $platform platform', async ({ platform, expectedUrl }) => {
+        TestBed.overrideProvider(PLATFORM_ID, { useValue: platform });
+        const returnUrl = `${PREMIUM_ROUTE}?checkout=canceled`;
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(overview()));
+        const { harness, router, refreshSession, createCheckout, openWidget } = await renderPremiumAsync(returnUrl, readOverview);
+
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(premiumRoot(harness).textContent).toContain('PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE');
+            expect(premiumRoot(harness).querySelector(PLANS)).not.toBeNull();
+            expect(router.url).toBe(expectedUrl);
+        });
+        expect(readOverview).toHaveBeenCalledOnce();
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(createCheckout).not.toHaveBeenCalled();
+        expect(openWidget).not.toHaveBeenCalled();
     });
 });
 

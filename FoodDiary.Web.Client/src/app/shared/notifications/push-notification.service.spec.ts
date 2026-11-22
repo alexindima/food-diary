@@ -1331,6 +1331,62 @@ describe('Push notification ownership after a worker renewal', () => {
     });
 });
 
+describe('Push device removal during a browser subscription change', () => {
+    it('preserves a renewed endpoint when the browser read under the lock has already changed', async () => {
+        const previous = createPushSubscription('https://push.example.com/subscriptions/before-renewal');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('already-subscribed');
+
+        const lockedRead = new Subject<PushSubscription | null>();
+        const readSubscription = vi
+            .fn<() => Observable<PushSubscription | null>>()
+            .mockReturnValueOnce(of(previous))
+            .mockReturnValue(lockedRead);
+        swPush.subscription = defer(readSubscription);
+        const removal = service.removeSubscriptionAsync(previous.endpoint);
+        await vi.waitFor(() => {
+            expect(lockedRead.observed).toBe(true);
+        });
+
+        const renewed = createPushSubscription('https://push.example.com/subscriptions/after-renewal');
+        confirmSubscriptionOwner(renewed, 'user-a');
+        lockedRead.next(renewed);
+        lockedRead.complete();
+
+        await expect(removal).resolves.toBe(false);
+        expect(previous.unsubscribeMock).not.toHaveBeenCalled();
+        expect(renewed.unsubscribeMock).not.toHaveBeenCalled();
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: renewed.endpoint, userId: 'user-a' }));
+    });
+
+    it('does not remove an absent endpoint for the previous account after another tab signs in', async () => {
+        const previous = createPushSubscription('https://push.example.com/subscriptions/before-account-switch');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('already-subscribed');
+
+        const unsubscribed = new Subject<boolean>();
+        previous.unsubscribeMock.mockReturnValueOnce(firstValueFrom(unsubscribed));
+        const removal = service.removeSubscriptionAsync(previous.endpoint);
+        await vi.waitFor(() => {
+            expect(previous.unsubscribeMock).toHaveBeenCalledOnce();
+        });
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = of(null);
+        unsubscribed.next(false);
+        unsubscribed.complete();
+
+        await expect(removal).resolves.toBe(false);
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: previous.endpoint, userId: 'user-a' }));
+    });
+});
+
 function invalidateAliceLocally(): void {
     sessionEvents.notifyLocalSessionInvalidating();
     authService.isAuthenticated.mockReturnValue(false);

@@ -135,6 +135,10 @@ export class ProductManageFormComponent implements UnsavedEditor {
     protected readonly isSubmitting = signal(false);
 
     protected readonly productFormModel = signal<ProductFormValues>(createProductForm());
+    protected readonly hasMixedLegacyGallery = computed(() => {
+        const gallery = this.productFormModel().images;
+        return gallery?.some(photo => photo.kind === 'remote') === true && gallery.some(photo => photo.assetId !== null);
+    });
     private readonly submitProductFormAsync = async (): Promise<void> => {
         await this.onSubmitAsync();
     };
@@ -488,7 +492,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     protected async onSubmitAsync(): Promise<Product | null> {
-        if (this.isSubmitting() || this.isDeleting() || this.photosUploading()) {
+        if (this.isSubmitting() || this.isDeleting() || this.photosUploading() || this.hasMixedLegacyGallery()) {
             return null;
         }
 

@@ -60,6 +60,7 @@
                         />
 
                         <div class="product-manage__actions-panel" data-tour-id="product-manage-actions">
+                            @let mixedGalleryError = 'PRODUCT_MANAGE.MIXED_LEGACY_GALLERY' | translate;
                             <div class="product-manage__footer-actions fd-row fd-gap-md">
                                 @if (canShowDeleteButton()) {
                                     <fd-ui-button
@@ -91,13 +92,15 @@
                                     appearance="brand-action"
                                     [icon]="manageHeaderState().submitIcon"
                                     [fullWidth]="true"
+                                    [disabled]="hasMixedLegacyGallery()"
+                                    [disabledReason]="mixedGalleryError"
                                     [loading]="isSubmitting() || isDeleting() || photosUploading()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}
                                 </fd-ui-button>
                             </div>
-                            @if (globalError()) {
-                                <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
+                            @if (hasMixedLegacyGallery() ? mixedGalleryError : globalError(); as error) {
+                                <fd-ui-form-error class="product-manage__footer-error" [error]="error" />
                             } @else if (photoImportLimitReached()) {
                                 <fd-ui-form-error
                                     class="product-manage__footer-error"

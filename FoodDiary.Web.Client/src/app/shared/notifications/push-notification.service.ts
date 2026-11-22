@@ -471,7 +471,13 @@ export class PushNotificationService {
 
     private async disconnectCurrentDeviceAsync(subscription: PushSubscription, session: PushSession): Promise<boolean> {
         this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
-        const disconnected = await this.revokeBrowserSubscriptionAsync(subscription, session, true);
+        const disconnected = await this.revokeBrowserSubscriptionAsync(subscription, session, metadata => {
+            if (!this.isCurrentSession(session) || !this.canRevokeBrowserSubscription(subscription, session, metadata)) {
+                return false;
+            }
+            this.clearRemovedDeviceState(subscription.endpoint);
+            return true;
+        });
         if (disconnected) {
             // A registration already sent for the disconnected browser must settle before its removal.
             await Promise.allSettled(this.pendingUpserts);
@@ -796,31 +802,39 @@ export class PushNotificationService {
     private async revokeBrowserSubscriptionAsync(
         subscription: PushSubscription,
         session: PushSession | null,
-        explicitRemoval = false,
+        onExplicitAbsence?: (metadata: AuthMetadataStorageService) => boolean,
     ): Promise<boolean> {
         return this.runBrowserMutationAsync(async metadata => {
             if (!this.canRevokeBrowserSubscription(subscription, session, metadata)) {
                 return false;
             }
             const current = await this.readCurrentSubscriptionAsync();
-            if (current === null && explicitRemoval && this.canRevokeBrowserSubscription(subscription, session, metadata)) {
-                this.clearRemovedDeviceState(subscription.endpoint);
-                return true;
+            if (current === null) {
+                return onExplicitAbsence?.(metadata) ?? false;
             }
-            if (current?.endpoint !== subscription.endpoint || !this.canRevokeBrowserSubscription(current, session, metadata)) {
+            if (current.endpoint !== subscription.endpoint || !this.canRevokeBrowserSubscription(current, session, metadata)) {
                 return false;
             }
             const removed = await firstValueFrom(from(current.unsubscribe()).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)));
-            if (removed) {
-                if (explicitRemoval) {
-                    // Keep the owner marker for same-account reconciliation until DELETE succeeds.
-                    this.clearRemovedDeviceState(current.endpoint);
-                } else {
-                    this.forgetSubscription(current);
-                }
+            if (!removed) {
+                return this.confirmExplicitSubscriptionAbsenceAsync(metadata, onExplicitAbsence);
             }
-            return removed;
+            if (onExplicitAbsence === undefined) {
+                this.forgetSubscription(current);
+            } else {
+                // Keep the owner marker for same-account reconciliation until DELETE succeeds.
+                this.clearRemovedDeviceState(current.endpoint);
+            }
+            return true;
         }).catch(() => false);
+    }
+
+    private async confirmExplicitSubscriptionAbsenceAsync(
+        metadata: AuthMetadataStorageService,
+        onExplicitAbsence: ((metadata: AuthMetadataStorageService) => boolean) | undefined,
+    ): Promise<boolean> {
+        // Native unsubscribe returns false if the subscription was already deactivated.
+        return onExplicitAbsence !== undefined && (await this.readCurrentSubscriptionAsync()) === null && onExplicitAbsence(metadata);
     }
 
     private canRevokeBrowserSubscription(

@@ -236,26 +236,51 @@ function registerUndoRenderingTests(): void {
         expect(rows[1].querySelector('.favorite-row__undo')).not.toBeNull();
         expect(restore).toHaveBeenCalledExactlyOnceWith(favorite);
     });
-}
-
-function registerPickerAsyncTests(): void {
-    it('debounces and trims searches, skips duplicates, and drops old undo rows', async () => {
+    it('debounces and trims native searches, drops old undo rows, and reloads when cleared', async () => {
         vi.useFakeTimers();
         try {
-            const component = TestBed.createComponent(RecipeFavoritesPickerComponent).componentInstance;
-            component['remove'](favorite);
-            component['search'](' r');
-            component['search'](' rice ');
+            const fixture = TestBed.createComponent(RecipeFavoritesPickerComponent);
+            fixture.detectChanges();
+            const element = fixture.nativeElement as HTMLElement;
+            const input = element.querySelector<HTMLInputElement>('fd-ui-input input');
+            const removeButton = element.querySelector<HTMLButtonElement>('button[aria-label="RECIPE_DETAIL.REMOVE_FAVORITE"]');
+            if (input === null || removeButton === null) {
+                throw new Error('Expected the favorite search and remove controls');
+            }
+            const enterSearch = (text: string): void => {
+                input.value = text;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            };
+
+            removeButton.click();
+            fixture.detectChanges();
+            expect(element.querySelector('.favorite-row__undo')).not.toBeNull();
+            enterSearch(' r');
+            enterSearch(' rice ');
+            expect(api.getPage).toHaveBeenCalledOnce();
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            fixture.detectChanges();
             expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'rice');
-            expect(component['facade'].removedIds().size).toBe(0);
-            component['search']('rice');
+            expect(element.querySelector('.favorite-row__undo')).toBeNull();
+
+            enterSearch('rice');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
             expect(api.getPage).toHaveBeenCalledTimes(2);
+
+            enterSearch('');
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            expect(api.getPage.mock.calls).toEqual([
+                [1, PAGE_SIZE, ''],
+                [1, PAGE_SIZE, 'rice'],
+                [1, PAGE_SIZE, ''],
+            ]);
         } finally {
             vi.useRealTimers();
         }
     });
+}
+
+function registerPickerAsyncTests(): void {
     it.each([true, false])('ignores stale restoration responses, success=%s', success => {
         const component = TestBed.createComponent(RecipeFavoritesPickerComponent).componentInstance;
         component['remove'](favorite);

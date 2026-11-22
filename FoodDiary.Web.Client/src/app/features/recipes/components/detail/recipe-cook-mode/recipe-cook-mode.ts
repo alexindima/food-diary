@@ -4,6 +4,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
 import { capitalizeFirstLetter } from '../../../../../shared/lib/text-display.utils';
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
@@ -21,7 +23,7 @@ type CookModeIngredientView = {
     templateUrl: './recipe-cook-mode.html',
     styleUrls: ['./recipe-cook-mode.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, LocalizedNumberPipe],
 })
 export class RecipeCookModeComponent {
     private readonly dialogService = inject(FdUiDialogService);
@@ -37,6 +39,7 @@ export class RecipeCookModeComponent {
     });
     public readonly recipe = input.required<Recipe>();
 
+    protected readonly language = injectCurrentLanguage();
     protected readonly currentStepIndex = signal(0);
     protected readonly steps = computed(() => [...this.recipe().steps].sort((a, b) => a.stepNumber - b.stepNumber));
     protected readonly stepCount = computed(() => this.steps().length);

@@ -92,13 +92,22 @@ export function buildProductData(values: ProductFormValues, nutritionMode: Nutri
         comment: values.comment,
         imageUrl: selectedImage?.url ?? null,
         imageAssetId: selectedImage?.assetId ?? null,
-        ...(values.images !== undefined ? { imageAssetIds: values.images.map(image => image.assetId).filter(id => id !== null) } : {}),
+        ...buildGalleryPatch(values.images),
         baseAmount,
         defaultPortionAmount,
         baseUnit: values.baseUnit,
         ...nutritionValues,
         visibility: values.visibility,
     };
+}
+
+function buildGalleryPatch(images: ProductFormValues['images']): Pick<CreateProductRequest, 'imageAssetIds'> {
+    if (images === undefined) {
+        return {};
+    }
+
+    const imageAssetIds = images.map(photo => photo.assetId).filter(id => id !== null);
+    return images.length === 0 || imageAssetIds.length > 0 ? { imageAssetIds } : {};
 }
 
 export function buildConvertedNutritionPatch(values: ProductFormValues, factor: number): Partial<ProductFormValues> {

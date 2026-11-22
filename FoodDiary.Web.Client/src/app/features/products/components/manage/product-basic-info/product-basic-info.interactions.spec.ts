@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
@@ -11,6 +11,7 @@ import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { type ProductSearchSuggestion, ProductVisibility } from '../../../../../shared/models/product.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductNameSearchFacade } from '../../../lib/manage/product-name-search.facade';
@@ -109,6 +110,39 @@ it('keeps the visibility summary and selector in sync after a choice and a local
     summary.click();
     expect(summary.closest('details')?.open).toBe(false);
     expect(summary.textContent).toContain('Публичный');
+});
+
+it('keeps the saved gallery and pristine form when the picker rejects a non-image file', async () => {
+    const { fixture } = renderNameSearch();
+    const { draft, fields } = fixture.componentInstance;
+    const cover = imageSelection('https://images.example.test/cover.jpg', 'saved-cover');
+    const other = imageSelection('https://images.example.test/back.jpg', 'saved-back');
+    draft.set({ ...createProductForm(), name: 'Saved product', imageUrl: cover, images: [cover, other] });
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const input = host.querySelector<HTMLInputElement>('fd-image-gallery-editor input[type="file"]');
+    const add = host.querySelector<HTMLButtonElement>('.recognition-photos__empty button');
+    if (input === null || add === null) {
+        throw new Error('Expected the saved gallery file picker');
+    }
+    const chooseFile = vi.spyOn(input, 'click');
+    add.click();
+    expect(chooseFile).toHaveBeenCalled();
+    Object.defineProperty(input, 'files', { value: [new File(['not a photo'], 'notes.txt', { type: 'text/plain' })] });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(host.querySelector('.image-upload-field__error')?.textContent).toContain('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES');
+    expect(Array.from(host.querySelectorAll('.recognition-photos__preview img'), image => image.getAttribute('src'))).toEqual([
+        cover.url,
+        other.url,
+    ]);
+    expect(draft().imageUrl).toEqual(cover);
+    expect(draft().images).toEqual([cover, other]);
+    expect(fields().dirty()).toBe(false);
+    TestBed.inject(HttpTestingController).expectNone(request => request.url.endsWith('/images/upload-url'));
 });
 
 @Component({

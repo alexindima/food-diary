@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { createEnvironmentInjector, DestroyRef, EnvironmentInjector, PLATFORM_ID } from '@angular/core';
@@ -110,6 +111,27 @@ describe('Authentication during server rendering', () => {
         expect(service.getUserId()).toBeNull();
         requests.expectNone({ method: 'POST', url: `${base}/session` });
         expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Authentication restoration without a document window', () => {
+    it('restores the cookie-backed session without attempting a URL handoff', async () => {
+        TestBed.resetTestingModule();
+        const detachedDocument = document.implementation.createHTMLDocument();
+        TestBed.overrideProvider(DOCUMENT, { useValue: detachedDocument });
+        configureAuthTesting();
+
+        const restored = service.ensureSessionReadyAsync();
+        expect(service.isAuthReady()).toBe(false);
+        requests.expectOne({ method: 'POST', url: `${base}/session` }).flush(response);
+        await restored;
+
+        expect(service.isAuthReady()).toBe(true);
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getUserId()).toBe(response.user.id);
+        expect(TestBed.inject(BrowserSessionStateService).contextId()).toBeNull();
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        requests.expectNone({ method: 'POST', url: `${base}/impersonation/exchange` });
     });
 });
 

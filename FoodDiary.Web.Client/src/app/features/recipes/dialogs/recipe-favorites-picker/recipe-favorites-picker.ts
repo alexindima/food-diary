@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { fdUiCoerceInputTextValue, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { debounceTime, distinctUntilChanged, filter, map, type Observable, of, Subject, switchMap, take } from 'rxjs';
 
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
@@ -91,8 +92,8 @@ export class RecipeFavoritesPickerComponent {
             });
     }
 
-    protected search(value: string | number | null): void {
-        this.searches.next(String(value ?? ''));
+    protected search(value: FdUiInputValue): void {
+        this.searches.next(fdUiCoerceInputTextValue(value));
     }
 
     protected load(page: number, search = this.facade.search()): void {

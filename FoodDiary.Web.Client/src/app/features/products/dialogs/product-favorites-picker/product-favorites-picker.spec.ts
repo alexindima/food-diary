@@ -245,19 +245,40 @@ function registerUndoRenderingTests(): void {
 }
 
 function registerPickerAsyncTests(): void {
-    it('debounces and trims searches, skips duplicates, and drops old undo rows', async () => {
+    it('debounces and trims native searches, skips duplicates, and restores the full list when cleared', async () => {
         vi.useFakeTimers();
         try {
-            const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
-            component['remove'](favorite);
-            component['search'](' r');
-            component['search'](' rice ');
+            const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            const input = host.querySelector<HTMLInputElement>('fd-ui-input input');
+            const removeButton = host.querySelector<HTMLButtonElement>('.favorite-row__star button');
+            if (input === null || removeButton === null) {
+                throw new Error('Expected the favorites search and remove controls');
+            }
+            removeButton.click();
+            fixture.detectChanges();
+            expect(host.querySelector('.favorite-row__undo')).not.toBeNull();
+            api.getPage.mockReturnValueOnce(of({ data: [], totalItems: 0, page: 1, limit: PAGE_SIZE, totalPages: 0 }));
+            typePickerSearch(input, ' r');
+            typePickerSearch(input, ' rice ');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
-            expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'rice');
-            expect(component['facade'].removedIds().size).toBe(0);
-            component['search']('rice');
+            fixture.detectChanges();
+            expect(host.querySelector('.favorite-row__undo')).toBeNull();
+            expect(host.querySelector('[aria-live="polite"]:not([hidden])')?.textContent).toContain('PRODUCT_FAVORITES.NO_RESULTS');
+            typePickerSearch(input, 'rice');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
             expect(api.getPage).toHaveBeenCalledTimes(2);
+
+            typePickerSearch(input, '');
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            fixture.detectChanges();
+            expect(api.getPage.mock.calls).toEqual([
+                [1, PAGE_SIZE, ''],
+                [1, PAGE_SIZE, 'rice'],
+                [1, PAGE_SIZE, ''],
+            ]);
+            expect(host.querySelector('fd-favorite-product-row strong')?.textContent).toContain(favorite.productName);
         } finally {
             vi.useRealTimers();
         }
@@ -303,4 +324,9 @@ function registerPickerAsyncTests(): void {
         component['changePage'](2);
         expect(api.getPage).toHaveBeenLastCalledWith(2, PAGE_SIZE, '');
     });
+}
+
+function typePickerSearch(input: HTMLInputElement, text: string): void {
+    input.value = text;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
 }

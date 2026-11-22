@@ -2979,16 +2979,25 @@ describe('Cycle period confirmation and factor persistence', () => {
         const updatedNote = 'Edited factor note';
         input(draft, updatedNote);
 
+        const form = requiredElementOfType(card, 'form', HTMLFormElement);
+        const submitted = vi.fn();
+        form.addEventListener('submit', submitted);
+        const save = button('CYCLE_TRACKING.UPDATE_FACTOR', card);
         click('CYCLE_TRACKING.CONFIRM_PERIOD_START', row);
         const confirmation = http.expectOne(periodRequest);
         expect(confirmation.request.body).toEqual({ date: episode.startDate });
+        expect(save.disabled).toBe(false);
+        save.click();
+        expect(submitted).toHaveBeenCalledOnce();
+
+        await harness.fixture.whenStable();
         harness.detectChanges();
-        const save = button('CYCLE_TRACKING.UPDATE_FACTOR', card);
         const end = button('CYCLE_TRACKING.END_FACTOR', card);
         expect(save.disabled).toBe(true);
         expect(end.disabled).toBe(true);
         save.click();
         end.click();
+        expect(submitted).toHaveBeenCalledOnce();
         http.expectNone(factorRequest);
         expect(draft.value).toBe(updatedNote);
 

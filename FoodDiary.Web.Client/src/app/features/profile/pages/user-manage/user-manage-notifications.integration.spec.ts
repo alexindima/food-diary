@@ -721,6 +721,56 @@ describe('Profile removed browser registration recovery', () => {
     });
 });
 
+describe('Profile disconnect after concurrent browser deactivation', () => {
+    it('removes a device when it disappears after discovery and browser unsubscribe reports false', async () => {
+        const discovery = new ReplaySubject<PushSubscription | null>(1);
+        const unregistration = new Subject<boolean>();
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockImplementation(async () => firstValueFrom(unregistration));
+        const { worker, providers } = createDiscoveryWorker(discovery);
+        const markerKey = 'webPushSubscriptionOwner';
+        const optInKey = 'webPushDeviceOptIn:profile-user';
+        localStorage.setItem(markerKey, JSON.stringify({ endpoint: localDevice.endpoint, userId: 'profile-user' }));
+        onTestFinished(() => {
+            unregistration.complete();
+            discovery.complete();
+            localStorage.removeItem(markerKey);
+            localStorage.removeItem(optInKey);
+        });
+
+        const { fixture, account, browser, toast, recordSubscription } = setup(initialPreferences, knownDevices, providers);
+        discovery.next(createExistingBrowserSubscription(unsubscribe));
+        const push = TestBed.inject(PushNotificationService);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(push.currentSubscriptionEndpoint()).toBe(localDevice.endpoint);
+            expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
+        });
+        account.getWebPushSubscriptions.mockReturnValueOnce(of([remoteDevice]));
+
+        removeButton(fixture, 'Chrome / Windows').click();
+        await vi.waitFor(() => {
+            expect(unsubscribe).toHaveBeenCalledOnce();
+        });
+        expect(account.removeWebPushSubscription).not.toHaveBeenCalled();
+
+        discovery.next(null);
+        unregistration.next(false);
+        await vi.waitFor(() => {
+            expect(recordSubscription.mock.calls.map(([action]) => action)).toContain('subscription.remove');
+        });
+
+        expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(localDevice.endpoint);
+        await waitForDeviceRemovalAsync(fixture, 'Chrome / Windows');
+        expect(removeButton(fixture, 'Firefox / Linux').disabled).toBe(false);
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST');
+        expect(toast.error).not.toHaveBeenCalled();
+        expect(localStorage.getItem(markerKey)).toBeNull();
+        expect(localStorage.getItem(optInKey)).toBe('false');
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+        expect(browser.capability.requestPermissionAsync).not.toHaveBeenCalled();
+    });
+});
+
 async function waitForDeviceRemovalAsync(fixture: ComponentFixture<UserManageComponent>, device: string): Promise<void> {
     await vi.waitFor(() => {
         fixture.detectChanges();

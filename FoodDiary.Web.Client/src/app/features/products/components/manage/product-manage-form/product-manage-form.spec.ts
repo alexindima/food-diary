@@ -2060,6 +2060,106 @@ describe('Product editor legacy cover actions', () => {
     });
 });
 
+const LINKED_PRODUCT_PHOTO_URL = 'https://images.example.test/original-linked-photo.jpg';
+const UPLOADED_PRODUCT_PHOTO_URL = 'https://images.example.test/new-uploaded-photo.jpg';
+const UPLOADED_PRODUCT_PHOTO_ID = '14fc3d4e-412b-47b4-a2eb-0b8d02b5f0cb';
+
+describe('Product editor mixed gallery persistence', () => {
+    it('keeps both photos in the draft and blocks saving the unsupported combination', async () => {
+        const { el, fixture, productManageFacade } = await openMixedProductGalleryAsync();
+        const saveButton = requiredFormButton(el, 'button[type="submit"]');
+        const disabled = saveButton.disabled;
+        saveButton.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect({
+            disabled,
+            warning: el.querySelector('.product-manage__footer-error')?.textContent.trim() ?? null,
+            writes: productManageFacade.submitProductAsync.mock.calls.map(([, payload]) => ({
+                imageUrl: payload.imageUrl,
+                imageAssetId: payload.imageAssetId,
+                imageAssetIds: payload.imageAssetIds,
+            })),
+            photos: productGalleryUrls(el),
+        }).toEqual({
+            disabled: true,
+            warning: 'PRODUCT_MANAGE.MIXED_LEGACY_GALLERY',
+            writes: [],
+            photos: [LINKED_PRODUCT_PHOTO_URL, UPLOADED_PRODUCT_PHOTO_URL],
+        });
+    });
+
+    it.each([
+        {
+            retained: 'the linked cover',
+            removeUrl: UPLOADED_PRODUCT_PHOTO_URL,
+            retainedUrl: LINKED_PRODUCT_PHOTO_URL,
+            assetId: null,
+            galleryIds: undefined,
+        },
+        {
+            retained: 'the uploaded cover',
+            removeUrl: LINKED_PRODUCT_PHOTO_URL,
+            retainedUrl: UPLOADED_PRODUCT_PHOTO_URL,
+            assetId: UPLOADED_PRODUCT_PHOTO_ID,
+            galleryIds: [UPLOADED_PRODUCT_PHOTO_ID],
+        },
+    ])('saves $retained after removing the other photo', async ({ removeUrl, retainedUrl, assetId, galleryIds }) => {
+        const { el, fixture, productManageFacade } = await openMixedProductGalleryAsync();
+        const photo = Array.from(
+            el.querySelectorAll<HTMLButtonElement>('fd-image-gallery-editor .recognition-photos__preview button'),
+        ).find(button => button.querySelector('img')?.getAttribute('src') === removeUrl);
+        if (photo === undefined) {
+            throw new Error('The photo selected for removal was missing');
+        }
+        photo.click();
+        const removeSelector = '.fd-ui-menu-item--danger button';
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(document.querySelector(removeSelector)).not.toBeNull();
+        });
+        requiredFormButton(document.body, removeSelector).click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(productGalleryUrls(el)).toEqual([retainedUrl]);
+        });
+
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        expect(save.disabled).toBe(false);
+        save.click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledOnce();
+        const payload = productManageFacade.submitProductAsync.mock.calls[0]?.[1];
+        expect(payload).toMatchObject({ imageUrl: retainedUrl, imageAssetId: assetId });
+        expect(payload.imageAssetIds).toEqual(galleryIds);
+        expect(Object.hasOwn(payload, 'imageAssetIds')).toBe(galleryIds !== undefined);
+    });
+});
+
+async function openMixedProductGalleryAsync(): Promise<ProductManageFormSetup> {
+    const editor = await setupComponentAsync();
+    const { el, fixture, uploadImage } = editor;
+    const photo = imageSelection(UPLOADED_PRODUCT_PHOTO_URL, UPLOADED_PRODUCT_PHOTO_ID);
+    uploadImage.mockReturnValueOnce(of(photo));
+    fixture.componentRef.setInput('product', { ...PRODUCT, imageUrl: LINKED_PRODUCT_PHOTO_URL });
+    fixture.detectChanges();
+    expect(productGalleryUrls(el)).toEqual([LINKED_PRODUCT_PHOTO_URL]);
+    beginNativeGalleryUpload(el);
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(uploadImage).toHaveBeenCalledOnce();
+        expect(productGalleryUrls(el)).toEqual([LINKED_PRODUCT_PHOTO_URL, UPLOADED_PRODUCT_PHOTO_URL]);
+    });
+    return editor;
+}
+
+function productGalleryUrls(el: HTMLElement): Array<string | null> {
+    return Array.from(el.querySelectorAll('fd-image-gallery-editor .recognition-photos__preview img'), image => image.getAttribute('src'));
+}
+
 const LEGACY_GALLERY_PHOTO_COUNT = 3;
 
 it('views the selected recognized photo without changing a saved cover that has no URL', async () => {
