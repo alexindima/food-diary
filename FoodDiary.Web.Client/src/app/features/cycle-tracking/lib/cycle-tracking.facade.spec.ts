@@ -826,6 +826,26 @@ describe('CycleTrackingFacade period start recovery', () => {
     });
 });
 
+it('rejects unparseable journal action dates and accepts normalized calendar dates', () => {
+    const profile = createCycleResponse();
+    cyclesService.getCurrent.mockReturnValue(of(profile));
+    facade.initialize();
+
+    facade.clearDay('not-a-calendar-date');
+    facade.confirmPeriodStart('not-a-calendar-date');
+
+    expect(cyclesService.clearDay).not.toHaveBeenCalled();
+    expect(cyclesService.confirmPeriodStart).not.toHaveBeenCalled();
+    expect(facade.cycle()).toBe(profile);
+    expect(facade.isDayMutationPending()).toBe(false);
+
+    facade.clearDay('2026-04-02T00:00:00.000Z');
+    facade.confirmPeriodStart('2026-04-02');
+
+    expect(cyclesService.clearDay).toHaveBeenCalledExactlyOnceWith(profile.id, '2026-04-02');
+    expect(cyclesService.confirmPeriodStart).toHaveBeenCalledExactlyOnceWith(profile.id, '2026-04-02');
+});
+
 describe('CycleTrackingFacade day clear recovery', () => {
     it('refreshes episode history and predictions after clearing a day', () => {
         facade.initialize();

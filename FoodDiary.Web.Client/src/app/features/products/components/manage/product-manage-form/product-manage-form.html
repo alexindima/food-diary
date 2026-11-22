@@ -55,6 +55,7 @@
                         <fd-product-nutrition-editor
                             [form]="productForm"
                             [nutritionMode]="nutritionMode"
+                            [recognitionDisabled]="photosUploading()"
                             (nutritionModeChange)="onNutritionModeChange($event)"
                             (openAiRecognition)="openAiRecognitionDialog()"
                         />

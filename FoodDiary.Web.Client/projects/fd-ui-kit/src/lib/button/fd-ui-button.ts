@@ -76,7 +76,13 @@ export class FdUiButtonComponent {
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by menu triggers, not a template internal.
     public focus(): void {
-        this.controlRef().nativeElement.focus();
+        this.nativeControl().focus();
+    }
+
+    /** Returns the rendered button for APIs that need an explicit focus target. */
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public focus target for dialog restoration.
+    public nativeControl(): HTMLButtonElement {
+        return this.controlRef().nativeElement;
     }
 
     /** Menu directives publish their state on the native, focusable control. */

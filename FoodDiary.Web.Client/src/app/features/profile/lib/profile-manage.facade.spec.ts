@@ -732,6 +732,27 @@ describe('ProfileManageFacade pending account actions', () => {
 });
 
 describe('ProfileManageFacade pending notification changes', () => {
+    it('saves account preferences while a separate profile read is still pending', async () => {
+        const pendingOverview = new Subject<UserProfileOverview>();
+        const change = { pushNotificationsEnabled: false };
+        const saved = { ...overview.notificationPreferences, ...change };
+        userService.getOverview.mockReturnValueOnce(pendingOverview);
+        notificationService.updateNotificationPreferences.mockReturnValueOnce(of(saved));
+        facade.initialize();
+
+        await expect(facade.updateNotificationPreferencesAsync(change)).resolves.toBeNull();
+
+        expect(notificationService.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith(change);
+        expect(facade.user()).toBeNull();
+        expect(facade.isUpdatingNotifications()).toBe(false);
+
+        pendingOverview.next({ ...overview, notificationPreferences: saved });
+        pendingOverview.complete();
+
+        expect(facade.user()).toEqual({ ...user, ...saved });
+        expect(facade.globalError()).toBeNull();
+    });
+
     it('preserves the current profile while preferences save and accepts a later change', async () => {
         const saved = { ...overview.notificationPreferences, pushNotificationsEnabled: false };
         const saving = new Subject<typeof saved>();

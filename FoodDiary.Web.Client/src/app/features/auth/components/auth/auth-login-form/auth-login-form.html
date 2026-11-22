@@ -1,5 +1,4 @@
 <form
-    #loginFormElement
     method="post"
     class="auth__form fd-stack fd-gap-md"
     [formRoot]="form()"
@@ -16,6 +15,7 @@
     @let loginErrors = errors();
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
+            #loginEmail
             appearance="auth"
             type="email"
             autocomplete="username"
@@ -30,6 +30,7 @@
 
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
+            #loginPassword
             appearance="auth"
             autocomplete="current-password"
             id="current-password"

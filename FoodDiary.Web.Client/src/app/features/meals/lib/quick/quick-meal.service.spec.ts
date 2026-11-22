@@ -13,7 +13,7 @@ import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
-import { QuickMealService } from './quick-meal.service';
+import { type QuickMealItem, QuickMealService } from './quick-meal.service';
 
 const DEFAULT_PORTION_AMOUNT = 180;
 const DOUBLE_DEFAULT_PORTION_AMOUNT = 360;
@@ -197,6 +197,21 @@ describe('QuickMealService draft items', () => {
                 amount: 240,
             }),
         );
+    });
+});
+
+describe('QuickMealService edit identity', () => {
+    it.each<QuickMealItem>([
+        { key: 'product-', type: 'product', product: { ...product, id: entityId<'product'>('') }, amount: CUSTOM_PRODUCT_AMOUNT },
+        { key: 'recipe-', type: 'recipe', recipe: { ...recipe, id: entityId<'recipe'>('') }, amount: 1 },
+    ])('keeps the original row when an edit has no $type identity', editedItem => {
+        service.addProduct(product);
+        const originalItems = service.items();
+
+        service.updateItem(`product-${product.id}`, editedItem);
+
+        expect(service.items()).toBe(originalItems);
+        expect(mealService.create).not.toHaveBeenCalled();
     });
 });
 

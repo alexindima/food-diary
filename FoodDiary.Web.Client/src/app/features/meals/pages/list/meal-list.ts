@@ -7,7 +7,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { filter, finalize, type Observable, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, filter, finalize, firstValueFrom, from, type Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
@@ -29,7 +29,7 @@ import { MEAL_DEVELOPMENT_TOOLS } from '../../contracts/meal-development-tools';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/list/meal-list-filter-chips';
-import { mealListQueryKey, readMealListQuery, writeMealListQuery } from '../../lib/list/meal-list-query';
+import { type MealListQuery, mealListQueryKey, readMealListQuery, writeMealListQuery } from '../../lib/list/meal-list-query';
 import { MealListRouteStateFacade } from '../../lib/list/meal-list-route-state.facade';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
 import type { MealDateGroupView } from './meal-list-lib/meal-list.types';
@@ -58,7 +58,7 @@ export class MealListComponent {
     private readonly mealListFacade = inject(MealListFacade);
     private readonly routeState = inject(MealListRouteStateFacade);
     private activeQueryKey = mealListQueryKey(this.routeState.initial);
-    private routeWriteRevision = 0;
+    private readonly routeWrites = new Subject<{ query: MealListQuery; replaceUrl: boolean }>();
     private readonly routeWriteFailed = signal(false);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -122,6 +122,19 @@ export class MealListComponent {
 
     public constructor() {
         const router = inject(Router);
+        this.routeWrites
+            .pipe(
+                switchMap(({ query, replaceUrl }) =>
+                    from(this.routeState.writeAsync(query, replaceUrl)).pipe(
+                        catchError(() => {
+                            this.routeWriteFailed.set(true);
+                            return EMPTY;
+                        }),
+                    ),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
         const fields = ['page', 'dateFrom', 'dateTo', 'mealTypes', 'caloriesFrom', 'caloriesTo', 'hasImage', 'hasAiSession'];
         connectDevelopmentScreen({
             kind: 'meal-diary',
@@ -275,7 +288,16 @@ export class MealListComponent {
     }
 
     protected async openMealDetailsAsync(meal: Meal): Promise<void> {
-        if (await this.mealListFacade.handleMealDetailsAsync(meal, this.structuredFilters)) {
+        const page = this.currentPageIndex() + 1;
+        const changed = await firstValueFrom(
+            from(this.mealListFacade.handleMealDetailsAsync(meal, this.structuredFilters)).pipe(
+                takeUntil(this.routeWrites),
+                takeUntilDestroyed(this.destroyRef),
+            ),
+            { defaultValue: false },
+        );
+        if (changed) {
+            this.syncResolvedPage(page);
             this.scrollToTop();
         }
     }
@@ -379,13 +401,8 @@ export class MealListComponent {
     private syncRoute(page: number, replaceUrl = false): void {
         const query = { ...this.structuredFilters, page };
         this.activeQueryKey = mealListQueryKey(query);
-        const revision = ++this.routeWriteRevision;
         this.routeWriteFailed.set(false);
-        void this.routeState.writeAsync(query, replaceUrl).catch(() => {
-            if (revision === this.routeWriteRevision && !this.destroyRef.destroyed) {
-                this.routeWriteFailed.set(true);
-            }
-        });
+        this.routeWrites.next({ query, replaceUrl });
     }
 
     private syncResolvedPage(requestedPage: number): void {

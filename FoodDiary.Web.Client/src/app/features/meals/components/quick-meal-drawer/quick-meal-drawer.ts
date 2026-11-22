@@ -271,13 +271,7 @@ export class QuickMealDrawerComponent {
             if (result === null || result === undefined || !this.isCurrentEdit(operation)) {
                 return;
             }
-            const source = result.product ?? result.recipe;
-            if (source.id.length === 0) {
-                return;
-            }
-            const updated = this.toQuickMealItem(result);
-            this.quickService.updateItem(operation.item.key, updated);
-            focusKey = updated.key;
+            focusKey = this.quickService.updateItem(operation.item.key, this.toQuickMealItem(result));
         } finally {
             if (this.activeEdit === operation) {
                 this.activeEdit = undefined;

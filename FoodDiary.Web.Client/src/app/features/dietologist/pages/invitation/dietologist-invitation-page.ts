@@ -11,8 +11,8 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
-import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 import { DietologistFacade } from '../../lib/dietologist.facade';
+import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
 

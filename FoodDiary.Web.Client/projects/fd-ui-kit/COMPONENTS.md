@@ -259,6 +259,8 @@ Universal single-line input.
 
 The `id` input identifies the native input control and its label. The component host does not repeat that ID.
 
+Call `readNativeValue()` after the input has rendered to read the current native string, including an empty value. Use it when a browser may have changed the field without emitting an input event. Reading leaves the bound form value unchanged.
+
 Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text units participate in the field layout, leaving the remaining width for the value in compact forms.
 
 Project an additional action with `fdInputSuffix` to place it inside the field beside the existing suffix button, for example a barcode scanner beside search clearing. The actions reserve their own space and keep independent focus. Give projected actions an accessible name, `type="button"`, and their own disabled binding when needed.
@@ -569,6 +571,7 @@ Use `appearance="filter-chip"` with `size="xs"` for removable active filters: ac
 **Methods**
 
 - `focus()` focuses the native button after rendering; disabled and loading buttons remain unfocusable.
+- `nativeControl()` returns the mounted native button for APIs such as dialog focus restoration. Call it after rendering.
 - `ariaHasPopup` publishes `menu`, `listbox`, `tree`, `grid` or `dialog` on the native button. `fdUiMenuTrigger` uses `setMenuState(expanded)` to publish its menu semantics and expanded state on this same focusable control; passing `null` restores the explicit button inputs.
 - `setHintDescription(id)` lets the hint directive add or remove its tooltip ID without replacing consumer descriptions.
 

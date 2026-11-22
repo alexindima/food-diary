@@ -133,15 +133,11 @@ export class CycleTrackingStateFacade {
         });
     }
 
-    public acceptSettingsWrite(cycle: CycleResponse): void {
+    public acceptProfileWrite(cycle: CycleResponse): void {
         const nutritionPurpose = CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS;
         if (this.hasActiveConsent(this.cycle(), nutritionPurpose) && !this.hasActiveConsent(cycle, nutritionPurpose)) {
             this.loadNutritionSummary(null);
         }
-        this.acceptProfileWrite(cycle);
-    }
-
-    public acceptProfileWrite(cycle: CycleResponse): void {
         this.profileWriteRevision += 1;
         this.cycle.set(cycle);
     }

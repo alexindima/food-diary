@@ -3647,6 +3647,51 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "27a656b137d5236720d796a58c8c7214f4f9f3b42eb579da29d3b817abd536ca",
       "eventHash": "7a9aed805fb94d14a42aa6d9e49a770a4b18bad5d417fbb043ccb71d43b55d2b"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "e334616e0cd84061b78ebc96b18b5b4c",
+      "workspace": ".artifacts/llm-wiki/tasks/client-auth-attached-native-inputs-20261122",
+      "recordedAtUtc": "2026-11-22T21:03:12.7362720Z",
+      "completionFingerprint": "489a2c969fdb4a6f84eeabc54a9d7d5f683e9c964c51bb54aae4641497b3cc07",
+      "retrospectiveHash": "5f49e7eb756d9d32214b1da5c9149039931c1515c249c55cd1d188a12df7348d",
+      "instructionSetFingerprint": "23907740e97a5ca8d3b11395eba685af8b83ac8307056265439d9cb7f1868309",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md",
+          "fingerprint": "0ea7f367af008446a9119fa7e2a9b10b2a62bcd4c61569bda347d34a5ef5fd2b"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "high",
+        "complexityScore": 78,
+        "complexityBandUpperBound": 79,
+        "cohortKey": "high|complexity<=79",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 71.25,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "7a9aed805fb94d14a42aa6d9e49a770a4b18bad5d417fbb043ccb71d43b55d2b",
+      "eventHash": "df28b5fff90369cc476034029146296aa2f2bc245bc13595a34dd5034ba7f9f4"
     }
   ]
 }

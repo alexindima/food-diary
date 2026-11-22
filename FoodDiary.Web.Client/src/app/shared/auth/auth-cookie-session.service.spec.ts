@@ -135,3 +135,38 @@ describe('AuthCookieSessionService lock completion', () => {
         expect(lock).toHaveBeenCalledTimes(2);
     });
 });
+
+it('cancels the active writer and advances the queue only once if its browser lock is released', async () => {
+    let releaseLock: (error: DOMException) => void = () => {};
+    const lockReleased = new Promise<never>((_resolve, reject) => {
+        releaseLock = reject;
+    });
+    // A revoked browser lock can reject its request while its callback is still running.
+    vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementationOnce(
+        async <T>(_name: string, write: () => Promise<T>): Promise<T> => Promise.race([write(), lockReleased]),
+    );
+    const http = TestBed.inject(HttpClient);
+    const requests = TestBed.inject(HttpTestingController);
+    const firstPath = '/cookie/first';
+    const secondPath = '/cookie/second';
+    const thirdPath = '/cookie/third';
+    const error = new DOMException('The active browser lock was released', 'AbortError');
+    const first = expect(firstValueFrom(service.run(() => http.post(firstPath, {})))).rejects.toBe(error);
+    const active = requests.expectOne({ method: 'POST', url: firstPath });
+    const second = firstValueFrom(service.run(() => http.post(secondPath, {})));
+    const third = firstValueFrom(service.run(() => http.post(thirdPath, {})));
+    requests.expectNone(secondPath);
+    requests.expectNone(thirdPath);
+
+    releaseLock(error);
+    await first;
+
+    expect(active.cancelled).toBe(true);
+    const successor = requests.expectOne({ method: 'POST', url: secondPath });
+    requests.expectNone(thirdPath);
+
+    successor.flush({ writer: 'second' });
+    await expect(second).resolves.toEqual({ writer: 'second' });
+    requests.expectOne({ method: 'POST', url: thirdPath }).flush({ writer: 'third' });
+    await expect(third).resolves.toEqual({ writer: 'third' });
+});

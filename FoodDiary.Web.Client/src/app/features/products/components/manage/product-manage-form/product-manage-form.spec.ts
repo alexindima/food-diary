@@ -1,4 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import type { Provider } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
@@ -18,6 +19,7 @@ import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shar
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { USDA_NUTRIENT_IDS } from '../../../../../shared/lib/usda-nutrient.constants';
+import type { FoodVisionResponse } from '../../../../../shared/models/ai.data';
 import { type ImageSelection, imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     MeasurementUnit,
@@ -30,8 +32,13 @@ import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { ProductService } from '../../../api/product.service';
-import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
+import type { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog';
+import type {
+    ProductAiDialogData,
+    ProductAiRecognitionResult,
+} from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
+import { ProductAiRecognitionFacade } from '../../../lib/product-ai-recognition.facade';
 import {
     PRODUCT_BRAND_MAX_LENGTH,
     PRODUCT_MAX_PHOTOS,
@@ -1059,6 +1066,7 @@ describe('Product editor gallery departure', () => {
         beginNativeGalleryUpload(el);
         const save = requiredFormButton(el, 'button[type="submit"]');
         const remove = requiredFormButton(el, '.product-manage__delete-button button');
+        const recognize = requiredFormButton(el, '.product-manage__ai button');
         await vi.waitFor(() => {
             fixture.detectChanges();
             expect(uploadImage).toHaveBeenCalledOnce();
@@ -1067,6 +1075,7 @@ describe('Product editor gallery departure', () => {
 
         expect(await component.canLeaveAsync()).toBe(false);
         expect(remove.matches(':disabled')).toBe(true);
+        expect(recognize.disabled).toBe(true);
         remove.click();
         expect(productManageFacade.deleteProductAsync).not.toHaveBeenCalled();
 
@@ -1076,6 +1085,7 @@ describe('Product editor gallery departure', () => {
             expect(save.matches(':disabled')).toBe(false);
         });
         expect(remove.matches(':disabled')).toBe(false);
+        expect(recognize.disabled).toBe(false);
         expect(await component.canLeaveAsync()).toBe(true);
         expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
     });
@@ -2160,7 +2170,162 @@ function productGalleryUrls(el: HTMLElement): Array<string | null> {
     return Array.from(el.querySelectorAll('fd-image-gallery-editor .recognition-photos__preview img'), image => image.getAttribute('src'));
 }
 
+const GALLERY_OVERLAP_RECOGNITION: FoodVisionResponse = {
+    items: [],
+    productLabel: {
+        name: 'Recognized product',
+        brand: null,
+        baseAmount: PORTION_AMOUNT,
+        baseUnit: 'g',
+        calories: PORTION_CALORIES,
+        protein: null,
+        fat: null,
+        carbs: null,
+        fiber: null,
+        alcohol: null,
+        notes: null,
+    },
+};
+
+it('waits for the inline gallery upload before recognizing and preserves the admitted photo after Apply', async () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+    onTestFinished(() => {
+        vi.unstubAllGlobals();
+    });
+    const analyzeFoodImage = vi.fn<ProductAiRecognitionFacade['analyzeFoodImage']>().mockReturnValue(of(GALLERY_OVERLAP_RECOGNITION));
+    const recognitionCount = vi.fn<ProductAiRecognitionFacade['recognitionCount']>().mockReturnValue(of(0));
+    const { el, fixture, dialogService, uploadImage } = await setupComponentAsync(undefined, [
+        { provide: ProductAiRecognitionFacade, useValue: { analyzeFoodImage, recognitionCount } },
+    ]);
+    const gallery = Array.from({ length: PRODUCT_MAX_PHOTOS - 1 }, (_, index) => ({
+        imageAssetId: `stored-product-photo-${index}`,
+        imageUrl: `/stored-product-photo-${index}.png`,
+    }));
+    fixture.componentRef.setInput('product', { ...PRODUCT, images: gallery });
+    fixture.detectChanges();
+    const pending = new Subject<ImageSelection>();
+    const inlinePhoto = imageSelection('/inline-photo.png', 'pending-inline-photo');
+    uploadImage.mockReturnValueOnce(pending);
+    const realDialogs = TestBed.runInInjectionContext(() => new FdUiDialogService());
+    dialogService.open.mockImplementationOnce(
+        (component: typeof ProductAiRecognitionDialogComponent, config: FdUiDialogConfig<ProductAiDialogData>) =>
+            realDialogs.open(component, config),
+    );
+    const recognize = requiredFormButton(el, '.product-manage__ai button');
+    beginNativeGalleryUpload(el);
+    expect(recognize.isConnected).toBe(true);
+    expect(recognize.disabled).toBe(false);
+    recognize.click();
+    expect(dialogService.open).not.toHaveBeenCalled();
+
+    const save = requiredFormButton(el, 'button[type="submit"]');
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
+        expect(save.disabled).toBe(true);
+    });
+    expect(recognize.disabled).toBe(true);
+    expect(recognize.getAttribute('title')).toBe('DISABLED_HINTS.OPERATION_BUSY');
+    pending.next(inlinePhoto);
+    pending.complete();
+    const expectedPhotos = [...gallery.map(photo => photo.imageUrl), inlinePhoto.url];
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(recognize.disabled).toBe(false);
+        expect(productGalleryUrls(el)).toEqual(expectedPhotos);
+    });
+
+    recognize.click();
+    fixture.detectChanges();
+    const dialog = document.querySelector<HTMLElement>('fd-product-ai-recognition-dialog');
+    if (dialog === null) {
+        throw new Error('Expected the native recognition dialog.');
+    }
+    expect(productGalleryUrls(dialog)).toEqual(expectedPhotos);
+    const analyze = productAiAction(dialog, 'PRODUCT_AI_DIALOG.ANALYZE');
+    analyze.click();
+    fixture.detectChanges();
+    expect(analyzeFoodImage).toHaveBeenCalledOnce();
+    const replacement = dialog.querySelector<HTMLInputElement>('#product-ai-replace');
+    if (replacement === null) {
+        throw new Error('Expected the native replacement confirmation.');
+    }
+    replacement.click();
+    fixture.detectChanges();
+    productAiAction(dialog, 'PRODUCT_AI_DIALOG.APPLY').click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(dialog.isConnected).toBe(false);
+        expect(productGalleryUrls(el)).toEqual(expectedPhotos);
+    });
+    expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe('Recognized product');
+    expect(save.disabled).toBe(false);
+});
+
+function productAiAction(dialog: HTMLElement, label: string): HTMLButtonElement {
+    const action = Array.from(dialog.querySelectorAll<HTMLButtonElement>('button')).find(button => button.textContent.trim() === label);
+    if (action === undefined) {
+        throw new Error(`Expected recognition action ${label}.`);
+    }
+    return action;
+}
+
 const LEGACY_GALLERY_PHOTO_COUNT = 3;
+
+it('restores focus to the cover preview button after changing the gallery order and removing a photo', async () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+    onTestFinished(() => {
+        vi.unstubAllGlobals();
+    });
+    const { el, fixture, dialogService } = await setupComponentAsync();
+    const first = { imageAssetId: 'front', imageUrl: '/product-front.jpg' };
+    const removed = { imageAssetId: 'side', imageUrl: '/product-side.jpg' };
+    const cover = { imageAssetId: 'back', imageUrl: '/product-back.jpg' };
+    fixture.componentRef.setInput('product', { ...PRODUCT, images: [first, removed, cover] });
+    fixture.detectChanges();
+
+    const triggerSelector = 'fd-image-gallery-editor .recognition-photos__preview button';
+    const [, removedTrigger, coverTrigger] = Array.from(el.querySelectorAll<HTMLButtonElement>(triggerSelector));
+    const clickPhotoActionAsync = async (trigger: HTMLButtonElement, label: string): Promise<void> => {
+        trigger.click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(productGalleryMenuLabels()).toContain(label);
+        });
+        productAiAction(document.body, label).click();
+    };
+    await clickPhotoActionAsync(coverTrigger, 'PRODUCT_AI_DIALOG.CHOOSE_COVER');
+    fixture.detectChanges();
+    expect(productGalleryUrls(el)).toEqual([cover.imageUrl, first.imageUrl, removed.imageUrl]);
+    expect(el.querySelector(triggerSelector)).toBe(coverTrigger);
+
+    await clickPhotoActionAsync(removedTrigger, 'IMAGE_UPLOAD_FIELD.REMOVE');
+    fixture.detectChanges();
+    expect(productGalleryUrls(el)).toEqual([cover.imageUrl, first.imageUrl]);
+    expect(removedTrigger.isConnected).toBe(false);
+    expect(productGalleryMenuLabels()).toEqual([]);
+
+    const realDialogs = TestBed.runInInjectionContext(() => new FdUiDialogService());
+    dialogService.open.mockImplementationOnce(
+        (component: typeof FdUiImagePreviewDialogComponent, config: FdUiDialogConfig<FdUiImagePreviewDialogData>) =>
+            realDialogs.open(component, config),
+    );
+    await clickPhotoActionAsync(coverTrigger, 'PRODUCT_AI_DIALOG.VIEW_PHOTO');
+    const previewSelector = 'fd-ui-image-preview-dialog';
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(document.querySelector(`${previewSelector} .fd-ui-image-preview-dialog__image`)?.getAttribute('src')).toBe(cover.imageUrl);
+    });
+    const close = requiredFormButton(document.body, `${previewSelector} .fd-ui-dialog__close-button`);
+    close.focus();
+    expect(document.activeElement).toBe(close);
+    close.click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(document.querySelector(previewSelector)).toBeNull();
+        expect(document.activeElement).toBe(coverTrigger);
+    });
+});
 
 it('views the selected recognized photo without changing a saved cover that has no URL', async () => {
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
@@ -2368,9 +2533,12 @@ function beginNativeGalleryUpload(host: HTMLElement): void {
     decoded.dispatchEvent(new Event('load'));
 }
 
-async function setupComponentAsync(developmentScreens?: {
-    attach: (screen: DevelopmentScreen) => () => void;
-}): Promise<ProductManageFormSetup> {
+async function setupComponentAsync(
+    developmentScreens?: {
+        attach: (screen: DevelopmentScreen) => () => void;
+    },
+    additionalProviders: Provider[] = [],
+): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const externalFoodFacade = createProductExternalFoodFacadeMock();
     const uploadImage = vi.fn<ImageUploadFacade['upload']>();
@@ -2389,6 +2557,7 @@ async function setupComponentAsync(developmentScreens?: {
         imports: [ProductManageFormComponent],
         providers: [
             ...(developmentScreens === undefined ? [] : [{ provide: DEVELOPMENT_SCREENS, useValue: developmentScreens }]),
+            ...additionalProviders,
             provideRouter([]),
             provideTranslateTesting(),
             { provide: NAME_SEARCH_DEBOUNCE_MS, useValue: 0 },

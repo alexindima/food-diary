@@ -1124,14 +1124,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "f47338859d5e28e0ad262d11c9c34ce6de320ea3250dfc2071097cfef5949d90",
-          "reviewReason": "The new instruction outcome records the applicable AGENTS.md fingerprints and the sealed USDA result. It extends the existing hash chain and does not change the instructions or the effectiveness model."
+          "sha256": "aae67b9c0a7de25c319bafeed637aede5ef976dc6a769fc8eb509ddecb769966",
+          "reviewReason": "Auth completion appended one validated hash-chain event for the sealed task, linking exact AGENTS.md fingerprints, task signals, and outcome. Existing entries and the documented observation, candidate, and verification behavior are unchanged."
         }
       ],
-      "reason": "The new instruction outcome records the applicable AGENTS.md fingerprints and the sealed USDA result. It extends the existing hash chain and does not change the instructions or the effectiveness model.",
+      "reason": "Auth completion appended one validated hash-chain event for the sealed task, linking exact AGENTS.md fingerprints, task signals, and outcome. Existing entries and the documented observation, candidate, and verification behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:53:58.2379733Z"
+      "gitHead": "e3af589c5a6a1b60a06ceafccd5c74a790bb5892",
+      "reviewedAtUtc": "2026-11-22T21:04:27.1696702Z"
     },
     {
       "pageId": "workflow-integration-scan",

@@ -50,10 +50,11 @@ describe('AuthLoginFormComponent', () => {
         expect(root.querySelector('input[type="password"]')).not.toBeNull();
     });
 
-    it('should expose login form and google button refs', () => {
-        const { component } = createComponent();
+    it('renders a native POST form and exposes the Google button', () => {
+        const { component, fixture } = createComponent();
+        const host = fixture.nativeElement as HTMLElement;
 
-        expect(component['formElement']()?.nativeElement.tagName).toBe('FORM');
+        expect(host.querySelector('form')?.method).toBe('post');
         expect(component['googleButton']()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
     });
 

@@ -3354,12 +3354,15 @@ function cyclePeriodAndFactorFixture(): {
     };
 }
 
-async function mountCycleMutationsOverHttpAsync(initial: CycleResponse): Promise<CycleOrderingRoute> {
+async function mountCycleMutationsOverHttpAsync(initial: CycleResponse, withNutritionSummary = false): Promise<CycleOrderingRoute> {
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
     const transport = TestBed.runInInjectionContext(() => new CyclesService());
     getCurrent.mockImplementation(() => transport.getCurrent());
     confirmPeriodStart.mockImplementation((profileId, date) => transport.confirmPeriodStart(profileId, date));
     upsertFactor.mockImplementation((profileId, payload) => transport.upsertFactor(profileId, payload));
+    if (withNutritionSummary) {
+        getNutritionSummary.mockImplementation((from, to) => transport.getNutritionSummary(from, to));
+    }
     const http = TestBed.inject(HttpTestingController);
     onTestFinished(() => {
         http.verify();
@@ -4196,6 +4199,64 @@ async function prepareCycleSettingsRereadAsync(
     }
     return { harness, host, drawer, duration, freshRequested };
 }
+
+describe('Cycle nutrition consent acknowledged by period confirmation', () => {
+    it.each(['already rendered', 'still in flight'] as const)(
+        'removes the summary that is %s after a same-profile confirmation',
+        async phase => {
+            const { initial, confirmedEpisode } = sameProfileOrderingFixture();
+            const tracking = cycleConsent('tracking', CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING);
+            const nutrition = cycleConsent('nutrition', CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS);
+            const { harness, host, http } = await mountCycleMutationsOverHttpAsync({ ...initial, consents: [tracking, nutrition] }, true);
+            const summary = http.expectOne(
+                request => request.method === 'GET' && request.url === `${environment.apiUrls.cycles}/current/nutrition-summary`,
+            );
+            const privateSummary: CycleNutritionSummary = {
+                dateFrom: calendarDate(TRACKING_START),
+                dateTo: calendarDate(TODAY),
+                loggedCycleDays: 31,
+                daysWithMeals: 4,
+                bleedingDays: 2,
+                averageCaloriesOnBleedingDays: 2100,
+                averageCaloriesOnNonBleedingCycleDays: 1800,
+                averageFiberOnBleedingDays: 18,
+                averageFiberOnNonBleedingCycleDays: 28,
+                averagePainImpactOnDaysWithMeals: 6,
+                hasEnoughNutritionData: true,
+            };
+            const card = requiredElement(host, 'fd-cycle-nutrition-summary-card');
+            const loggedDays = (): string | undefined => card.querySelector('.cycle-tracking__nutrition-metric strong')?.textContent.trim();
+            if (phase === 'already rendered') {
+                summary.flush(privateSummary);
+                harness.detectChanges();
+                expect(loggedDays()).toBe(String(privateSummary.loggedCycleDays));
+            } else {
+                expect(card.textContent).toContain('CYCLE_TRACKING.LOADING');
+            }
+
+            click('CYCLE_TRACKING.CONFIRM_PERIOD_START', cycleHistoryDayWithNote(host, sameProfilePeriodNote));
+            const confirm = http.expectOne({ method: 'PUT', url: `${environment.apiUrls.cycles}/${initial.id}/period-start` });
+            expect(confirm.request.body).toEqual({ date: confirmedEpisode.startDate });
+            confirm.flush({
+                ...initial,
+                consents: [tracking, { ...nutrition, isActive: false, revokedAtUtc: utcInstant(`${TODAY}T12:00:00Z`) }],
+                menstrualEpisodes: [confirmedEpisode],
+            });
+            const obsoleteReadWasCancelled = phase === 'already rendered' || summary.cancelled;
+            if (!obsoleteReadWasCancelled) {
+                summary.flush(privateSummary);
+            }
+            harness.detectChanges();
+
+            expect(cycleHistoryDayWithNote(host, sameProfilePeriodNote).textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+            expect(card.textContent).not.toContain('CYCLE_TRACKING.LOADING');
+            expect({ obsoleteReadWasCancelled, loggedDays: loggedDays() }).toEqual({
+                obsoleteReadWasCancelled: true,
+                loggedDays: undefined,
+            });
+        },
+    );
+});
 
 describe('Cycle nutrition during settings revocation', () => {
     it.each(['already rendered', 'still in flight'] as const)(

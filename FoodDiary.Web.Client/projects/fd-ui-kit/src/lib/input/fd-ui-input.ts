@@ -185,6 +185,11 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         }
     }
 
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public read contract for consumers of rendered native input.
+    public readNativeValue(): string {
+        return this.control().nativeElement.value;
+    }
+
     // eslint-disable-next-line local/prefer-protected-template-members -- Public reset contract for a consumer that discards an unfinished number.
     public resetNativeNumberDraft(): void {
         if (!this.nativeNumberDraftInvalid) {

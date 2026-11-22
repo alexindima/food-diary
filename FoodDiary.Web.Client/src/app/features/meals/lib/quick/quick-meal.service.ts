@@ -120,29 +120,29 @@ export class QuickMealService {
         this.itemsSignal.update(items => items.filter(item => item.key !== key));
     }
 
-    public updateItem(key: string, item: QuickMealItem): void {
-        this.itemsSignal.update(items => {
-            const originalIndex = items.findIndex(current => current.key === key);
-            if (originalIndex === -1) {
-                return items;
-            }
+    /** Returns the replacement key for an applied edit and the original target key otherwise. */
+    public updateItem(key: string, item: QuickMealItem): string {
+        const source = item.type === 'product' ? item.product : item.recipe;
+        const items = this.itemsSignal();
+        const originalIndex = items.findIndex(current => current.key === key);
+        if (originalIndex === -1 || source.id.length === 0) {
+            return key;
+        }
 
-            const flashId = ++this.nextFlashId;
-            const updated = items.filter(current => current.key !== key);
-            const existingIndex = updated.findIndex(current => current.key === item.key);
-
-            if (existingIndex !== -1) {
-                updated[existingIndex] = {
-                    ...updated[existingIndex],
-                    amount: updated[existingIndex].amount + item.amount,
-                    flashId,
-                };
-                return updated;
-            }
-
+        const flashId = ++this.nextFlashId;
+        const updated = items.filter(current => current.key !== key);
+        const existingIndex = updated.findIndex(current => current.key === item.key);
+        if (existingIndex !== -1) {
+            updated[existingIndex] = {
+                ...updated[existingIndex],
+                amount: updated[existingIndex].amount + item.amount,
+                flashId,
+            };
+        } else {
             updated.splice(originalIndex, 0, { ...item, flashId });
-            return updated;
-        });
+        }
+        this.itemsSignal.set(updated);
+        return item.key;
     }
 
     public clear(): void {

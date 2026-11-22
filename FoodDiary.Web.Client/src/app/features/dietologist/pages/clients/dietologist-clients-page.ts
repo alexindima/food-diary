@@ -20,8 +20,8 @@ import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '..
 import type { AttentionSignalId, UserId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { BulkRecommendationReviewComponent } from '../../dialogs/bulk-recommendation-review/bulk-recommendation-review';
-import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 import { DietologistFacade } from '../../lib/dietologist.facade';
+import { formatDietologistDate } from '../../lib/dietologist-date.utils';
 import { buildClientCardViewModels } from './dietologist-clients-lib/dietologist-clients.mapper';
 import type { ClientCardViewModel } from './dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list/dietologist-clients-list';

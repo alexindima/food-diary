@@ -402,7 +402,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     protected openAiRecognitionDialog(): void {
-        if (!this.ensurePremiumAccess()) {
+        if (this.photosUploading() || !this.ensurePremiumAccess()) {
             return;
         }
 

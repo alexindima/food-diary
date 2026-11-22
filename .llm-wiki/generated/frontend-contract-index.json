@@ -3,7 +3,7 @@
   "summary": {
     "components": 509,
     "componentsWithoutDirectSpecs": 122,
-    "inputs": 1680,
+    "inputs": 1681,
     "outputs": 560,
     "apiCalls": 335,
     "templatesWithTranslations": 369,
@@ -11191,6 +11191,11 @@
           "name": "nutritionMode",
           "type": "NutritionMode",
           "required": true
+        },
+        {
+          "name": "recognitionDisabled",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -24489,6 +24494,7 @@
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "PRODUCT_MANAGE.AI_BUTTON",
         "PRODUCT_MANAGE.AI_SUBTITLE",
         "PRODUCT_MANAGE.AI_TITLE",
@@ -32479,6 +32485,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "type",
@@ -45029,7 +45037,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "form",
-        "nutritionMode"
+        "nutritionMode",
+        "recognitionDisabled"
       ],
       "outputsHandled": [
         "nutritionModeChange",

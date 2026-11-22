@@ -44,7 +44,8 @@ export class AuthLoginFormComponent {
     public readonly passwordResetOpen = output();
     public readonly restoreSubmit = output();
 
-    public readonly formElement = viewChild<ElementRef<HTMLFormElement>>('loginFormElement');
+    private readonly loginEmail = viewChild.required<FdUiInputComponent>('loginEmail');
+    private readonly loginPassword = viewChild.required<FdUiInputComponent>('loginPassword');
     public readonly googleButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
 
     protected readonly isPasswordVisible = signal(false);
@@ -54,6 +55,11 @@ export class AuthLoginFormComponent {
     protected readonly passwordToggleLabelKey = computed(() =>
         this.isPasswordVisible() ? 'AUTH.LOGIN.HIDE_PASSWORD' : 'AUTH.LOGIN.SHOW_PASSWORD',
     );
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Auth reads the rendered credentials as one snapshot.
+    public readNativeCredentials(): Pick<LoginFormValues, 'email' | 'password'> {
+        return { email: this.loginEmail().readNativeValue(), password: this.loginPassword().readNativeValue() };
+    }
 
     protected togglePasswordVisibility(): void {
         this.isPasswordVisible.update(isVisible => !isVisible);

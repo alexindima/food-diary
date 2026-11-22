@@ -805,6 +805,7 @@ describe('FdUiInputComponent delayed browser autofill', () => {
 
         dispatchAnimation(control, 'unrelated-decoration');
         fixture.detectChanges();
+        expect(component.readNativeValue()).toBe('restored@example.test');
         expect(component.value()).toBeNull();
         expect(changed).not.toHaveBeenCalled();
 

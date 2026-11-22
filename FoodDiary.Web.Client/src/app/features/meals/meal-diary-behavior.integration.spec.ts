@@ -47,7 +47,7 @@ const CREATED_TIME = '12:30';
 const MEAL = makeMeal('dinner-row', 'Dinner on the selected page', DIARY_DATE);
 
 type DiaryApi = {
-    [Method in 'queryOverview' | 'create']: Mock<MealService[Method]>;
+    [Method in 'queryOverview' | 'create' | 'deleteById']: Mock<MealService[Method]>;
 };
 
 type DiarySetup = {
@@ -63,6 +63,7 @@ function configureDiary(): DiarySetup {
     const api: DiaryApi = {
         queryOverview: vi.fn<MealService['queryOverview']>().mockReturnValue(of(overview([]))),
         create: vi.fn<MealService['create']>(),
+        deleteById: vi.fn<MealService['deleteById']>(),
     };
     const developmentScreens = new Map<string, DevelopmentScreen>();
     const legacyScreens: MealDevelopmentScreen[] = [];
@@ -204,6 +205,54 @@ describe('Routed meal diary pages', () => {
         expect(routeHost(harness).textContent).toContain(MEAL.comment);
     });
 });
+
+it('replaces the diary URL when deleting the last meal moves the results to page one', async () => {
+    stubScrollIntoView();
+    const { api } = configureDiary();
+    const firstPageLabel = 'Meal remaining on page one';
+    const firstPage = Array.from({ length: PAGE_SIZE }, (_, index) =>
+        makeMeal(`previous-meal-${index}`, `${firstPageLabel} ${index}`, DIARY_DATE),
+    );
+    const emptyLastPage = overview([], LAST_PAGE);
+    api.deleteById.mockReturnValueOnce(of(void 0));
+    api.queryOverview
+        .mockReturnValueOnce(of(overview([MEAL], LAST_PAGE, LAST_PAGE)))
+        .mockReturnValueOnce(of({ ...emptyLastPage, allMeals: { ...emptyLastPage.allMeals, totalItems: PAGE_SIZE } }))
+        .mockReturnValueOnce(of(overview(firstPage)));
+
+    const harness = await RouterTestingHarness.create(`/meals?page=${LAST_PAGE}&dateFrom=${FILTER_FROM}&campaign=summer`);
+    const router = TestBed.inject(Router);
+    const host = routeHost(harness);
+    expect(host.textContent).toContain(MEAL.comment);
+    requiredButton(host, 'fd-meal-card .entity-card__open-button').click();
+    await vi.dynamicImportSettled();
+    await harness.fixture.whenStable();
+    redraw(harness);
+    clickMealOverlayAction('fd-meal-detail', 'MEAL_DETAIL.DELETE_BUTTON');
+    redraw(harness);
+    clickMealOverlayAction('fd-confirm-delete-dialog', 'CONFIRM_DELETE.CONFIRM');
+
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(host.textContent).toContain(firstPageLabel);
+    });
+    expect(document.querySelector('fd-meal-detail')).toBeNull();
+    expect(host.textContent).not.toContain(MEAL.comment);
+    expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(MEAL.id);
+    expect(api.queryOverview.mock.calls.map(([page]) => page)).toEqual([LAST_PAGE, LAST_PAGE, 1]);
+    await harness.fixture.whenStable();
+    expect(router.parseUrl(router.url).queryParams).toEqual({ dateFrom: FILTER_FROM, campaign: 'summer' });
+});
+
+function clickMealOverlayAction(selector: string, label: string): void {
+    const button = Array.from(document.querySelectorAll<HTMLButtonElement>(`${selector} button`)).find(
+        candidate => candidate.querySelector('.fd-ui-button__label')?.textContent.trim() === label,
+    );
+    if (button === undefined) {
+        throw new Error(`Expected the meal dialog action ${label}`);
+    }
+    button.click();
+}
 
 describe('Routed meal diary search controls', () => {
     it('keeps a reversed calorie range local and applies corrected filters to the first page', async () => {

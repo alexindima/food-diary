@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2918,
+    "typescriptFiles": 2916,
     "symbols": 875,
     "routes": 113,
     "features": 46,
-    "specs": 957,
+    "specs": 956,
     "localeFiles": 5,
     "roles": {
       "Component": 499,
@@ -514,7 +514,6 @@
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-form.factory.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-form.manager.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-google.manager.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-login-autofill.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-form/auth-register-form.spec.ts",
@@ -3867,7 +3866,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 59
+      "line": 58
     },
     {
       "name": "TelegramEntryButtonComponent",

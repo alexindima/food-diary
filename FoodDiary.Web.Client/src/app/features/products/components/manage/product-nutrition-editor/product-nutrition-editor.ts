@@ -49,6 +49,7 @@ export class ProductNutritionEditorComponent {
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
     public readonly nutritionMode = model.required<NutritionMode>();
+    public readonly recognitionDisabled = input(false);
     protected readonly maxCalories = computed(() =>
         this.getAllowedNutritionMax(getProductMaxCaloriesPerBaseForUnit(this.form().baseUnit().value())),
     );

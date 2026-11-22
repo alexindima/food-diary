@@ -36,7 +36,6 @@ import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from '.
 import { AUTH_TABS } from './auth-lib/auth-form.config';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
-import { getLoginAutofillFieldValues } from './auth-lib/auth-login-autofill.utils';
 import { AuthLoginFormComponent } from './auth-login-form/auth-login-form';
 import { AuthPasswordResetFormComponent } from './auth-password-reset-form/auth-password-reset-form';
 import { AuthRegisterFormComponent } from './auth-register-form/auth-register-form';
@@ -577,13 +576,13 @@ export class AuthComponent {
     }
 
     private syncLoginNativeValues(): void {
-        const form = this.loginFormComponent()?.formElement()?.nativeElement;
+        const form = this.loginFormComponent();
 
         if (form === undefined) {
             return;
         }
 
-        const { email, password } = getLoginAutofillFieldValues(form);
+        const { email, password } = form.readNativeCredentials();
         this.loginModel.update(value => (email === value.email && password === value.password ? value : { ...value, email, password }));
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, model, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -30,7 +30,6 @@ const MAX_PHOTOS = 5;
 })
 export class ImageGalleryEditorComponent {
     private readonly dialogService = inject(FdUiDialogService);
-    private readonly photoTriggers = viewChildren<FdUiButtonComponent, ElementRef<HTMLElement>>('photoTrigger', { read: ElementRef });
     public readonly compact = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
@@ -57,12 +56,16 @@ export class ImageGalleryEditorComponent {
         return this.compact() ? 'compact' : 'preview';
     });
 
-    protected preview(photoIndex: number, initialIndex: number, collageImages: readonly FdUiImagePreviewDialogCollageImage[]): void {
+    protected preview(
+        trigger: FdUiButtonComponent,
+        initialIndex: number,
+        collageImages: readonly FdUiImagePreviewDialogCollageImage[],
+    ): void {
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
             width: 'var(--fd-size-dialog-media-width)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
-            restoreFocus: this.photoTriggers()[photoIndex]?.nativeElement.querySelector('button') ?? true,
+            restoreFocus: trigger.nativeControl(),
             data: { collageImages, initialIndex },
         });
     }

@@ -230,7 +230,7 @@ export class CycleSettingsFacade {
                 take(1),
                 filter(ownsProfile),
                 tap(cycle => {
-                    this.state.acceptSettingsWrite(cycle);
+                    this.state.acceptProfileWrite(cycle);
                 }),
             );
         const updateConsentIfChanged = (cycle: CycleResponse, purpose: CycleConsentPurpose, granted: boolean): Observable<CycleResponse> =>

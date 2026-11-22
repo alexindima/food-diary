@@ -21,7 +21,7 @@
                 <span class="recognition-photos__cover-label" [hidden]="!$first">{{ 'PRODUCT_AI_DIALOG.COVER_SELECTED' | translate }}</span>
                 <fd-ui-menu #photoMenu>
                     @if (thumbnail !== null) {
-                        <fd-ui-menu-item (itemClick)="preview($index, thumbnail.initialIndex, gallery.images)">
+                        <fd-ui-menu-item (itemClick)="preview(photoTrigger, thumbnail.initialIndex, gallery.images)">
                             {{ 'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate }}
                         </fd-ui-menu-item>
                     }

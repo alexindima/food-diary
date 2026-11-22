@@ -13,7 +13,15 @@
                 <div class="product-manage__ai-title">{{ 'PRODUCT_MANAGE.AI_TITLE' | translate }}</div>
                 <div class="product-manage__ai-subtitle">{{ 'PRODUCT_MANAGE.AI_SUBTITLE' | translate }}</div>
             </div>
-            <fd-ui-button type="button" variant="secondary" fill="outline" icon="auto_awesome" (click)="openAiRecognition.emit()">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="outline"
+                icon="auto_awesome"
+                [disabled]="recognitionDisabled()"
+                [disabledReason]="recognitionDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (click)="openAiRecognition.emit()"
+            >
                 {{ 'PRODUCT_MANAGE.AI_BUTTON' | translate }}
             </fd-ui-button>
         </div>
