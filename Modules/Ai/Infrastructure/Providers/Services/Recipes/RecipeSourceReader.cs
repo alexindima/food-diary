@@ -93,7 +93,7 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
         throw new HttpRequestException("Recipe source connection failed.");
     }
 
-    internal sealed class NonPublicRecipeSourceException : Exception;
+    internal sealed class NonPublicRecipeSourceException() : Exception;
 
     public static bool IsPublicAddress(IPAddress address) {
         if (address.IsIPv4MappedToIPv6) {

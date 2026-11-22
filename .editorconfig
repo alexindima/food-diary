@@ -135,6 +135,7 @@ dotnet_diagnostic.RCS1146.severity = error
 dotnet_diagnostic.RCS1161.severity = error
 dotnet_diagnostic.RCS1168.severity = error
 dotnet_diagnostic.RCS1170.severity = warning
+dotnet_diagnostic.RCS1181.severity = none
 dotnet_diagnostic.RCS1189.severity = error
 dotnet_diagnostic.RCS1199.severity = error
 dotnet_diagnostic.RCS1205.severity = error
@@ -529,10 +530,6 @@ dotnet_diagnostic.RCS1194.severity = none
 # Billing conflict exceptions require provider identifiers and must not expose context-free constructors.
 [Modules/Billing/Application.Abstractions/Common/*Exception.cs]
 dotnet_diagnostic.RCS1194.severity = none
-
-# This file contains a ReSharper control comment, not member documentation.
-[Shared/FoodDiary.Domain.Primitives/Entity.cs]
-dotnet_diagnostic.RCS1181.severity = none
 
 # Preserve EF navigation setters after RecipeCommunity entity extraction.
 [Modules/RecipeCommunity/Domain/Entities/**/*.cs]
