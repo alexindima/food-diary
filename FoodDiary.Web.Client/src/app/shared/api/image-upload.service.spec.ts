@@ -9,19 +9,21 @@ import { entityId } from '../models/semantics/entity-id';
 import { signedImageUploadUrl } from '../models/semantics/image-location';
 import { ImageUploadService } from './image-upload.service';
 
+const baseUrl = environment.apiUrls.images;
+
+function setup(): { service: ImageUploadService; httpMock: HttpTestingController } {
+    TestBed.configureTestingModule({
+        providers: [ImageUploadService, provideHttpClient(), provideHttpClientTesting()],
+    });
+    return { service: TestBed.inject(ImageUploadService), httpMock: TestBed.inject(HttpTestingController) };
+}
+
 describe('ImageUploadService', () => {
     let service: ImageUploadService;
     let httpMock: HttpTestingController;
 
-    const baseUrl = environment.apiUrls.images;
-
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [ImageUploadService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(ImageUploadService);
-        httpMock = TestBed.inject(HttpTestingController);
+        ({ service, httpMock } = setup());
     });
 
     afterEach(() => {
@@ -101,5 +103,49 @@ describe('ImageUploadService', () => {
         const req = httpMock.expectOne(`${baseUrl}/${assetId}`);
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
+    });
+});
+
+describe('Recipe photo upload transport', () => {
+    let service: ImageUploadService;
+    let httpMock: HttpTestingController;
+
+    beforeEach(() => {
+        ({ service, httpMock } = setup());
+    });
+
+    afterEach(() => {
+        httpMock.verify();
+    });
+
+    it('opts just this upload into protected recipe storage', () => {
+        const file = new File(['image-data'], 'recipe.webp', { type: 'image/webp' });
+        service.requestUploadUrl(file, true).subscribe();
+
+        const req = httpMock.expectOne(`${baseUrl}/upload-url`);
+        expect(req.request.body).toEqual({
+            fileName: file.name,
+            contentType: file.type,
+            fileSizeBytes: file.size,
+            keepPrivate: true,
+        });
+        req.flush({
+            uploadUrl: 'https://s3.example.com/upload?signed=abc',
+            fileUrl: 'https://cdn.example.com/recipe.webp',
+            expiresAtUtc: '2026-03-28T12:00:00Z',
+            assetId: 'photo',
+        });
+    });
+
+    it('retrieves authorized owner preview data through the application API', () => {
+        const dataUrl = 'data:image/webp;base64,UklGRg==';
+        service.getOwnerPreview(entityId<'image-asset'>('photo')).subscribe(value => {
+            expect(value).toBe(dataUrl);
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/photo/content`);
+        expect(req.request.method).toBe('GET');
+        expect(req.request.context.get(SKIP_AUTH)).toBe(false);
+        req.flush({ dataUrl });
     });
 });

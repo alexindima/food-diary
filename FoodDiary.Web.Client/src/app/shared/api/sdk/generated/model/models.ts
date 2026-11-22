@@ -149,6 +149,7 @@ export * from './notification-preferences-http-response';
 export * from './notification-read-status-http-request';
 export * from './notification-read-status-http-response';
 export * from './open-food-facts-product-http-response';
+export * from './owned-image-content-http-response';
 export * from './portal-session-http-response';
 export * from './product-http-response';
 export * from './product-http-response-paged-http-response';

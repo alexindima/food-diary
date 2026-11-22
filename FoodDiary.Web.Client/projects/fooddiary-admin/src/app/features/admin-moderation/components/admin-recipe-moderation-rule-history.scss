@@ -1,0 +1,26 @@
+:host {
+    display: block;
+}
+
+h2,
+p {
+    margin: 0;
+}
+
+.history-row details {
+    margin-block-start: var(--fd-space-xs);
+}
+
+.history-row dd {
+    margin-inline-start: 0;
+}
+
+.history-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--fd-space-sm);
+    padding-block: var(--fd-space-sm);
+    border-block-end: var(--fd-border-default);
+}

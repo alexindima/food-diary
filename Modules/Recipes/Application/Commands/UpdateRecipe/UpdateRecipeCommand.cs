@@ -1,4 +1,5 @@
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Models;
@@ -36,4 +37,5 @@ public record UpdateRecipeCommand(
     public bool LanguageConfirmed { get; init; }
     public string? Language { get; init; }
     public IReadOnlyList<Guid>? ImageAssetIds { get; init; }
+    internal RecipePublicationClaim? ApprovedPublication { get; init; }
 }

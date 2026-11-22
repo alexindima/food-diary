@@ -48,7 +48,9 @@ This document captures the current backend security baseline.
 
 - Presigned uploads only allow a small image MIME allowlist.
 - Max upload size is enforced by `S3:MaxUploadSizeBytes`.
-- Direct uploads must target the distinct private `S3:StagingBucket`. The API validates and decodes the staged object before copying it into the public `S3:Bucket`; staging must never be included in the public bucket/CDN policy.
+- Direct uploads target the distinct private `S3:StagingBucket`. The API validates and decodes the staged object before storing confirmed bytes. Keep the staging bucket outside the public bucket and CDN access policy.
+- With recipe moderation enabled, the backend writes confirmed recipe photos under `private-confirmed/` in staging. Only the server writes this prefix. The browser's signed PUT targets a separate raw upload key. Owner and moderator previews use authenticated, non-cacheable API endpoints.
+- The approved recipe worker copies the confirmed bytes into the public `S3:Bucket` after saving the moderation decision. Orphan and account cleanup remove private objects through the image deletion outbox.
 - Upload URLs are short-lived.
 - Image assets are tracked before use so later delete/reference rules can be enforced.
 

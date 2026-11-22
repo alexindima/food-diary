@@ -2,10 +2,12 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
+import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
@@ -150,7 +152,11 @@ function setupComponent(
 } {
     TestBed.configureTestingModule({
         imports: [RecipeStepCardComponent],
-        providers: [provideRouter([]), provideTranslateTesting()],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: ImageUploadFacade, useValue: { getOwnerPreview: (): Observable<string> => of('data:image/webp;base64,UklGRg==') } },
+        ],
     });
 
     const fixture = TestBed.createComponent(RecipeStepCardComponent);

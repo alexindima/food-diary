@@ -1,0 +1,30 @@
+<h3>{{ 'ADMIN_RECIPE_MODERATION.CHECKED_TEXT' | translate }}</h3>
+<pre>{{ item().text }}</pre>
+@if (item().images.length) {
+    <h3>{{ 'ADMIN_RECIPE_MODERATION.CHECKED_IMAGES' | translate }}</h3>
+    <div class="image-actions">
+        @for (image of item().images; track image.assetId + image.field) {
+            <fd-ui-button variant="secondary" size="sm" (click)="showImage(image.assetId)">
+                {{ 'ADMIN_RECIPE_MODERATION.VIEW_IMAGE' | translate }} · {{ image.field }}
+            </fd-ui-button>
+        }
+    </div>
+    @if (imageLoading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (imageFailed()) {
+        <fd-ui-form-error [error]="'ADMIN_RECIPE_MODERATION.IMAGE_UNAVAILABLE' | translate" />
+    } @else if (imageUrl(); as url) {
+        <div class="image-preview">
+            <img [src]="url" [alt]="'ADMIN_RECIPE_MODERATION.CHECKED_IMAGE' | translate" />
+            <fd-ui-button variant="secondary" size="sm" (click)="closeImage()">
+                {{ 'ADMIN_RECIPE_MODERATION.CLOSE_IMAGE' | translate }}
+            </fd-ui-button>
+        </div>
+    }
+}
+@for (result of results(); track result.label) {
+    <details>
+        <summary>{{ result.label | translate }}</summary>
+        <pre>{{ result.result }}</pre>
+    </details>
+}

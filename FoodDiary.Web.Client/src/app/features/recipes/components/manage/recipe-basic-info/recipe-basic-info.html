@@ -43,6 +43,7 @@
         <div class="recipe-basic-info__image">
             @for (owner of [{ id: photoOwnerId() }]; track owner.id) {
                 <fd-image-gallery-editor
+                    [keepPrivate]="true"
                     [photos]="photos()"
                     [cover]="photos()[0] ?? null"
                     (photosChange)="setPhotos($event)"

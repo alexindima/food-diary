@@ -1,0 +1,76 @@
+<div class="admin-moderation-rules">
+    <fd-admin-moderation-navigation active="/moderation/rules" />
+
+    @if (loading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (loadFailed()) {
+        <fd-admin-load-error (retry)="load()" />
+    } @else if (policy(); as current) {
+        <section>
+            <h2>{{ 'ADMIN_RECIPE_MODERATION.ACTIVE_RULES' | translate }}</h2>
+            <p>
+                <span [hidden]="current.active.publishedBy === null">{{ current.active.publishedAt | date: 'medium' }}</span>
+                <span [hidden]="current.active.publishedBy !== null">{{ 'ADMIN_RECIPE_MODERATION.DEFAULT_RULES' | translate }}</span>
+                · {{ current.active.id }}
+            </p>
+            <p>{{ 'ADMIN_RECIPE_MODERATION.OPENAI_PRIMARY' | translate }}</p>
+
+            <div class="category-grid">
+                <fd-admin-recipe-moderation-rule-categories
+                    [legend]="'ADMIN_RECIPE_MODERATION.TEXT_REVIEW' | translate"
+                    [options]="textCategoryOptions"
+                    [selected]="textCategories()"
+                    [disabled]="saving()"
+                    (categoryChange)="setCategory('text', $event.category, $event.selected)"
+                />
+                <fd-admin-recipe-moderation-rule-categories
+                    [legend]="'ADMIN_RECIPE_MODERATION.IMAGE_REVIEW' | translate"
+                    [options]="imageCategoryOptions"
+                    [selected]="imageCategories()"
+                    [disabled]="saving()"
+                    (categoryChange)="setCategory('image', $event.category, $event.selected)"
+                />
+            </div>
+
+            <div class="sample">
+                <fd-ui-input
+                    type="number"
+                    [label]="'ADMIN_RECIPE_MODERATION.MISTRAL_SAMPLE' | translate"
+                    [minimum]="0"
+                    [maximum]="100"
+                    [step]="1"
+                    [value]="samplePercent()"
+                    [disabled]="saving()"
+                    (valueChange)="setSamplePercent($event)"
+                />
+                @if (!current.mistralAvailable) {
+                    <p>{{ 'ADMIN_RECIPE_MODERATION.MISTRAL_UNAVAILABLE' | translate }}</p>
+                }
+            </div>
+
+            @if (updateFailed()) {
+                <fd-ui-form-error [error]="'ADMIN_MODERATION.ACTION_ERROR' | translate" />
+            }
+            @if (updated()) {
+                <p role="status">{{ 'ADMIN_RECIPE_MODERATION.RULES_PUBLISHED' | translate }}</p>
+            }
+            <fd-ui-button
+                [loading]="saving()"
+                [disabled]="!validRules()"
+                [disabledReason]="'ADMIN_RECIPE_MODERATION.INVALID_RULES' | translate"
+                (click)="publish()"
+                >{{ 'ADMIN_RECIPE_MODERATION.PUBLISH_RULES' | translate }}</fd-ui-button
+            >
+        </section>
+
+        <section>
+            <fd-admin-recipe-moderation-rule-history
+                [history]="current.history"
+                [activeId]="current.active.id"
+                [categoryLabels]="categoryLabels"
+                [saving]="saving()"
+                (restore)="restore($event)"
+            />
+        </section>
+    }
+</div>

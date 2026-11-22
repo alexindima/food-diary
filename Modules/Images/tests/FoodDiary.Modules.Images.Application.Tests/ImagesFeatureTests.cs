@@ -134,6 +134,40 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
+    public async Task PrivateUploadConfirmationAndPromotionKeepSeparateStorageTransitionsAsync() {
+        var owner = UserId.New();
+        var repository = new FakeImageAssetRepository();
+        var asset = ImageAsset.Create(owner, "images/recipe.jpg", "https://cdn.example/recipe.jpg", keepPrivate: true);
+        await repository.AddAsync(asset, CancellationToken.None);
+        var key = ObjectStorageKey.FromStoredValue(asset.ObjectKey);
+        IImageStorageService storage = CreateImageStorageService();
+        storage.ConfirmPrivateUploadedObjectAsync(key, Arg.Any<CancellationToken>()).Returns(ImageObjectValidationResult.Accepted);
+        storage.PromotePrivateImageAsync(key, Arg.Any<CancellationToken>()).Returns(ImageObjectValidationResult.Accepted);
+        var runner = new InlineImageTransactionRunner();
+        var outbox = new FakeImageObjectDeletionOutbox();
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var confirm = new ConfirmImageUploadCommandHandler(repository, storage, outbox, unitOfWork, runner);
+
+        Result<ConfirmImageUploadResult> confirmed = await confirm.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+        ResultAssert.Success(confirmed);
+        Assert.True(asset.IsConfirmed);
+        Assert.True(asset.IsPrivate);
+        await storage.DidNotReceive().ConfirmUploadedObjectAsync(key, Arg.Any<CancellationToken>());
+        Assert.Equal((asset.ObjectKey, false), Assert.Single(outbox.Deletions));
+
+        var promotion = new RecipeImagePromotionService(repository, storage, runner, outbox, unitOfWork);
+
+        ResultAssert.Failure(await promotion.PromoteAsync(asset.Id, UserId.New(), CancellationToken.None));
+        ResultAssert.Success(await promotion.PromoteAsync(asset.Id, owner, CancellationToken.None));
+        ResultAssert.Success(await promotion.PromoteAsync(asset.Id, owner, CancellationToken.None));
+        Assert.False(asset.IsPrivate);
+        Assert.Equal((key.ForPrivateConfirmedImage().Value, false), outbox.Deletions[1]);
+        await storage.Received(1).PromotePrivateImageAsync(key, Arg.Any<CancellationToken>());
+        await unitOfWork.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ConfirmImageUploadCommandHandler_WithInvalidIdentifiers_ReturnsValidationFailuresWithoutStorageAccess() {
         IImageStorageService storage = CreateImageStorageService();
         var handler = new ConfirmImageUploadCommandHandler(
@@ -516,6 +550,23 @@ public class ImagesFeatureTests {
         Assert.Null(storedAsset);
         Assert.Equal(
             [("images/removable.jpg", false), ("images/removable.jpg", true)],
+            outbox.Deletions);
+    }
+
+    [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_RemovesAllPrivateStorageVariantsAsync() {
+        var repository = new FakeImageAssetRepository();
+        var outbox = new FakeImageObjectDeletionOutbox();
+        var asset = ImageAsset.Create(UserId.New(), "images/recipe.jpg", "https://cdn.example/recipe.jpg", keepPrivate: true);
+        asset.Confirm();
+        await repository.AddAsync(asset, CancellationToken.None);
+        var service = new ImageAssetCleanupService(repository, outbox);
+
+        DeleteImageAssetResult deleted = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+
+        Assert.True(deleted.Deleted);
+        Assert.Equal(
+            [(asset.ObjectKey, false), (asset.ObjectKey, true), ("private-confirmed/images/recipe.jpg", false)],
             outbox.Deletions);
     }
 

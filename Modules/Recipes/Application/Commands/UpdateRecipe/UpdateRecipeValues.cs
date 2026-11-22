@@ -17,4 +17,5 @@ internal sealed record UpdateRecipeValues(
     ImageAssetReadModel? ImageAsset,
     ImageAssetId? OldAssetId,
     IReadOnlyList<ImageAssetId> OldStepAssetIds,
-    IReadOnlyList<RecipeStepInput> Steps);
+    IReadOnlyList<RecipeStepInput> Steps,
+    int UsageCount);

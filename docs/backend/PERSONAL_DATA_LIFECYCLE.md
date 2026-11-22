@@ -79,6 +79,18 @@ Independent operational retention applies to:
 
 All values are validated options and can be shortened to meet a deployment's policy.
 
+## Public recipe moderation
+
+A public recipe submission is a separate processing purpose from food recognition. The publication snapshot contains recipe-owned public text and the managed photos proposed for publication. Private recipe notes stay with the recipe owner. The OpenAI request contains the public text and sanitized photo bytes. If a Mistral API key is configured, a policy may sample the public text for observation. Mistral results cannot change the publication decision.
+
+Recipes owns moderation snapshots, results and image references. Superseded revisions stop their pending checks. Account deletion and ownership transfer remove source-owned moderation snapshots in the Recipes purge transaction, including snapshots for recipes whose numeric composition survives. The same transaction clears review and policy actor IDs for the erased account. Provider keys and raw requests stay out of application logs.
+
+Apply the moderation migration before enabling `RecipeModeration__Enabled` on API and JobManager together. JobManager reads the existing `OpenAi__ApiKey`. `Mistral__ApiKey` is optional and an absent key turns off observation. Set `RecipeModeration__ProcessingEnabled=false` to pause processing while holding submitted versions. The API keeps staging submissions while processing is paused.
+
+With moderation enabled, recipe uploads use the private staging bucket. Confirmation validates the image, strips metadata and writes a separate server-owned copy under `private-confirmed/`. The asset owner and administrators reviewing the submitted revision access its bytes through authenticated, non-cacheable previews. The applicant's proposed version remains private throughout review.
+
+After approval is saved, the worker copies the confirmed bytes for that revision to the published bucket before updating the public recipe. Delivery retries reuse the same asset keys and keep the previous public recipe visible until publishing succeeds. External photo URLs require a managed upload before automatic verification. The feature is off by default.
+
 ## Purge guarantees
 
 `UserCleanupService` runs each user purge in its own database transaction.

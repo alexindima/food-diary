@@ -30,6 +30,13 @@
     </header>
 
     <div class="recipe-detail fd-stack fd-gap-lg">
+        <fd-recipe-publication-notice
+            [status]="publicationStatus()"
+            [reason]="publicationReason()"
+            [loading]="publicationLoading()"
+            [refreshFailed]="publicationRefreshFailed()"
+            (refreshRequested)="refreshPublication()"
+        />
         <fd-ui-tabs #detailTabs [ariaLabel]="recipe.name" [tabs]="tabs" [(selectedValue)]="activeTab" />
         <div
             role="tabpanel"
@@ -39,6 +46,9 @@
             [hidden]="activeTab !== 'summary'"
         >
             @if (activeTab === 'summary') {
+                <div [hidden]="coverImages().length === 0">
+                    <fd-public-recipe-gallery aspect="wide" [images]="coverImages()" [name]="recipe.name" />
+                </div>
                 <fd-recipe-detail-summary
                     [recipe]="recipe"
                     [calories]="calories"
@@ -86,7 +96,7 @@
             [hidden]="activeTab !== 'cook'"
         >
             @if (activeTab === 'cook') {
-                <fd-recipe-cook-mode [recipe]="recipe" />
+                <fd-recipe-cook-mode [recipe]="mediaRecipe()" />
             }
         </div>
     </div>

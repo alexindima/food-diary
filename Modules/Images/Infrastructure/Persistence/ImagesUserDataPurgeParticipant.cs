@@ -23,14 +23,12 @@ internal sealed class ImagesUserDataPurgeParticipant(
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         var deletedImages = await context.ImageAssets
             .Where(asset => asset.UserId == userId)
-            .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })
+            .Select(asset => new { asset.ObjectKey, asset.IsConfirmed, asset.IsPrivate })
             .ToListAsync(cancellationToken);
 
-        foreach (var image in deletedImages.DistinctBy(static image => new { image.ObjectKey, image.IsConfirmed })) {
-            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), image.IsConfirmed, cancellationToken);
-            if (!image.IsConfirmed) {
-                await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true, cancellationToken);
-            }
+        foreach (var image in deletedImages.Distinct()) {
+            await imageObjectDeletionOutbox.EnqueueAssetObjectsAsync(
+                ObjectStorageKey.FromStoredValue(image.ObjectKey), image.IsConfirmed, image.IsPrivate, cancellationToken);
         }
 
         await context.ImageAssets

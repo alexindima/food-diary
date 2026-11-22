@@ -126,7 +126,7 @@ export function buildRecipeDto(
 }
 
 export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
-    const { images } = recipeData;
+    const { images, publicationStatus } = recipeData;
     return {
         language: recipeData.language ?? 'en',
         ...(images !== undefined && images.length > 0
@@ -140,7 +140,10 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
         prepTime: toNullable(recipeData.prepTime),
         cookTime: toNullable(recipeData.cookTime),
         servings: recipeData.servings,
-        visibility: normalizeRecipeVisibility(recipeData.visibility),
+        visibility:
+            publicationStatus !== undefined && publicationStatus !== null
+                ? RecipeVisibility.Public
+                : normalizeRecipeVisibility(recipeData.visibility),
         calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
         ...buildRecipeManualNutritionPatchValue(recipeData),
     };

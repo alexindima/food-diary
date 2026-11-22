@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1430,
+    "contracts": 1442,
     "ambiguousContracts": 34,
-    "consumerEdges": 11698,
-    "productionConsumerEdges": 6490,
-    "testConsumerEdges": 5208,
-    "consumedContracts": 1430,
+    "consumerEdges": 11786,
+    "productionConsumerEdges": 6542,
+    "testConsumerEdges": 5244,
+    "consumedContracts": 1442,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1230,6 +1230,57 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Responses/AdminOutgoingEmailPageHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminRecipeModerationImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminRecipeModerationImageHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminRecipeModerationResolveHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminRecipeModerationResolveHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminRecipeModerationRulesHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminRecipeModerationRulesHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6366,6 +6417,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetAdminRecipeModerationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminRecipeModerationHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetAdminRetentionHttpQuery",
       "roles": [
         "Query"
@@ -8371,6 +8439,23 @@
       ],
       "definitionPaths": [
         "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetOwnedImageContentQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15184,6 +15269,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IRecipeLikeReadRepository",
       "roles": [
         "ReadRepository"
@@ -15252,6 +15354,57 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IRecipeModerationProcessor",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IRecipeMutationTransactionRunner",
       "roles": [
         "Other"
@@ -15298,6 +15451,40 @@
       ],
       "definitionPaths": [
         "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IRecipePublicationApplier",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18886,6 +19073,23 @@
       ],
       "definitionPaths": [
         "Modules/OpenFoodFacts/Presentation/Responses/OpenFoodFactsProductHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "OwnedImageContentHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Presentation/Responses/OwnedImageContentHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -27787,6 +27991,45 @@
       "referenceCount": 2
     },
     {
+      "contract": "AdminRecipeModerationImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminRecipeModerationImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AdminRecipeModerationResolveHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminRecipeModerationResolveHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminRecipeModerationRulesHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminRecipeModerationRulesHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "AdminReportActionHttpRequest",
       "roles": [
         "Request"
@@ -29449,6 +29692,20 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -33991,7 +34248,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "ConfirmImageUploadCommand",
@@ -37481,6 +37738,19 @@
         "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.Publication.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CreateRecipeCommandValidatorTests.cs",
       "isTest": true,
       "referenceCount": 14
@@ -37495,6 +37765,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/RecipeHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CreateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -48302,6 +48585,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "GetAdminRecipeModerationHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminRecipeModerationHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminRetentionHttpQuery",
       "roles": [
         "Query"
@@ -55893,6 +56189,32 @@
       "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.Journal.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetOwnedImageContentQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetOwnedImageContentQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Presentation/Controllers/ImagesController.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "GetProductByIdQuery",
@@ -73921,7 +74243,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
       "isTest": false,
-      "referenceCount": 92
+      "referenceCount": 93
     },
     {
       "contract": "ICompositionReadContext",
@@ -78521,6 +78843,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SerializedOwnerCommandsIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -82669,6 +83004,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/ReadSnapshotIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -90741,6 +91089,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Services/RecipePublicationPhotos.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Services/RecipeStepAppender.cs",
       "isTest": false,
       "referenceCount": 3
@@ -90963,6 +91324,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -91352,6 +91726,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -91417,6 +91804,19 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91433,6 +91833,58 @@
       "consumerPath": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/OpenAiRecipeModerationProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationAdministration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeImageContentTransportTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IImageAssetContentService",
@@ -91472,6 +91924,32 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetContentService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetContentService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Recipes/RecipeModerationProviderTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IImageAssetContentService",
@@ -91924,6 +92402,19 @@
         "Modules/Images/Application.Abstractions/Common/IImageAssetWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageAssetWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -92002,6 +92493,19 @@
         "Modules/Images/Application.Abstractions/Common/IImageConfirmationTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageConfirmationTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageConfirmationTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -92054,6 +92558,19 @@
         "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application.Abstractions/Common/ImageObjectDeletionOutboxExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageObjectDeletionOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -92068,6 +92585,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageObjectDeletionOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -92340,6 +92870,19 @@
         "Modules/Images/Application.Abstractions/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageStorageService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageStorageService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -92433,7 +92976,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 19
+      "referenceCount": 20
     },
     {
       "contract": "IImageStorageService",
@@ -99334,6 +99877,19 @@
         "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
       "isTest": false,
       "referenceCount": 1
@@ -99519,6 +100075,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageAssetRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IModuleTransactionCoordinator",
@@ -100181,7 +100750,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "ImportCatalogRecipeCommand",
@@ -110532,6 +111101,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -112768,6 +113350,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -114213,7 +114808,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 15
     },
     {
       "contract": "IRecipeCommentReadModelRepository",
@@ -114526,6 +115121,71 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeImagePromotionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.Promotion.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IRecipeLikeReadRepository",
@@ -114944,6 +115604,227 @@
       "referenceCount": 1
     },
     {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationAdministration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminRecipeModerationTransportTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IRecipeModerationAdministration",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.Promotion.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeModerationProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/RecipeModerationWorker.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeModerationProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/MistralRecipeModerationProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/OpenAiRecipeModerationProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.Promotion.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipeModerationProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Recipes/RecipeModerationProviderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IRecipeMutationTransactionRunner",
       "roles": [
         "Other"
@@ -115059,6 +115940,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IRecipeMutationTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Common/IRecipeMutationTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRecipeMutationTransactionRunner",
@@ -115399,6 +116293,266 @@
       "referenceCount": 4
     },
     {
+      "contract": "IRecipePublicationApplier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationApplier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Services/RecipePublicationApplier.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationApplier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Services/RecipePublicationDraft.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.Publication.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Publication.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IRecipePublicationQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IRecipeReadRepository",
       "roles": [
         "ReadRepository"
@@ -115461,7 +116615,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IRecipeReadRepository",
@@ -115486,6 +116640,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Common/IRecipeReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -115980,6 +117147,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application.Abstractions/Common/IRecipeWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -122869,6 +124049,19 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.AtomicCommands.cs",
       "isTest": true,
       "referenceCount": 2
@@ -127811,7 +129004,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 17
+      "referenceCount": 19
     },
     {
       "contract": "ISender",
@@ -131774,6 +132967,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
       "isTest": false,
       "referenceCount": 2
@@ -132088,7 +133294,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "IUnitOfWork",
@@ -132438,6 +133644,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeCompositionIsolationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -138053,6 +139272,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -138651,6 +139883,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserPremiumTrialStore.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserPremiumTrialStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserPremiumTrialStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramTrialEligibilityTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -139135,6 +140380,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IUserProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserProfileReadService",
@@ -143542,6 +144800,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserWriteRepository",
@@ -152007,6 +153278,19 @@
       "referenceCount": 5
     },
     {
+      "contract": "OwnedImageContentHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Presentation/Responses/OwnedImageContentHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Presentation/Controllers/ImagesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
       "contract": "PagedHttpResponse",
       "roles": [
         "Response"
@@ -153330,7 +154614,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "PagedResponse",
@@ -166806,6 +168090,19 @@
         "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartUserPremiumTrialCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramTrialEligibilityTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -171671,7 +172968,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "UpdateRecipeCommand",
@@ -171697,7 +172994,33 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 3
+    },
+    {
+      "contract": "UpdateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Services/RecipePublicationDraft.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "UpdateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Application/Services/RecipePublicationPhotos.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "UpdateRecipeCommand",
@@ -171786,6 +173109,19 @@
         "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Publication.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
       "isTest": true,
       "referenceCount": 3
@@ -171841,6 +173177,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "UpdateRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeModerationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "UpdateRecipeCommentCommand",

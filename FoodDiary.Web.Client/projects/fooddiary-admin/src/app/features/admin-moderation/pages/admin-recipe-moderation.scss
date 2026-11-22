@@ -1,0 +1,62 @@
+.admin-recipe-moderation {
+    display: grid;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-lg);
+}
+
+.counts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--fd-space-md);
+    margin: 0;
+}
+
+.counts > div,
+.detail-panel {
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-lg);
+}
+
+dt {
+    color: var(--fd-color-text-muted);
+}
+
+dd {
+    margin-inline-start: 0;
+    overflow-wrap: anywhere;
+}
+
+.counts dd {
+    margin-block-start: var(--fd-space-xs);
+    font-size: var(--fd-text-title-sm-size);
+    font-weight: var(--fd-font-weight-bold);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: start;
+}
+
+th,
+td {
+    padding: var(--fd-space-sm);
+    border-block-end: var(--fd-border-default);
+    text-align: start;
+}
+
+.recipe-summary strong,
+.recipe-summary span {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.recipe-summary span {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-xs-size);
+}

@@ -52,6 +52,7 @@
                 [class.recognition-photos__add]="photos().length > 0"
                 [showRecommendation]="false"
                 [multiple]="true"
+                [keepPrivate]="keepPrivate()"
                 [maxFiles]="maxPhotos - photos().length"
                 [selectText]="photos().length ? '+' : ('PRODUCT_AI_DIALOG.ADD_PHOTOS' | translate)"
                 [dropText]="'PRODUCT_AI_DIALOG.DROP_PHOTOS' | translate: { count: maxPhotos - photos().length }"

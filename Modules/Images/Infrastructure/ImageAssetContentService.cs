@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using Amazon.S3;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
@@ -32,7 +33,11 @@ public sealed class ImageAssetContentService(
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(TimeSpan.FromSeconds(30));
         try {
-            return await ReadDataUrlAsync(asset.ObjectKey, deadline.Token);
+            string bucket = asset.IsPrivate ? options.Value.StagingBucket : options.Value.Bucket;
+            string key = asset.IsPrivate
+                ? ObjectStorageKey.FromStoredValue(asset.ObjectKey).ForPrivateConfirmedImage().Value
+                : asset.ObjectKey;
+            return await ReadDataUrlAsync(bucket, key, deadline.Token);
         } catch (InvalidDataException) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image exceeds the allowed size."));
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
@@ -42,17 +47,17 @@ public sealed class ImageAssetContentService(
         }
     }
 
-    private async Task<Result<string>> ReadDataUrlAsync(string objectKey, CancellationToken cancellationToken) {
+    private async Task<Result<string>> ReadDataUrlAsync(string bucket, string objectKey, CancellationToken cancellationToken) {
         S3Options settings = options.Value;
         long maximumBytes = Math.Min(settings.MaxUploadSizeBytes, S3Options.MaximumUploadSizeBytes);
-        StoredObjectInfo? info = await storage.GetObjectInfoAsync(settings.Bucket, objectKey, cancellationToken);
+        StoredObjectInfo? info = await storage.GetObjectInfoAsync(bucket, objectKey, cancellationToken);
         string? contentType = info?.ContentType?.ToLowerInvariant();
         if (info is null || info.SizeBytes <= 0 || info.SizeBytes > maximumBytes
             || contentType is not ("image/jpeg" or "image/png" or "image/webp" or "image/gif")) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image is missing or has an unsupported size or content type."));
         }
 
-        byte[]? content = await storage.GetObjectBytesAsync(settings.Bucket, objectKey, maximumBytes, cancellationToken);
+        byte[]? content = await storage.GetObjectBytesAsync(bucket, objectKey, maximumBytes, cancellationToken);
         if (content is null || content.LongLength != info.SizeBytes || content.LongLength > maximumBytes) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image content is missing or incomplete."));
         }

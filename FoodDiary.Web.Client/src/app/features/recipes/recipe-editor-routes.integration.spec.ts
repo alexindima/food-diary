@@ -1,5 +1,5 @@
 import { Location, PlatformLocation } from '@angular/common';
-import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { type HttpInterceptorFn, HttpResponse, HttpStatusCode, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
 import type { FavoriteRecipeHttpResponse } from '../../shared/api/sdk/generated/model/favorite-recipe-http-response';
@@ -72,6 +73,19 @@ const createRecipe = vi.fn<RecipeService['create']>();
 const deleteRecipe = vi.fn<RecipeService['deleteById']>();
 const updateRecipe = vi.fn<RecipeService['update']>();
 
+const recipePhotoPreviews: HttpInterceptorFn = (request, next) => {
+    const imagesPath = `${environment.apiUrls.images}/`;
+    const suffix = '/content';
+    if (request.method !== 'GET' || !request.url.startsWith(imagesPath) || !request.url.endsWith(suffix)) {
+        return next(request);
+    }
+
+    expect(request.withCredentials).toBe(true);
+    expect(request.context.get(SKIP_AUTH)).toBe(false);
+    const assetId = decodeURIComponent(request.url.slice(imagesPath.length, -suffix.length));
+    return of(new HttpResponse({ body: { dataUrl: recipePhotoPreviewUrl(assetId) } }));
+};
+
 beforeEach(() => {
     readRecipe.mockReset().mockReturnValue(of(RECIPE));
     loadRecipes.mockReset().mockReturnValue(of(OVERVIEW));
@@ -92,7 +106,7 @@ beforeEach(() => {
         providers: [
             provideFdUiDialogNavigation(),
             provideRouter([{ path: 'recipes', children: routes }], withComponentInputBinding()),
-            provideHttpClient(),
+            provideHttpClient(withInterceptors([recipePhotoPreviews])),
             provideHttpClientTesting(),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             {
@@ -355,7 +369,7 @@ it.each([
         stepsWhileUploading: originalStepCount,
         cancelled: false,
         busyAfterUpload: 'false',
-        attachmentOnOriginalStep: fileUrl,
+        attachmentOnOriginalStep: recipePhotoPreviewUrl(assetId),
     });
     expect(apply.disabled).toBe(false);
     apply.click();
@@ -427,7 +441,7 @@ it('waits for a step photo before recognizing a replacement recipe from a link',
         prematureRequestCount: 0,
         wasCanceled: false,
         activeRecipe: originalName,
-        attachedPhoto: fileUrl,
+        attachedPhoto: recipePhotoPreviewUrl(assetId),
     });
 
     expect(recognize.disabled).toBe(false);
@@ -1417,8 +1431,8 @@ it.each([
     harness.detectChanges();
     expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
     expect(recipeName(harness).value).toBe(earlier.name);
-    expectRecipeGalleryImage(harness, 'fd-recipe-basic-info fd-image-gallery-editor img', cover.imageUrl);
-    expectRecipeGalleryImage(harness, 'fd-recipe-step-card fd-image-gallery-editor img', step.imageUrl);
+    expectRecipeGalleryImage(harness, 'fd-recipe-basic-info fd-image-gallery-editor img', recipePhotoPreviewUrl(cover.imageAssetId));
+    expectRecipeGalleryImage(harness, 'fd-recipe-step-card fd-image-gallery-editor img', recipePhotoPreviewUrl(step.imageAssetId));
     const cancelled = confirmation.cancelled;
     if (!cancelled) {
         confirmation.flush({ assetId, fileUrl });
@@ -1428,7 +1442,12 @@ it.each([
         expect(editor.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
     });
 
-    const stalePreview = editor.querySelector(`fd-image-gallery-editor img[src="${fileUrl}"]`)?.getAttribute('src') ?? null;
+    const stalePreview =
+        editor
+            .querySelector(
+                `fd-image-gallery-editor img[src="${recipePhotoPreviewUrl(assetId)}"], fd-image-gallery-editor img[src="${fileUrl}"]`,
+            )
+            ?.getAttribute('src') ?? null;
     const submit = getButton(harness.routeNativeElement, 'button[type="submit"]');
     expect(submit.disabled).toBe(false);
     const currentInput = recipeGalleryFileInput(harness.routeNativeElement, owner);
@@ -1436,9 +1455,10 @@ it.each([
     expect(currentInput.disabled).toBe(false);
     const uploaded = await holdRecipePhotoConfirmationAsync(currentInput, NEXT_RECIPE_PHOTO);
     uploaded.confirmation.flush({ assetId: uploaded.assetId, fileUrl: uploaded.fileUrl });
+    const uploadedPreview = recipePhotoPreviewUrl(uploaded.assetId);
     await vi.waitFor(() => {
         harness.detectChanges();
-        expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img[src="${uploaded.fileUrl}"]`, uploaded.fileUrl);
+        expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img[src="${uploadedPreview}"]`, uploadedPreview);
     });
 
     submit.click();
@@ -1463,7 +1483,7 @@ it.each([
     });
 });
 
-type StoredGalleryPhoto = NonNullable<Recipe['images']>[number];
+type StoredGalleryPhoto = NonNullable<Recipe['images']>[number] & { imageAssetId: NonNullable<Recipe['imageAssetId']> };
 
 type HeldRecipePhotoFixture = {
     harness: RouterTestingHarness;
@@ -1518,7 +1538,7 @@ async function openRecipeWithHeldGalleryUploadAsync(owner: string): Promise<Held
     }
     const target = recipeGalleryFileInput(harness.routeNativeElement, owner);
     expect(recipeName(harness).value).toBe(current.name);
-    expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img`, currentPhoto.imageUrl);
+    expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img`, recipePhotoPreviewUrl(currentPhoto.imageAssetId));
     const { confirmation, assetId, fileUrl } = await holdRecipePhotoConfirmationAsync(target);
     harness.detectChanges();
     expect(editor.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
@@ -1545,7 +1565,7 @@ it('keeps an existing asset-only cover when the owner uploads an additional reci
     confirmation.flush({ assetId, fileUrl });
     await vi.waitFor(() => {
         harness.detectChanges();
-        expect(gallery?.querySelector(`img[src="${fileUrl}"]`)).not.toBeNull();
+        expect(gallery?.querySelector(`img[src="${recipePhotoPreviewUrl(assetId)}"]`)).not.toBeNull();
     });
 
     getButton(harness.routeNativeElement, 'button[type="submit"]').click();
@@ -1581,9 +1601,10 @@ it.each([
     expect(input.disabled).toBe(false);
     const { confirmation, assetId, fileUrl } = await holdRecipePhotoConfirmationAsync(input);
     confirmation.flush({ assetId, fileUrl });
+    const uploadedPreview = recipePhotoPreviewUrl(assetId);
     await vi.waitFor(() => {
         harness.detectChanges();
-        expectRecipeGalleryImage(harness, `${gallery} img[src="${fileUrl}"]`, fileUrl);
+        expectRecipeGalleryImage(harness, `${gallery} img[src="${uploadedPreview}"]`, uploadedPreview);
         expectRecipeGalleryImage(harness, `${gallery} img[src="${current.imageUrl}"]`, current.imageUrl);
     });
 
@@ -1601,12 +1622,12 @@ it.each([
     });
     expect(attemptedSave).toEqual({ writeCount: 0, warning: 'RECIPE_MANAGE.MIXED_LEGACY_GALLERY' });
     expect(submit.disabled).toBe(true);
-    expectRecipeGalleryImage(harness, `${gallery} img[src="${fileUrl}"]`, fileUrl);
+    expectRecipeGalleryImage(harness, `${gallery} img[src="${uploadedPreview}"]`, uploadedPreview);
     expectRecipeGalleryImage(harness, `${gallery} img[src="${current.imageUrl}"]`, current.imageUrl);
 
     const keepUpload = owner === 'fd-recipe-basic-info';
-    const removeUrl = keepUpload ? current.imageUrl : fileUrl;
-    const keepUrl = keepUpload ? fileUrl : current.imageUrl;
+    const removeUrl = keepUpload ? current.imageUrl : uploadedPreview;
+    const keepUrl = keepUpload ? uploadedPreview : current.imageUrl;
     const thumbnail = getButton(harness.routeNativeElement, `${gallery} button:has(img[src="${removeUrl}"])`);
     thumbnail.click();
     harness.detectChanges();
@@ -1996,7 +2017,7 @@ it.each([
     currentRead.flush(current);
     await openingCurrent;
     const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
-    expect(recipeEditorCoverUrl(harness)).toBe(current.imageUrl);
+    expect(recipeEditorCoverUrl(harness)).toBe(recipePhotoPreviewUrl(current.imageAssetId));
     const portionLabel = 'RECIPE_MANAGE.NUTRITION_SCALE_MODE.PORTION';
     const recipeLabel = 'RECIPE_MANAGE.NUTRITION_SCALE_MODE.RECIPE';
     recipeTextButton(harness.routeNativeElement, portionLabel).click();
@@ -2221,7 +2242,7 @@ function storedRecipeGalleryFixtures(
     currentId: string,
     earlierId: string,
     coverUrl: string | null,
-): { current: RecipeHttpResponse; earlier: RecipeHttpResponse } {
+): { current: RecipeHttpResponse & { imageAssetId: string }; earlier: RecipeHttpResponse } {
     const storedCover = { imageAssetId: '941c9f07-20df-44df-8cce-3534084b4a35', imageUrl: '/recipes/current-asset-cover.jpg' };
     const currentRecipe = storedManualRecipe(currentId, 'Roasted vegetables', { servings: 2, calories: 256, proteins: 12 });
     return {
@@ -2395,7 +2416,7 @@ async function holdRecipePhotoConfirmationAsync(
     const presign = await vi.waitFor(() =>
         http.expectOne(request => request.method === 'POST' && request.url.endsWith('/images/upload-url')),
     );
-    expect(presign.request.body).toEqual({ fileName: file.name, contentType: file.type, fileSizeBytes: file.size });
+    expect(presign.request.body).toEqual({ fileName: file.name, contentType: file.type, fileSizeBytes: file.size, keepPrivate: true });
     presign.flush({ assetId, uploadUrl, fileUrl, expiresAtUtc: '2026-05-17T10:00:00.000Z' });
     const upload = await vi.waitFor(() => http.expectOne({ method: 'PUT', url: uploadUrl }));
     expect(upload.request.body).toBe(file);
@@ -2408,6 +2429,10 @@ async function holdRecipePhotoConfirmationAsync(
 
 function recipeEditorCoverUrl(harness: RouterTestingHarness): string | null {
     return harness.routeNativeElement?.querySelector('fd-recipe-basic-info fd-image-gallery-editor img')?.getAttribute('src') ?? null;
+}
+
+function recipePhotoPreviewUrl(assetId: string): string {
+    return `data:image/png;base64,${btoa(assetId)}`;
 }
 
 function expectRecipeGalleryImage(harness: RouterTestingHarness, selector: string, expectedUrl: string): void {

@@ -1,4 +1,4 @@
-import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { type Recipe, RECIPE_PUBLICATION_STATUSES, RecipeVisibility } from '../../models/recipe.data';
 import { RECIPE_CATEGORIES } from '../../models/recipe-category';
 import { recipeIngredientFromStored } from '../../models/recipe-ingredient';
 import type { RecipeLookup } from '../../models/recipe-lookup.data';
@@ -23,6 +23,10 @@ export function recipeFromSdk(response: RecipeHttpResponse): Recipe {
         ...value,
         language: value.language ?? undefined,
         visibility: sdkEnum(value.visibility, Object.values(RecipeVisibility)),
+        publicationStatus:
+            value.publicationStatus === undefined
+                ? undefined
+                : sdkOptional(value.publicationStatus, status => sdkEnum(status, RECIPE_PUBLICATION_STATUSES)),
         category: value.category === undefined ? undefined : sdkOptional(value.category, category => sdkEnum(category, RECIPE_CATEGORIES)),
         qualityGrade:
             value.qualityGrade === undefined

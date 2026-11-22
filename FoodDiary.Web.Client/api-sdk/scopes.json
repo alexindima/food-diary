@@ -493,6 +493,7 @@
     {
         "operations": {
             "DELETE /api/v{version}/images/{assetId}": "deleteImagesByAssetId",
+            "GET /api/v{version}/images/{assetId}/content": "getImagesByAssetIdContent",
             "POST /api/v{version}/images/{assetId}/confirm": "postImagesByAssetIdConfirm",
             "POST /api/v{version}/images/upload-url": "postImagesUploadUrl"
         },

@@ -4,10 +4,12 @@ import { form, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { type Observable, of } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
@@ -148,7 +150,11 @@ function setupComponent(): {
 } {
     TestBed.configureTestingModule({
         imports: [RecipeBasicInfoComponent],
-        providers: [provideTranslateTesting(), provideRouter([])],
+        providers: [
+            provideTranslateTesting(),
+            provideRouter([]),
+            { provide: ImageUploadFacade, useValue: { getOwnerPreview: (): Observable<string> => of('data:image/webp;base64,UklGRg==') } },
+        ],
     });
 
     const fixture = TestBed.createComponent(RecipeBasicInfoComponent);

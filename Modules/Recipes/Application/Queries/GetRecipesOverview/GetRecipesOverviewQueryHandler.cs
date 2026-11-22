@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
@@ -21,7 +22,8 @@ public sealed class GetRecipesOverviewQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,
     RecentRecipeLoader recentRecipeLoader,
     ISender sender,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipePublicationQueue? publicationQueue = null)
     : IQueryHandler<GetRecipesOverviewQuery, Result<RecipeOverviewModel>> {
     private sealed record RecipeOverviewOptions(
         UserId UserId,
@@ -68,13 +70,17 @@ public sealed class GetRecipesOverviewQueryHandler(
             favoriteRecipeIds, options.FavoriteLimit), cancellationToken);
         var favoritesByRecipeId = favorites.Items.ToDictionary(ToFavoriteRecipeId);
 
-        PagedResponse<RecipeModel> allPaged = CreatePagedRecipes(
-            allRecipes,
-            favoritesByRecipeId,
-            options,
+        RecipeModel[] allModels = ToRecipeModels(allRecipes, favoritesByRecipeId);
+        RecipeModel[] recentModels = ToRecipeModels(recentItems, favoritesByRecipeId);
+        IReadOnlyDictionary<RecipeId, RecipePublicationState> states =
+            await RecipePublicationDraft.GetOwnedStatesAsync(allModels.Concat(recentModels), publicationQueue, cancellationToken);
+        var allPaged = new PagedResponse<RecipeModel>(
+            allModels.Select(model => RecipePublicationDraft.WithPublication(model, states)).ToList(),
+            options.PageNumber,
+            options.PageSize,
+            (int)Math.Ceiling(totalItems / (double)options.PageSize),
             totalItems);
-        RecipeModel[] recentResponses = ToRecipeModels(recentItems, favoritesByRecipeId);
-
+        RecipeModel[] recentResponses = [.. recentModels.Select(model => RecipePublicationDraft.WithPublication(model, states))];
         return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favorites.Preview, favorites.Total));
     }
 
@@ -95,18 +101,6 @@ public sealed class GetRecipesOverviewQueryHandler(
                 query.CaloriesFrom,
                 query.CaloriesTo,
             query.HasImage));
-
-    private static PagedResponse<RecipeModel> CreatePagedRecipes(
-        IReadOnlyList<RecipeOverviewReadItem> recipes,
-        IReadOnlyDictionary<RecipeId, FavoriteRecipeModel> favoritesByRecipeId,
-        RecipeOverviewOptions options,
-        int totalItems) =>
-        new(
-            ToRecipeModels(recipes, favoritesByRecipeId).ToList(),
-            options.PageNumber,
-            options.PageSize,
-            (int)Math.Ceiling(totalItems / (double)options.PageSize),
-            totalItems);
 
     private static RecipeModel[] ToRecipeModels(
         IEnumerable<RecipeOverviewReadItem> recipes,

@@ -1,0 +1,37 @@
+:host {
+    display: grid;
+    gap: var(--fd-space-sm);
+}
+
+h3,
+p,
+pre {
+    margin: 0;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+summary {
+    cursor: pointer;
+}
+
+.image-preview {
+    display: grid;
+    gap: var(--fd-space-xs);
+    justify-items: start;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 24rem;
+    object-fit: contain;
+}
+
+.image-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+}

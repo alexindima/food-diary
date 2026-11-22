@@ -19,11 +19,12 @@ export class ImageUploadService {
     private readonly baseUrl = environment.apiUrls.images;
     private readonly sdk = createSdkConnection(ImagesSdk, this.baseUrl, this.http);
 
-    public requestUploadUrl(file: File): Observable<ImageUploadUrlResponse> {
+    public requestUploadUrl(file: File, keepPrivate = false): Observable<ImageUploadUrlResponse> {
         const body = {
             fileName: file.name,
             contentType: file.type,
             fileSizeBytes: file.size,
+            ...(keepPrivate ? { keepPrivate } : {}),
         };
 
         return this.sdk.client.postImagesUploadUrl({ version: this.sdk.version, getImageUploadUrlHttpRequest: body }).pipe(
@@ -62,6 +63,12 @@ export class ImageUploadService {
             }),
             catchError((error: unknown) => rethrowApiError('Failed to confirm image upload', error)),
         );
+    }
+
+    public getOwnerPreview(assetId: ImageAssetId): Observable<string> {
+        return this.sdk.client
+            .getImagesByAssetIdContent({ version: this.sdk.version, assetId }, 'body', false, { transferCache: false })
+            .pipe(map(response => requireSdkFields(response, ['dataUrl']).dataUrl));
     }
 
     public deleteAsset(assetId: ImageAssetId): Observable<void> {

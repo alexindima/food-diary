@@ -15,6 +15,33 @@ public sealed class S3ImageStorageServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
     [Fact]
+    public async Task PrivateConfirmationStoresSanitizedBytesUnderAnUnsignableStagingKeyUntilPromotionAsync() {
+        byte[] raw = CreateImageBytes(SKEncodedImageFormat.Png);
+        var storage = new StubObjectStorageClient(content: raw);
+        S3ImageStorageService service = CreateService(storage);
+        var key = ObjectStorageKey.FromStoredValue("users/test/recipe.png");
+
+        ImageObjectValidationResult confirmation = await service.ConfirmPrivateUploadedObjectAsync(key, CancellationToken.None);
+
+        Assert.True(confirmation.IsValid);
+        byte[] approvedBytes = Assert.IsType<byte[]>(storage.PublishedContent);
+        Assert.Multiple(
+            () => Assert.Equal(("fooddiary-assets-staging", key.Value), storage.Read),
+            () => Assert.Equal("fooddiary-assets-staging", storage.PublishedBucket),
+            () => Assert.Equal("private-confirmed/users/test/recipe.png", storage.StoredKey));
+
+        Array.Clear(raw);
+        ImageObjectValidationResult promotion = await service.PromotePrivateImageAsync(key, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(promotion.IsValid),
+            () => Assert.Equal(("fooddiary-assets-staging", "private-confirmed/users/test/recipe.png"), storage.Read),
+            () => Assert.Equal("fooddiary-assets", storage.PublishedBucket),
+            () => Assert.Equal(key.Value, storage.StoredKey),
+            () => Assert.Equal(approvedBytes, storage.PublishedContent));
+    }
+
+    [Fact]
     public void ContentTypeMatchesFormat_WhenCodecFormatIsUnsupported_ReturnsFalse() {
         MethodInfo method = typeof(S3ImageStorageService).GetMethod(
             "ContentTypeMatchesFormat",
@@ -582,7 +609,9 @@ public sealed class S3ImageStorageServiceTests {
         byte[]? content = null) : IObjectStorageClient {
         private readonly byte[] _content = content ?? CreateImageBytes(SKEncodedImageFormat.Png);
         public string? PublishedBucket { get; private set; }
+        public string? StoredKey { get; private set; }
         public byte[]? PublishedContent { get; private set; }
+        public (string Bucket, string Key)? Read { get; private set; }
 
         public string GetPreSignedUploadUrl(
             string bucketName,
@@ -597,18 +626,27 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) {
             PublishedBucket = bucketName;
+            StoredKey = key;
             PublishedContent = content.ToArray();
             return Task.CompletedTask;
         }
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
-            Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(_content.LongLength, "image/png"));
+            Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(GetContent(bucketName, key).LongLength, "image/png"));
 
         public Task<byte[]?> GetObjectBytesAsync(
             string bucketName,
             string key,
             long maximumBytes,
-            CancellationToken cancellationToken) => Task.FromResult<byte[]?>(_content);
+            CancellationToken cancellationToken) {
+            Read = (bucketName, key);
+            return Task.FromResult<byte[]?>(GetContent(bucketName, key));
+        }
+
+        private byte[] GetContent(string bucketName, string key) =>
+            string.Equals(bucketName, PublishedBucket, StringComparison.Ordinal) && string.Equals(key, StoredKey, StringComparison.Ordinal)
+                ? PublishedContent ?? _content
+                : _content;
     }
 
     [ExcludeFromCodeCoverage]

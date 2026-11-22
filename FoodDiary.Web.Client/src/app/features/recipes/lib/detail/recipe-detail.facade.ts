@@ -3,13 +3,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { catchError, finalize, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
-import type { Recipe } from '../../../../shared/models/recipe.data';
+import { type Recipe, type RecipePublicationStatus, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
@@ -28,12 +28,20 @@ export class RecipeDetailFacade {
     public readonly isFavoriteLoading = signal(false);
     public readonly isDuplicateInProgress = signal(false);
     public readonly duplicateError = signal(false);
+    public readonly refreshedRecipe = signal<Recipe | null>(null);
+    public readonly publicationStatus = signal<RecipePublicationStatus | 'Published' | null>(null);
+    public readonly publicationReason = signal<string | null>(null);
+    public readonly publicationLoading = signal(false);
+    public readonly publicationRefreshFailed = signal(false);
 
     private readonly cancelFavoriteCheck = new Subject<void>();
     private initialFavoriteState = false;
     private favoriteRecipeId: string | null = null;
 
     public initialize(recipe: Recipe): void {
+        this.refreshedRecipe.set(null);
+        this.publicationStatus.set(recipe.publicationStatus ?? null);
+        this.publicationReason.set(recipe.publicationReason ?? null);
         this.cancelFavoriteCheck.next();
         this.initialFavoriteState = recipe.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
@@ -49,6 +57,39 @@ export class RecipeDetailFacade {
             .subscribe(isFav => {
                 this.initialFavoriteState = isFav;
                 this.isFavorite.set(isFav);
+            });
+    }
+
+    public refreshPublication(recipe: Recipe): void {
+        if (this.publicationLoading()) {
+            return;
+        }
+        this.publicationLoading.set(true);
+        this.publicationRefreshFailed.set(false);
+        this.recipeService
+            .getById(recipe.id, false)
+            .pipe(
+                take(1),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.publicationLoading.set(false);
+                }),
+            )
+            .subscribe({
+                next: latest => {
+                    if (latest === null) {
+                        this.publicationRefreshFailed.set(true);
+                        return;
+                    }
+                    this.refreshedRecipe.set(latest);
+                    this.publicationStatus.set(
+                        latest.publicationStatus ?? (latest.visibility === RecipeVisibility.Public ? 'Published' : null),
+                    );
+                    this.publicationReason.set(latest.publicationReason ?? null);
+                },
+                error: () => {
+                    this.publicationRefreshFailed.set(true);
+                },
             });
     }
 

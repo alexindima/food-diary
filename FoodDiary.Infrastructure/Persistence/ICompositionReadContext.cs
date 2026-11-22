@@ -48,6 +48,7 @@ public interface ICompositionReadContext {
     IQueryable<FavoriteRecipe> FavoriteRecipes { get; }
     IQueryable<HydrationEntry> HydrationEntries { get; }
     IQueryable<ImageAsset> ImageAssets { get; }
+    IQueryable<ImageAsset> ActiveRecipePublicationImages { get; }
     IQueryable<MealAiItem> MealAiItems { get; }
     IQueryable<MealAiSession> MealAiSessions { get; }
     IQueryable<MealItem> MealItems { get; }

@@ -3799,6 +3799,9 @@
                     "fileSizeBytes": {
                         "format": "int64",
                         "type": "integer"
+                    },
+                    "keepPrivate": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -5238,6 +5241,15 @@
                 },
                 "type": "object"
             },
+            "OwnedImageContentHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "dataUrl": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "PortalSessionHttpResponse": {
                 "additionalProperties": false,
                 "properties": {
@@ -6013,6 +6025,19 @@
                         "format": "int32",
                         "nullable": true,
                         "type": "integer"
+                    },
+                    "publicationReason": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "publicationRevisionId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "publicationStatus": {
+                        "nullable": true,
+                        "type": "string"
                     },
                     "qualityGrade": {
                         "type": "string"
@@ -31319,6 +31344,141 @@
                             }
                         },
                         "description": "Service Unavailable"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
+                    }
+                ],
+                "tags": ["Images"]
+            }
+        },
+        "/api/v{version}/images/{assetId}/content": {
+            "get": {
+                "operationId": "getImagesByAssetIdContent",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "assetId",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OwnedImageContentHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OwnedImageContentHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OwnedImageContentHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "502": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Gateway"
                     }
                 },
                 "security": [

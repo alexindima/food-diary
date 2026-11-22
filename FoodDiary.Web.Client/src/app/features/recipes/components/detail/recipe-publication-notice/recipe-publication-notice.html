@@ -1,0 +1,26 @@
+@if (status(); as publicationStatus) {
+    <div class="fd-ui-notice-surface fd-ui-body-sm fd-stack fd-gap-sm">
+        <div role="status">
+            {{ `RECIPE_PUBLICATION.${publicationStatus}` | translate }}
+            @let note = reason();
+            @if (publicationStatus === 'ChangesRequested' && note) {
+                <p>{{ note === 'ReplaceImage' ? ('RECIPE_PUBLICATION.REPLACE_IMAGE' | translate) : note }}</p>
+            }
+            @if (refreshFailed()) {
+                <p>{{ 'RECIPE_PUBLICATION.REFRESH_FAILED' | translate }}</p>
+            }
+        </div>
+        @if (publicationStatus !== 'Published') {
+            <fd-ui-button
+                type="button"
+                size="sm"
+                variant="secondary"
+                fill="outline"
+                [loading]="loading()"
+                (click)="refreshRequested.emit()"
+            >
+                {{ 'RECIPE_PUBLICATION.REFRESH' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+}

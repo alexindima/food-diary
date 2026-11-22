@@ -41,6 +41,19 @@ public sealed class ImageAssetContentServiceTests {
         Assert.DoesNotContain("127.0.0.1", result.Value, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task GetDataUrlAsync_UsesServerOnlyStagingKeyForAnOwnedPrivateImageAsync() {
+        var fixture = new Fixture(keepPrivate: true);
+        Result<string> foreign = await fixture.Service.GetDataUrlAsync(fixture.Asset.Id, UserId.New(), CancellationToken.None);
+        Assert.Equal("Image.NotFound", foreign.Error.Code);
+        Assert.Equal(0, fixture.Storage.MetadataCalls);
+
+        Result<string> owned = await fixture.Service.GetDataUrlAsync(fixture.Asset.Id, fixture.Asset.UserId, CancellationToken.None);
+
+        Assert.Equal("data:image/png;base64,AQID", owned.Value);
+        Assert.Equal(("staging", "private-confirmed/users/test/image.png", 10L), fixture.Storage.Read);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -116,11 +129,13 @@ public sealed class ImageAssetContentServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class Fixture {
-        public ImageAsset Asset { get; } = ImageAsset.Create(UserId.New(), "users/test/image.png", "http://127.0.0.1:9000/published/image.png");
+        public ImageAsset Asset { get; }
         public Storage Storage { get; } = new();
         public ImageAssetContentService Service { get; }
 
-        public Fixture(bool confirmed = true) {
+        public Fixture(bool confirmed = true, bool keepPrivate = false) {
+            Asset = ImageAsset.Create(
+                UserId.New(), "users/test/image.png", "http://127.0.0.1:9000/published/image.png", keepPrivate);
             if (confirmed) {
                 Asset.Confirm();
             }

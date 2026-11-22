@@ -73,35 +73,49 @@ Source: `Modules/Recipes/Presentation/Controllers/RecipesController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
-- Public contract files: 17
+- Public contract files: 35
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
-- Interfaces: 11
+- Public contract types: 35
+- Interfaces: 15
 - DTO/read-model/projection types: 0
-- Enums: 0
+- Enums: 1
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class RecipeErrors`
+- `class RecipeModerationProviderException`
+- `enum RecipeModerationActionOutcome`
 - `interface IRecipeAccessService`
 - `interface IRecipeCatalogIdReadService`
 - `interface IRecipeLookupService`
+- `interface IRecipeModerationAdministration`
+- `interface IRecipeModerationProvider`
 - `interface IRecipeMutationTransactionRunner`
 - `interface IRecipeNutritionWriter`
 - `interface IRecipeOverviewReadService`
+- `interface IRecipePublicationApplier`
+- `interface IRecipePublicationQueue`
 - `interface IRecipeReadRepository`
 - `interface IRecipeRepository`
 - `interface IRecipeUsageQuery`
 - `interface IRecipeUserPurgeRetentionReadService`
 - `interface IRecipeWriteRepository`
 - `record RecipeImageReadItem`
+- `record RecipeModerationCheck`
+- `record RecipeModerationContent`
+- `record RecipeModerationImage`
+- `record RecipeModerationItem`
+- `record RecipeModerationPage`
+- `record RecipeModerationPolicyInput`
+- `record RecipeModerationPolicyVersion`
+- `record RecipeModerationPolicyView`
+- `record RecipeModerationPreviewImage`
+- `record RecipeModerationSignal`
 - `record RecipeOverviewIngredientReadItem`
-- `record RecipeOverviewReadItem`
-- `record RecipeOverviewStepReadItem`
-- `record RecipeQueryFilters`
+- ... 5 more type(s)
 
 ## Focused Tests
 
@@ -118,6 +132,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.GalleryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.Publication.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.TimeFilterTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs`
@@ -136,7 +151,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/RecordingImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestProductOverview.cs`
-- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestRecipeOverview.cs`
 
 ## Working Rule
 

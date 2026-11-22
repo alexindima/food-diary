@@ -30,7 +30,7 @@ public sealed class GetImageUploadUrlCommandHandler(
             return Result.Failure<GetImageUploadUrlResult>(ImageErrors.InvalidData(ex.Message));
         }
 
-        var asset = ImageAsset.CreateWithLocation(userId, presign.ObjectKey, presign.FileUrl);
+        var asset = ImageAsset.CreateWithLocation(userId, presign.ObjectKey, presign.FileUrl, request.KeepPrivate);
         asset = await imageAssetRepository.AddAsync(asset, cancellationToken);
 
         return Result.Success(new GetImageUploadUrlResult(

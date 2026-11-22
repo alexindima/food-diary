@@ -386,7 +386,13 @@ export class RecipeManageFacade {
         }
 
         const responseBody = error['error'];
-        return this.isRecord(responseBody) && typeof responseBody['message'] === 'string' ? responseBody['message'] : null;
+        if (!this.isRecord(responseBody)) {
+            return null;
+        }
+        if (responseBody['error'] === 'Recipe.PublicationImageRequiresPrivateUpload') {
+            return this.translateService.instant('RECIPE_PUBLICATION.REPLACE_IMAGE');
+        }
+        return typeof responseBody['message'] === 'string' ? responseBody['message'] : null;
     }
 
     private isRecord(value: unknown): value is Record<string, unknown> {

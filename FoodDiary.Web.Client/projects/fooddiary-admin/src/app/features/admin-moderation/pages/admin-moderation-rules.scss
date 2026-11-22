@@ -1,0 +1,29 @@
+.admin-moderation-rules {
+    display: grid;
+    gap: var(--fd-space-lg);
+    padding: var(--fd-space-lg);
+}
+
+section {
+    display: grid;
+    gap: var(--fd-space-sm);
+    max-width: 56rem;
+    overflow-wrap: anywhere;
+}
+
+h2,
+p {
+    margin: 0;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--fd-space-md);
+}
+
+.sample {
+    display: grid;
+    gap: var(--fd-space-xs);
+    justify-items: start;
+}

@@ -41,9 +41,16 @@ internal static class UpdateRecipeValuePreparer {
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, recipeRepository, cancellationToken);
-        if (recipeResult.IsFailure) {
-            return Result.Failure<UpdateRecipeValues>(recipeResult.Error);
+        Recipe? recipe = await recipeRepository.GetByIdForUpdateAsync(
+            recipeId, userId, includePublic: false, includeSteps: true, cancellationToken: cancellationToken);
+        if (recipe is null) {
+            return Result.Failure<UpdateRecipeValues>(RecipeErrors.NotAccessible(command.RecipeId));
+        }
+
+        int usageCount = await recipeRepository.GetUsageCountAsync(recipeId, userId, includePublic: false, cancellationToken);
+        if (usageCount > 0 && command.ApprovedPublication is null) {
+            return Result.Failure<UpdateRecipeValues>(
+                Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"));
         }
 
         Result<Visibility?> visibilityResult = ParseVisibility(command);
@@ -73,7 +80,6 @@ internal static class UpdateRecipeValuePreparer {
             return Result.Failure<UpdateRecipeValues>(imageAssetResult.Error);
         }
 
-        Recipe recipe = recipeResult.Value;
         return Result.Success(new UpdateRecipeValues(
             userId,
             recipeId,
@@ -83,7 +89,8 @@ internal static class UpdateRecipeValuePreparer {
             imageAssetResult.Value.ImageAsset,
             recipe.ImageAssetId,
             GetStepAssetIds(recipe),
-            steps));
+            steps,
+            usageCount));
     }
 
     private static IReadOnlyList<ImageAssetId> GetStepAssetIds(Recipe recipe) =>
@@ -101,33 +108,6 @@ internal static class UpdateRecipeValuePreparer {
             nameof(command.RecipeId),
             "Recipe id must not be empty.",
             value => new RecipeId(value));
-
-    private static async Task<Result<Recipe>> ResolveEditableRecipeAsync(
-        UpdateRecipeCommand command,
-        RecipeId recipeId,
-        UserId userId,
-        IRecipeReadRepository recipeRepository,
-        CancellationToken cancellationToken) {
-        Recipe? recipe = await recipeRepository.GetByIdForUpdateAsync(
-            recipeId,
-            userId,
-            includePublic: false,
-            includeSteps: true,
-            cancellationToken: cancellationToken);
-        if (recipe is null) {
-            return Result.Failure<Recipe>(RecipeErrors.NotAccessible(command.RecipeId));
-        }
-
-        int usageCount = await recipeRepository.GetUsageCountAsync(
-            recipe.Id,
-            recipe.UserId,
-            includePublic: false,
-            cancellationToken);
-        return usageCount > 0
-            ? Result.Failure<Recipe>(
-                Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"))
-            : Result.Success(recipe);
-    }
 
     private static Result<Visibility?> ParseVisibility(UpdateRecipeCommand command) {
         if (string.IsNullOrWhiteSpace(command.Visibility)) {

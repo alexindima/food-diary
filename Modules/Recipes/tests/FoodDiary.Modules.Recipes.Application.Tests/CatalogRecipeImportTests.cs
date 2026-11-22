@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 using FoodDiary.Modules.Recipes.Application.Commands.ImportCatalogRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
@@ -9,12 +10,31 @@ using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using ResultAssert = FoodDiary.Testing.Assertions.ResultAssert;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CatalogRecipeImportTests {
+    [Fact]
+    public async Task Import_AlreadyPendingModerationIsIdempotent() {
+        CatalogRecipeModel item = ValidRecipe();
+        IRecipeCatalogIdReadService repository = Substitute.For<IRecipeCatalogIdReadService>();
+        repository.CatalogIdIsPublicAsync(item.Id, CancellationToken.None).Returns(returnThis: false);
+        IRecipePublicationQueue queue = Substitute.For<IRecipePublicationQueue>();
+        queue.GetCurrentAsync(new RecipeId(item.Id), CancellationToken.None)
+            .Returns(new RecipePublicationState(Guid.NewGuid(), "Pending", Reason: null));
+        ISender sender = Substitute.For<ISender>();
+        var handler = new ImportCatalogRecipeCommandHandler(repository, new CreateRecipeCommandValidator(), sender, queue);
+
+        CatalogRecipeImportResult result = ResultAssert.Success(await handler.Handle(
+            new ImportCatalogRecipeCommand(Guid.NewGuid(), item, Preview: false), CancellationToken.None));
+
+        Assert.Equal("pendingModeration", result.Status);
+        Assert.Empty(sender.ReceivedCalls());
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData(0)]

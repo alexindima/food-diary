@@ -1,18 +1,26 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Observable, of } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { type ImageSelection, imageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeStepCardComponent, type RecipeStepCardState, type RecipeStepIngredientState } from './recipe-step-card';
 
 function stepFixture(overrides: Partial<RecipeStepCardState> = {}): ComponentFixture<RecipeStepCardComponent> {
     TestBed.configureTestingModule({
         imports: [RecipeStepCardComponent],
-        providers: [provideRouter([]), provideTranslateTesting({ fallbackLang: 'en' })],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting({ fallbackLang: 'en' }),
+            {
+                provide: ImageUploadFacade,
+                useValue: { getOwnerPreview: (assetId: string): Observable<string> => of(stepPhotoPreview(assetId)) },
+            },
+        ],
     });
     const fixture = TestBed.createComponent(RecipeStepCardComponent);
     const initial: RecipeStepCardState = {
@@ -39,6 +47,10 @@ function ingredient(name: string): RecipeStepIngredientState {
         foodName: { value: '', error: null },
         nestedRecipeId: null,
     };
+}
+
+function stepPhotoPreview(assetId: string): string {
+    return `data:image/png;base64,${btoa(assetId)}`;
 }
 
 function element<T extends HTMLElement>(root: ParentNode, selector: string, type: abstract new () => T): T {
@@ -172,20 +184,22 @@ describe('Recipe step photo actions', () => {
     });
 
     it('promotes a selected photo to cover and keeps the original when the new cover is removed', () => {
-        const original = imageSelection('https://example.test/start.jpg', 'start-image');
-        const alternate = imageSelection('https://example.test/final.jpg', 'final-image');
+        const originalId = 'start-image';
+        const alternateId = 'final-image';
+        const original = imageSelection('https://example.test/start.jpg', originalId);
+        const alternate = imageSelection('https://example.test/final.jpg', alternateId);
         const fixture = stepFixture({ images: [original, alternate], imageUrl: { value: original, error: null } });
         const root = fixture.nativeElement as HTMLElement;
         const changed = bindGalleryPhotos(fixture);
-        expect(visibleStepPhotoUrls(root)).toEqual([original.url, alternate.url]);
+        expect(visibleStepPhotoUrls(root)).toEqual([stepPhotoPreview(originalId), stepPhotoPreview(alternateId)]);
 
         chooseStepPhotoAction(fixture, root, 1, 'PRODUCT_AI_DIALOG.CHOOSE_COVER');
         expect(changed).toHaveBeenCalledExactlyOnceWith([alternate, original]);
-        expect(visibleStepPhotoUrls(root)).toEqual([alternate.url, original.url]);
+        expect(visibleStepPhotoUrls(root)).toEqual([stepPhotoPreview(alternateId), stepPhotoPreview(originalId)]);
 
         chooseStepPhotoAction(fixture, root, 0, 'IMAGE_UPLOAD_FIELD.REMOVE');
         expect(changed).toHaveBeenLastCalledWith([original]);
-        expect(visibleStepPhotoUrls(root)).toEqual([original.url]);
+        expect(visibleStepPhotoUrls(root)).toEqual([stepPhotoPreview(originalId)]);
     });
 });
 

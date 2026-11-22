@@ -10,7 +10,7 @@
         [attr.aria-describedby]="error() ? errorId : null"
         [class.image-upload-field__dropzone--dragging]="isDragging()"
         [class.image-upload-field__dropzone--uploading]="isUploading()"
-        [class.image-upload-field__dropzone--has-image]="!!selection().url"
+        [class.image-upload-field__dropzone--has-image]="hasSelection()"
         (click)="onZoneClick(fileInput)"
         (keydown.enter)="onZoneKeydown($event, fileInput)"
         (keydown.space)="onZoneKeydown($event, fileInput, true)"
@@ -26,12 +26,14 @@
             (change)="onFileSelected(fileInput)"
         />
 
-        @if (selection().url; as previewUrl) {
+        @if (hasSelection()) {
             <img
                 class="image-upload-field__preview"
                 width="512"
                 height="512"
-                [ngSrc]="previewUrl"
+                loading="lazy"
+                [attr.src]="previewUrl()"
+                [hidden]="previewUrl() === null"
                 [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
             />
             <div class="image-upload-field__control">

@@ -6,6 +6,8 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
+import { injectImagePreviews } from '../../../../../shared/lib/image-owner-preview';
+import { recipePhotoSources, recipeUsesOwnerImagePreviews } from '../../../../../shared/lib/recipe-image.util';
 import { capitalizeFirstLetter } from '../../../../../shared/lib/text-display.utils';
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
@@ -33,10 +35,20 @@ export class RecipeCookModeComponent {
     protected readonly currentStepIndex = signal(0);
     protected readonly steps = computed(() => [...this.recipe().steps].sort((a, b) => a.stepNumber - b.stepNumber));
     protected readonly stepCount = computed(() => this.steps().length);
-    protected readonly currentStep = computed(() => {
-        const step = this.steps().at(this.currentStepIndex());
-        return step === undefined ? null : { ...step, photos: this.getStepPhotos(step) };
-    });
+    protected readonly currentStep = computed<RecipeStep | null>(() => this.steps().at(this.currentStepIndex()) ?? null);
+    private readonly stepPreviews = injectImagePreviews(
+        computed(() => {
+            const step = this.currentStep();
+            if (step === null) {
+                return [];
+            }
+            const useOwner = recipeUsesOwnerImagePreviews(this.recipe());
+            return step.images !== undefined && step.images.length > 0
+                ? recipePhotoSources({ images: step.images }, useOwner)
+                : recipePhotoSources(step, useOwner);
+        }),
+    );
+    protected readonly stepPhotos = computed(() => this.stepPreviews.urls().filter((url): url is string => url !== null));
     protected readonly progressPercent = computed(() => {
         const count = this.stepCount();
         return count > 0 ? ((this.currentStepIndex() + 1) / count) * PERCENT_SCALE : 0;
@@ -65,13 +77,6 @@ export class RecipeCookModeComponent {
         if (this.canGoNext()) {
             this.currentStepIndex.update(index => index + 1);
         }
-    }
-
-    private getStepPhotos(step: RecipeStep): string[] {
-        if (step.images !== undefined && step.images.length > 0) {
-            return step.images.map(image => image.imageUrl);
-        }
-        return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
     }
 
     private buildIngredientViews(ingredients: readonly RecipeIngredient[]): CookModeIngredientView[] {

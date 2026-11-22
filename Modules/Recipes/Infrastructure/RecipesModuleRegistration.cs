@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Recipes.Infrastructure.Services;
+using FoodDiary.Modules.Recipes.Infrastructure.Moderation;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence;
@@ -24,6 +25,7 @@ public static class RecipesModuleRegistration {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, RecipesUserDataPurgeParticipant>());
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ITelegramDiaryContentTransfer, RecipesUserDataPurgeParticipant>());
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserContentRetentionParticipant, RecipesUserContentRetentionParticipant>());
+        services.AddRecipePublicationPersistence();
         services.AddScoped<IRecipeRepository>(provider => new RecipeRepository(
             provider.GetRequiredService<RecipesDbContext>(), provider.GetRequiredService<IProductSnapshotReadService>(),
             provider.GetRequiredService<IRecipeUsageQuery>(), CreateTransactionSynchronizer(provider)));

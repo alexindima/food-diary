@@ -28,7 +28,7 @@ import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../../s
 import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
-import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data';
+import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
@@ -125,8 +125,20 @@ export class RecipeManageComponent implements UnsavedEditor {
     protected readonly importText = signal('');
     protected readonly importErrorKey = signal<string | null>(null);
     protected readonly isImportPanelVisible = computed(() => this.recipe() === null);
+    protected readonly publicationNotice = computed(() => {
+        const recipe = this.recipe();
+        const status = recipe?.publicationStatus;
+        const reason = status === 'ChangesRequested' ? (recipe?.publicationReason ?? '') : '';
+        const replaceImage = reason === 'ReplaceImage';
+        return {
+            statusKey: status !== undefined && status !== null ? `RECIPE_PUBLICATION.${status}` : '',
+            reasonKey: replaceImage ? 'RECIPE_PUBLICATION.REPLACE_IMAGE' : '',
+            reasonText: replaceImage ? '' : reason,
+        };
+    });
 
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue(this.recipeManageFacade.preferredLanguage()));
+    protected readonly requestsPublication = computed(() => this.recipeFormModel().visibility === RecipeVisibility.Public);
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
         validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));

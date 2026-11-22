@@ -1,0 +1,106 @@
+<div class="admin-recipe-moderation">
+    <fd-admin-moderation-navigation active="/moderation/recipes" />
+
+    @if (queue(); as data) {
+        <dl class="counts">
+            <div>
+                <dt>{{ 'ADMIN_RECIPE_MODERATION.PENDING' | translate }}</dt>
+                <dd>{{ data.pendingCount }}</dd>
+            </div>
+            <div>
+                <dt>{{ 'ADMIN_RECIPE_MODERATION.NEEDS_REVIEW' | translate }}</dt>
+                <dd>{{ data.needsReviewCount }}</dd>
+            </div>
+            <div>
+                <dt>{{ 'ADMIN_RECIPE_MODERATION.CHECK_DELAYED' | translate }}</dt>
+                <dd>{{ data.delayedCount }}</dd>
+            </div>
+        </dl>
+    }
+
+    <div class="admin-filter-bar">
+        <fd-ui-select
+            [label]="'ADMIN_MODERATION.STATUS' | translate"
+            [value]="status() ?? ''"
+            [options]="[
+                { value: '', label: 'ADMIN_COMMON.ALL' | translate },
+                { value: 'Pending', label: 'ADMIN_RECIPE_MODERATION.PENDING' | translate },
+                { value: 'NeedsReview', label: 'ADMIN_RECIPE_MODERATION.NEEDS_REVIEW' | translate },
+                { value: 'CheckDelayed', label: 'ADMIN_RECIPE_MODERATION.CHECK_DELAYED' | translate },
+                { value: 'ChangesRequested', label: 'ADMIN_RECIPE_MODERATION.CHANGES_REQUESTED' | translate },
+                { value: 'Published', label: 'ADMIN_RECIPE_MODERATION.PUBLISHED' | translate },
+                { value: 'Superseded', label: 'ADMIN_RECIPE_MODERATION.SUPERSEDED' | translate },
+            ]"
+            (valueChange)="setStatus($event)"
+        />
+        <fd-ui-button variant="secondary" (click)="loadQueue()">{{ 'ADMIN_RECIPE_MODERATION.REFRESH' | translate }}</fd-ui-button>
+    </div>
+
+    @if (queueLoading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (queueFailed()) {
+        <fd-admin-load-error (retry)="loadQueue()" />
+    } @else if (queue(); as data) {
+        <div class="table-container">
+            <table [attr.aria-label]="'ADMIN_RECIPE_MODERATION.CHECKS' | translate">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'ADMIN_MODERATION.RECIPE' | translate }}</th>
+                        <th scope="col">{{ 'ADMIN_MODERATION.STATUS' | translate }}</th>
+                        <th scope="col">{{ 'ADMIN_MODERATION.CREATED' | translate }}</th>
+                        <th scope="col">{{ 'ADMIN_RECIPE_MODERATION.ATTEMPTS' | translate }}</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of data.items; track item.revisionId) {
+                        <tr>
+                            <td class="recipe-summary">
+                                <strong>{{ item.summary }}</strong>
+                                <span>{{ item.recipeId }}</span>
+                            </td>
+                            <td>{{ statusLabels[item.status] | translate }}</td>
+                            <td>{{ item.createdAt | date: 'short' }}</td>
+                            <td>{{ item.attempts }}</td>
+                            <td>
+                                <fd-ui-button
+                                    size="sm"
+                                    variant="secondary"
+                                    [disabled]="actionInProgress()"
+                                    [disabledReason]="'ADMIN_COMMON.LOADING' | translate"
+                                    (click)="select(item.revisionId)"
+                                    >{{ 'ADMIN_RECIPE_MODERATION.DETAILS' | translate }}</fd-ui-button
+                                >
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="5">{{ 'ADMIN_COMMON.EMPTY' | translate }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <fd-ui-pagination
+            [length]="data.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="goToPage($event + 1)"
+        />
+    }
+
+    @if (selectedId()) {
+        <section #detailPanel tabindex="-1" class="detail-panel" [attr.aria-label]="'ADMIN_RECIPE_MODERATION.DETAILS' | translate">
+            <fd-admin-recipe-moderation-detail
+                [item]="selected()"
+                [loading]="detailsLoading()"
+                [failed]="detailsFailed()"
+                [actionInProgress]="actionInProgress()"
+                [actionError]="actionError()"
+                [(reason)]="reason"
+                (retryDetails)="loadDetails()"
+                (submitAction)="submit($event)"
+            />
+        </section>
+    }
+</div>

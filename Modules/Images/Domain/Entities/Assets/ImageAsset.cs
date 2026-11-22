@@ -10,36 +10,45 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
     public string ObjectKey { get; private set; } = string.Empty;
     public string Url { get; private set; } = string.Empty;
     public bool IsConfirmed { get; private set; }
+    public bool IsPrivate { get; private set; }
 
     private ImageAsset() {
     }
 
-    private ImageAsset(ImageAssetId id, UserId userId, string objectKey, string url, bool isConfirmed)
+    private ImageAsset(ImageAssetId id, UserId userId, string objectKey, string url, bool isPrivate)
         : base(id) {
         UserId = userId;
         ObjectKey = objectKey;
         Url = url;
-        IsConfirmed = isConfirmed;
+        IsPrivate = isPrivate;
     }
 
-    public static ImageAsset CreateWithLocation(UserId userId, ObjectStorageKey objectKey, PublicImageUrl url) {
+    public static ImageAsset CreateWithLocation(UserId userId, ObjectStorageKey objectKey, PublicImageUrl url, bool keepPrivate = false) {
         EnsureUserId(userId);
         ArgumentNullException.ThrowIfNull(objectKey);
         ArgumentNullException.ThrowIfNull(url);
-        return Create(userId, objectKey.Value, url.Value);
+        return Create(userId, objectKey.Value, url.Value, keepPrivate);
     }
 
-    public static ImageAsset Create(UserId userId, string objectKey, string url) {
+    public static ImageAsset Create(UserId userId, string objectKey, string url, bool keepPrivate = false) {
         EnsureUserId(userId);
         string normalizedObjectKey = NormalizeRequiredValue(objectKey, nameof(objectKey));
         string normalizedUrl = NormalizeRequiredValue(url, nameof(url));
 
-        var asset = new ImageAsset(ImageAssetId.New(), userId, normalizedObjectKey, normalizedUrl, isConfirmed: false);
+        var asset = new ImageAsset(ImageAssetId.New(), userId, normalizedObjectKey, normalizedUrl, keepPrivate);
         asset.SetCreated();
         return asset;
     }
 
     public void Confirm() => IsConfirmed = true;
+
+    public void Promote() {
+        if (!IsConfirmed) {
+            throw new InvalidOperationException("Only a confirmed image can be promoted.");
+        }
+
+        IsPrivate = false;
+    }
 
     private static void EnsureUserId(UserId userId) {
         if (userId == UserId.Empty) {

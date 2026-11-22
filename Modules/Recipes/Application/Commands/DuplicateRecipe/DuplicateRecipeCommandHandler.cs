@@ -2,12 +2,12 @@ using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
-using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Common;
@@ -24,7 +24,8 @@ public sealed class DuplicateRecipeCommandHandler(
     IRecipeWriteRepository recipeWriteRepository,
     IRecipeNutritionWriter recipeNutritionWriter,
     ICurrentUserAccessService currentUserAccessService,
-    IRecipeMutationTransactionRunner transactionRunner)
+    IRecipeMutationTransactionRunner transactionRunner,
+    IRecipePublicationQueue? publicationQueue = null)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) =>
         transactionRunner.ExecuteAsync(
@@ -63,14 +64,15 @@ public sealed class DuplicateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(RecipeErrors.NotAccessible(command.RecipeId));
         }
 
-        Recipe duplicate = CreateDuplicate(userId, original);
+        bool keepManagedCover = publicationQueue?.Enabled == true && original.Visibility == Visibility.Public;
+        Recipe duplicate = CreateDuplicate(userId, original, keepManagedCover);
         await recipeWriteRepository.AddAsync(duplicate, cancellationToken);
         await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeNutritionWriter, cancellationToken);
 
-        return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
+        return Result.Success(await RecipePublicationDraft.StageNewAsync(duplicate, publicationQueue, cancellationToken));
     }
 
-    private static Recipe CreateDuplicate(UserId userId, Recipe original) {
+    private static Recipe CreateDuplicate(UserId userId, Recipe original, bool keepManagedCover) {
         bool isOwnerDuplicate = original.UserId == userId;
         var duplicate = Recipe.Create(
             userId,
@@ -80,7 +82,7 @@ public sealed class DuplicateRecipeCommandHandler(
             isOwnerDuplicate ? original.Comment : null,
             original.Category.ToCode(),
             original.ImageUrl,
-            imageAssetId: null,
+            imageAssetId: isOwnerDuplicate && keepManagedCover ? original.ImageAssetId : null,
             original.PrepTime,
             original.CookTime,
             original.Visibility, original.Language);

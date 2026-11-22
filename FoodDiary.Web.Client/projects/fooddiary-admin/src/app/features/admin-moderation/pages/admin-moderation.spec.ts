@@ -181,7 +181,7 @@ describe('AdminModerationComponent loading and pagination', () => {
             reporterId: '',
             targetId: 'target',
         });
-        expect(element(fixture).querySelector('[aria-current="page"]')?.textContent.trim()).toBe('2');
+        expect(element(fixture).querySelector('fd-ui-pagination [aria-current="page"]')?.textContent.trim()).toBe('2');
         expect(button(fixture, 'PAGINATION.NEXT').disabled).toBe(true);
         button(fixture, 'PAGINATION.NEXT').click();
         expect(getReports).toHaveBeenCalledTimes(2);
@@ -191,7 +191,7 @@ describe('AdminModerationComponent loading and pagination', () => {
         const fixture = await renderAsync('?page=99&status=Reviewed');
         expect(getReports).toHaveBeenCalledTimes(2);
         expect(getReports).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, 'Reviewed', expect.anything());
-        expect(element(fixture).querySelector('[aria-current="page"]')?.textContent.trim()).toBe('2');
+        expect(element(fixture).querySelector('fd-ui-pagination [aria-current="page"]')?.textContent.trim()).toBe('2');
     });
 
     it('shows a load error and retries the same filters before rendering an empty response', async () => {

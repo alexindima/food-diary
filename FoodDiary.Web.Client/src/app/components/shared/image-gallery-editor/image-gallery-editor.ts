@@ -9,6 +9,7 @@ import {
 } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit/menu';
 
+import { injectImagePreviews } from '../../../shared/lib/image-owner-preview';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 
@@ -31,16 +32,20 @@ const MAX_PHOTOS = 5;
 export class ImageGalleryEditorComponent {
     private readonly dialogService = inject(FdUiDialogService);
     public readonly compact = input(false);
+    public readonly keepPrivate = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
     public readonly scanning = input(false);
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);
+    private readonly photoPreviews = injectImagePreviews(
+        computed(() => this.photos().map(photo => ({ ...photo, requiresOwner: this.keepPrivate() }))),
+    ).urls;
     protected readonly previewGallery = computed(() => {
         const images: FdUiImagePreviewDialogCollageImage[] = [];
-        const thumbnails = this.photos().map(({ url }) => {
-            if (url === null || url.trim().length === 0) {
+        const thumbnails = this.photoPreviews().map(url => {
+            if (url === null) {
                 return null;
             }
             const thumbnail = { url, initialIndex: images.length };

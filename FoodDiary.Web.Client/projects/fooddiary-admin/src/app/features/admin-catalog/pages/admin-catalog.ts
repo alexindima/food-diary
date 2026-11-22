@@ -33,6 +33,7 @@ export class AdminCatalogComponent {
         ready: this.report().filter(row => row.status === 'ready').length,
         skipped: this.report().filter(row => row.status === 'skipped').length,
         imported: this.report().filter(row => row.status === 'imported').length,
+        pending: this.report().filter(row => row.status === 'pendingModeration').length,
         invalid: this.report().filter(row => row.status === 'invalid' || row.status === 'failed').length,
     }));
 

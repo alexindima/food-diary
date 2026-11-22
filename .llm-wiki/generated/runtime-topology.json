@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "eb7dfac0802bcca96e501b607209e726d505d9764e13c0595d7ee316168480c0",
-    "sourceFileCount": 4875
+    "sourceFingerprint": "327a7a4072e432d608f9260f6dddd8191db9f44cb26d26b9a2ba103deeb1d020",
+    "sourceFileCount": 4927
   },
   "summary": {
     "composeServices": 20,
-    "hostedServices": 17,
-    "httpClients": 24,
+    "hostedServices": 18,
+    "httpClients": 26,
     "webhooks": 22,
     "recurringJobRegistrations": 20,
-    "networkPolicies": 45
+    "networkPolicies": 49
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -683,6 +683,16 @@
       "behaviorSignalScope": "class-window"
     },
     {
+      "name": "RecipeModerationWorker",
+      "baseType": "BackgroundService",
+      "path": "FoodDiary.JobManager/Services/RecipeModerationWorker.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
       "name": "RecurringJobsHostedService",
       "baseType": "IHostedService",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
@@ -829,6 +839,16 @@
       "behaviorSignalScope": "registration-window"
     },
     {
+      "contract": null,
+      "implementation": "MistralRecipeModerationProvider",
+      "registrationPath": "Modules/Recipes/Infrastructure/Moderation/MistralRecipeModerationProvider.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
       "contract": "IOpenAiFoodClient",
       "implementation": "OpenAiFoodClient",
       "registrationPath": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
@@ -837,6 +857,16 @@
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "registration-window"
+    },
+    {
+      "contract": null,
+      "implementation": "OpenAiRecipeModerationProvider",
+      "registrationPath": "Modules/Recipes/Infrastructure/Moderation/OpenAiRecipeModerationProvider.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience"
+      ],
+      "behaviorSignalScope": "class-window"
     },
     {
       "contract": "IOpenFoodFactsService",
@@ -1621,6 +1651,24 @@
       ]
     },
     {
+      "name": "MistralRecipeModerationProvider",
+      "path": "Modules/Recipes/Infrastructure/Moderation/MistralRecipeModerationProvider.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
       "name": "ModuleRegistration",
       "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
       "securitySignals": [
@@ -1676,6 +1724,24 @@
         "duplicate-or-replay-control",
         "retry-or-resilience",
         "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "OpenAiRecipeModerationProvider",
+      "path": "Modules/Recipes/Infrastructure/Moderation/OpenAiRecipeModerationProvider.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience"
       ],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",
@@ -1797,6 +1863,42 @@
         "cancellation-propagation-candidate",
         "timeout-or-delay"
       ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "RecipeModerationHttp",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationHttp.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "RecipeModerationProviderRegistration",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProviderRegistration.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "redirects-disabled"
+      ],
+      "behaviorSignals": [],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [

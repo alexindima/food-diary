@@ -2,12 +2,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
@@ -922,6 +923,7 @@ async function setupComponentAsync(
             provideRouter([]),
             provideTranslateTesting(),
             provideHttpClient(),
+            { provide: ImageUploadFacade, useValue: { getOwnerPreview: (): Observable<string> => of('data:image/webp;base64,UklGRg==') } },
             ...(developmentScreens === undefined ? [] : [{ provide: DEVELOPMENT_SCREENS, useValue: developmentScreens }]),
         ],
     })

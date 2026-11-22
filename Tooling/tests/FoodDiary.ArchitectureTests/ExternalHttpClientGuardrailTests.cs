@@ -53,6 +53,7 @@ public sealed class ExternalHttpClientGuardrailTests {
             "Modules/OpenFoodFacts/Infrastructure/Providers",
             "Modules/Identity/Infrastructure/Providers",
             "Modules/Images/Infrastructure/Providers",
+            "Modules/Recipes/Infrastructure/Moderation",
         ];
         return providerRoots.SelectMany(path => SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(path)))
             .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path)

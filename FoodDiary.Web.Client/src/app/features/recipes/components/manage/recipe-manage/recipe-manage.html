@@ -35,6 +35,16 @@
                 </div>
             }
 
+            @let publication = publicationNotice();
+            <div class="fd-ui-notice-surface fd-ui-body-sm" role="status" [hidden]="!publication.statusKey">
+                {{ publication.statusKey | translate }}
+                <p [hidden]="!publication.reasonKey && !publication.reasonText">
+                    {{ publication.reasonKey | translate }}{{ publication.reasonText }}
+                </p>
+            </div>
+
+            <p class="fd-ui-body-sm" [hidden]="!requestsPublication()">{{ 'RECIPE_PUBLICATION.DATA_NOTICE' | translate }}</p>
+
             @if (isImporting()) {
                 <p class="fd-ui-body-sm" role="status">{{ 'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate }}</p>
             }

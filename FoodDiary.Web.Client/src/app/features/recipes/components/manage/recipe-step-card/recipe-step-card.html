@@ -92,6 +92,7 @@
             <div class="recipe-step-card__content">
                 <div class="recipe-step-card__image">
                     <fd-image-gallery-editor
+                        [keepPrivate]="true"
                         [compact]="true"
                         [photos]="photos()"
                         [cover]="photos()[0] ?? null"

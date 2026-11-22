@@ -8,15 +8,19 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
+import { injectImagePreviews } from '../../../../../shared/lib/image-owner-preview';
+import { recipePhotoSources, recipeUsesOwnerImagePreviews } from '../../../../../shared/lib/recipe-image.util';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { ShoppingListAddFacade } from '../../../../shopping-lists/contracts/shopping-list-add';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import { buildRecipeShoppingItems } from '../../../lib/detail/recipe-shopping-items';
+import { PublicRecipeGalleryComponent } from '../../public-gallery/public-gallery';
 import { RecipeCookModeComponent } from '../recipe-cook-mode/recipe-cook-mode';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 import { buildRecipeDetailViewModel } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
 import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-detail-summary';
+import { RecipePublicationNoticeComponent } from '../recipe-publication-notice/recipe-publication-notice';
 
 @Component({
     selector: 'fd-recipe-detail',
@@ -33,7 +37,9 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
         FdUiButtonComponent,
         FdUiTabsComponent,
         RecipeDetailSummaryComponent,
+        RecipePublicationNoticeComponent,
         RecipeCookModeComponent,
+        PublicRecipeGalleryComponent,
     ],
 })
 export class RecipeDetailComponent {
@@ -45,12 +51,24 @@ export class RecipeDetailComponent {
     protected readonly isFavorite = this.recipeDetailFacade.isFavorite;
     protected readonly isFavoriteLoading = this.recipeDetailFacade.isFavoriteLoading;
     protected readonly duplicateError = this.recipeDetailFacade.duplicateError;
+    protected readonly publicationStatus = this.recipeDetailFacade.publicationStatus;
+    protected readonly publicationReason = this.recipeDetailFacade.publicationReason;
+    protected readonly publicationLoading = this.recipeDetailFacade.publicationLoading;
+    protected readonly publicationRefreshFailed = this.recipeDetailFacade.publicationRefreshFailed;
     protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
     protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
     );
 
     protected readonly recipe: Recipe;
+    protected readonly mediaRecipe = computed(() => this.recipeDetailFacade.refreshedRecipe() ?? this.recipe);
+    private readonly coverPreviews = injectImagePreviews(
+        computed(() => {
+            const recipe = this.mediaRecipe();
+            return recipe.isOwnedByCurrentUser ? recipePhotoSources(recipe, recipeUsesOwnerImagePreviews(recipe)) : [];
+        }),
+    );
+    protected readonly coverImages = computed(() => this.coverPreviews.urls().filter((url): url is string => url !== null));
     protected readonly calories: number;
     protected readonly proteins: number;
     protected readonly fats: number;
@@ -113,6 +131,10 @@ export class RecipeDetailComponent {
 
     protected close(): void {
         this.recipeDetailFacade.close(this.recipe);
+    }
+
+    protected refreshPublication(): void {
+        this.recipeDetailFacade.refreshPublication(this.recipe);
     }
 
     protected onEdit(): void {

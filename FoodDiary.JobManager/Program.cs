@@ -5,6 +5,7 @@ using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.RecentItems.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
+using FoodDiary.Modules.Recipes.Infrastructure.Moderation;
 using FoodDiary.Modules.Meals.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.Notifications.Application;
@@ -68,6 +69,7 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddIdentityEmailOptions(builder.Configuration)
     .AddExportInfrastructure()
     .AddRecipesPersistence()
+    .AddRecipePublicationWorker(builder.Configuration)
     .AddAdminPersistence()
     .AddIdentityPersistence()
     .AddIdentityAuthenticationInfrastructure()
@@ -102,6 +104,7 @@ builder.Services.AddHangfireServer();
 builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();
 builder.Services.AddHostedService<RecurringJobsHostedService>();
 builder.Services.AddHostedService<FoodRecognitionWorker>();
+builder.Services.AddHostedService<RecipeModerationWorker>();
 
 IHost app = builder.Build();
 

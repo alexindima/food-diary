@@ -18,7 +18,7 @@ const DUPLICATED_RECIPE_ID = 'recipe-2';
 const FAVORITE_ID = 'favorite-1';
 
 let facade: RecipeDetailFacade;
-let recipeService: { duplicate: ReturnType<typeof vi.fn> };
+let recipeService: { duplicate: ReturnType<typeof vi.fn>; getById: ReturnType<typeof vi.fn> };
 let favoriteRecipeService: {
     add: ReturnType<typeof vi.fn>;
     getLookupPage: ReturnType<typeof vi.fn>;
@@ -31,6 +31,7 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 beforeEach(() => {
     recipeService = {
         duplicate: vi.fn().mockReturnValue(of(createRecipe({ id: entityId<'recipe'>(DUPLICATED_RECIPE_ID) }))),
+        getById: vi.fn().mockReturnValue(of(createRecipe({ visibility: RecipeVisibility.Public }))),
     };
     favoriteRecipeService = {
         add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
@@ -65,6 +66,18 @@ beforeEach(() => {
 });
 
 describe('RecipeDetailFacade initialization and close', () => {
+    it('refreshes an owner publication from pending to published', () => {
+        const recipe = createRecipe({ publicationStatus: 'Pending' });
+        facade.initialize(recipe);
+        expect(facade.publicationStatus()).toBe('Pending');
+
+        facade.refreshPublication(recipe);
+
+        expect(recipeService.getById).toHaveBeenCalledWith(RECIPE_ID, false);
+        expect(facade.publicationStatus()).toBe('Published');
+        expect(facade.publicationLoading()).toBe(false);
+    });
+
     it('initializes favorite state from API', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
 

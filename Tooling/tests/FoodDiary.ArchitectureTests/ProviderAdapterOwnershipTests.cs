@@ -55,6 +55,7 @@ public sealed class ProviderAdapterOwnershipTests {
     [InlineData("Usda")]
     [InlineData("OpenFoodFacts")]
     [InlineData("Images")]
+    [InlineData("Recipes")]
     public void ProviderOwner_DependsOnSharedIntegrationHelpersWithoutReverseExports(string module) {
         string[] references = ProjectReferenceReader.ReadProjectReferences($"Modules/{module}/Infrastructure/FoodDiary.Modules.{module}.Infrastructure.csproj");
         Assert.Contains("FoodDiary.Integrations.Http", references, StringComparer.Ordinal);

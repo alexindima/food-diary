@@ -15,6 +15,7 @@ import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminModerationContextComponent } from '../components/admin-moderation-context';
+import { AdminModerationNavigationComponent } from '../components/admin-moderation-navigation';
 import {
     AdminModerationActionDialogComponent,
     type AdminModerationActionDialogData,
@@ -37,6 +38,7 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
     imports: [
         AdminPeriodControlComponent,
         AdminModerationContextComponent,
+        AdminModerationNavigationComponent,
         TranslatePipe,
         FdUiInputComponent,
         FdUiSelectComponent,

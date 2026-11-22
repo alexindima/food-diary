@@ -1,4 +1,6 @@
 using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -11,7 +13,8 @@ namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecentRecipes;
 
 public sealed class GetRecentRecipesQueryHandler(
     RecentRecipeLoader recentRecipeLoader,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipePublicationQueue? publicationQueue = null)
     : IQueryHandler<GetRecentRecipesQuery, Result<IReadOnlyList<RecipeModel>>> {
     public async Task<Result<IReadOnlyList<RecipeModel>>> Handle(
         GetRecentRecipesQuery query,
@@ -46,6 +49,9 @@ public sealed class GetRecentRecipesQueryHandler(
             includePublic,
             cancellationToken);
 
-        return [.. items.Select(item => item.ToModel())];
+        RecipeModel[] models = [.. items.Select(item => item.ToModel())];
+        IReadOnlyDictionary<RecipeId, RecipePublicationState> states =
+            await RecipePublicationDraft.GetOwnedStatesAsync(models, publicationQueue, cancellationToken);
+        return [.. models.Select(model => RecipePublicationDraft.WithPublication(model, states))];
     }
 }
