@@ -436,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1297d2b2219e945eb74601dd85a1daaede9e0ee774090e0f6d1b21dc29b482e4",
-          "reviewReason": "Reviewed the combined frontend implementation and generated inventory. The gallery preserves the master dialog and focus behavior and uses authorized previews for recipe images. The dependency edges remain typed owner contracts."
+          "sha256": "8f830d21637c3d222d7dfc88a1005955e4988e90e5341a7e3d84f3f4b794da04",
+          "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -457,13 +457,13 @@
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
           "sha256": "5048fafaa131f9e166c38d684bbbe8b476a35a6eaaeda6fb240d4c2287bf3fa0",
-          "reviewReason": "Reviewed the combined frontend implementation and generated inventory. The gallery preserves the master dialog and focus behavior and uses authorized previews for recipe images. The dependency edges remain typed owner contracts."
+          "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
         }
       ],
-      "reason": "Reviewed the combined frontend implementation and generated inventory. The gallery preserves the master dialog and focus behavior and uses authorized previews for recipe images. The dependency edges remain typed owner contracts.",
-      "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:13.7153097Z"
+      "reason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates.",
+      "baseRef": "74844c5eb820935c0cba1f4d0bea881454234a6f",
+      "gitHead": "bcbde2a494952766acbbc64bc8a21b6643e74c77",
+      "reviewedAtUtc": "2026-11-23T07:52:05.2433297Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -713,8 +713,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "db105f6cb12254e63f99b959d08ec681949eace70a7438440cdf5dc7e9043dc6",
-          "reviewReason": "Reviewed the append-only observations emitted by the sealed USDA retrospective. They are unpromoted duration observations for the existing checks. No verification policy, calibration or durable guidance was applied."
+          "sha256": "0c1c4d6cacacfbe4503754cfc187eba5c8e9d6fa9338c53e3965b7027ed0b3ba",
+          "reviewReason": "Verified append-only observation 126 from backend-coverage-cleanup-602. The architecture-tests forecast overestimate is a pending cost-calibration candidate. Approval, materialization and calibration still follow the documented promotion workflow."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -752,10 +752,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the append-only observations emitted by the sealed USDA retrospective. They are unpromoted duration observations for the existing checks. No verification policy, calibration or durable guidance was applied.",
-      "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:53:57.917437Z"
+      "reason": "Verified append-only observation 126 from backend-coverage-cleanup-602. The architecture-tests forecast overestimate is a pending cost-calibration candidate. Approval, materialization and calibration still follow the documented promotion workflow.",
+      "baseRef": "74844c5eb820935c0cba1f4d0bea881454234a6f",
+      "gitHead": "bcbde2a494952766acbbc64bc8a21b6643e74c77",
+      "reviewedAtUtc": "2026-11-23T07:52:05.6570465Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1124,14 +1124,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "aae67b9c0a7de25c319bafeed637aede5ef976dc6a769fc8eb509ddecb769966",
-          "reviewReason": "Auth completion appended one validated hash-chain event for the sealed task, linking exact AGENTS.md fingerprints, task signals, and outcome. Existing entries and the documented observation, candidate, and verification behavior are unchanged."
+          "sha256": "adda927ec6b0156f12fdc886bbbda109e75060179f42490f01280f82a5602005",
+          "reviewReason": "Verified five appended schema-2 task outcome records. The entries retain the applied AGENTS.md fingerprints, risk and complexity cohorts, outcome scores and predecessor hashes. They are input observations for the existing effectiveness metrics."
         }
       ],
-      "reason": "Auth completion appended one validated hash-chain event for the sealed task, linking exact AGENTS.md fingerprints, task signals, and outcome. Existing entries and the documented observation, candidate, and verification behavior are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "e3af589c5a6a1b60a06ceafccd5c74a790bb5892",
-      "reviewedAtUtc": "2026-11-22T21:04:27.1696702Z"
+      "reason": "Verified five appended schema-2 task outcome records. The entries retain the applied AGENTS.md fingerprints, risk and complexity cohorts, outcome scores and predecessor hashes. They are input observations for the existing effectiveness metrics.",
+      "baseRef": "74844c5eb820935c0cba1f4d0bea881454234a6f",
+      "gitHead": "bcbde2a494952766acbbc64bc8a21b6643e74c77",
+      "reviewedAtUtc": "2026-11-23T07:52:06.0059229Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1161,8 +1161,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "1a1fe7800ddfd3b13c27b87d56674fa76154abfda39f5a5af86d5b6c1dc54076",
-          "reviewReason": "The task completion captured the USDA paths and observed verification timings in one review candidate. The event is observed only, leaving the active eval suite and its approval lifecycle intact."
+          "sha256": "614cc2e318cd2251d0870a0299b182fd7ea4f555be99d1cf089c5ae76540b49c",
+          "reviewReason": "Verified observed event 32 for learned-3b3065d6ece656e4. The architecture-tests cost-miss case records expected modules, scopes, policy rules and check. It is pending and reaches the active suite only through the documented approval and application steps."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1185,10 +1185,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "The task completion captured the USDA paths and observed verification timings in one review candidate. The event is observed only, leaving the active eval suite and its approval lifecycle intact.",
-      "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:53:58.5479158Z"
+      "reason": "Verified observed event 32 for learned-3b3065d6ece656e4. The architecture-tests cost-miss case records expected modules, scopes, policy rules and check. It is pending and reaches the active suite only through the documented approval and application steps.",
+      "baseRef": "74844c5eb820935c0cba1f4d0bea881454234a6f",
+      "gitHead": "bcbde2a494952766acbbc64bc8a21b6643e74c77",
+      "reviewedAtUtc": "2026-11-23T07:52:06.3493509Z"
     },
     {
       "pageId": "workflow-model-routing",
