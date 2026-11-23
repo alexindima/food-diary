@@ -1655,6 +1655,11 @@ function frontendRuntimeOwnerContext(database, query, candidatePaths, limit) {
   tokens.sort();
   const paths = [...new Set((candidatePaths ?? []).map((path) => String(path).replaceAll('\\', '/').replace(/\/+$/, '')).filter(Boolean))]
     .sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase()) || left.localeCompare(right));
+  const candidateScopes = paths.map((path) => {
+    const absolutePath = resolve(repositoryRoot, path);
+    const isDirectory = existsSync(absolutePath) && statSync(absolutePath).isDirectory();
+    return { path, isDirectory, directory: isDirectory ? path : dirname(path).replaceAll('\\', '/') };
+  });
 
   const predicates = [];
   const parameters = [];
@@ -1662,9 +1667,7 @@ function frontendRuntimeOwnerContext(database, query, candidatePaths, limit) {
     predicates.push('instr(lower(payload_json), ?) > 0');
     parameters.push(token.toLowerCase());
   }
-  for (const path of paths) {
-    const directory = existsSync(resolve(repositoryRoot, path)) && statSync(resolve(repositoryRoot, path)).isDirectory()
-      ? path : dirname(path).replaceAll('\\', '/');
+  for (const { path, directory } of candidateScopes) {
     predicates.push("(lower(json_extract(payload_json, '$.path')) = lower(?) OR lower(json_extract(payload_json, '$.templatePath')) = lower(?) OR lower(json_extract(payload_json, '$.path')) LIKE lower(?))");
     parameters.push(path, path, `${directory}/%`);
   }
@@ -1677,27 +1680,26 @@ function frontendRuntimeOwnerContext(database, query, candidatePaths, limit) {
   `).all(...parameters);
   const components = candidateRows.map((row) => ({ row, component: JSON.parse(row.payloadJson) }));
   const ranked = components.map(({ row, component }) => {
-    const componentPath = String(component.path ?? '');
+    const componentPath = String(component.path ?? '').toLowerCase();
     const componentDirectory = dirname(componentPath).replaceAll('\\', '/');
-    const explicit = paths.some((path) => {
-      if (existsSync(resolve(repositoryRoot, path)) && statSync(resolve(repositoryRoot, path)).isDirectory()) {
-        return componentPath.toLowerCase().startsWith(`${path.toLowerCase()}/`);
-      }
-      return path.toLowerCase() === componentPath.toLowerCase()
-        || path.toLowerCase() === String(component.templatePath ?? '').toLowerCase()
-        || (component.stylePaths ?? []).some((style) => String(style).toLowerCase() === path.toLowerCase())
-        || dirname(path).replaceAll('\\', '/').toLowerCase() === componentDirectory.toLowerCase();
-    });
+    const templatePath = String(component.templatePath ?? '').toLowerCase();
+    const stylePaths = (component.stylePaths ?? []).map((style) => String(style).toLowerCase());
+    const directlyRequested = candidateScopes.some(({ path, isDirectory }) => isDirectory
+      ? componentPath.startsWith(`${path.toLowerCase()}/`)
+      : path.toLowerCase() === componentPath || path.toLowerCase() === templatePath || stylePaths.includes(path.toLowerCase()));
+    const explicit = directlyRequested || candidateScopes.some(({ directory, isDirectory }) =>
+      !isDirectory && directory.toLowerCase() === componentDirectory);
     const inputNames = (component.inputs ?? []).map((item) => String(item?.name ?? '')).filter(Boolean);
     const outputNames = (component.outputs ?? []).map((item) => String(item?.name ?? '')).filter(Boolean);
     const search = `${component.class ?? ''} ${component.selector ?? ''} ${componentPath} ${component.templatePath ?? ''} ${inputNames.join(' ')} ${outputNames.join(' ')}`.toLowerCase();
     const semanticScore = tokens.filter((token) => search.includes(token)).length;
-    return { row, component, score: semanticScore + (explicit ? 100 : 0), explicit };
+    return { row, component, score: semanticScore + (explicit ? 100 : 0), explicit, directlyRequested };
   }).filter((item) => item.explicit || item.score > 0);
   const maximumScore = ranked.length === 0 ? null : Math.max(...ranked.map((item) => item.score));
-  const owners = ranked
-    .filter((item) => item.score === maximumScore)
-    .sort((left, right) => String(left.component.path ?? '').toLowerCase().localeCompare(String(right.component.path ?? '').toLowerCase())
+  const directlyRequestedOwners = ranked.filter((item) => item.directlyRequested);
+  const owners = (directlyRequestedOwners.length > 0 ? directlyRequestedOwners : ranked.filter((item) => item.score === maximumScore))
+    .sort((left, right) => right.score - left.score
+      || String(left.component.path ?? '').toLowerCase().localeCompare(String(right.component.path ?? '').toLowerCase())
       || String(left.component.path ?? '').localeCompare(String(right.component.path ?? '')))
     .slice(0, limit);
 

@@ -9,6 +9,13 @@ $repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for frontend runtime-owner parity.' }
 $null = & $manager -Action build -Format Json
 
+$multiOwnerCase = @{
+    Query = 'Adjust hydration dashboard card layout'
+    CandidatePath = @(
+        'FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html'
+        'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html'
+    )
+}
 $cases = @(
     @{ Query = 'Improve AI photo annotation layout on the dashboard result.'; CandidatePath = 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html' }
     @{ Query = 'Move annotation labels outside the AI photo result on dashboard.'; CandidatePath = $null }
@@ -16,7 +23,7 @@ $cases = @(
     @{ Query = 'Improve account settings provider controls'; CandidatePath = $null }
     @{ Query = 'Responsive product autocomplete results'; CandidatePath = $null }
     @{ Query = 'Dashboard widget header'; CandidatePath = 'FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts' }
-    @{ Query = 'Tune two existing cards'; CandidatePath = @('FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html', 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html') }
+    $multiOwnerCase
     @{ Query = 'Изменить карточку гидратации'; CandidatePath = $null }
     @{ Query = 'frontend surface with no matching owner zyxwv'; CandidatePath = $null }
     @{ Query = 'zznosuchruntimeowner92841'; CandidatePath = $null }
@@ -53,11 +60,16 @@ foreach ($case in $cases) {
 if ($reducedCases -ne $cases.Count) {
     throw "SQLite runtime-owner payload filtering reduced records for only $reducedCases/$($cases.Count) parity cases."
 }
+$limitedOwners = & $tool @multiOwnerCase -Limit 1 -Format Json | ConvertFrom-Json
+if ($limitedOwners.ownerCount -ne 1 -or $limitedOwners.owners[0].templatePath -ne $multiOwnerCase.CandidatePath[0]) {
+    throw 'The runtime-owner limit did not retain the most relevant explicit owner.'
+}
 $sharedStyleComponent = 'FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts'
 $sharedStyle = 'FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.scss'
 $sharedOwner = & $tool -Query '' -CandidatePath $sharedStyleComponent -Format Json | ConvertFrom-Json
-if (@($sharedOwner.owners | Where-Object { $_.componentPath -eq $sharedStyleComponent -and $sharedStyle -in @($_.recommendedScope) }).Count -ne 1) {
-    throw 'Runtime ownership omitted the component-declared shared stylesheet.'
+if ($sharedOwner.ownerCount -ne 1 -or $sharedOwner.owners[0].componentPath -ne $sharedStyleComponent -or
+    $sharedStyle -notin @($sharedOwner.owners[0].recommendedScope)) {
+    throw 'Exact component ownership selected unrelated siblings or omitted the declared shared stylesheet.'
 }
 foreach ($owner in @($sharedOwner.owners)) {
     foreach ($path in @($owner.recommendedScope)) {

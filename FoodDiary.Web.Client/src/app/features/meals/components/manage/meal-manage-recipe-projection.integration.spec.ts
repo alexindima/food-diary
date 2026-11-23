@@ -1,6 +1,7 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideLocationMocks } from '@angular/common/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -193,6 +194,7 @@ async function setupEditorAsync(getById: RecipeLookupService['getById'], tools: 
             provideHttpClient(),
             provideHttpClientTesting(),
             provideRouter([]),
+            provideLocationMocks(),
             provideTranslateTesting(),
             {
                 provide: AuthService,

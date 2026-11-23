@@ -472,14 +472,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved."
         }
       ],
-      "reason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs.",
-      "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:43.9097028Z"
+      "reason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:12.0691946Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -549,6 +549,11 @@
           "reviewReason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
           "sha256": "1e32dc94effcc7fe603441ffaf0bda1745219c0266a6c24707ea86d3fd8580a7",
           "reviewReason": "The SQLite cold-checkout regression now detaches HEAD and removes fixture refs to match pull-request CI. The existing assertions still verify planning, all twelve indexes, source isolation, and the frontend dependency diagnostic. The updated full cold-checkout test passed locally."
@@ -559,10 +564,10 @@
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds.",
-      "baseRef": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
-      "gitHead": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
-      "reviewedAtUtc": "2026-11-23T09:11:38.7732439Z"
+      "reason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:05.4728769Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -858,8 +863,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
@@ -877,10 +882,10 @@
           "reviewReason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI.",
-      "baseRef": "HEAD",
-      "gitHead": "704b5cbb8381a944736b0e99da87cff94e45fd92",
-      "reviewedAtUtc": "2026-11-14T11:36:30.4525519Z"
+      "reason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:06.2218340Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -1015,8 +1020,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1039,10 +1044,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/impact-simulation.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
-      "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:45.3200219Z"
+      "reason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:12.4800741Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -1322,8 +1327,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -1331,10 +1336,10 @@
           "reviewReason": "Followed merged recipe images from signed raw upload through server-owned private storage, authenticated previews and approval. The merged gallery and cook/detail flows retain owner reads without a CDN fallback for private bytes."
         }
       ],
-      "reason": "Followed merged recipe images from signed raw upload through server-owned private storage, authenticated previews and approval. The merged gallery and cook/detail flows retain owner reads without a CDN fallback for private bytes.",
-      "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:14.6551800Z"
+      "reason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:12.8677964Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1907,8 +1912,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply."
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
@@ -1936,10 +1941,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The shared ranking policy uses a bounded Database-only write-repository role and prevents browser autofill wording from matching unrelated renderer and transformation roles. The result remains navigation evidence and the same change-policy and Node/.NET parity checks apply.",
-      "baseRef": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
-      "gitHead": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
-      "reviewedAtUtc": "2026-11-23T09:11:39.4856355Z"
+      "reason": "The frontend runtime-owner query retains all directly requested owners within its configured limit, ordering them by relevance. Exact component or template matches take precedence over adjacent directory fallback. The same SQLite source, live projection checks, consumer graph and query-only ranking apply.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:07.4801836Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1969,8 +1974,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
-          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
+          "sha256": "43fc5b403de5ebae3fd5d2babf3bcb8823f6303d15f14656181fed8046074d46",
+          "reviewReason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
@@ -1978,10 +1983,10 @@
           "reviewReason": "Read reader/recovery and source-stability guidance. Stable kernel process identity repairs Linux orphan protection without altering cache repair, source ownership checks, projection validation or housekeeping. Cold-checkout isolation and all standalone indexes pass."
         }
       ],
-      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
-      "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:47.5025145Z"
+      "reason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved.",
+      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
+      "reviewedAtUtc": "2026-11-23T09:27:13.2935503Z"
     }
   ]
 }
