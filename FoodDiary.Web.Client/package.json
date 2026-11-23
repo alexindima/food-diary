@@ -167,7 +167,7 @@
         "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
         "@material-design-icons/font": "^0.14.15",
         "@openai/codex": "0.171.0",
-        "@playwright/test": "^1.65.0",
+        "@playwright/test": "^1.65.1",
         "@storybook/angular-vite": "^10.6.7",
         "@types/express": "^5.0.6",
         "@types/node": "^26.6.6",
