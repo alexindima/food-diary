@@ -68,6 +68,9 @@ jobs:
     needs: authorize
     env:
       SOURCE_COMMIT_SHA: ${{ needs.authorize.outputs.source_sha }}
+      # Buildx 0.39.0 can abort context transfer for Dockerfiles with many source paths.
+      PRODUCTION_BUILDX_VERSION: v0.39.1
+      PRODUCTION_BUILDKIT_IMAGE: moby/buildkit:v0.35.1@sha256:baf6138eb8c37644800c7c913fba051e840ebb9ba13eaf92d92ef9a1712d0b4c
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -99,6 +102,9 @@ jobs:
       - name: Set up Docker Buildx
         id: cached_builder
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+        with:
+          version: ${{ env.PRODUCTION_BUILDX_VERSION }}
+          driver-opts: image=${{ env.PRODUCTION_BUILDKIT_IMAGE }}
       - name: Build and push production image
         id: cached_build
         continue-on-error: true
@@ -125,6 +131,9 @@ jobs:
         id: retry_builder
         if: steps.cache_failure.outputs.retry == 'true'
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+        with:
+          version: ${{ env.PRODUCTION_BUILDX_VERSION }}
+          driver-opts: image=${{ env.PRODUCTION_BUILDKIT_IMAGE }}
       - name: Retry production image without cache
         id: retry_build
         if: steps.cache_failure.outputs.retry == 'true'

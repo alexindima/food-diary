@@ -203,6 +203,19 @@ const receipts = () => images.map(({ name }, index) => createReceipt({
 }));
 const helper = fileURLToPath(new URL("./deploy-images.mjs", import.meta.url));
 
+test("production build and retry use the same pinned Buildx and BuildKit", () => {
+    const workers = job("build-images");
+    assert.match(workers, /^      PRODUCTION_BUILDX_VERSION: v\d+\.\d+\.\d+\r?$/mu);
+    assert.match(workers, /^      PRODUCTION_BUILDKIT_IMAGE: moby\/buildkit:v\d+\.\d+\.\d+@sha256:[0-9a-f]{64}\r?$/mu);
+
+    for (const id of ["cached_builder", "retry_builder"]) {
+        const setup = workers.split(`        id: ${id}\n`)[1]?.split("\n      - name:")[0];
+        assert.ok(setup, id);
+        assert.match(setup, /version: \$\{\{ env\.PRODUCTION_BUILDX_VERSION \}\}/u, id);
+        assert.match(setup, /driver-opts: image=\$\{\{ env\.PRODUCTION_BUILDKIT_IMAGE \}\}/u, id);
+    }
+});
+
 test("cache failure recovery permits one classified clean rebuild before signing", () => {
     const workers = job("build-images");
     assert.ok(workers.includes("id: cached_build"), "A failed production build must be classified before a single cache-free retry");
