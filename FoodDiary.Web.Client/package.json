@@ -196,7 +196,7 @@
         "jsdom": "^31.0.1",
         "lighthouse": "^13.6.0",
         "ng-morph": "^5.0.2",
-        "ng-packagr": "^22.2.6",
+        "ng-packagr": "^22.3.0",
         "postcss-scss": "^4.0.9",
         "prettier": "^3.10.1",
         "sass": "^1.108.2",
