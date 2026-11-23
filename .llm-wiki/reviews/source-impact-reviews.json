@@ -988,14 +988,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "a54bc56a778622253f66c6435906978319465c931d081c4dda9a8cd0be236b19",
-          "reviewReason": "The new Admin npm pretest validates the generated metadata filter before V8. Ran the Admin production build and the named recipe moderation Chrome interaction at 1440 and 390 pixels with successful keyboard focus, Retry and conflict settlement."
+          "sha256": "d10ee6618f7dfda20249207de28cdcfe5d77a2b7ce7c55dcd0b5d484322b6fbe",
+          "reviewReason": "The merged manifest adds angularx-qrcode for the on-demand public recipe dialog. Its peer range covers Angular 22.3.0. The frontend build, i18n, Playwright, and coverage command definitions match the master base."
         }
       ],
-      "reason": "The new Admin npm pretest validates the generated metadata filter before V8. Ran the Admin production build and the named recipe moderation Chrome interaction at 1440 and 390 pixels with successful keyboard focus, Retry and conflict settlement.",
-      "baseRef": "HEAD",
-      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
-      "reviewedAtUtc": "2026-11-22T23:32:34.9562699Z"
+      "reason": "The merged manifest adds angularx-qrcode for the on-demand public recipe dialog. Its peer range covers Angular 22.3.0. The frontend build, i18n, Playwright, and coverage command definitions match the master base.",
+      "baseRef": "8b53c322c",
+      "gitHead": "8b53c322c53e30273572bff90e85687d25628a14",
+      "reviewedAtUtc": "2026-11-23T11:16:09.0912917Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

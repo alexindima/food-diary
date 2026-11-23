@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2952,
-    "symbols": 885,
+    "typescriptFiles": 2953,
+    "symbols": 886,
     "routes": 115,
     "features": 46,
     "specs": 969,
     "localeFiles": 5,
     "roles": {
-      "Component": 507,
+      "Component": 508,
       "Directive": 22,
       "Facade": 92,
       "Other": 42,
@@ -1345,6 +1345,7 @@
         "PublicRecipeDetailComponent",
         "PublicRecipeGalleryComponent",
         "PublicRecipeNavigationComponent",
+        "PublicRecipeQrDialogComponent",
         "PublicRecipeService",
         "PublicRecipesFacade",
         "PublicStepsComponent",
@@ -6272,6 +6273,13 @@
       "line": 8
     },
     {
+      "name": "PublicRecipeQrDialogComponent",
+      "role": "Component",
+      "selector": "fd-public-recipe-qr-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.ts",
+      "line": 14
+    },
+    {
       "name": "RecipeFavoritesPickerComponent",
       "role": "Component",
       "selector": "fd-recipe-favorites-picker",
@@ -8506,8 +8514,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4231,
-      "russianProperties": 4231,
+      "englishProperties": 4234,
+      "russianProperties": 4234,
       "countsMatch": true
     },
     {

@@ -58,9 +58,19 @@
                             (click)="actAsync('save')"
                             >{{ saveLabelKey() | translate }}</fd-ui-button
                         >
-                        <fd-ui-button variant="secondary" fill="text" icon="share" (click)="shareAsync()">{{
-                            'PUBLIC_RECIPES.SHARE' | translate
-                        }}</fd-ui-button>
+                        <div class="recipe-share-actions">
+                            <fd-ui-button variant="secondary" fill="text" icon="share" (click)="shareAsync()">{{
+                                'PUBLIC_RECIPES.SHARE' | translate
+                            }}</fd-ui-button>
+                            <fd-ui-button
+                                variant="secondary"
+                                fill="text"
+                                icon="qr_code"
+                                ariaHasPopup="dialog"
+                                (click)="showQrCodeAsync()"
+                                >{{ 'PUBLIC_RECIPES.SHOW_QR' | translate }}</fd-ui-button
+                            >
+                        </div>
                     </div>
                     <p role="status" [hidden]="actionMessage() === null">{{ actionMessageKey() | translate }}</p>
                     <a [hidden]="shareUrl() === null" [href]="shareUrl()">{{ shareUrl() }}</a>

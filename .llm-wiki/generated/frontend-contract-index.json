@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 517,
-    "componentsWithoutDirectSpecs": 124,
+    "components": 518,
+    "componentsWithoutDirectSpecs": 125,
     "inputs": 1706,
     "outputs": 566,
     "apiCalls": 344,
-    "templatesWithTranslations": 376,
-    "translationKeys": 2313,
-    "consumerEdges": 1359,
+    "templatesWithTranslations": 377,
+    "translationKeys": 2316,
+    "consumerEdges": 1360,
     "consumedComponents": 332,
-    "unconsumedComponents": 184
+    "unconsumedComponents": 185
   },
   "components": [
     {
@@ -12643,6 +12643,19 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.spec.ts"
+    },
+    {
+      "class": "PublicRecipeQrDialogComponent",
+      "selector": "fd-public-recipe-qr-dialog",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "PublicStepsComponent",
@@ -25822,6 +25835,14 @@
     },
     {
       "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.html",
+      "keys": [
+        "PUBLIC_RECIPES.QR_HINT",
+        "PUBLIC_RECIPES.QR_TITLE"
+      ]
+    },
+    {
+      "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "keys": [
         "RECIPE_FAVORITES.LOADING",
@@ -25936,6 +25957,7 @@
         "PUBLIC_RECIPES.RETRY",
         "PUBLIC_RECIPES.SAVED",
         "PUBLIC_RECIPES.SHARE",
+        "PUBLIC_RECIPES.SHOW_QR",
         "PUBLIC_RECIPES.UNAVAILABLE_HINT"
       ]
     },
@@ -34030,8 +34052,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.html",
-      "occurrences": 5,
+      "occurrences": 6,
       "inputsUsed": [
+        "ariaHasPopup",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -36658,6 +36681,19 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "subtitle",
         "title"
       ],
       "outputsHandled": []

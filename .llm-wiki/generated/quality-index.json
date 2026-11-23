@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7143,
+    "productionFiles": 7144,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1063,
@@ -15681,6 +15681,14 @@
       "structuralRiskScore": 0.04
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/public-recipe-qr-dialog/public-recipe-qr-dialog.ts",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.ts",
       "nonBlankLines": 109,
       "decisionPoints": 2,
@@ -15962,11 +15970,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.ts",
-      "nonBlankLines": 200,
-      "decisionPoints": 34,
+      "nonBlankLines": 241,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55
+      "structuralRiskScore": 64.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/public-recipe.routes.ts",

@@ -304,6 +304,31 @@ function recipeAction(harness: RouterTestingHarness, label: string): HTMLButtonE
     }
     return selected;
 }
+describe('Public recipe QR code', () => {
+    it('opens a QR code for the current public recipe without clipboard or sign-in access', async () => {
+        const open = vi.fn().mockReturnValue({ afterClosed: vi.fn().mockReturnValue(of(undefined)), close: vi.fn() });
+        TestBed.overrideProvider(FdUiDialogService, { useValue: { open } });
+        const harness = await RouterTestingHarness.create('/explore/recipe?page=2&category=salads#ingredients');
+
+        recipeAction(harness, 'PUBLIC_RECIPES.SHOW_QR').click();
+        await vi.dynamicImportSettled();
+        expect(open).toHaveBeenCalledExactlyOnceWith(expect.any(Function), {
+            size: 'sm',
+            data: { url: 'https://fooddiary.test/explore/recipe' },
+        });
+
+        await harness.navigateByUrl('/explore/other-recipe');
+        recipeAction(harness, 'PUBLIC_RECIPES.SHOW_QR').click();
+        await vi.dynamicImportSettled();
+        expect(open).toHaveBeenNthCalledWith(2, expect.any(Function), {
+            size: 'sm',
+            data: { url: 'https://fooddiary.test/explore/other-recipe' },
+        });
+        expect(browser.copyTextAsync).not.toHaveBeenCalled();
+        expect(dialog.openAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('public recipe account actions', () => {
     it('copies the recipe URL without catalog filters', async () => {
         const harness = await RouterTestingHarness.create('/explore/recipe?page=2&category=salads');
@@ -313,6 +338,7 @@ describe('public recipe account actions', () => {
         expect(browser.copyTextAsync).toHaveBeenCalledWith('https://fooddiary.test/explore/recipe');
         expect(harness.routeNativeElement?.querySelector('[role="status"]')?.textContent).toContain('PUBLIC_RECIPES.COPIED');
     });
+
     it('shows a selectable link when clipboard access fails', async () => {
         browser.copyTextAsync.mockRejectedValue(new Error('Clipboard unavailable'));
         const harness = await RouterTestingHarness.create('/explore/recipe');
