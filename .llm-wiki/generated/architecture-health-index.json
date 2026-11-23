@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 74,
     "componentsWithoutDirectSpecs": 125,
-    "criticalSymbolsWithoutTestReferences": 47,
+    "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5892,16 +5892,6 @@
       "coveredThrough": []
     },
     {
-      "name": "AdminRecipeModerationController",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
-      "line": 20,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "AdminUserPremiumGrantController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
@@ -6036,16 +6026,6 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetOwnedImageContentQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
-      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

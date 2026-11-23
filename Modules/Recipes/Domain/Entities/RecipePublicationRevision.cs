@@ -30,5 +30,8 @@ public sealed class RecipePublicationRevision {
     private readonly List<RecipePublicationImageReference> _images = [];
     public IReadOnlyCollection<RecipePublicationImageReference> Images => _images;
 
-    public void AddImage(Guid assetId) => _images.Add(new RecipePublicationImageReference { AssetId = (ImageAssetId)assetId });
+    public void AddImage(Guid assetId) => _images.Add(new RecipePublicationImageReference {
+        RevisionId = Id,
+        AssetId = (ImageAssetId)assetId,
+    });
 }

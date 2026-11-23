@@ -11,6 +11,31 @@ namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BotGeneratedClientTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task RequestImageUpload_PreservesExplicitPrivacySelectionAsync(bool keepPrivate) {
+        using var handler = new Handler(async request => {
+            Assert.Equal("/api/v1/images/upload-url", request.RequestUri?.AbsolutePath);
+            using var body = JsonDocument.Parse(await request.Content!.ReadAsStringAsync());
+            Assert.Multiple(
+                () => Assert.Equal(keepPrivate, body.RootElement.GetProperty("keepPrivate").GetBoolean()),
+                () => Assert.Equal("recipe.jpg", body.RootElement.GetProperty("fileName").GetString()));
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        });
+        using var http = new HttpClient(handler);
+        var images = new BotImagesApi(new BotApiTransport(http, new Uri("https://diary.example")));
+
+        using HttpResponseMessage reply = await images.RequestUploadAsync("1", "upload-once", new GetImageUploadUrlHttpRequest {
+            FileName = "recipe.jpg",
+            ContentType = "image/jpeg",
+            FileSizeBytes = 1024,
+            KeepPrivate = keepPrivate,
+        }, new BotApiRequestContext("token"), CancellationToken.None);
+
+        Assert.Equal(HttpStatusCode.OK, reply.StatusCode);
+    }
+
     [Fact]
     public async Task PrivacyAsync_RoundTripsDeclinedHealthAndAcceptedMarketingWithTheNoticeVersion() {
         const string response = """

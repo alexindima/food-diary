@@ -2103,8 +2103,6 @@
       "module": "Recipes",
       "capabilities": [
         "call:RecipePublicationRevision.AddImage",
-        "context:CurrentTransaction",
-        "context:Database",
         "context:ExecuteSerializableAsync",
         "entity:RecipePublicationPolicy",
         "entity:RecipePublicationRevision",
@@ -2112,8 +2110,8 @@
         "tracked:RecipePublicationRevision",
         "write:RecipePublicationRevision"
       ],
-      "reason": "Reads and writes only Recipes-owned version and policy tables. Joins the existing transaction for submission, supersession and completion. Publication completes only with the matching unexpired approval lease. Snapshot text and asset pointers are immutable once stored.",
-      "technicalSourceSha256": "0834ca9e8539097faf1e2ab124cd679b4a18d3115750fd82e1da5bbccc57a365"
+      "reason": "Reads and writes only Recipes-owned version and policy tables. The persistence session binds submission, supersession and completion to the shared transaction. Publication completes only with the matching unexpired approval lease. Snapshot text and asset pointers are immutable once stored.",
+      "technicalSourceSha256": "d86196b037277acf2817f81793b11c4c4afd5d9eb925d31c35541e3994483d3f"
     },
     "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs": {
       "module": "Recipes",
@@ -2125,7 +2123,7 @@
         "write:RecipePublicationRevision"
       ],
       "reason": "Claims due publication rows using PostgreSQL row locks and expiring leases. Provider counters update atomically by time window. Moderation requests run outside database transactions. After approval commits, the worker checks the exact active lease before each Images-owned photo promotion. Promotion retries preserve approval, and Recipes verifies the same lease while applying the version.",
-      "technicalSourceSha256": "e7e60da2c2d9b815103d18b830d7053e77382b13f8c1dc75cc8fdafd2cfef33e"
+      "technicalSourceSha256": "b6ba638fe0562a7f7037a8522d8b73767e8115d0fce3c29286a812b99803d8ac"
     },
     "Modules/Recipes/Infrastructure/Moderation/RecipeModerationAdministration.cs": {
       "module": "Recipes",

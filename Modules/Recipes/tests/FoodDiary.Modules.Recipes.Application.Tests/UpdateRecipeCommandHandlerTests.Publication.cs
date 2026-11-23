@@ -1,5 +1,9 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 using FoodDiary.Modules.Recipes.Application.Common;
@@ -13,6 +17,119 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 public partial class UpdateRecipeCommandHandlerTests {
+    [Theory]
+    [InlineData(false, 1, true, null)]
+    [InlineData(false, 1, false, "no longer current")]
+    [InlineData(true, 1, true, "already used")]
+    [InlineData(true, 0, false, "no longer current")]
+    public async Task Approval_RespectsRecipeUseAndRequiresClaimCompletionAsync(
+        bool changedWhilePending, int usageCount, bool completed, string? expectedError) {
+        var owner = UserId.New();
+        var recipe = Recipe.Create(owner, "Pending recipe", servings: 2, visibility: Visibility.Private);
+        recipe.AddStep(1, "Cook");
+        string submitted = RecipePublicationDraft.Capture(recipe).Serialize();
+        var claim = new RecipePublicationClaim(Guid.NewGuid(), Guid.NewGuid());
+        IRecipePublicationQueue queue = Substitute.For<IRecipePublicationQueue>();
+        queue.CanApplyAsync(recipe.Id, claim, CancellationToken.None).Returns(returnThis: true);
+        queue.CompleteAsync(recipe.Id, claim, CancellationToken.None).Returns(completed);
+        IRecipeRepository repository = CreateRecipeRepository(recipe.Id, owner, recipe);
+        repository.GetUsageCountAsync(recipe.Id, owner, includePublic: false, CancellationToken.None).Returns(usageCount);
+        if (changedWhilePending) {
+            recipe.AddStep(2, "Cool");
+        }
+        var applier = new RecipePublicationApplier(UpdateRecipeHandler(
+            repository, new NoopImageAssetCleanupService(),
+            CreateUserRepository(User.Create("approval@example.test", "hash")), AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(), new AllowAllRecipeLookupService(), queue));
+
+        Result result = await applier.ApplyAsync(recipe.Id, owner, claim, submitted, CancellationToken.None);
+
+        if (expectedError is null) {
+            ResultAssert.Success(result);
+            Assert.Equal(Visibility.Public, recipe.Visibility);
+            Assert.Equal("Cook", Assert.Single(recipe.Steps).Instruction);
+        } else {
+            ResultAssert.Failure(result);
+            Assert.Contains(expectedError, result.Error.Message, StringComparison.Ordinal);
+            if (changedWhilePending && usageCount > 0) {
+                Assert.Equal(Visibility.Private, recipe.Visibility);
+                Assert.Equal(2, recipe.Steps.Count);
+            }
+        }
+        await queue.Received(changedWhilePending && usageCount > 0 ? 0 : 1).CompleteAsync(recipe.Id, claim, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task Approval_RejectsDraftForAnotherOwnerBeforeLoadingRecipeAsync() {
+        var owner = UserId.New();
+        var recipe = Recipe.Create(owner, "Pending recipe", servings: 2);
+        var claim = new RecipePublicationClaim(Guid.NewGuid(), Guid.NewGuid());
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        var applier = new RecipePublicationApplier(UpdateRecipeHandler(
+            repository, new NoopImageAssetCleanupService(), CreateUserRepository(User.Create("owner@example.test", "hash")),
+            AllowImageAssetAccessService.Instance, new AllowAllProductLookupService(), new AllowAllRecipeLookupService()));
+
+        Result result = await applier.ApplyAsync(
+            recipe.Id, UserId.New(), claim, RecipePublicationDraft.Capture(recipe).Serialize(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("The proposed recipe does not match the publication.", result.Error.Message);
+        Assert.Empty(repository.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task PublicUpdate_WithInvalidNutritionDoesNotChangeOrStageRecipeAsync() {
+        var owner = UserId.New();
+        var recipe = Recipe.Create(owner, "Current recipe", servings: 2, visibility: Visibility.Public);
+        IRecipePublicationQueue queue = Substitute.For<IRecipePublicationQueue>();
+        queue.Enabled.Returns(returnThis: true);
+        IRecipeRepository repository = CreateRecipeRepository(recipe.Id, owner, recipe);
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
+            repository, new NoopImageAssetCleanupService(),
+            CreateUserRepository(User.Create("invalid-nutrition@example.test", "hash")), AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(), new AllowAllRecipeLookupService(), queue);
+
+        Result<RecipeModel> result = await handler.Handle(
+            UpdateCommand(owner.Value, recipe.Id.Value, calculateNutritionAutomatically: false), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal(ErrorKind.Validation, result.Error.Kind),
+            () => Assert.Equal("Current recipe", recipe.Name));
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<Recipe>(), Arg.Any<CancellationToken>());
+        await queue.DidNotReceiveWithAnyArgs().StageAsync(default, default, default!, default!, default);
+    }
+
+    [Fact]
+    public async Task PublicUpdate_WhenPhotoAccessFailsDuringAdmissionDoesNotStageRecipeAsync() {
+        var owner = UserId.New();
+        var recipe = Recipe.Create(owner, "Current recipe", servings: 2, visibility: Visibility.Private);
+        var imageId = ImageAssetId.New();
+        var photo = new ImageAssetReadModel(imageId, "https://cdn.example.com/recipe.jpg", IsPrivate: true);
+        Error accessError = Errors.Validation.Invalid("ImageAssetId", "Photo is no longer available.");
+        IImageAssetAccessService imageAccess = Substitute.For<IImageAssetAccessService>();
+        imageAccess.ResolveOptionalAsync(assetId: null, owner, CancellationToken.None)
+            .Returns(Result.Success<ImageAssetReadModel?>(value: null));
+        imageAccess.ResolveOptionalAsync(imageId, owner, CancellationToken.None)
+            .Returns(Result.Success<ImageAssetReadModel?>(photo), Result.Failure<ImageAssetReadModel?>(accessError));
+        IRecipePublicationQueue queue = Substitute.For<IRecipePublicationQueue>();
+        queue.Enabled.Returns(returnThis: true);
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
+            CreateRecipeRepository(recipe.Id, owner, recipe), new NoopImageAssetCleanupService(),
+            CreateUserRepository(User.Create("photo-race@example.test", "hash")), imageAccess,
+            new AllowAllProductLookupService(), new AllowAllRecipeLookupService(), queue);
+
+        Result<RecipeModel> result = await handler.Handle(
+            UpdateCommand(owner.Value, recipe.Id.Value, imageAssetId: imageId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal(accessError, result.Error),
+            () => Assert.Equal(Visibility.Private, recipe.Visibility),
+            () => Assert.Null(recipe.ImageAssetId));
+        await queue.DidNotReceiveWithAnyArgs().StageAsync(default, default, default!, default!, default);
+    }
+
     [Fact]
     public async Task PublicUpdate_AppliesOnlyAnApprovedCurrentRevisionAndPreservesPersonalNotes() {
         var owner = UserId.New();

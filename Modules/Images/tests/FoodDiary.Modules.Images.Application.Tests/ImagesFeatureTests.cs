@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace FoodDiary.Modules.Images.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public class ImagesFeatureTests {
+public partial class ImagesFeatureTests {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -59,6 +59,22 @@ public class ImagesFeatureTests {
             () => Assert.Equal("images/object.jpg", storage.ValidatedObjectKey),
             () => Assert.Equal(("images/object.jpg", true), outbox.Enqueued));
     }
+
+    [Fact]
+    public async Task ImageAbstraction_WithoutPrivateStorage_RejectsConfirmationAndPromotionAsync() {
+        IImageStorageService storage = new DefaultMethodImageStorageService();
+        var key = ObjectStorageKey.FromStoredValue("images/recipe.jpg");
+
+        InvalidOperationException confirmation = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => storage.ConfirmPrivateUploadedObjectAsync(key, CancellationToken.None));
+        InvalidOperationException promotion = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => storage.PromotePrivateImageAsync(key, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal("Private image storage is not configured.", confirmation.Message),
+            () => Assert.Equal(confirmation.Message, promotion.Message));
+    }
+
     [Fact]
     public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
         var handler = new GetImageUploadUrlCommandHandler(

@@ -6,8 +6,8 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1834,
-    "credential": 184,
+    "candidateFields": 1835,
+    "credential": 185,
     "identity": 217,
     "health": 838,
     "financial": 169,
@@ -751,6 +751,13 @@
       "type": "Guid?",
       "path": "Modules/Recipes/Domain/Entities/RecipePublicationRevision.cs",
       "line": 26
+    },
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "line": 199
     },
     {
       "category": "credential",

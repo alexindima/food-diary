@@ -29,13 +29,13 @@ internal sealed class RecipeModerationProcessor(
             return false;
         }
 
-        RecipePublicationRevision? revision = await store.ExecuteAsync(token => ClaimAsync(observation, token), cancellationToken);
-        if (revision is null) {
+        if (await store.ExecuteAsync(token => ClaimAsync(observation, token), cancellationToken) is not { } claimed) {
             return false;
         }
 
+        (RecipePublicationRevision revision, Guid leaseToken) = claimed;
         if (!observation && revision.Status is RecipePublicationStatuses.Approved) {
-            await PublishAsync(revision, cancellationToken);
+            await PublishAsync(revision, new RecipePublicationClaim(revision.Id, leaseToken), cancellationToken);
             return true;
         }
 
@@ -43,13 +43,9 @@ internal sealed class RecipeModerationProcessor(
         return true;
     }
 
-    private async Task PublishAsync(RecipePublicationRevision revision, CancellationToken cancellationToken) {
+    private async Task PublishAsync(
+        RecipePublicationRevision revision, RecipePublicationClaim claim, CancellationToken cancellationToken) {
         store.Context.ChangeTracker.Clear();
-        if (revision.LeaseToken is not { } leaseToken) {
-            return;
-        }
-
-        var claim = new RecipePublicationClaim(revision.Id, leaseToken);
         if (!await PromotePhotosAsync(revision, claim, cancellationToken)) {
             return;
         }
@@ -150,8 +146,8 @@ internal sealed class RecipeModerationProcessor(
             return;
         }
 
-        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        deadline.CancelAfter(LeaseDuration - TimeSpan.FromSeconds(30));
+        using var timeout = new CancellationTokenSource(LeaseDuration - TimeSpan.FromSeconds(30), clock);
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
         try {
             RecipeModerationCheck check = await provider.CheckAsync(content, deadline.Token);
             await FinishAsync(revision, observation, async (current, token) => {
@@ -170,7 +166,7 @@ internal sealed class RecipeModerationProcessor(
                 current.Reason = review ? "Flagged" : null;
                 current.NextAttemptAt = review ? null : clock.GetUtcNow();
             }, cancellationToken);
-        } catch (OperationCanceledException) when (deadline.IsCancellationRequested && !cancellationToken.IsCancellationRequested) {
+        } catch (OperationCanceledException) when (timeout.IsCancellationRequested && !cancellationToken.IsCancellationRequested) {
             await FinishAsync(revision, observation, current => DelayCheck(current, observation,
                 new RecipeModerationProviderException("The moderation request timed out.", retryable: true)), cancellationToken);
         } catch (RecipeModerationProviderException error) {
@@ -200,7 +196,8 @@ internal sealed class RecipeModerationProcessor(
         }
     }
 
-    private async Task<RecipePublicationRevision?> ClaimAsync(bool observation, CancellationToken cancellationToken) {
+    private async Task<(RecipePublicationRevision Revision, Guid LeaseToken)?> ClaimAsync(
+        bool observation, CancellationToken cancellationToken) {
         DateTimeOffset now = clock.GetUtcNow();
         FormattableString sql = observation
             ? (FormattableString)$"""
@@ -219,12 +216,13 @@ internal sealed class RecipeModerationProcessor(
             return null;
         }
 
+        var leaseToken = Guid.NewGuid();
         if (observation) {
-            revision.ShadowLeaseToken = Guid.NewGuid();
+            revision.ShadowLeaseToken = leaseToken;
             revision.ShadowLeaseUntil = now.Add(LeaseDuration);
             revision.ShadowAttempts++;
         } else {
-            revision.LeaseToken = Guid.NewGuid();
+            revision.LeaseToken = leaseToken;
             revision.LeaseUntil = now.Add(LeaseDuration);
             if (revision.Status is RecipePublicationStatuses.Pending) {
                 revision.Attempts++;
@@ -233,7 +231,7 @@ internal sealed class RecipeModerationProcessor(
             }
         }
 
-        return revision;
+        return (revision, leaseToken);
     }
 
     private Task<bool> FinishAsync(RecipePublicationRevision claim, bool observation, Action<RecipePublicationRevision> change,

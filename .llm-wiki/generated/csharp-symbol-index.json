@@ -26045,7 +26045,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStore.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "EfRecipeMutationTransactionRunner",

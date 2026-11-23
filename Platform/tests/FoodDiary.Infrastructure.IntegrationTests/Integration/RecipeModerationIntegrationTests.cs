@@ -234,10 +234,11 @@ public sealed partial class RecipeModerationIntegrationTests(PostgresDatabaseFix
             .GetByIdAsync(recipeId, viewer, includePublic: true, cancellationToken: CancellationToken.None);
     }
 
-    private static async Task<bool> ProcessAsync(ServiceProvider provider, bool observation = false) {
+    private static async Task<bool> ProcessAsync(
+        ServiceProvider provider, bool observation = false, CancellationToken cancellationToken = default) {
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         return await scope.ServiceProvider.GetRequiredService<IRecipeModerationProcessor>()
-            .ProcessNextAsync(observation, CancellationToken.None);
+            .ProcessNextAsync(observation, cancellationToken);
     }
 
     private static Guid GetRevisionId(RecipeModel model) {
@@ -269,7 +270,8 @@ public sealed partial class RecipeModerationIntegrationTests(PostgresDatabaseFix
         IRecipeModerationProvider? mistral = null,
         IRecipeImagePromotionService? photoPromotion = null,
         IReadOnlyList<ImageAsset>? privateAssets = null,
-        TimeProvider? clock = null) {
+        TimeProvider? clock = null,
+        IImageAssetContentService? imageContent = null) {
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = connectionString,
             ["RecipeModeration:Enabled"] = "true",
@@ -292,7 +294,7 @@ public sealed partial class RecipeModerationIntegrationTests(PostgresDatabaseFix
         }
         services.AddSingleton(imageAccess);
         services.AddSingleton(photoPromotion ?? Substitute.For<IRecipeImagePromotionService>());
-        services.AddSingleton(Substitute.For<IImageAssetContentService>());
+        services.AddSingleton(imageContent ?? Substitute.For<IImageAssetContentService>());
         services.AddSingleton(Substitute.For<IImageAssetCleanupService>());
         services.AddSingleton(openAi);
         if (mistral is not null) {

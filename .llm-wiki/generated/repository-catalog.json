@@ -796,6 +796,7 @@
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj",
           "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj",
+          "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj",
           "Modules/Users/Application.Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
@@ -1511,6 +1512,7 @@
           "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
+          "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj"
         ],

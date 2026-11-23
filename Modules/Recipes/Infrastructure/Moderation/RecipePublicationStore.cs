@@ -7,7 +7,6 @@ using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Modules.Recipes.Infrastructure.Moderation;
@@ -26,7 +25,6 @@ internal sealed class RecipePublicationStore(
 
     public async Task<RecipePublicationState> StageAsync(
         RecipeId recipeId, UserId ownerId, string changeJson, RecipeModerationContent content, CancellationToken cancellationToken) {
-        await JoinTransactionAsync(cancellationToken);
         DateTimeOffset now = clock.GetUtcNow();
         await SupersedeAsync(recipeId, now, cancellationToken);
         RecipeModerationPolicyVersion policy = await GetActivePolicyAsync(cancellationToken);
@@ -58,7 +56,6 @@ internal sealed class RecipePublicationStore(
     }
 
     public async Task<RecipePublicationState?> GetCurrentAsync(RecipeId recipeId, CancellationToken cancellationToken) {
-        await JoinTransactionAsync(cancellationToken);
         RecipePublicationRevision? current = await Revisions.AsNoTracking()
             .SingleOrDefaultAsync(revision => revision.RecipeId == recipeId && revision.IsCurrent, cancellationToken);
         return current is null ? null : ToPublicationState(current);
@@ -70,7 +67,6 @@ internal sealed class RecipePublicationStore(
             return new Dictionary<RecipeId, RecipePublicationState>();
         }
 
-        await JoinTransactionAsync(cancellationToken);
         var states = await Revisions.AsNoTracking().Where(revision => revision.IsCurrent && recipeIds.Contains(revision.RecipeId))
             .Select(revision => new { revision.RecipeId, revision.Id, revision.Status, revision.Reason }).ToListAsync(cancellationToken);
         return states.ToDictionary(revision => revision.RecipeId, revision => new RecipePublicationState(
@@ -78,7 +74,6 @@ internal sealed class RecipePublicationStore(
     }
 
     public async Task CancelAsync(RecipeId recipeId, CancellationToken cancellationToken) {
-        await JoinTransactionAsync(cancellationToken);
         await SupersedeAsync(recipeId, clock.GetUtcNow(), cancellationToken);
         await Revisions.Where(revision => revision.RecipeId == recipeId && revision.ShadowNextAttemptAt.HasValue)
             .ExecuteUpdateAsync(update => update
@@ -86,13 +81,10 @@ internal sealed class RecipePublicationStore(
                 .SetProperty(revision => revision.ShadowLeaseToken, (Guid?)null), cancellationToken);
     }
 
-    public async Task<bool> CanApplyAsync(RecipeId recipeId, RecipePublicationClaim claim, CancellationToken cancellationToken) {
-        await JoinTransactionAsync(cancellationToken);
-        return await ActiveApproval(recipeId, claim).AnyAsync(cancellationToken);
-    }
+    public Task<bool> CanApplyAsync(RecipeId recipeId, RecipePublicationClaim claim, CancellationToken cancellationToken) =>
+        ActiveApproval(recipeId, claim).AnyAsync(cancellationToken);
 
     public async Task<bool> CompleteAsync(RecipeId recipeId, RecipePublicationClaim claim, CancellationToken cancellationToken) {
-        await JoinTransactionAsync(cancellationToken);
         RecipePublicationRevision? revision = await ActiveApproval(recipeId, claim).SingleOrDefaultAsync(cancellationToken);
         if (revision is null) {
             return false;
@@ -134,16 +126,7 @@ internal sealed class RecipePublicationStore(
     }
 
     internal Task<T> ExecuteAsync<T>(Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken) =>
-        transactions.ExecuteSerializableAsync(async token => {
-            await JoinTransactionAsync(token);
-            return await operation(token);
-        }, cancellationToken);
-
-    private async Task JoinTransactionAsync(CancellationToken cancellationToken) {
-        if (context.Database.IsRelational() && context.Database.CurrentTransaction?.GetDbTransaction() != transactions.CurrentTransaction) {
-            await context.Database.UseTransactionAsync(transactions.CurrentTransaction, cancellationToken);
-        }
-    }
+        transactions.ExecuteSerializableAsync(operation, cancellationToken);
 
     private Task<int> SupersedeAsync(RecipeId id, DateTimeOffset now, CancellationToken cancellationToken) =>
         Revisions.Where(revision => revision.RecipeId == id && revision.IsCurrent)

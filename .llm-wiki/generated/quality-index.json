@@ -9,8 +9,8 @@
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1063,
-    "criticalSymbolsWithTestReferences": 1016,
-    "criticalSymbolsWithoutTestReferences": 47,
+    "criticalSymbolsWithTestReferences": 1018,
+    "criticalSymbolsWithoutTestReferences": 45,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -23909,8 +23909,8 @@
       "nonBlankLines": 64,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.28
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.28
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
@@ -40157,8 +40157,8 @@
       "nonBlankLines": 21,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.92
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.92
     },
     {
       "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
@@ -48186,11 +48186,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipePublicationRevision.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 34,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.68
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
@@ -48370,11 +48370,11 @@
     },
     {
       "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
-      "nonBlankLines": 280,
-      "decisionPoints": 49,
+      "nonBlankLines": 279,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.1
+      "structuralRiskScore": 77.58
     },
     {
       "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProviderRegistration.cs",
@@ -48402,11 +48402,11 @@
     },
     {
       "path": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStore.cs",
-      "nonBlankLines": 143,
-      "decisionPoints": 19,
+      "nonBlankLines": 127,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.36
+      "structuralRiskScore": 28.04
     },
     {
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
@@ -61437,9 +61437,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
       "line": 20,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminRecipeModerationControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -64472,9 +64474,11 @@
       "role": "QueryHandler",
       "path": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.Publication.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

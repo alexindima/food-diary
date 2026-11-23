@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure.Tests.Recipes;
 
 [ExcludeFromCodeCoverage]
-public sealed class RecipeModerationProviderTests {
+public sealed partial class RecipeModerationProviderTests {
     [Fact]
     public async Task OpenAiChecksTextAndConfirmedImageWithSeparateAttributionAsync() {
         var handler = new RecordingHandler(() => OpenAiResponse());
@@ -132,19 +132,26 @@ public sealed class RecipeModerationProviderTests {
             () => Assert.Single(handler.Requests));
     }
 
-    [Fact]
-    public async Task OpenAiTreatsAnIncompleteResponseAsRetryableInsteadOfClearedAsync() {
-        var handler = new RecordingHandler(() => OpenAiResponse(omitRequiredCategory: true));
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    [InlineData(false, null)]
+    public async Task OpenAiTreatsAnIncompleteOrInconsistentResponseAsRetryableAsync(bool omitRequiredCategory, bool? flagged) {
+        var handler = new RecordingHandler(() => OpenAiResponse(omitRequiredCategory, flagged));
         using var client = new HttpClient(handler);
         var provider = new OpenAiRecipeModerationProvider(client, Substitute.For<IImageAssetContentService>(), "openai-test-key");
 
         RecipeModerationProviderException exception = await Assert.ThrowsAsync<RecipeModerationProviderException>(
             () => provider.CheckAsync(new RecipeModerationContent("Soup", []), CancellationToken.None));
 
-        Assert.True(exception.Retryable);
+        Assert.Multiple(
+            () => Assert.True(exception.Retryable),
+            () => Assert.False(exception.RequiresContentChanges),
+            () => Assert.Single(handler.Requests));
     }
 
-    private static HttpResponseMessage OpenAiResponse(bool omitRequiredCategory = false) {
+    private static HttpResponseMessage OpenAiResponse(
+        bool omitRequiredCategory = false, bool? flagged = true, string model = "omni-moderation-2024-09-26") {
         string[] knownCategories = [
             "harassment", "harassment/threatening", "hate", "hate/threatening", "illicit", "illicit/violent",
             "self-harm", "self-harm/intent", "self-harm/instructions", "sexual", "sexual/minors", "violence", "violence/graphic",
@@ -156,7 +163,7 @@ public sealed class RecipeModerationProviderTests {
         }
 
         var result = new {
-            flagged = true,
+            flagged,
             categories,
             category_scores = knownCategories.ToDictionary(
                 static category => category, static category => IsViolence(category) ? 0.75 : 0, StringComparer.Ordinal),
@@ -164,7 +171,7 @@ public sealed class RecipeModerationProviderTests {
         return new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new {
                 id = "modr-test",
-                model = "omni-moderation-2024-09-26",
+                model,
                 results = new[] { result },
             }),
         };

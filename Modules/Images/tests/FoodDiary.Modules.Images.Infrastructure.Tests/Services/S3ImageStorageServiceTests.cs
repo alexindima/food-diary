@@ -41,6 +41,23 @@ public sealed class S3ImageStorageServiceTests {
             () => Assert.Equal(approvedBytes, storage.PublishedContent));
     }
 
+    [Theory]
+    [InlineData("text/plain", false)]
+    [InlineData("image/png", true)]
+    public async Task PromotePrivateImage_RejectsUnsupportedMetadataOrMismatchedLengthBeforePublishingAsync(
+        string contentType, bool readsContent) {
+        var storage = new StubObjectStorageClient(new StoredObjectInfo(4, contentType), [1, 2, 3]);
+        S3ImageStorageService service = CreateService(storage);
+        var key = ObjectStorageKey.FromStoredValue("users/test/recipe.png");
+
+        ImageObjectValidationResult promotion = await service.PromotePrivateImageAsync(key, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("invalid_private_image", promotion.ErrorCode),
+            () => Assert.Equal(readsContent ? ("fooddiary-assets-staging", key.ForPrivateConfirmedImage().Value) : null, storage.Read),
+            () => Assert.Null(storage.PublishedContent));
+    }
+
     [Fact]
     public void ContentTypeMatchesFormat_WhenCodecFormatIsUnsupported_ReturnsFalse() {
         MethodInfo method = typeof(S3ImageStorageService).GetMethod(

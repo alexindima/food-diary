@@ -127,14 +127,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "5048fafaa131f9e166c38d684bbbe8b476a35a6eaaeda6fb240d4c2287bf3fa0",
-          "reviewReason": "Reviewed the Recipes worker and HTTP transport test dependencies. Recipe writes remain with Recipes, and the worker invokes the existing Images service boundary for approved photos."
+          "sha256": "3890142f6ef5bf0cbcac0f4412c380e721e0cd6bac4aefe347b4d5f6ef5c3ec5",
+          "reviewReason": "Reviewed the dependency matrix and both test manifests. Only the Admin presentation and JobManager test projects name Recipes assemblies directly for types used by the moderation controller and worker tests. The documented runtime dependency directions and composition are accurate."
         }
       ],
-      "reason": "Reviewed the Recipes worker and HTTP transport test dependencies. Recipe writes remain with Recipes, and the worker invokes the existing Images service boundary for approved photos.",
+      "reason": "Reviewed the dependency matrix and both test manifests. Only the Admin presentation and JobManager test projects name Recipes assemblies directly for types used by the moderation controller and worker tests. The documented runtime dependency directions and composition are accurate.",
       "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:12.9421159Z"
+      "gitHead": "a99d23b505940158aab883157531027a8266b7d4",
+      "reviewedAtUtc": "2026-11-23T15:25:31.9869517Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -435,11 +435,6 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3b0a764c0bb914c0d5bb9c3fac7a91b7b2262cfebfbeeb955e3b3a4364f17f5d",
-          "reviewReason": "The new public-recipe QR dialog is loaded dynamically by the public detail page. The architecture index flags its unused selector and absence of a direct component spec as investigation candidates. The caller spec passed all 25 tests, including opening the dialog. Dependency direction and module cycles are unchanged."
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
           "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
           "reviewReason": "Reviewed conservative removal diagnostics: retained JSON projection inputs are never marked removable solely by a limited text scan. This agrees with the existing dynamic-consumer and behavior-proof guidance; dependency drift enforcement and SQLite query contracts are unchanged."
@@ -456,14 +451,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "5048fafaa131f9e166c38d684bbbe8b476a35a6eaaeda6fb240d4c2287bf3fa0",
-          "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
+          "sha256": "3890142f6ef5bf0cbcac0f4412c380e721e0cd6bac4aefe347b4d5f6ef5c3ec5",
+          "reviewReason": "The exact project-reference checks still enforce the same rule. New entries describe the two direct test-only moderation dependencies verified by the solution build. The architecture-review workflow remains accurate."
         }
       ],
-      "reason": "The new public-recipe QR dialog is loaded dynamically by the public detail page. The architecture index flags its unused selector and absence of a direct component spec as investigation candidates. The caller spec passed all 25 tests, including opening the dialog. Dependency direction and module cycles are unchanged.",
-      "baseRef": "8b53c322c53e30273572bff90e85687d25628a14",
-      "gitHead": "92c7d1b1d4d70ac241ffc09d967451a461f8a8be",
-      "reviewedAtUtc": "2026-11-23T12:29:00.7147757Z"
+      "reason": "The exact project-reference checks still enforce the same rule. New entries describe the two direct test-only moderation dependencies verified by the solution build. The architecture-review workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "a99d23b505940158aab883157531027a8266b7d4",
+      "reviewedAtUtc": "2026-11-23T15:25:33.1561397Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

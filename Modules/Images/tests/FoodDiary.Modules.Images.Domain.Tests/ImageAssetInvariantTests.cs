@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -29,5 +30,23 @@ public sealed class ImageAssetInvariantTests {
     public void Create_WithBlankUrl_Throws() {
         Assert.Throws<ArgumentException>(() =>
             ImageAsset.Create(UserId.New(), "images/a.png", "   "));
+    }
+
+    [Fact]
+    public void Promote_RequiresConfirmationAndPreservesAssetIdentity() {
+        var asset = ImageAsset.Create(UserId.New(), "images/recipe.png", "https://cdn/recipe.png", keepPrivate: true);
+        ImageAssetId id = asset.Id;
+
+        Assert.Throws<InvalidOperationException>(asset.Promote);
+        Assert.True(asset.IsPrivate);
+
+        asset.Confirm();
+        asset.Promote();
+
+        Assert.Multiple(
+            () => Assert.False(asset.IsPrivate),
+            () => Assert.True(asset.IsConfirmed),
+            () => Assert.Equal(id, asset.Id),
+            () => Assert.Equal("images/recipe.png", asset.ObjectKey));
     }
 }
