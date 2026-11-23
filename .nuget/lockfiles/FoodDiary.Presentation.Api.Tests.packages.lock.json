@@ -320,6 +320,7 @@
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },

@@ -769,6 +769,7 @@
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
@@ -2939,7 +2940,9 @@
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
@@ -2951,6 +2954,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
