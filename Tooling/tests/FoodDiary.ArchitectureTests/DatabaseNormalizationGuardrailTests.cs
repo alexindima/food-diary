@@ -12,6 +12,9 @@ public sealed class DatabaseNormalizationGuardrailTests {
         "HydrationOperationReceipt.AmountMl",
         "HydrationOperationReceipt.EntryId",
         "HydrationOperationReceipt.TimestampUtc",
+        // Minute and day counters can start at the same UTC instant. The request count belongs
+        // to the full provider, start time, and window size key.
+        "RecipeModerationBudget.Requests",
     ];
 
     private static readonly HashSet<string> AllowedDocumentColumns = [with(StringComparer.Ordinal),
@@ -23,6 +26,17 @@ public sealed class DatabaseNormalizationGuardrailTests {
         // User-entered symptom tags are small per-entry annotations, not shared facts or reporting dimensions.
         "CycleSymptomEntry.TagsJson",
         "Notification.PayloadJson",
+        // Each submitted revision binds to a fixed rule version. The document holds the version's
+        // supported category lists and sampling settings, which are read together.
+        "RecipePublicationPolicy.RulesJson",
+        // A revision captures the proposed public edit and the exact input reviewed by providers.
+        // The worker applies and reviews these snapshots as whole documents. Media references remain relational.
+        "RecipePublicationRevision.ChangeJson",
+        "RecipePublicationRevision.ContentJson",
+        // Per-provider evidence has sparse, model-specific categories. Keep the primary and
+        // observation results as the two audit documents attached to this revision.
+        "RecipePublicationRevision.PrimaryResult",
+        "RecipePublicationRevision.ShadowResult",
         // User-owned display preferences moved with their existing opaque layout document in ADR 0052.
         "UserPreferences.DashboardLayoutJson",
     ];
@@ -81,6 +95,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         new("WaistEntry", ["UserId", "Date"]),
         new("RecentItem", ["UserId", "ItemType", "ItemId"]),
         new("RecipeLike", ["UserId", "RecipeId"]),
+        new("RecipeModerationBudget", ["Provider", "WindowStart", "WindowSeconds"]),
         new("UserLessonProgress", ["UserId", "LessonId"]),
         new("FavoriteMeal", ["UserId", "MealId"]),
         new("FavoriteProduct", ["UserId", "ProductId"]),

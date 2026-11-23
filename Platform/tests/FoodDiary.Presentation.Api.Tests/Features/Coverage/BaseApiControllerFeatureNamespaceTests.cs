@@ -2,6 +2,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Presentation.Controllers;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Images.Presentation.Controllers;
+using FoodDiary.Modules.Images.Presentation.Mappings;
 
 namespace FoodDiary.Presentation.Api.Tests.Features.Coverage;
 
@@ -24,6 +25,9 @@ public sealed class BaseApiControllerFeatureNamespaceTests {
             .GetParameters()
             .Select(static parameter => parameter.ParameterType)];
 
-        Assert.Equal([typeof(ISender)], constructorDependencies);
+        Type[] expectedDependencies = controllerType == typeof(ImagesController)
+            ? [typeof(ISender), typeof(ImageUploadHttpProcessor)]
+            : [typeof(ISender)];
+        Assert.Equal(expectedDependencies, constructorDependencies);
     }
 }

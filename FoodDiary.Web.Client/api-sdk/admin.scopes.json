@@ -218,6 +218,7 @@
             "POST /api/v{version}/images/upload-url": "postImagesUploadUrl",
             "POST /api/v{version}/images/{assetId}/confirm": "postImagesByAssetIdConfirm"
         },
-        "prefix": "/api/v{version}/images"
+        "prefix": "/api/v{version}/images",
+        "excludedOperations": ["GET /api/v{version}/images/{assetId}/content"]
     }
 ]

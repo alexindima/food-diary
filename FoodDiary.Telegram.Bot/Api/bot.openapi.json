@@ -596,6 +596,9 @@
                     "fileSizeBytes": {
                         "format": "int64",
                         "type": "integer"
+                    },
+                    "keepPrivate": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"

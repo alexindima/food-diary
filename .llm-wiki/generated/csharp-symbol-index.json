@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4926,
-    "symbols": 4898,
+    "sourceFiles": 4928,
+    "symbols": 4900,
     "interfaceImplementationLinks": 222,
     "dependencyInjectionRegistrations": 80,
     "kinds": {
-      "class": 2528,
+      "class": 2530,
       "enum": 78,
       "interface": 442,
       "record": 1692,
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 78,
-      "Other": 2067,
+      "Other": 2069,
       "Query": 313,
       "QueryHandler": 226,
       "ReadModelRepository": 33,
@@ -4758,7 +4758,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "AdminRetentionController",
@@ -4807,7 +4807,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "AdminMailDependencyFailureAttribute",
@@ -4934,6 +4934,13 @@
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminOutgoingEmailHttpMappings.cs",
       "line": 7
+    },
+    {
+      "name": "AdminRecipeModerationHttpProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Mappings/AdminRecipeModerationHttpProcessor.cs",
+      "line": 9
     },
     {
       "name": "AdminRetentionHttpMappings",
@@ -19178,27 +19185,34 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
-      "line": 20
+      "line": 18
     },
     {
       "name": "ImagesPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Presentation/Extensions/ImagesPresentationServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ImageHttpMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Presentation/Mappings/ImageHttpMappings.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageHttpResponseMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Presentation/Mappings/ImageHttpResponseMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageUploadHttpProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Presentation/Mappings/ImageUploadHttpProcessor.cs",
       "line": 6
     },
     {
@@ -25212,7 +25226,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "UpdateRecipeCommandValidator",

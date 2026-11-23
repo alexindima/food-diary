@@ -3908,7 +3908,9 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "20"
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
@@ -3916,13 +3918,16 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "1"
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Status",
               "Location": "query",
               "Required": false,
               "Type": "string",
+              "MaxLength": 64,
               "Enum": [
                 "Pending",
                 "NeedsReview",

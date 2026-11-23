@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7141,
+    "productionFiles": 7143,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1063,
@@ -5034,11 +5034,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
@@ -9954,11 +9954,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/get-image-upload-url-http-request.ts",
-      "nonBlankLines": 14,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/get-image-upload-url-http-response.ts",
@@ -23898,11 +23898,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
-      "nonBlankLines": 105,
-      "decisionPoints": 8,
+      "nonBlankLines": 64,
+      "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 21.1
+      "structuralRiskScore": 8.28
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
@@ -23954,11 +23954,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Admin/Presentation/Filters/AdminMailDependencyFailureAttribute.cs",
@@ -24103,6 +24103,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Admin/Presentation/Mappings/AdminRecipeModerationHttpProcessor.cs",
+      "nonBlankLines": 71,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.42
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminRetentionHttpMappings.cs",
@@ -24410,11 +24418,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Requests/GetAdminRecipeModerationHttpQuery.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Admin/Presentation/Requests/GetAdminRetentionHttpQuery.cs",
@@ -40410,27 +40418,27 @@
     },
     {
       "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 51,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.06
+      "structuralRiskScore": 3.02
     },
     {
       "path": "Modules/Images/Presentation/Extensions/ImagesPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Images/Presentation/Mappings/ImageHttpMappings.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 26,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
+      "structuralRiskScore": 2.02
     },
     {
       "path": "Modules/Images/Presentation/Mappings/ImageHttpResponseMappings.cs",
@@ -40439,6 +40447,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Images/Presentation/Mappings/ImageUploadHttpProcessor.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs",
@@ -47426,11 +47442,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "nonBlankLines": 181,
+      "nonBlankLines": 186,
       "decisionPoints": 37,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 61.12
+      "structuralRiskScore": 61.22
     },
     {
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
@@ -60908,7 +60924,7 @@
       "name": "UpdateRecipeCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 21,
+      "line": 22,
       "testReferenceCount": 11,
       "testReferences": [
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
@@ -61412,7 +61428,7 @@
       "name": "AdminRecipeModerationController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
-      "line": 19,
+      "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -62075,7 +62091,7 @@
       "name": "ImagesController",
       "role": "Controller",
       "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
-      "line": 20,
+      "line": 18,
       "testReferenceCount": 3,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs",

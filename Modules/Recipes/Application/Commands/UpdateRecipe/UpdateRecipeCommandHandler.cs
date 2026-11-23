@@ -15,6 +15,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
@@ -130,7 +131,11 @@ public sealed class UpdateRecipeCommandHandler(
             draft.HasSamePublicContent(existing ?? RecipePublicationDraft.Capture(recipe));
 
         string? previousComment = recipe.Comment;
-        recipe.UpdateIdentity(comment: command.Comment, clearComment: command.ClearComment);
+        recipe.UpdateIdentityChanges(new RecipeIdentityChanges(
+            Name: null,
+            Description: FieldChanges.Unchanged<string>(),
+            Comment: FieldChanges.FromOptionalText(command.Comment, command.ClearComment),
+            Category: FieldChanges.Unchanged<string>()));
         if (!string.Equals(recipe.Comment, previousComment, StringComparison.Ordinal)) {
             await recipeWriteRepository.UpdateAsync(recipe, cancellationToken);
         }

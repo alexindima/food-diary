@@ -7,6 +7,7 @@ using FoodDiary.Modules.Cycles.Presentation.Controllers;
 using FoodDiary.Modules.Export.Presentation.Controllers;
 using FoodDiary.Modules.Fasting.Presentation.Controllers;
 using FoodDiary.Modules.Images.Presentation.Controllers;
+using FoodDiary.Modules.Images.Presentation.Mappings;
 using FoodDiary.Modules.Meals.Presentation.Controllers;
 using FoodDiary.Modules.Products.Presentation.Controllers;
 using FoodDiary.Modules.Recipes.Presentation.Controllers;
@@ -17,6 +18,7 @@ using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -46,7 +48,10 @@ public sealed class ThinControllerFailureContractTests {
     [MemberData(nameof(Controllers))]
     public async Task Actions_MapTransportInputsAndNormalizeApplicationFailures(Type controllerType) {
         FailureSender sender = new();
-        ControllerBase controller = Assert.IsAssignableFrom<ControllerBase>(Activator.CreateInstance(controllerType, sender));
+        using var configuration = new ConfigurationManager();
+        ControllerBase controller = controllerType == typeof(ImagesController)
+            ? new ImagesController(sender, new ImageUploadHttpProcessor(configuration))
+            : Assert.IsAssignableFrom<ControllerBase>(Activator.CreateInstance(controllerType, sender));
         controller.ControllerContext = new ControllerContext {
             HttpContext = new DefaultHttpContext(),
         };

@@ -94,8 +94,8 @@
     <ProjectReference Include="../../../Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj" />
     <ProjectReference Include="../../../Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
-    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
   </ItemGroup>

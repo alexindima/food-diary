@@ -1,4 +1,6 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -101,6 +103,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void InfrastructureBulkMutationUsage_StaysInsideCurrentExplicitAllowlist() {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string identityLoginEvents = ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Users", "UserLoginEventRepository.cs");
+        string recipePublicationStore = ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Moderation", "RecipePublicationStore.cs");
         string[] allowedFiles = [
             // ADR 0052: only shared receipts are deleted for expired-key replacement, bounded retention and owner purge.
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfAtomicCommandExecutor.cs"),
@@ -132,6 +135,9 @@ public sealed class PersistenceTransactionGuardrailTests {
             // ADR 0054: selective retention changes only source-owned catalog rows in the shared cleanup transaction.
             ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "ProductsUserContentRetentionParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItemsUserDataPurgeParticipant.cs"),
+            // Supersession clears the current revision's unique slot before staging its replacement.
+            // Cancellation also clears outstanding observation leases in the same owner transaction.
+            recipePublicationStore,
             ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "RecipesUserDataPurgeParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "RecipesUserContentRetentionParticipant.cs"),
         ];
@@ -153,5 +159,21 @@ public sealed class PersistenceTransactionGuardrailTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
+        // The persistence capability manifest also pins the reviewed source fingerprint.
+        Assert.Equal(
+            ["CancelAsync.ExecuteUpdateAsync", "SupersedeAsync.ExecuteUpdateAsync"],
+            ReadBulkMutationMethods(recipePublicationStore));
     }
+
+    private static string[] ReadBulkMutationMethods(string path) =>
+        [.. CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetRoot()
+            .DescendantNodes().OfType<InvocationExpressionSyntax>()
+            .Select(invocation => (Invocation: invocation, Name: invocation.Expression switch {
+                MemberAccessExpressionSyntax member => member.Name.Identifier.ValueText,
+                SimpleNameSyntax name => name.Identifier.ValueText,
+                _ => null,
+            }))
+            .Where(entry => entry.Name is "ExecuteUpdateAsync" or "ExecuteDeleteAsync")
+            .Select(entry => $"{entry.Invocation.FirstAncestorOrSelf<MethodDeclarationSyntax>()?.Identifier.ValueText}.{entry.Name}")
+            .Order(StringComparer.Ordinal)];
 }

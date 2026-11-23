@@ -11,4 +11,6 @@ internal sealed class GetImageUploadUrlHttpRequest {
     public string FileName { get; init; } = default!;
     [JsonPropertyName("fileSizeBytes")]
     public long FileSizeBytes { get; init; } = default!;
+    [JsonPropertyName("keepPrivate")]
+    public bool KeepPrivate { get; init; } = default!;
 }

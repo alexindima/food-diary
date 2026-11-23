@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Images.Presentation.Mappings;
-using FoodDiary.Modules.Images.Application.Queries.GetOwnedImageContent;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 
@@ -11,13 +10,12 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Modules.Images.Presentation.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/images")]
-public sealed class ImagesController(ISender mediator, IConfiguration configuration) : AuthorizedController(mediator) {
+public sealed class ImagesController(ISender mediator, ImageUploadHttpProcessor upload) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
     [EnableIdempotency]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
@@ -26,7 +24,7 @@ public sealed class ImagesController(ISender mediator, IConfiguration configurat
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.ImagesRateLimitPolicyName)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, configuration["RecipeModeration:Enabled"] is "true" or "True" or "1"),
+        HandleOk(upload.CreateCommand(userId, request),
             static value => value.ToHttpResponse());
 
     [HttpPost("{assetId:guid}/confirm")]
@@ -47,7 +45,7 @@ public sealed class ImagesController(ISender mediator, IConfiguration configurat
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> GetContent(Guid assetId, [FromCurrentUser] Guid userId) =>
-        HandleOk(new GetOwnedImageContentQuery(userId, assetId), static dataUrl => new OwnedImageContentHttpResponse(dataUrl));
+        HandleOk(assetId.ToOwnedContentQuery(userId), static dataUrl => new OwnedImageContentHttpResponse(dataUrl));
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

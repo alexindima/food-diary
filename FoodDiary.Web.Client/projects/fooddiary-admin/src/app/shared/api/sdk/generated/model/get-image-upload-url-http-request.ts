@@ -12,4 +12,5 @@ export interface GetImageUploadUrlHttpRequest {
     contentType?: string;
     fileName?: string;
     fileSizeBytes?: number;
+    keepPrivate?: boolean;
 }

@@ -387,7 +387,12 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("postgres:17-alpine@sha256:", compose, StringComparison.Ordinal);
         Assert.Contains("rabbitmq:4-management@sha256:", compose, StringComparison.Ordinal);
         Assert.Contains("redis:7-alpine@sha256:", compose, StringComparison.Ordinal);
-        Assert.Contains("nginx:alpine@sha256:", compose, StringComparison.Ordinal);
+        Match nginx = Regex.Match(
+            compose,
+            @"(?ms)^  nginx:\r?\n.*?(?=^  [a-zA-Z0-9_-]+:\r?$|\z)",
+            RegexOptions.None,
+            TimeSpan.FromSeconds(1));
+        Assert.Matches(@"(?m)^    image: nginx:[0-9]+\.[0-9]+\.[0-9]+-alpine@sha256:[0-9a-f]{64}\r?$", nginx.Value);
     }
 
     [Fact]

@@ -5,7 +5,7 @@
       "source": "Directory.Packages.props"
     },
     "angular": {
-      "version": "^22.2.6",
+      "version": "^22.3.0",
       "source": "FoodDiary.Web.Client/package.json"
     },
     "typescript": {
@@ -21,7 +21,7 @@
       "source": "Directory.Packages.props"
     },
     "playwright": {
-      "version": "^1.65.0",
+      "version": "^1.65.1",
       "source": "FoodDiary.Web.Client/package.json"
     }
   }

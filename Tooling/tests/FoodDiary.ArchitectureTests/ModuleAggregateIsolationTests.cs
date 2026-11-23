@@ -71,6 +71,7 @@ public sealed class ModuleAggregateIsolationTests {
                 typeof(IImageAssetCleanupService),
                 typeof(IImageAssetContentService),
                 typeof(IImageAssetOwnershipService),
+                typeof(IRecipeImagePromotionService),
                 typeof(ImageAssetReadModel),
                 typeof(ImageAssetIdParser),
                 typeof(ImageAssetResolution),

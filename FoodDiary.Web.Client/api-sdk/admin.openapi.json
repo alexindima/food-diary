@@ -3750,6 +3750,9 @@
                     "fileSizeBytes": {
                         "format": "int64",
                         "type": "integer"
+                    },
+                    "keepPrivate": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -12417,6 +12420,7 @@
                         "name": "Status",
                         "schema": {
                             "enum": ["Pending", "NeedsReview", "ChangesRequested", "CheckDelayed", "Published", "Superseded"],
+                            "maxLength": 64,
                             "type": "string"
                         }
                     },
@@ -12426,6 +12430,8 @@
                         "schema": {
                             "default": 1,
                             "format": "int32",
+                            "maximum": 10000,
+                            "minimum": 1,
                             "type": "integer"
                         }
                     },
@@ -12435,6 +12441,8 @@
                         "schema": {
                             "default": 20,
                             "format": "int32",
+                            "maximum": 100,
+                            "minimum": 1,
                             "type": "integer"
                         }
                     },

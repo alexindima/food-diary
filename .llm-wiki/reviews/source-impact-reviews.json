@@ -420,14 +420,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "92204d0442d0dc217c28f8485aef07f8d1fae3e2c8e02f6e5e59740e329dc754",
-          "reviewReason": "Compared the final host contract with master. The owner preview path, optional keepPrivate request flag and moderation DTOs are additive. The API compatibility gate reported zero breaking changes."
+          "sha256": "ba150dafec9d2fffc2ec9ec0cdb2db00316364c2eb98b48c63c53705c6209d0a",
+          "reviewReason": "Compared the live moderation OpenAPI and normalized fixture. The snapshot now records the page and limit ranges and the status filter length while preserving routes and response contracts. The exact host passed both Swagger guardrails and the read-only full contract fixture, and the scoped clients use the regenerated contracts."
         }
       ],
-      "reason": "Compared the final host contract with master. The owner preview path, optional keepPrivate request flag and moderation DTOs are additive. The API compatibility gate reported zero breaking changes.",
-      "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:13.4152690Z"
+      "reason": "Compared the live moderation OpenAPI and normalized fixture. The snapshot now records the page and limit ranges and the status filter length while preserving routes and response contracts. The exact host passed both Swagger guardrails and the read-only full contract fixture, and the scoped clients use the regenerated contracts.",
+      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "reviewedAtUtc": "2026-11-23T08:32:24.9008014Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -436,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8f830d21637c3d222d7dfc88a1005955e4988e90e5341a7e3d84f3f4b794da04",
-          "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
+          "sha256": "c3e564836324c954f27324cce5752b94f3d7e333815236fb97f3fb30cbdf7ad2",
+          "reviewReason": "The controller entry now points to line 20 after the Admin HTTP processor import. Dependency, module cycle and removal-candidate data retain their previous values. The affected architecture suite passed 127 tests."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -460,10 +460,10 @@
           "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
         }
       ],
-      "reason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates.",
-      "baseRef": "74844c5eb820935c0cba1f4d0bea881454234a6f",
-      "gitHead": "bcbde2a494952766acbbc64bc8a21b6643e74c77",
-      "reviewedAtUtc": "2026-11-23T07:52:05.2433297Z"
+      "reason": "The controller entry now points to line 20 after the Admin HTTP processor import. Dependency, module cycle and removal-candidate data retain their previous values. The affected architecture suite passed 127 tests.",
+      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "reviewedAtUtc": "2026-11-23T08:33:07.6795220Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1515,14 +1515,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "95f6d3d505ec89fa3d3bde4209b918f1bcbbc31cd683ff56c81d137308db7bbd",
-          "reviewReason": "Reviewed the runtime index against the master deployment configuration and the API/JobManager implementation. The API authenticates owner previews and the worker publishes approved photos with leases and retries."
+          "sha256": "da79b6c2ec71b7f4ca592b67562d0ae76e81636b88b1eee3721c949400eaa797",
+          "reviewReason": "Compared the regenerated topology with the prior version. The freshness fingerprint and source count account for two new HTTP processor files. Hosts, services, workers, recurring jobs and integration inventory are unchanged."
         }
       ],
-      "reason": "Reviewed the runtime index against the master deployment configuration and the API/JobManager implementation. The API authenticates owner previews and the worker publishes approved photos with leases and retries.",
-      "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:15.7662179Z"
+      "reason": "Compared the regenerated topology with the prior version. The freshness fingerprint and source count account for two new HTTP processor files. Hosts, services, workers, recurring jobs and integration inventory are unchanged.",
+      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "reviewedAtUtc": "2026-11-23T08:33:08.5821341Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1887,8 +1887,8 @@
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "874ca5e0e249dd8de8ea9e6e547c499876e88324aa7a43e535c76156a3955ef4",
-          "reviewReason": "Reviewed catalog entries for the moderation queue, image preview, migrations and frontend tests against their owning source. The combined catalog preserves master coverage and deployment entries."
+          "sha256": "fb16c9708fc9c36a8f751c3b10c4dfad79caf36ac32193e3a8b5f3b86f76af63",
+          "reviewReason": "Compared the regenerated catalog for eight moderation and four image routes. Their HTTP verbs, route templates and controller owners match the previous catalog. The refreshed line anchors locate the expression-bodied actions."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1931,10 +1931,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Reviewed catalog entries for the moderation queue, image preview, migrations and frontend tests against their owning source. The combined catalog preserves master coverage and deployment entries.",
-      "baseRef": "HEAD",
-      "gitHead": "64f4072623c2597b7a11dacf752f12e27795fb77",
-      "reviewedAtUtc": "2026-11-22T22:45:15.2302109Z"
+      "reason": "Compared the regenerated catalog for eight moderation and four image routes. Their HTTP verbs, route templates and controller owners match the previous catalog. The refreshed line anchors locate the expression-bodied actions.",
+      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
+      "reviewedAtUtc": "2026-11-23T08:33:08.1699417Z"
     },
     {
       "pageId": "workflow.review-diff",

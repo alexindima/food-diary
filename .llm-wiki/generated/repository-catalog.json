@@ -15524,42 +15524,42 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/moderation/recipes",
-            "line": 20
+            "line": 21
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}",
-            "line": 26
+            "line": 27
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/images/{assetId:guid}",
-            "line": 34
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/resolve",
-            "line": 44
+            "line": 39
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/retry",
-            "line": 63
+            "line": 50
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/moderation/rules",
-            "line": 72
+            "line": 57
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/moderation/rules",
-            "line": 77
+            "line": 62
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/rules/{id:guid}/restore",
-            "line": 93
+            "line": 68
           }
         ]
       },
@@ -16858,22 +16858,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/images/upload-url",
-            "line": 21
+            "line": 19
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}/confirm",
-            "line": 32
+            "line": 30
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}/content",
-            "line": 43
+            "line": 41
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}",
-            "line": 52
+            "line": 50
           }
         ]
       },

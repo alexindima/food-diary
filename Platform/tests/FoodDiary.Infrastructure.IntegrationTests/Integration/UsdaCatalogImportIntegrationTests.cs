@@ -45,10 +45,23 @@ public sealed class UsdaCatalogImportIntegrationTests(PostgresDatabaseFixture da
 
             await RunImportAsync(provider, path, dryRun: false);
             var product = await database.Products.Select(item => new {
-                item.Id, item.UserId, item.UsdaFdcId, item.Name, item.UsdaEnglishName, item.Category,
-                item.ProductType, item.Visibility, item.BaseUnit, item.BaseAmount, item.CaloriesPerBase,
-                item.ProteinsPerBase, item.FatsPerBase, item.CarbsPerBase, item.FiberPerBase,
-                item.AlcoholPerBase, item.ModifiedOnUtc,
+                item.Id,
+                item.UserId,
+                item.UsdaFdcId,
+                item.Name,
+                item.UsdaEnglishName,
+                item.Category,
+                item.ProductType,
+                item.Visibility,
+                item.BaseUnit,
+                item.BaseAmount,
+                item.CaloriesPerBase,
+                item.ProteinsPerBase,
+                item.FatsPerBase,
+                item.CarbsPerBase,
+                item.FiberPerBase,
+                item.AlcoholPerBase,
+                item.ModifiedOnUtc,
             }).SingleAsync();
             Assert.Multiple(
                 () => Assert.Equal(SystemContentOwner.Id, product.UserId),

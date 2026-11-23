@@ -61,7 +61,7 @@ internal static class RecipeModerationHttp {
 
     private static RecipeModerationCheck Decode(
         ModerationResponse? payload, string field, IReadOnlyList<string>? requiredCategories) {
-        if (payload is not { Results: [ { Categories.Count: > 0, CategoryScores.Count: > 0 } result ] }
+        if (payload is not { Results: [{ Categories.Count: > 0, CategoryScores.Count: > 0 } result] }
             || string.IsNullOrWhiteSpace(payload.Id)
             || string.IsNullOrWhiteSpace(payload.Model)) {
             throw InvalidResponse();

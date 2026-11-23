@@ -337,15 +337,18 @@ public sealed class SideEffectReliabilityGuardrailTests {
         string userCleanupSource = File.ReadAllText(userCleanupPath);
         string imagePurgeSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules", "Images", "Infrastructure", "Persistence", "ImagesUserDataPurgeParticipant.cs"));
+        string imageOutboxExtensionsSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Images", "Application.Abstractions", "Common", "ImageObjectDeletionOutboxExtensions.cs"));
 
         Assert.Contains("emailOutbox.EnqueueAsync", emailSenderSource, StringComparison.Ordinal);
         Assert.Contains("emailOutbox.EnqueueAsync", dietologistEmailSenderSource, StringComparison.Ordinal);
         Assert.Contains("webPushOutbox.EnqueueAsync", notificationWriterSource, StringComparison.Ordinal);
-        Assert.Contains("imageObjectDeletionOutbox.EnqueueAsync", imageCleanupSource, StringComparison.Ordinal);
+        Assert.Contains("imageObjectDeletionOutbox.EnqueueAssetObjectsAsync", imageCleanupSource, StringComparison.Ordinal);
         Assert.DoesNotContain("imageStorageService.DeleteAsync", imageCleanupSource, StringComparison.Ordinal);
         Assert.Contains("participant.PurgeAsync", userCleanupSource, StringComparison.Ordinal);
-        Assert.Contains("imageObjectDeletionOutbox.EnqueueAsync", imagePurgeSource, StringComparison.Ordinal);
+        Assert.Contains("imageObjectDeletionOutbox.EnqueueAssetObjectsAsync", imagePurgeSource, StringComparison.Ordinal);
         Assert.DoesNotContain("imageStorageService.DeleteAsync", imagePurgeSource, StringComparison.Ordinal);
+        Assert.Contains("outbox.EnqueueAsync", imageOutboxExtensionsSource, StringComparison.Ordinal);
     }
     [Fact]
     public void ArchitectureRoadmap_DocumentsDurableSideEffectDirection() {
