@@ -86,7 +86,7 @@ jobs:
             profile: performance
     container:
       # ci.test.mjs requires this version to match the locked Playwright package.
-      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
       options: --user 1001 --init --ipc=host
     env:
       FD_WEB_QUALITY_CHANNEL: chromium

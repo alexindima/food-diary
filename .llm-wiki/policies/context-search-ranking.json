@@ -305,7 +305,6 @@
     "счетчик": ["counter"],
     "повтор": ["retry","duplicate","repeat"],
     "получ": ["get","load"],
-    "подстав": ["render","renderer","resource"],
     "защищ": ["guard","replay","security"],
     "поведен": ["behavior"],
     "верси": ["version"],
@@ -907,6 +906,17 @@
       "score": 400,
       "identityScope": "file",
       "changeTypes": ["Database"]
+    },
+    {
+      "id": "database-repository-write-intent",
+      "queryTerms": ["add", "insert", "persist", "save", "store", "write"],
+      "minimumMatches": 1,
+      "identityTerms": ["repository", "write"],
+      "minimumIdentityMatches": 2,
+      "score": 35,
+      "identityScope": "file",
+      "changeTypes": ["Database"],
+      "directOnly": true
     },
     {
       "id": "explicit-selector-role",
@@ -3011,7 +3021,8 @@
     },
     {
       "id": "frontend-transformation-utility-role",
-      "queryTerms": ["calculate", "recalculate", "edit", "translate", "map", "normalize", "update", "resolve", "build", "autofill", "detect", "crop", "resize", "move", "bounds", "bar", "scale", "position", "percent"],
+      "queryTerms": ["calculate", "recalculate", "edit", "translate", "map", "normalize", "update", "resolve", "build", "detect", "crop", "resize", "move", "bounds", "bar", "scale", "position", "percent"],
+      "excludedQueryTerms": ["autofill"],
       "minimumMatches": 2,
       "candidateTerms": ["utils", "util"],
       "minimumCandidateMatches": 1,

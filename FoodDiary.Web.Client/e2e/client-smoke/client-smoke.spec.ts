@@ -4488,6 +4488,25 @@ test.describe('compact recent products', () => {
     }
 });
 
+async function mockRecipeGalleryImageContentAsync(
+    page: Page,
+    images: ReadonlyArray<{ imageAssetId: string; imageUrl: string }>,
+): Promise<void> {
+    for (const { imageAssetId, imageUrl } of images) {
+        await page.route(
+            url => url.pathname === `/api/v1/images/${imageAssetId}/content`,
+            async route => {
+                const request = route.request();
+                if (request.method() !== 'GET') {
+                    await route.fallback();
+                    return;
+                }
+                await route.fulfill(jsonFixture(fixtureContract, 'GET', request.url(), { dataUrl: imageUrl }));
+            },
+        );
+    }
+}
+
 test.describe('recipe editor gallery', () => {
     for (const width of MEAL_DIALOG_VIEWPORTS) {
         test(`compact nutrition and five saved photos at ${width}px`, async ({ page }, testInfo) => {
@@ -4507,6 +4526,7 @@ test.describe('recipe editor gallery', () => {
                 imageAssetId: fixtureUuid(`photo-${index}`),
                 imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
             }));
+            await mockRecipeGalleryImageContentAsync(page, images);
             await page.route('**/api/v1/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48**', async route =>
                 route.fulfill({ json: { ...recipe, images, steps: [], isOwnedByCurrentUser: true, usageCount: 0 } }),
             );
@@ -4582,6 +4602,7 @@ test.describe('recipe step galleries', () => {
                 imageAssetId: fixtureUuid(`step-photo-${index}`),
                 imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
             }));
+            await mockRecipeGalleryImageContentAsync(page, images);
             const ingredient = {
                 id: 'ded293ba-bfd6-5f4d-9a52-67ebf5455ba4',
                 productId: '599d8621-9d94-5c93-b772-a1586e78f6fd',

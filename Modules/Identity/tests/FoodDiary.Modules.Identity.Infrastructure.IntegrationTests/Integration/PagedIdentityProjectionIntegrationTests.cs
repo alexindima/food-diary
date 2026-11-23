@@ -80,9 +80,11 @@ public sealed class PagedIdentityProjectionIntegrationTests(PostgresDatabaseFixt
         context.ChangeTracker.Clear();
         using var cancellation = new CancellationTokenSource();
         List<CancellationToken> synchronizations = [];
-        var synchronized = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }),
+        var clock = new FixedTimeProvider(now.AddMinutes(6));
+        IOptions<JwtOptions> options = Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 });
+        var synchronized = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, clock, options,
             token => { synchronizations.Add(token); return Task.CompletedTask; });
-        var standalone = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
+        var standalone = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, clock, options);
 
         IReadOnlyList<RefreshTokenSessionReadModel> first = await standalone.GetActivePageReadModelsAsync(owner.Id, 1, 1, cancellation.Token);
         IReadOnlyList<RefreshTokenSessionReadModel> second = await synchronized.GetActivePageReadModelsAsync(owner.Id, 2, 1, cancellation.Token);
@@ -106,4 +108,9 @@ public sealed class PagedIdentityProjectionIntegrationTests(PostgresDatabaseFixt
     private static UserRefreshTokenSession CreateSession(string id, UserId owner, DateTime createdAt, string agent) =>
         UserRefreshTokenSession.Create(new RefreshTokenSessionId(Guid.Parse(id)), owner, "hash-" + agent, rememberMe: false,
             authProvider: "password", ipAddress: null, userAgent: agent, nowUtc: createdAt);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime nowUtc) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(nowUtc);
+    }
 }

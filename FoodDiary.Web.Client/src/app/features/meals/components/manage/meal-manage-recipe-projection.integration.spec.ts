@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
@@ -133,13 +134,13 @@ describe('Independent recipe quantity drafts', () => {
             const drawer = TestBed.createComponent(QuickMealDrawerComponent);
             const drawerHost = drawer.nativeElement as HTMLElement;
             drawer.detectChanges();
+            const opened = firstValueFrom(TestBed.inject(Dialog).afterOpened);
             requiredElement(drawerHost.querySelector<HTMLButtonElement>('button[aria-label="QUICK_MEAL.EDIT_ITEM_NAMED"]')).click();
-            const { modal, amount } = await vi.waitFor(() => {
-                TestBed.tick();
-                const dialog = requiredElement(document.querySelector<HTMLElement>('fd-meal-manual-item-dialog'));
-                const amountInput = requiredElement(dialog.querySelector<HTMLInputElement>('input[type="number"]'));
-                return { modal: dialog, amount: amountInput };
-            });
+            const dialog = await opened;
+            await drawer.whenStable();
+            drawer.detectChanges();
+            const modal = requiredElement(dialog.overlayRef.overlayElement.querySelector<HTMLElement>('fd-meal-manual-item-dialog'));
+            const amount = requiredElement(modal.querySelector<HTMLInputElement>('input[type="number"]'));
             expect(amount.valueAsNumber).toBe(nextAmount);
             expect(lookup.mock.calls).toEqual(needsSecondLookup ? [[SOUP.id], [SOUP.id]] : [[SOUP.id]]);
             const cancel = Array.from(modal.querySelectorAll('button')).find(

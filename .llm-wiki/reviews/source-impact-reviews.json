@@ -534,14 +534,19 @@
           "reviewReason": "The affected corpus now points to the active Signal Forms resolver after the retired app helper was removed. The current and baseline SQLite checks agree on all 30 probe-three ranks and all 40 probe-seven ranks. The graph execution and acceptance thresholds remain as described."
         },
         {
+          "path": ".llm-wiki/evals/context-search-probe-7.json",
+          "sha256": "7cfd5121ec962d6fe040854799ff62cedb178ab87014790c37621babc1054795",
+          "reviewReason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds."
+        },
+        {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "6ae5c83d72936d239c644b2ff32dfa3ce484855a3163185b4e03f9ff9695b92e",
-          "reviewReason": "The primary retrieval corpus now asks for the password login command handler for email credentials. This disambiguates the intended diary LoginCommandHandler from other sign-in methods while preserving the expected owner and thresholds."
+          "sha256": "e4ed2f2857be54cb7bdab5c8f108ece2dcb98bb6a25528e1ca8f84fb93cb33c1",
+          "reviewReason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
-          "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
+          "sha256": "dd0eea78ce46bdcc69245b23749b270a4b2bab23c4ce5e2de17d4a3dc471780e",
+          "reviewReason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
@@ -554,10 +559,10 @@
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "The affected corpus now points to the active Signal Forms resolver after the retired app helper was removed. The current and baseline SQLite checks agree on all 30 probe-three ranks and all 40 probe-seven ranks. The graph execution and acceptance thresholds remain as described.",
-      "baseRef": "HEAD",
-      "gitHead": "8b06edff06cd74b84550f33abf0ddb5ad0d05e25",
-      "reviewedAtUtc": "2026-11-21T00:40:28.3749157Z"
+      "reason": "Follow the real browser credential value read to AuthLoginFormComponent after helper removal and the pending report transition to the ContentReports owner command after module extraction. Ambiguous substitution wording no longer expands globally to renderer terms, and generic transformation-utility ranking excludes browser autofill intent. Explicit write queries rank write-repository file roles ahead of read-only candidates. Both rules stay within the existing ranking budget and retrieval quality thresholds.",
+      "baseRef": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "gitHead": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "reviewedAtUtc": "2026-11-23T09:11:38.7732439Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1531,8 +1536,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
-          "reviewReason": "Reviewed the calculator-only exclusion from the generic result-file affinity. Security discovery signals and control classifications are unchanged, and the frozen security retrieval corpus passed."
+          "sha256": "dd0eea78ce46bdcc69245b23749b270a4b2bab23c4ce5e2de17d4a3dc471780e",
+          "reviewReason": "Reviewed the changed normalization and role rules against the security workflow. Explicit security discovery terms and safety-control families remain in place, and the focused security retrieval corpus still meets its gate."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
@@ -1540,10 +1545,10 @@
           "reviewReason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force."
         }
       ],
-      "reason": "Reviewed the calculator-only exclusion from the generic result-file affinity. Security discovery signals and control classifications are unchanged, and the frozen security retrieval corpus passed.",
-      "baseRef": "HEAD",
-      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
-      "reviewedAtUtc": "2026-11-13T22:10:23.8721671Z"
+      "reason": "Reviewed the changed normalization and role rules against the security workflow. Explicit security discovery terms and safety-control families remain in place, and the focused security retrieval corpus still meets its gate.",
+      "baseRef": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "gitHead": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "reviewedAtUtc": "2026-11-23T09:11:40.0563303Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1892,8 +1897,8 @@
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
-          "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
+          "sha256": "dd0eea78ce46bdcc69245b23749b270a4b2bab23c4ce5e2de17d4a3dc471780e",
+          "reviewReason": "The shared ranking policy uses a bounded Database-only write-repository role and prevents browser autofill wording from matching unrelated renderer and transformation roles. The result remains navigation evidence and the same change-policy and Node/.NET parity checks apply."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1931,10 +1936,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Compared the regenerated catalog for eight moderation and four image routes. Their HTTP verbs, route templates and controller owners match the previous catalog. The refreshed line anchors locate the expression-bodied actions.",
-      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "reviewedAtUtc": "2026-11-23T08:33:08.1699417Z"
+      "reason": "The shared ranking policy uses a bounded Database-only write-repository role and prevents browser autofill wording from matching unrelated renderer and transformation roles. The result remains navigation evidence and the same change-policy and Node/.NET parity checks apply.",
+      "baseRef": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "gitHead": "4272a4de2c7890f7b604378c8b5ee5ee3f35cbdd",
+      "reviewedAtUtc": "2026-11-23T09:11:39.4856355Z"
     },
     {
       "pageId": "workflow.review-diff",

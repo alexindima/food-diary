@@ -136,7 +136,7 @@
       "id": "content-report-review",
       "query": "admin reviews a pending user content report",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs"]
+      "expectedPaths": ["Modules/ContentReports/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs"]
     },
     {
       "id": "cycle-prediction",

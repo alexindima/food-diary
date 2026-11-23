@@ -69,7 +69,7 @@
       "query": "браузер сам подставил логин и пароль — где UI определяет полное или частичное autofill даже без native input события",
       "changeType": "Frontend",
       "expectedPaths": [
-        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-login-autofill.utils.ts"
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts"
       ]
     },
     {
