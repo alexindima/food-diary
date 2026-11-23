@@ -18,7 +18,10 @@ Current npm entry points are `test:coverage:app`, `test:coverage:admin`,
 `test:coverage:ui-kit`, `test:coverage:tour` and `test:coverage:webmcp`; verify their
 definitions in `FoodDiary.Web.Client/package.json`. `test:coverage` runs all five.
 Use focused execution while iterating, then the complete requested scope on final
-sources. Retain raw coverage and test output under owned artifacts.
+sources. For local iterations use `npm run test:coverage:local -- <project>` from
+the frontend workspace. Use `--full` for comparable final evidence and `.keep`
+in its run directory to pin a baseline. See `docs/TESTING_STRATEGY.md` for the
+project aliases, include filters, and retention policy.
 
 Trace gaps to owner behavior. Prefer real template inputs/outputs and visible
 states for components, and public state/contracts for services. Cover failure,

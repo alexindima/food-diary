@@ -220,7 +220,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      # Skip optional GSS negotiation to avoid the Alpine Kerberos resolver crash.
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD};GSS Encryption Mode=Disable
       ConnectionStrings__Redis: redis:6379,abortConnect=false
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
@@ -277,7 +278,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD};GSS Encryption Mode=Disable
       ConnectionStrings__Redis: redis:6379,abortConnect=false
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}

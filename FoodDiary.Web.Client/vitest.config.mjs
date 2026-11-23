@@ -1,8 +1,11 @@
-// Keep failed-run reports for diagnosis; Angular assigns a directory per project.
+// Angular assigns a directory per project unless the local wrapper owns this run.
+const localReportsDirectory = process.env.FOODDIARY_LOCAL_COVERAGE_REPORTS_DIRECTORY;
+
 export default {
     test: {
         maxWorkers: 4,
         coverage: {
+            ...(localReportsDirectory && { reportsDirectory: localReportsDirectory, clean: false }),
             reportOnFailure: true,
             thresholds: {
                 'src/app/interceptor/retry.interceptor.ts': { lines: 100, statements: 100, functions: 100, branches: 100 },

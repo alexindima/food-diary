@@ -292,14 +292,14 @@
       "sources": [
         {
           "path": "docker-compose.yml",
-          "sha256": "a304f6a2c32646ef4726fb891eb57a8026efc4fc662a4c86f194969709ea2d7e",
-          "reviewReason": "Both Node SSR slots now run under Docker init and receive SIGTERM. Verified both resolved Compose services and Linux container shutdown. The declared service topology, ports, dependencies and trust boundaries still match this page."
+          "sha256": "85b7abb80d1c9a25060deff556ca1d76563400ceee6ec81571d0b7c5b4da6687",
+          "reviewReason": "Both existing API slots use the same optional PostgreSQL GSS opt-out as Job Manager. Validated resolved Compose parity and a successful password-authenticated query with the pinned Alpine runtime. Service topology, environment key names, ports, startup ordering and caller boundaries are unchanged."
         }
       ],
-      "reason": "Both Node SSR slots now run under Docker init and receive SIGTERM. Verified both resolved Compose services and Linux container shutdown. The declared service topology, ports, dependencies and trust boundaries still match this page.",
+      "reason": "Both existing API slots use the same optional PostgreSQL GSS opt-out as Job Manager. Validated resolved Compose parity and a successful password-authenticated query with the pinned Alpine runtime. Service topology, environment key names, ports, startup ordering and caller boundaries are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f4be04dd1f29da946a7763358f2e02baed62faaf",
-      "reviewedAtUtc": "2026-11-17T05:07:45.9431275Z"
+      "gitHead": "ae4ce53ce4f396a93ca20fab940c84521028b0ff",
+      "reviewedAtUtc": "2026-11-23T12:21:02.1569015Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -436,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c3e564836324c954f27324cce5752b94f3d7e333815236fb97f3fb30cbdf7ad2",
-          "reviewReason": "The controller entry now points to line 20 after the Admin HTTP processor import. Dependency, module cycle and removal-candidate data retain their previous values. The affected architecture suite passed 127 tests."
+          "sha256": "3b0a764c0bb914c0d5bb9c3fac7a91b7b2262cfebfbeeb955e3b3a4364f17f5d",
+          "reviewReason": "The new public-recipe QR dialog is loaded dynamically by the public detail page. The architecture index flags its unused selector and absence of a direct component spec as investigation candidates. The caller spec passed all 25 tests, including opening the dialog. Dependency direction and module cycles are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -460,10 +460,10 @@
           "reviewReason": "Reviewed four recipe-moderation production edges and ten direct test edges against their owning project files and dependency matrix. The refreshed index reports zero violations, unused allowances, untracked production projects, or module cycles. Routed Angular components remain distinct from selector-removal candidates."
         }
       ],
-      "reason": "The controller entry now points to line 20 after the Admin HTTP processor import. Dependency, module cycle and removal-candidate data retain their previous values. The affected architecture suite passed 127 tests.",
-      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "reviewedAtUtc": "2026-11-23T08:33:07.6795220Z"
+      "reason": "The new public-recipe QR dialog is loaded dynamically by the public detail page. The architecture index flags its unused selector and absence of a direct component spec as investigation candidates. The caller spec passed all 25 tests, including opening the dialog. Dependency direction and module cycles are unchanged.",
+      "baseRef": "8b53c322c53e30273572bff90e85687d25628a14",
+      "gitHead": "92c7d1b1d4d70ac241ffc09d967451a461f8a8be",
+      "reviewedAtUtc": "2026-11-23T12:29:00.7147757Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -988,14 +988,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "d10ee6618f7dfda20249207de28cdcfe5d77a2b7ce7c55dcd0b5d484322b6fbe",
-          "reviewReason": "The merged manifest adds angularx-qrcode for the on-demand public recipe dialog. Its peer range covers Angular 22.3.0. The frontend build, i18n, Playwright, and coverage command definitions match the master base."
+          "sha256": "aa59d3ba7abcf914bc239da2592eae820bdd50e8714c6267dedbfc701104ec4a",
+          "reviewReason": "Added an opt-in local Vitest coverage entry point with per-run retention. Reviewed the package commands for visual evidence, browser QA, build and CI; those workflows still call their existing commands."
         }
       ],
-      "reason": "The merged manifest adds angularx-qrcode for the on-demand public recipe dialog. Its peer range covers Angular 22.3.0. The frontend build, i18n, Playwright, and coverage command definitions match the master base.",
-      "baseRef": "8b53c322c",
-      "gitHead": "8b53c322c53e30273572bff90e85687d25628a14",
-      "reviewedAtUtc": "2026-11-23T11:16:09.0912917Z"
+      "reason": "Added an opt-in local Vitest coverage entry point with per-run retention. Reviewed the package commands for visual evidence, browser QA, build and CI; those workflows still call their existing commands.",
+      "baseRef": "HEAD",
+      "gitHead": "ae4ce53ce4f396a93ca20fab940c84521028b0ff",
+      "reviewedAtUtc": "2026-11-23T12:02:49.9014710Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1525,14 +1525,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "da79b6c2ec71b7f4ca592b67562d0ae76e81636b88b1eee3721c949400eaa797",
-          "reviewReason": "Compared the regenerated topology with the prior version. The freshness fingerprint and source count account for two new HTTP processor files. Hosts, services, workers, recurring jobs and integration inventory are unchanged."
+          "sha256": "57d68b9a0eb55a87440bc6bd2b0c75d92c508787a76567d14dfd3934327ed7fa",
+          "reviewReason": "The runtime topology snapshot was regenerated after the Compose GSS option change in both API services. Only its source-content fingerprint changed. Its service inventory, runtime signals and the documented impact workflow remain accurate."
         }
       ],
-      "reason": "Compared the regenerated topology with the prior version. The freshness fingerprint and source count account for two new HTTP processor files. Hosts, services, workers, recurring jobs and integration inventory are unchanged.",
-      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "reviewedAtUtc": "2026-11-23T08:33:08.5821341Z"
+      "reason": "The runtime topology snapshot was regenerated after the Compose GSS option change in both API services. Only its source-content fingerprint changed. Its service inventory, runtime signals and the documented impact workflow remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "ae4ce53ce4f396a93ca20fab940c84521028b0ff",
+      "reviewedAtUtc": "2026-11-23T12:26:48.0918402Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1729,14 +1729,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "55014c106e990601a71c65dbaff3f55e7240b4753b085023e9eb2602705bb9b3",
-          "reviewReason": "The testing strategy records the shared Angular metadata adapter and the Admin 100 percent floors. The exact Admin suite executed 846 tests successfully, with all four V8 totals at 100 percent."
+          "sha256": "3830d7ffc0374577a2d3946cce739fc53bafd623e1224a5fbfa4c7baea634447",
+          "reviewReason": "Testing strategy now documents the local coverage wrapper, summary and full modes, and run retention. The same Angular coverage targets and thresholds continue to apply, and the documented project test-plan selection remains valid."
         }
       ],
-      "reason": "The testing strategy records the shared Angular metadata adapter and the Admin 100 percent floors. The exact Admin suite executed 846 tests successfully, with all four V8 totals at 100 percent.",
+      "reason": "Testing strategy now documents the local coverage wrapper, summary and full modes, and run retention. The same Angular coverage targets and thresholds continue to apply, and the documented project test-plan selection remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
-      "reviewedAtUtc": "2026-11-22T23:32:35.7383498Z"
+      "gitHead": "ae4ce53ce4f396a93ca20fab940c84521028b0ff",
+      "reviewedAtUtc": "2026-11-23T12:02:52.9388381Z"
     },
     {
       "pageId": "workflow-trace-feature",

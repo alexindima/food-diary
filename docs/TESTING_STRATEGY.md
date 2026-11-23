@@ -521,6 +521,29 @@ CI uploads this directory with `if: always()` as `frontend-checks-coverage-app-t
 Open `index.html` for line/branch details; consult functions as well as branches:
 an uncalled error callback can coexist with 100% branch coverage.
 
+For local iterations, use the managed coverage runner from `FoodDiary.Web.Client`.
+
+```powershell
+npm run test:coverage:local -- app
+npm run test:coverage:local -- app --include=**/quick-meal-drawer.spec.ts
+npm run test:coverage:local -- app --full
+npm run test:coverage:local -- --plan
+```
+
+The project can be `app`, `admin`, `ui-kit`, `tour`, or `webmcp`. The runner uses
+the same coverage configuration and thresholds. An include filter narrows the
+tests, so a focused run can fall below the full-project thresholds. The default
+saves the JSON summary and up to 4 MiB of test output. Use `--full` for an
+unfiltered run with raw coverage, HTML, and lcov reports.
+
+Each run has its own directory in `.artifacts/local-frontend-coverage`. The
+runner records the Git revision, whether the checkout was dirty, the command and
+the outcome. It keeps the newest three summary runs, two successful full runs,
+and one failed full run per project. Create a `.keep` file in a run directory to
+retain it outside these limits. Rotation applies to completed runs created by
+this wrapper. An interrupted run without a completion record stays available for
+inspection. `--plan` lists current rotation candidates without deleting files.
+
 The main app has minimum coverage thresholds in its Angular configuration
 (80% lines, 81% statements, 75% branches, 78% functions). Key dashboard, fasting,
 weekly check-in, and user API files also have individual thresholds in
