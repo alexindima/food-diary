@@ -109,6 +109,82 @@ describe('RecipeCardComponent photo access', () => {
     });
 });
 
+describe('RecipeCardComponent private gallery', () => {
+    it('opens authorized cover and step photos only after the requested gallery settles', async () => {
+        vi.stubGlobal(
+            'matchMedia',
+            vi.fn(() => ({ matches: false })),
+        );
+        try {
+            const { component, fixture, el, ownerPreview } = await setupRecipeCardAsync();
+            const coverUrl = 'data:image/webp;base64,UklGRg==';
+            const stepUrl = 'data:image/webp;base64,UklGVw==';
+            const unavailable = new Subject<string>();
+            const step = new Subject<string>();
+            const opened = vi.fn();
+            component.open.subscribe(opened);
+            ownerPreview
+                .mockReturnValueOnce(of(coverUrl))
+                .mockReturnValueOnce(unavailable.asObservable())
+                .mockReturnValueOnce(step.asObservable());
+            fixture.componentRef.setInput('recipe', {
+                ...MOCK_RECIPE,
+                visibility: RecipeVisibility.Private,
+                imageUrl: '/cdn/private-cover.webp',
+                imageAssetId: 'private-cover',
+                images: [{ imageUrl: '/cdn/private-unavailable.webp', imageAssetId: 'private-unavailable' }],
+                steps: [{ imageUrl: '/cdn/private-step.webp', imageAssetId: 'private-step' }],
+            });
+            await renderGalleryAsync(fixture);
+            expect(ownerPreview).toHaveBeenCalledExactlyOnceWith('private-cover');
+            const thumbnail = galleryControl(el, '.entity-card__thumb[role="button"]');
+            expect(thumbnail.querySelector('img')?.getAttribute('src')).toBe(coverUrl);
+
+            thumbnail.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            await renderGalleryAsync(fixture);
+            expect(ownerPreview.mock.calls).toEqual([['private-cover'], ['private-unavailable'], ['private-step']]);
+            expect(document.querySelector('fd-ui-image-preview-dialog')).toBeNull();
+
+            step.next(stepUrl);
+            await renderGalleryAsync(fixture);
+            expect(document.querySelector('fd-ui-image-preview-dialog')).toBeNull();
+            unavailable.error(new Error('The protected photo is unavailable'));
+            await renderGalleryAsync(fixture);
+
+            const gallery = galleryControl(document, 'fd-ui-image-preview-dialog');
+            const activeImage = galleryControl(gallery, '.fd-ui-image-preview-dialog__image');
+            expect(activeImage.getAttribute('src')).toBe(coverUrl);
+            expect(activeImage.getAttribute('alt')).toBe(MOCK_RECIPE.name);
+            const buttons = gallery.querySelectorAll<HTMLButtonElement>('.fd-ui-image-preview-dialog__thumbnail');
+            expect(Array.from(buttons, button => button.querySelector('img')?.getAttribute('src'))).toEqual([coverUrl, stepUrl]);
+            galleryControl(gallery, '.fd-ui-image-preview-dialog__thumbnail:nth-child(2)').click();
+            await renderGalleryAsync(fixture);
+            expect(activeImage.getAttribute('src')).toBe(stepUrl);
+            expect(opened).not.toHaveBeenCalled();
+            expect(step.observed).toBe(false);
+
+            galleryControl(gallery, '.fd-ui-dialog__close-button').click();
+            await renderGalleryAsync(fixture);
+            expect(document.querySelector('fd-ui-image-preview-dialog')).toBeNull();
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+});
+
+async function renderGalleryAsync(fixture: ComponentFixture<RecipeCardComponent>): Promise<void> {
+    fixture.detectChanges();
+    await fixture.whenStable();
+}
+
+function galleryControl(root: ParentNode, selector: string): HTMLElement {
+    const control = root.querySelector(selector);
+    if (!(control instanceof HTMLElement)) {
+        throw new Error(`Expected recipe gallery control ${selector}`);
+    }
+    return control;
+}
+
 describe('RecipeCardComponent content', () => {
     it('keeps catalog ingredient count and cooking time while moving long ingredient names and comments to details', async () => {
         const { component, el, fixture } = await setupRecipeCardAsync();

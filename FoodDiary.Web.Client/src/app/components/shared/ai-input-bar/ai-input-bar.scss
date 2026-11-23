@@ -60,19 +60,24 @@
         max-width: calc(100% - var(--fd-size-control-sm) - var(--fd-space-xs));
     }
 
+    &__history-space {
+        display: flex;
+        flex: 1 1 0;
+        justify-content: flex-end;
+        min-inline-size: var(--fd-size-control-sm);
+        contain: inline-size;
+    }
+
     &__history {
         flex-shrink: 0;
-        margin-inline-start: auto;
         --fd-button-width: var(--fd-size-control-sm);
         --fd-button-min-width: var(--fd-size-control-sm);
-        --fd-button-padding-x: 0;
 
         &--labeled {
             --fd-button-width: auto;
-            --fd-button-padding-x: var(--fd-space-xs);
 
             .ai-input-bar__history-label {
-                display: inline;
+                display: inline-block;
                 white-space: nowrap;
             }
         }
@@ -91,6 +96,18 @@
 
     &__history-label {
         display: none;
+    }
+
+    &__history-overhead {
+        // This projected box inherits the rendered text button's sizing tokens.
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: calc(
+            var(--fd-button-icon-size) + var(--fd-button-gap) + 2 * (var(--fd-button-text-padding-x) + var(--fd-button-border-width))
+        );
+        block-size: 0;
+        visibility: hidden;
     }
 
     &__hidden-upload {

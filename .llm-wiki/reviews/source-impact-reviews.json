@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "a83c92697bc15f7bd2633aac69d2f266a45cd45886a2722854f6f663e69afc6f",
-          "reviewReason": "The client test target now selects a client-specific Vitest config. Project roots, feature discovery, and the frontend-index inputs described on this page retain their existing semantics."
+          "sha256": "ab06f5f3c26d0c9675c42e8482f31f6fcaeca4eee4edeadc9c4b0182392c93e5",
+          "reviewReason": "Reviewed the Angular app and Admin coverage targets and their shared metadata adapter. The strict index check confirmed 46 features, 885 symbols and 115 routed entries."
         }
       ],
-      "reason": "The client test target now selects a client-specific Vitest config. Project roots, feature discovery, and the frontend-index inputs described on this page retain their existing semantics.",
+      "reason": "Reviewed the Angular app and Admin coverage targets and their shared metadata adapter. The strict index check confirmed 46 features, 885 symbols and 115 routed entries.",
       "baseRef": "HEAD",
-      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
-      "reviewedAtUtc": "2026-11-22T12:21:23.3561324Z"
+      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
+      "reviewedAtUtc": "2026-11-22T23:32:34.1811620Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "a83c92697bc15f7bd2633aac69d2f266a45cd45886a2722854f6f663e69afc6f",
-          "reviewReason": "The Angular workspace changes only the client test runner config. The project catalog and documented build targets are unaffected by the coverage-provider callback."
+          "sha256": "ab06f5f3c26d0c9675c42e8482f31f6fcaeca4eee4edeadc9c4b0182392c93e5",
+          "reviewReason": "Reviewed the Angular project build targets and coverage test entries after sharing the adapter. The strict catalog check confirmed 459 .NET projects and 393 HTTP endpoints."
         }
       ],
-      "reason": "The Angular workspace changes only the client test runner config. The project catalog and documented build targets are unaffected by the coverage-provider callback.",
+      "reason": "Reviewed the Angular project build targets and coverage test entries after sharing the adapter. The strict catalog check confirmed 459 .NET projects and 393 HTTP endpoints.",
       "baseRef": "HEAD",
-      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
-      "reviewedAtUtc": "2026-11-22T12:21:23.6995624Z"
+      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
+      "reviewedAtUtc": "2026-11-22T23:32:34.4990914Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -978,14 +978,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "7cd8463466e027b0579b86e3d79d2064007b0d93c8cfe6e74f01441d1098c2b1",
-          "reviewReason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change."
+          "sha256": "a54bc56a778622253f66c6435906978319465c931d081c4dda9a8cd0be236b19",
+          "reviewReason": "The new Admin npm pretest validates the generated metadata filter before V8. Ran the Admin production build and the named recipe moderation Chrome interaction at 1440 and 390 pixels with successful keyboard focus, Retry and conflict settlement."
         }
       ],
-      "reason": "Verified the coverage lifecycle carries the existing filter tests before the same Angular coverage target. The browser QA commands and workflow remain valid for this package change.",
+      "reason": "The new Admin npm pretest validates the generated metadata filter before V8. Ran the Admin production build and the named recipe moderation Chrome interaction at 1440 and 390 pixels with successful keyboard focus, Retry and conflict settlement.",
       "baseRef": "HEAD",
-      "gitHead": "b9bf5484ff534ff2c3a891a686f861f382683eb9",
-      "reviewedAtUtc": "2026-11-22T13:35:22.2130598Z"
+      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
+      "reviewedAtUtc": "2026-11-22T23:32:34.9562699Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1719,14 +1719,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "14ea65bc15bb954a8089d180db1c8a1473511e393fd943490954169609254ce1",
-          "reviewReason": "Reviewed the production launch instructions. The test-plan page cites the Docker startup and Rider coverage sections, and both citations still match their source sections."
+          "sha256": "55014c106e990601a71c65dbaff3f55e7240b4753b085023e9eb2602705bb9b3",
+          "reviewReason": "The testing strategy records the shared Angular metadata adapter and the Admin 100 percent floors. The exact Admin suite executed 846 tests successfully, with all four V8 totals at 100 percent."
         }
       ],
-      "reason": "Reviewed the production launch instructions. The test-plan page cites the Docker startup and Rider coverage sections, and both citations still match their source sections.",
+      "reason": "The testing strategy records the shared Angular metadata adapter and the Admin 100 percent floors. The exact Admin suite executed 846 tests successfully, with all four V8 totals at 100 percent.",
       "baseRef": "HEAD",
-      "gitHead": "f17b8a2f792b2919ac4e47a05e13f60341aa4e48",
-      "reviewedAtUtc": "2026-11-22T21:48:54.4753804Z"
+      "gitHead": "25ea593d55f40a1e509cf920e0db8f61bae5ca27",
+      "reviewedAtUtc": "2026-11-22T23:32:35.7383498Z"
     },
     {
       "pageId": "workflow-trace-feature",

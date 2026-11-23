@@ -387,6 +387,144 @@ it('requires a new image after removing the last photo through its action menu',
     expect(wizard.analyzeFoodImage).not.toHaveBeenCalled();
 });
 
+it('keeps the gallery and accepted recognition aligned when Remove is activated before the busy render', async () => {
+    const original = imageSelection('https://images.example.test/label.jpg', 'label-photo');
+    const secondary = imageSelection('https://images.example.test/ingredients.jpg', 'ingredients-photo');
+    const active = new Subject<FoodVisionResponse>();
+    const wizard = await openWizardAsync({ initialPhotos: [original, secondary] });
+    wizard.analyzeFoodImage.mockReturnValue(active);
+    const trigger = requiredElement(
+        wizard.host,
+        '.recognition-photos__item:nth-child(2) .recognition-photos__preview button',
+        HTMLButtonElement,
+    );
+    const analyze = action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE');
+    expect(document.querySelector('button[role="menuitem"]')).toBeNull();
+    analyze.click();
+    expect(active.observed).toBe(true);
+    expect(wizard.analyzeFoodImage).toHaveBeenCalledExactlyOnceWith({
+        imageAssetId: original.assetId,
+        additionalImageAssetIds: [secondary.assetId],
+        description: null,
+        isProductLabel: true,
+    });
+
+    expect(trigger.isConnected).toBe(true);
+    expect(trigger.disabled).toBe(false);
+    trigger.click();
+    const remove = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')).find(
+        control => control.textContent.trim() === 'IMAGE_UPLOAD_FIELD.REMOVE',
+    );
+    if (remove === undefined) {
+        throw new Error('Expected the actual Remove control before the owner redraw');
+    }
+    expect(remove.isConnected).toBe(true);
+    expect(remove.disabled).toBe(false);
+    remove.click();
+    expect(remove.isConnected).toBe(false);
+    expect(active.observed).toBe(true);
+
+    wizard.detectChanges();
+    expect(wizard.host.querySelector('[role="status"]')?.textContent).toContain('PRODUCT_AI_DIALOG.STATUS_ANALYZING');
+    expect(recognitionPhotoUrls(wizard)).toEqual([original.url, secondary.url]);
+    active.next({ items: [] });
+    active.complete();
+    wizard.detectChanges();
+    expect(action(wizard.host, 'PRODUCT_AI_DIALOG.REANALYZE').disabled).toBe(false);
+});
+
+it('keeps the current cover when a stale photo menu is activated during recognition', async () => {
+    const label = imageSelection('https://images.example.test/label.jpg', 'label-photo');
+    const ingredients = imageSelection('https://images.example.test/ingredients.jpg', 'ingredients-photo');
+    const active = new Subject<FoodVisionResponse>();
+    const wizard = await openWizardAsync({ initialPhotos: [label, ingredients] });
+    wizard.analyzeFoodImage.mockReturnValue(active);
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    requiredElement(wizard.host, '.recognition-photos__item:nth-child(2) .recognition-photos__preview button', HTMLButtonElement).click();
+    const chooseCover = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')).find(
+        control => control.textContent.trim() === 'PRODUCT_AI_DIALOG.CHOOSE_COVER',
+    );
+    if (chooseCover === undefined) {
+        throw new Error('Expected the Choose Cover action in the photo menu');
+    }
+    expect(chooseCover.disabled).toBe(false);
+    chooseCover.click();
+
+    wizard.detectChanges();
+    expect(active.observed).toBe(true);
+    expect(recognitionPhotoUrls(wizard)).toEqual([label.url, ingredients.url]);
+    active.next({ items: [] });
+    active.complete();
+});
+
+it('ignores a queued native photo selection after Analyze starts and accepts a fresh selection afterward', async () => {
+    const primary = imageSelection('https://images.example.test/label.jpg', 'label-photo');
+    const additional = imageSelection('https://images.example.test/ingredients.jpg', 'ingredients-photo');
+    const active = new Subject<FoodVisionResponse>();
+    const wizard = await openWizardAsync({ initialPhotos: [primary] });
+    wizard.analyzeFoodImage.mockReturnValue(active);
+    wizard.uploadImage.mockReturnValue(of(additional));
+
+    const image = document.createElement('img');
+    const photoSize = 320;
+    Object.defineProperties(image, { naturalWidth: { value: photoSize }, naturalHeight: { value: photoSize } });
+    vi.stubGlobal('Image', function createDecodedImage(): HTMLImageElement {
+        return image;
+    });
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:recognition-photo');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    onTestFinished(() => {
+        createUrl.mockRestore();
+        revokeUrl.mockRestore();
+    });
+
+    const add = requiredElement(wizard.host, '.recognition-photos__empty button', HTMLButtonElement);
+    const picker = requiredElement(wizard.host, 'fd-image-upload-field input[type="file"]', HTMLInputElement);
+    const pickerActivated = vi.fn();
+    picker.addEventListener('click', pickerActivated);
+    const file = new File(['label image'], 'ingredients.png', { type: 'image/png' });
+    const selectPhoto = (): void => {
+        Object.defineProperty(picker, 'files', { configurable: true, value: [file] });
+        picker.dispatchEvent(new Event('change', { bubbles: true }));
+        image.dispatchEvent(new Event('load'));
+    };
+
+    add.click();
+    expect(pickerActivated).toHaveBeenCalledOnce();
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    expect(active.observed).toBe(true);
+    expect(picker.isConnected).toBe(true);
+    expect(picker.disabled).toBe(false);
+    selectPhoto();
+    await new Promise<void>(resolve => {
+        setTimeout(resolve, 0);
+    });
+    wizard.detectChanges();
+
+    expect(recognitionPhotoUrls(wizard)).toEqual([primary.url]);
+    expect(wizard.uploadImage).not.toHaveBeenCalled();
+    expect(active.observed).toBe(true);
+    expect(wizard.analyzeFoodImage).toHaveBeenCalledExactlyOnceWith({
+        imageAssetId: primary.assetId,
+        additionalImageAssetIds: [],
+        description: null,
+        isProductLabel: true,
+    });
+
+    active.next({ items: [] });
+    active.complete();
+    wizard.detectChanges();
+    add.click();
+    expect(pickerActivated).toHaveBeenCalledTimes(2);
+    selectPhoto();
+    await vi.waitFor(() => {
+        wizard.detectChanges();
+        expect(recognitionPhotoUrls(wizard)).toEqual([primary.url, additional.url]);
+    });
+    expect(wizard.uploadImage).toHaveBeenCalledExactlyOnceWith(file);
+});
+
 it('explains that an imported photo on its own needs an additional upload', async () => {
     const imported = imageSelection('https://images.example.test/imported.jpg', null);
     const wizard = await openWizardAsync({ initialPhotos: [imported] });

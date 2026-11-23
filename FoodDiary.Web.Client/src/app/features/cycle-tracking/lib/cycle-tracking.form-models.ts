@@ -81,8 +81,9 @@ export function createDefaultCycleDayFormModel(): CycleDayFormModel {
 }
 
 export type CycleFactorFormModel = {
-    type: CycleFactorType | null;
-    startDate: string | null;
+    // These required pickers start populated and have no clear action.
+    type: CycleFactorType;
+    startDate: string;
     endDate: string | null;
     notes: string | null;
 };

@@ -236,7 +236,7 @@
                     "options": {
                         "setupFiles": ["src/test-setup.ts"],
                         "isolate": true,
-                        "runnerConfig": "vitest.client.config.mjs"
+                        "runnerConfig": "vitest.angular.config.mjs"
                     },
                     "configurations": {
                         "coverage": {
@@ -455,11 +455,11 @@
                                 "**/*.d.ts",
                                 "projects/fooddiary-admin/src/app/shared/api/sdk/generated/**"
                             ],
-                            "runnerConfig": "vitest.config.mjs",
+                            "runnerConfig": "vitest.angular.config.mjs",
                             "coverageThresholds": {
                                 "statements": 100,
                                 "lines": 100,
-                                "branches": 99,
+                                "branches": 100,
                                 "functions": 100
                             }
                         }

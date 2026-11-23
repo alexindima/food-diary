@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -22,7 +22,7 @@ export class MealDetailFacade {
     private readonly favoriteStatusRequests = new Subject<void>();
     private readonly dialogRef = inject(FdUiDialogRef<unknown, MealDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
-    private readonly datePipe = inject(DatePipe);
+    private readonly locale = inject(LOCALE_ID);
     private readonly translate = inject(TranslateService);
     private readonly favoriteMealService = inject(FavoriteMealService);
 
@@ -71,7 +71,7 @@ export class MealDetailFacade {
     }
 
     public delete(meal: Meal): void {
-        const formattedDate = this.datePipe.transform(meal.date, 'dd.MM.yyyy') ?? '';
+        const formattedDate = formatDate(meal.date, 'dd.MM.yyyy', this.locale);
         const data: ConfirmDeleteDialogData = {
             title: this.translate.instant('CONFIRM_DELETE.TITLE', {
                 type: this.translate.instant('MEAL_DETAIL.ENTITY_NAME'),

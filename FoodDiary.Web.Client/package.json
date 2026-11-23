@@ -76,6 +76,7 @@
         "test:coverage:ui-kit": "ng test fd-ui-kit --watch=false --configuration=coverage",
         "test:coverage:tour": "ng test fd-tour --watch=false --configuration=coverage",
         "test:coverage:webmcp": "ng test fd-webmcp --watch=false --configuration=coverage",
+        "pretest:coverage:admin": "node --test scripts/angular-metadata-coverage.test.mjs",
         "test:coverage:admin": "ng test fooddiary-admin --watch=false --configuration=coverage",
         "check:i18n": "node scripts/check-i18n.mjs",
         "check:seo-prerender": "node scripts/check-prerender-html.mjs",

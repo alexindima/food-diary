@@ -32,7 +32,7 @@ import { PwaInstallCardComponent } from '../../../../components/shared/pwa-insta
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
-import type { ActivityLevelOption, Gender } from '../../../../shared/models/user.data';
+import type { ActivityLevelOption, Gender, User } from '../../../../shared/models/user.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
@@ -115,6 +115,7 @@ export class UserManageComponent {
     private readonly comparisonWidgets = viewChild(UserManageComparisonWidgetsComponent);
     private lastProfileSavedVersion = 0;
     private pendingProfileSave: ProfileSaveSnapshot | null = null;
+    private activeProfileSave: Promise<boolean> | null = null;
     private readonly pendingPasswordSetupIntent = signal(false);
 
     protected genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
@@ -210,7 +211,7 @@ export class UserManageComponent {
 
         const unsavedChangesHandler: UnsavedChangesHandler = {
             hasChanges: () => this.hasUnsavedProfileChanges(),
-            save: (): boolean | Promise<boolean> => this.onSubmit(),
+            save: (): boolean | Promise<boolean> => this.activeProfileSave ?? this.onSubmit(),
             discard: () => {
                 this.discardUserFormChanges();
             },
@@ -259,25 +260,25 @@ export class UserManageComponent {
                 return;
             }
 
-            const userData = {
-                ...createUserManageFormModel(),
-                ...mapUserToForm(user),
-            };
-            const wasProfileSaved = profileSavedVersion !== this.lastProfileSavedVersion;
-            this.lastProfileSavedVersion = profileSavedVersion;
             untracked(() => {
-                this.syncUserProfileForm(userData, wasProfileSaved);
+                this.syncUserProfileForm(user, profileSavedVersion);
             });
             this.notifications.syncFromUser(user);
         });
     }
 
-    private syncUserProfileForm(userData: UserFormValues, wasProfileSaved: boolean): void {
+    private syncUserProfileForm(user: User, profileSavedVersion: number): void {
+        const userData = {
+            ...createUserManageFormModel(),
+            ...mapUserToForm(user),
+        };
+        const wasProfileSaved = profileSavedVersion !== this.lastProfileSavedVersion;
+        this.lastProfileSavedVersion = profileSavedVersion;
         const currentFormData = this.readUserFormValues();
         const submission = this.pendingProfileSave;
         if (wasProfileSaved && submission !== null) {
             this.pendingProfileSave = null;
-            submission.hasNewerEdits = !this.areUserFormValuesEqual(currentFormData, submission.values);
+            submission.hasNewerEdits = this.hasProfileDraftChanged(submission.values, currentFormData);
             if (submission.hasNewerEdits) {
                 this.lastSyncedUserFormData.set(userData);
                 return;
@@ -324,23 +325,32 @@ export class UserManageComponent {
 
     protected onSubmit(): boolean | Promise<boolean> {
         this.userForm().markAsTouched();
-        if (this.userForm().invalid() || this.facade.isSavingProfile()) {
+        if (this.userForm().invalid() || this.facade.isSavingProfile() || this.activeProfileSave !== null) {
             if (this.userForm().invalid()) {
                 this.focusInvalidProfileField();
             }
             return false;
         }
+        const user = this.facade.user();
+        const profileSavedVersion = this.facade.profileSavedVersion();
+        if (user !== null && profileSavedVersion !== this.lastProfileSavedVersion) {
+            // The previous save can finish before the profile effect reconciles its form snapshot.
+            this.syncUserProfileForm(user, profileSavedVersion);
+        }
         const submission: ProfileSaveSnapshot = { values: this.readUserFormValues(), hasNewerEdits: null };
         this.pendingProfileSave = submission;
-        return this.facade.saveProfileAsync(buildUserUpdateDto(submission.values)).then(saved => {
-            if (!saved) {
-                if (this.pendingProfileSave === submission) {
+        this.activeProfileSave = this.facade.saveProfileAsync(buildUserUpdateDto(submission.values)).then(saved => {
+            try {
+                if (!saved) {
                     this.pendingProfileSave = null;
+                    return false;
                 }
-                return false;
+                return !(submission.hasNewerEdits ?? this.hasProfileDraftChanged(submission.values, this.readUserFormValues()));
+            } finally {
+                this.activeProfileSave = null;
             }
-            return !(submission.hasNewerEdits ?? !this.areUserFormValuesEqual(submission.values, this.readUserFormValues()));
         });
+        return this.activeProfileSave;
     }
 
     protected onUserFormSubmit(event: SubmitEvent): void {
@@ -508,6 +518,10 @@ export class UserManageComponent {
 
     private hasUserFormChanges(formData: UserFormValues = this.readUserFormValues()): boolean {
         return !this.areUserFormValuesEqual(formData, this.lastSyncedUserFormData());
+    }
+
+    private hasProfileDraftChanged(submitted: UserFormValues, current: UserFormValues): boolean {
+        return this.userForm().invalid() || !this.areUserFormValuesEqual(submitted, current);
     }
 
     private areUserFormValuesEqual(formData: UserFormValues, synced: UserFormValues): boolean {

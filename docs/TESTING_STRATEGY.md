@@ -512,6 +512,8 @@ explicitly includes its own TypeScript source tree, including files that no test
 imports. Specs, declarations, and Storybook stories are excluded; runtime facades
 and services are not. Angular HTML templates and Playwright execution are not
 included in these TypeScript coverage figures.
+The app and Admin share `vitest.angular.config.mjs`, which recognizes specific
+compiler-generated Angular metadata and preserves authored callbacks in coverage.
 
 `vitest.config.mjs` keeps reports even when tests fail. HTML, JSON,
 JSON-summary, and lcov reports live in `FoodDiary.Web.Client/coverage/<project>/`.
@@ -544,7 +546,7 @@ contracts including invalid responses and rejected mutations.
 Admin and all three libraries also enforce project-wide minimums in their Angular
 coverage configurations. These floors preserve the measured baseline; they do
 not imply that every important scenario has a test. In lines/statements/branches/
-functions order, the minimums are Admin 100/100/99/100, UI kit 100/100/100/100, tour
+functions order, the minimums are Admin 100/100/100/100, UI kit 100/100/100/100, tour
 100/100/100/100, and WebMCP 96/96/96/95. Raise the relevant floor after closing a
 meaningful gap rather than compensating for a regression in another project.
 

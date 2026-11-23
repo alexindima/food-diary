@@ -328,7 +328,7 @@
                                         [label]="'CYCLE_TRACKING.FACTOR_END_DATE' | translate"
                                         [clearAriaLabel]="'CYCLE_TRACKING.CLEAR_FACTOR_END_DATE' | translate"
                                         [formField]="factorForm.endDate"
-                                        [earliestDate]="factorForm.startDate().value() ?? undefined"
+                                        [earliestDate]="factorForm.startDate().value()"
                                         [error]="factorEndDateError() | translate"
                                     />
                                 </div>

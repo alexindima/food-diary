@@ -59,9 +59,15 @@ export class TelegramDiaryTransferComponent {
     protected readonly needsConfirmation = computed(() => this.error() === 'AUTH.CONFIRM.MERGE_HINT');
     protected readonly choice = signal<GoalSource | null>(null);
     protected readonly confirmationUserId = signal<UserId | null>(null);
-    protected readonly selectedGoalSource = computed<GoalSource | null>(() =>
-        this.transfer().preview?.canUseTelegramGoals === false ? 'email' : this.choice(),
-    );
+    protected readonly selectedGoalSource = computed<GoalSource | null>(() => {
+        const state = this.transfer();
+        if (state.kind !== 'review') {
+            return null;
+        }
+
+        const canUseTelegramGoals: unknown = state.preview.canUseTelegramGoals;
+        return canUseTelegramGoals === false ? 'email' : this.choice();
+    });
     protected readonly canRetryPreview = computed(
         () => this.step() === 'sign-in' && this.error() === 'AUTH.TELEGRAM_DIARY.OPERATION_PENDING',
     );

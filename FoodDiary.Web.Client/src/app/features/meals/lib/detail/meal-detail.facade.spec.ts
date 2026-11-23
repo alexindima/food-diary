@@ -1,4 +1,3 @@
-import { DATE_PIPE_DEFAULT_OPTIONS, DatePipe } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -80,8 +79,6 @@ beforeEach(() => {
         providers: [
             provideTranslateTesting(),
             MealDetailFacade,
-            DatePipe,
-            { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { timezone: 'UTC' } },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FdUiDialogService, useValue: dialogService },
             { provide: FavoriteMealService, useValue: favoriteMealService },
@@ -187,15 +184,32 @@ describe('MealDetailFacade actions', () => {
         expect(dialogRef.close).toHaveBeenNthCalledWith(2, expect.objectContaining({ id: 'meal-1', action: 'Repeat' }));
     });
 
-    it('identifies the dated meal in the prompt before dispatching the confirmed delete', async () => {
+    const browserLocalDay = '14.05.2026';
+    const crossingInstantUtc = '2026-05-13T10:15:00.000Z';
+    const crossingInstantLocalDay = new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(new Date(crossingInstantUtc));
+
+    it.each([
+        { encoding: 'just after local midnight', date: new Date('2026-05-14T00:15:00').toISOString(), label: browserLocalDay },
+        { encoding: 'just before the next local midnight', date: new Date('2026-05-14T23:45:00').toISOString(), label: browserLocalDay },
+        { encoding: 'a UTC instant', date: crossingInstantUtc, label: crossingInstantLocalDay },
+        {
+            encoding: 'the same instant with an offset that changes its written date',
+            date: '2026-05-14T00:15:00+14:00',
+            label: crossingInstantLocalDay,
+        },
+    ])('identifies the local day of the meal saved as $encoding before dispatching delete', async ({ date, label }) => {
         const translate = TestBed.inject(TranslateService);
         translate.setTranslation('en', { CONFIRM_DELETE: { MESSAGE: 'Delete the meal for {{name}}?' } });
         await firstValueFrom(translate.use('en'));
         facade.initialize(meal);
 
-        facade.delete(meal);
+        facade.delete({ ...meal, date: utcInstant(date) });
 
-        const data: unknown = expect.objectContaining({ name: '14.05.2026', message: 'Delete the meal for 14.05.2026?' });
+        const data: unknown = expect.objectContaining({ name: label, message: `Delete the meal for ${label}?` });
         expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(ConfirmDeleteDialogComponent, { size: 'sm', data });
         expect(dialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: 'meal-1', action: 'Delete' }));
     });

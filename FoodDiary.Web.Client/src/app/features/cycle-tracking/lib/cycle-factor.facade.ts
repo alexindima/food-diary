@@ -7,7 +7,6 @@ import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-    type CycleFactorType,
     type CycleResponse,
     type UpsertCycleFactorPayload,
 } from '../../../shared/models/cycle.data';
@@ -19,8 +18,6 @@ import { MAX_CYCLE_NOTES_LENGTH } from './cycle-tracking.config';
 import type { CycleFactorFormModel } from './cycle-tracking.form-models';
 import { getCycleNotesLength, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
 import { CycleTrackingStateFacade } from './cycle-tracking-state.facade';
-
-type CycleFactorSaveDraft = CycleFactorFormModel & { type: CycleFactorType; startDate: string };
 
 @Injectable()
 export class CycleFactorFacade {
@@ -47,7 +44,7 @@ export class CycleFactorFacade {
         validate(path.endDate, context => {
             const start = context.valueOf(path.startDate);
             const end = context.value();
-            if (start === null || end === null || start.length === 0 || end.length === 0) {
+            if (end === null || start.length === 0 || end.length === 0) {
                 return;
             }
             return toCycleDateKey(end) < toCycleDateKey(start) ? { kind: 'dateOrder' } : undefined;
@@ -55,17 +52,10 @@ export class CycleFactorFacade {
     });
 
     public async submitFactorAsync(): Promise<boolean> {
-        return submit(this.factorForm, async () => {
-            const { type, startDate, endDate, notes } = this.factorModel();
-            if (type === null || startDate === null || startDate.length === 0) {
-                return;
-            }
-
-            await this.saveFactorAsync({ type, startDate, endDate, notes });
-        });
+        return submit(this.factorForm, async () => this.saveFactorAsync(this.factorModel()));
     }
 
-    private async saveFactorAsync(draft: CycleFactorSaveDraft): Promise<void> {
+    private async saveFactorAsync(draft: CycleFactorFormModel): Promise<void> {
         const currentCycle = this.state.cycle();
         if (currentCycle === null || currentCycle.id.length === 0 || this.state.isProfileMutationPending()) {
             return;
@@ -101,7 +91,7 @@ export class CycleFactorFacade {
         }
     }
 
-    private buildFactorPayload(formValue: CycleFactorSaveDraft): UpsertCycleFactorPayload {
+    private buildFactorPayload(formValue: CycleFactorFormModel): UpsertCycleFactorPayload {
         const notes = toOptionalCycleText(formValue.notes);
         const factorId = this.state.editingFactorId();
         return {

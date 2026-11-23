@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
 import { finalize, of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { ExportService } from '../../../shared/api/export.service';
@@ -1418,16 +1418,21 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('discards a cancelled draft and resets field interaction state', () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(new Date('2026-04-03T12:00:00'));
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
         facade.initialize();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
-        facade.factorModel.update(value => ({ ...value, notes: 'cancelled', startDate: null }));
+        facade.factorModel.update(value => ({ ...value, notes: 'cancelled', startDate: calendarDate('2026-04-02') }));
         facade.factorForm().markAsTouched();
 
         facade.cancelFactorEdit();
 
         expect(facade.editingFactorId()).toBeNull();
         expect(facade.factorModel().notes).toBeNull();
-        expect(facade.factorModel().startDate).not.toBeNull();
+        expect(facade.factorModel().startDate).toBe('2026-04-03');
         expect(facade.factorForm().touched()).toBe(false);
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });

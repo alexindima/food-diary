@@ -376,6 +376,29 @@ describe('ProfileManageFacade account actions', () => {
         expect(facade.isUnlinkingTelegram()).toBe(false);
         expect(toastService.success).not.toHaveBeenCalled();
     });
+
+    it('keeps the sign-in method and allows retry when the confirmation dialog cannot open', async () => {
+        const linked = { ...user, hasTelegramIdentity: true, hasGoogleIdentity: true };
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: linked }));
+        dialogService.open
+            .mockImplementationOnce(() => {
+                throw new Error('Unable to create the dialog overlay');
+            })
+            .mockReturnValueOnce({ afterClosed: () => of(undefined) });
+        facade.initialize();
+
+        await facade.unlinkTelegramAsync();
+
+        expect(facade.user()).toEqual(linked);
+        expect(facade.telegramUnlinkError()).toBe('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        expect(facade.isUnlinkingTelegram()).toBe(false);
+        expect(authService.onLogoutAsync).not.toHaveBeenCalled();
+
+        await facade.unlinkTelegramAsync();
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+        expect(facade.telegramUnlinkError()).toBeNull();
+        expect(facade.user()).toEqual(linked);
+    });
 });
 
 describe('ProfileManageFacade password and deletion actions', () => {

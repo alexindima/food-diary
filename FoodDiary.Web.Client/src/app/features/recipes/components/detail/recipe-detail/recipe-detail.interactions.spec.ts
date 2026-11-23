@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
@@ -11,6 +11,8 @@ import { expect, it, type Mock, vi } from 'vitest';
 import { environment } from '../../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { FavoriteRecipeHttpResponse } from '../../../../../shared/api/sdk/generated/model/favorite-recipe-http-response';
+import type { OwnedImageContentHttpResponse } from '../../../../../shared/api/sdk/generated/model/owned-image-content-http-response';
+import type { RecipeHttpResponse } from '../../../../../shared/api/sdk/generated/model/recipe-http-response';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
@@ -184,5 +186,71 @@ it('favorites a public recipe once before repaint and cancels the obsolete statu
     expect(close).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({ id: RECIPE_ID, action: 'FavoriteChanged', favoriteChanged: true }),
     );
+    http.verify();
+});
+
+it('retries a failed publication refresh and shows the current owner photo after publication is withdrawn', async () => {
+    const oldAsset = entityId<'image-asset'>('bdcd39fc-f901-4b09-864f-3f70e581ace9');
+    const newAsset = entityId<'image-asset'>('22404104-99f8-4ca4-8da6-674c00ea4053');
+    const oldPreview = 'data:image/webp;base64,UklGRg==';
+    const newPreview = 'data:image/png;base64,iVBORw0KGgo=';
+    const note = 'Please use a photo of the finished dish.';
+    const submitted = recipe({ imageAssetId: oldAsset, publicationStatus: 'ChangesRequested', publicationReason: note });
+    const { fixture, host, http } = await renderDetailsAsync(submitted);
+    const status = (): string | undefined => host.querySelector('fd-recipe-publication-notice [role="status"]')?.textContent;
+    const cover = (): string | null | undefined => host.querySelector('fd-public-recipe-gallery .gallery-cover img')?.getAttribute('src');
+    const recipeUrl = `${environment.apiUrls.recipes}/${RECIPE_ID}?includePublic=false`;
+    const failedMessage = 'RECIPE_PUBLICATION.REFRESH_FAILED';
+
+    http.expectOne({ method: 'GET', url: `${FAVORITES_API}/check/${RECIPE_ID}` }).flush(false);
+    expect(cover()).toBeUndefined();
+    http.expectOne({ method: 'GET', url: `${environment.apiUrls.images}/${oldAsset}/content` }).flush({
+        dataUrl: oldPreview,
+    } satisfies OwnedImageContentHttpResponse);
+    fixture.detectChanges();
+    expect(status()).toContain('RECIPE_PUBLICATION.ChangesRequested');
+    expect(status()).toContain(note);
+    expect(cover()).toBe(oldPreview);
+
+    const refresh = button(host, 'RECIPE_PUBLICATION.REFRESH');
+    refresh.click();
+    refresh.click();
+    const failedRead = http.expectOne({ method: 'GET', url: recipeUrl });
+    fixture.detectChanges();
+    expect(refresh.disabled).toBe(true);
+    failedRead.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+    fixture.detectChanges();
+    expect(status()).toContain(failedMessage);
+    expect(status()).toContain(note);
+    expect(cover()).toBe(oldPreview);
+
+    expect(refresh.disabled).toBe(false);
+    refresh.click();
+    const retry = http.expectOne({ method: 'GET', url: recipeUrl });
+    fixture.detectChanges();
+    expect(status()).not.toContain(failedMessage);
+    retry.flush({
+        id: submitted.id,
+        name: submitted.name,
+        createdAt: submitted.createdAt,
+        servings: submitted.servings,
+        usageCount: submitted.usageCount,
+        isOwnedByCurrentUser: true,
+        isNutritionAutoCalculated: true,
+        visibility: RecipeVisibility.Private,
+        publicationStatus: null,
+        imageAssetId: newAsset,
+        steps: [],
+    } satisfies RecipeHttpResponse);
+    fixture.detectChanges();
+    expect(status()).toBeUndefined();
+    expect(refresh.isConnected).toBe(false);
+    expect(cover()).toBeUndefined();
+
+    http.expectOne({ method: 'GET', url: `${environment.apiUrls.images}/${newAsset}/content` }).flush({
+        dataUrl: newPreview,
+    } satisfies OwnedImageContentHttpResponse);
+    fixture.detectChanges();
+    expect(cover()).toBe(newPreview);
     http.verify();
 });

@@ -163,9 +163,6 @@ export class ProductAiRecognitionDialogComponent {
             .filter(name => name.length > 0),
     );
     protected onPhotosChanged(photos: ImageSelection[]): void {
-        if (this.isBusy()) {
-            return;
-        }
         this.photos.set(photos);
         const uploadedAssetIds = this.uploadedAssetIds();
         const primaryAssetId = this.primaryAnalysisAssetId();

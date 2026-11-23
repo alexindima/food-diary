@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
@@ -19,12 +19,22 @@ import { PushNotificationInteractionService } from './push-notification-interact
 
 export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 
+type PushBrowserContext = {
+    readonly storage: BrowserStorageService;
+    readonly window: BrowserWindowService;
+    readonly metadata: AuthMetadataStorageService;
+    mutationQueue: Promise<void> | null;
+};
+
 type PushSession = {
+    browser: PushBrowserContext;
     version: number;
     owner: string;
     token: string;
     localInvalidationVersion: number;
 };
+
+type PushBrowserSession = PushSession | { browser: PushBrowserContext; owner: null };
 
 type OwnedPushSubscription = {
     subscription: PushSubscription | null;
@@ -47,10 +57,15 @@ export class PushNotificationService {
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly document = inject(DOCUMENT);
     private readonly sessionEvents = inject(SessionEventsService);
-    private readonly browserContext = this.swPush.isEnabled
-        ? { storage: inject(BrowserStorageService), window: inject(BrowserWindowService), metadata: inject(AuthMetadataStorageService) }
+    private readonly browserContext: PushBrowserContext | null = this.swPush.isEnabled
+        ? {
+              storage: inject(BrowserStorageService),
+              window: inject(BrowserWindowService),
+              metadata: inject(AuthMetadataStorageService),
+              mutationQueue: null,
+          }
         : null;
-    private browserMutationQueue: Promise<void> | null = null;
+    private readonly supportedBrowser = signal(this.browserContext);
     private sessionVersion = 0;
     private sessionEnding = false;
     private sessionOwner = this.readSessionOwner();
@@ -68,23 +83,24 @@ export class PushNotificationService {
     private localInvalidationVersion = 0;
 
     public readonly canCheckBrowserSubscription = this.browserContext !== null;
-    public readonly isSupported = signal(this.swPush.isEnabled);
+    public readonly isSupported = computed(() => this.supportedBrowser() !== null);
     public readonly isSubscribed = signal(false);
     public readonly isBusy = signal(false);
     public readonly currentSubscriptionEndpoint = signal<string | null>(null);
 
     public constructor() {
-        if (!this.swPush.isEnabled) {
+        const browser = this.browserContext;
+        if (browser === null) {
             return;
         }
         const interactions = inject(PushNotificationInteractionService);
-        this.observeBrowserResume();
+        this.observeBrowserResume(browser);
 
-        const unregisterCleanup = this.sessionEvents.registerSessionEndCleanup(async () => this.endSessionAsync());
+        const unregisterCleanup = this.sessionEvents.registerSessionEndCleanup(async () => this.endSessionAsync(browser));
         this.destroyRef.onDestroy(unregisterCleanup);
         this.sessionEvents.authenticated$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (!this.authService.isImpersonating() && this.knownSubscriptions.size > 0) {
-                void this.endSessionAsync();
+                void this.endSessionAsync(browser);
             }
             this.sessionVersion++;
             this.localSessionInvalidated = false;
@@ -96,31 +112,31 @@ export class PushNotificationService {
             }
             this.isBusy.set(false);
             this.setSubscriptionState(null);
-            void this.syncExistingSubscriptionAsync();
+            void this.syncExistingSubscriptionAsync(browser);
         });
         this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.sessionEvents.isLocalSessionInvalidated) {
-                this.invalidateLocalSession();
+                this.invalidateLocalSession(browser);
             } else {
-                void this.endSessionAsync();
+                void this.endSessionAsync(browser);
             }
         });
         this.sessionEvents.localSessionInvalidating$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.invalidateLocalSession();
+            this.invalidateLocalSession(browser);
         });
 
         this.swPush.subscription.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: subscription => {
-                this.observeSubscription(subscription);
+                this.observeSubscription(subscription, browser);
             },
             error: () => {
-                this.isSupported.set(false);
+                this.supportedBrowser.set(null);
                 this.setSubscriptionState(null);
             },
         });
 
         this.swPush.pushSubscriptionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(change => {
-            void this.syncSubscriptionChangeAsync(change.oldSubscription, change.newSubscription);
+            void this.syncSubscriptionChangeAsync(change.oldSubscription, change.newSubscription, browser);
         });
 
         this.swPush.notificationClicks.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -148,15 +164,15 @@ export class PushNotificationService {
             }
 
             untracked(() => {
-                void this.syncExistingSubscriptionAsync();
+                void this.syncExistingSubscriptionAsync(browser);
             });
         });
     }
 
-    private observeBrowserResume(): void {
+    private observeBrowserResume(browser: PushBrowserContext): void {
         const resume = (): void => {
             if (this.document.visibilityState === 'visible') {
-                void this.syncExistingSubscriptionAsync();
+                void this.syncExistingSubscriptionAsync(browser);
             }
         };
         this.document.addEventListener('visibilitychange', resume);
@@ -169,13 +185,13 @@ export class PushNotificationService {
         });
     }
 
-    private observeSubscription(subscription: PushSubscription | null): void {
+    private observeSubscription(subscription: PushSubscription | null, browser: PushBrowserContext): void {
         this.subscriptionObserved = true;
         if (this.authService.isImpersonating()) {
             this.setSubscriptionState(null);
             return;
         }
-        if (this.finishPendingDiscovery(subscription)) {
+        if (this.finishPendingDiscovery(subscription, browser)) {
             return;
         }
         if (this.observeInvalidatedSubscription(subscription)) {
@@ -185,10 +201,10 @@ export class PushNotificationService {
         if (subscription !== null) {
             this.knownSubscriptions.set(subscription.endpoint, subscription);
         }
-        if (this.captureSession() === null) {
+        if (this.captureSession(browser) === null) {
             this.setSubscriptionState(null);
             if (subscription !== null && this.sessionCleanup === null) {
-                void this.revokeBrowserSubscriptionAsync(subscription, null);
+                void this.revokeBrowserSubscriptionAsync(subscription, { browser, owner: null });
             }
             return;
         }
@@ -208,12 +224,13 @@ export class PushNotificationService {
         return true;
     }
 
-    private finishPendingDiscovery(subscription: PushSubscription | null): boolean {
+    private finishPendingDiscovery(subscription: PushSubscription | null, browser: PushBrowserContext): boolean {
         const previousOwners = [...this.pendingDiscoveryRevocations.values()];
         this.pendingDiscoveryRevocations.clear();
         if (subscription !== null && previousOwners.length > 0) {
             if (this.sessionCleanup === null) {
                 void this.trackSessionCleanupAsync(
+                    browser,
                     Promise.allSettled(
                         previousOwners.map(async session =>
                             this.revokeSubscriptionsAsync(new Map([[subscription.endpoint, subscription]]), session),
@@ -228,7 +245,8 @@ export class PushNotificationService {
     }
 
     public async ensureSubscriptionAsync(): Promise<PushNotificationEnableResult> {
-        if (!this.isSupported()) {
+        const browser = this.supportedBrowser();
+        if (browser === null) {
             return 'unsupported';
         }
 
@@ -236,7 +254,7 @@ export class PushNotificationService {
             return this.isSubscribed() ? 'already-subscribed' : 'unavailable';
         }
 
-        const session = this.captureSession();
+        const session = this.captureSession(browser);
         if (session === null) {
             return 'unavailable';
         }
@@ -262,7 +280,7 @@ export class PushNotificationService {
 
     private rememberEnabledDevice(result: PushNotificationEnableResult, session: PushSession): void {
         if (this.isCurrentSession(session) && (result === 'subscribed' || result === 'already-subscribed')) {
-            this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'true');
+            session.browser.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'true');
         }
     }
 
@@ -299,11 +317,11 @@ export class PushNotificationService {
         return this.isCurrentSession(session) ? 'subscribed' : 'unavailable';
     }
 
-    private async syncExistingSubscriptionAsync(): Promise<void> {
+    private async syncExistingSubscriptionAsync(browser: PushBrowserContext): Promise<void> {
         if (this.subscriptionRequestInFlight) {
             return;
         }
-        const session = this.captureSession();
+        const session = this.captureSession(browser);
         if (session === null) {
             return;
         }
@@ -329,10 +347,11 @@ export class PushNotificationService {
     }
 
     private async restoreDeviceSubscriptionAsync(session: PushSession): Promise<void> {
+        const { storage } = session.browser;
         if (
             this.isBusy() ||
             this.browserNotifications.getPermission() !== 'granted' ||
-            this.browserContext?.storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) !== 'true'
+            storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) !== 'true'
         ) {
             return;
         }
@@ -344,7 +363,7 @@ export class PushNotificationService {
             if (
                 preferences.pushNotificationsEnabled &&
                 this.isCurrentSession(session) &&
-                this.browserContext.storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) === 'true'
+                storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) === 'true'
             ) {
                 await this.ensureSubscriptionForSessionAsync(session, false);
             }
@@ -358,10 +377,11 @@ export class PushNotificationService {
     private async syncSubscriptionChangeAsync(
         oldSubscription: PushSubscription | null,
         newSubscription: PushSubscription | null,
+        browser: PushBrowserContext,
     ): Promise<void> {
-        const session = this.captureSession();
+        const session = this.captureSession(browser);
         if (session === null) {
-            await this.handleUnauthenticatedSubscriptionChangeAsync(oldSubscription, newSubscription);
+            await this.handleUnauthenticatedSubscriptionChangeAsync(oldSubscription, newSubscription, browser);
             return;
         }
         try {
@@ -407,6 +427,7 @@ export class PushNotificationService {
     private async handleUnauthenticatedSubscriptionChangeAsync(
         oldSubscription: PushSubscription | null,
         newSubscription: PushSubscription | null,
+        browser: PushBrowserContext,
     ): Promise<void> {
         if (this.localSessionInvalidated && this.locallyInvalidatedSession !== null) {
             const subscriptions = [oldSubscription, newSubscription].filter(value => value !== null);
@@ -415,16 +436,17 @@ export class PushNotificationService {
                 this.locallyInvalidatedSession,
             );
         } else if (newSubscription !== null && !this.localSessionInvalidated) {
-            await this.revokeBrowserSubscriptionAsync(newSubscription, null);
+            await this.revokeBrowserSubscriptionAsync(newSubscription, { browser, owner: null });
         }
     }
 
     public async removeSubscriptionAsync(endpoint: string): Promise<boolean> {
-        if (!this.canCheckBrowserSubscription || endpoint.length === 0 || this.isBusy()) {
+        const browser = this.browserContext;
+        if (browser === null || endpoint.length === 0 || this.isBusy()) {
             return false;
         }
 
-        const session = this.captureSession();
+        const session = this.captureSession(browser);
         if (session === null) {
             return false;
         }
@@ -470,9 +492,9 @@ export class PushNotificationService {
     }
 
     private async disconnectCurrentDeviceAsync(subscription: PushSubscription, session: PushSession): Promise<boolean> {
-        this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
-        const disconnected = await this.revokeBrowserSubscriptionAsync(subscription, session, metadata => {
-            if (!this.isCurrentSession(session) || !this.canRevokeBrowserSubscription(subscription, session, metadata)) {
+        session.browser.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
+        const disconnected = await this.revokeBrowserSubscriptionAsync(subscription, session, () => {
+            if (!this.isCurrentSession(session) || !this.canRevokeBrowserSubscription(subscription, session)) {
                 return false;
             }
             this.clearRemovedDeviceState(subscription.endpoint);
@@ -486,10 +508,10 @@ export class PushNotificationService {
     }
 
     private async forgetRemovedDeviceAsync(endpoint: string, session: PushSession): Promise<void> {
-        await this.runBrowserMutationAsync(async () => {
+        await this.runBrowserMutationAsync(session.browser, async () => {
             const current = await this.readCurrentSubscriptionAsync();
             if (current?.endpoint !== endpoint && this.isCurrentSession(session) && this.isConfirmedOwner(endpoint, session.owner)) {
-                this.browserContext?.storage.removeItem('local', PUSH_OWNER_STORAGE_KEY);
+                session.browser.storage.removeItem('local', PUSH_OWNER_STORAGE_KEY);
             }
         }).catch(() => {
             // The server already removed the endpoint. Keep its marker available for later reconciliation.
@@ -642,24 +664,19 @@ export class PushNotificationService {
         return firstValueFrom(this.swPush.subscription.pipe(take(1), timeout(PUSH_REQUEST_TIMEOUT_MS)));
     }
 
-    private async runBrowserMutationAsync<T>(operation: (metadata: AuthMetadataStorageService) => Promise<T>): Promise<T> {
-        const context = this.browserContext;
-        if (context === null) {
-            throw new Error('Browser push is unavailable.');
-        }
-        const lockedOperation = operation.bind(undefined, context.metadata);
+    private async runBrowserMutationAsync<T>(browser: PushBrowserContext, operation: () => Promise<T>): Promise<T> {
         const pending =
-            this.browserMutationQueue === null
-                ? context.window.runWithLockAsync(PUSH_BROWSER_LOCK, lockedOperation)
-                : this.browserMutationQueue.then(async () => context.window.runWithLockAsync(PUSH_BROWSER_LOCK, lockedOperation));
+            browser.mutationQueue === null
+                ? browser.window.runWithLockAsync(PUSH_BROWSER_LOCK, operation)
+                : browser.mutationQueue.then(async () => browser.window.runWithLockAsync(PUSH_BROWSER_LOCK, operation));
         const settled = pending.then(
             () => {},
             () => {},
         );
-        this.browserMutationQueue = settled;
+        browser.mutationQueue = settled;
         void settled.finally(() => {
-            if (this.browserMutationQueue === settled) {
-                this.browserMutationQueue = null;
+            if (browser.mutationQueue === settled) {
+                browser.mutationQueue = null;
             }
         });
         return pending;
@@ -700,11 +717,11 @@ export class PushNotificationService {
     }
 
     private async readOwnedSubscriptionAsync(session: PushSession): Promise<OwnedPushSubscription> {
-        return this.runBrowserMutationAsync(async () => {
+        return this.runBrowserMutationAsync(session.browser, async () => {
             this.requireCurrentSession(session);
             const subscription = await this.readCurrentSubscriptionAsync();
             this.requireCurrentSession(session);
-            this.isSupported.set(true);
+            this.supportedBrowser.set(session.browser);
             if (subscription === null) {
                 await this.removeMissingOwnedSubscriptionAsync(session);
                 return { subscription: null, revoked: false };
@@ -766,6 +783,7 @@ export class PushNotificationService {
         allowPermissionPrompt = true,
     ): Promise<PushSubscription> {
         const request = await this.runBrowserMutationAsync<{ subscription: PushSubscription } | { pending: Promise<PushSubscription> }>(
+            session.browser,
             async () => {
                 this.requireCurrentSession(session);
                 const current = await this.readCurrentSubscriptionAsync();
@@ -793,23 +811,23 @@ export class PushNotificationService {
 
     private async revokeBrowserSubscriptionAsync(
         subscription: PushSubscription,
-        session: PushSession | null,
-        onExplicitAbsence?: (metadata: AuthMetadataStorageService) => boolean,
+        session: PushBrowserSession,
+        onExplicitAbsence?: () => boolean,
     ): Promise<boolean> {
-        return this.runBrowserMutationAsync(async metadata => {
-            if (!this.canRevokeBrowserSubscription(subscription, session, metadata)) {
+        return this.runBrowserMutationAsync(session.browser, async () => {
+            if (!this.canRevokeBrowserSubscription(subscription, session)) {
                 return false;
             }
             const current = await this.readCurrentSubscriptionAsync();
             if (current === null) {
-                return onExplicitAbsence?.(metadata) ?? false;
+                return onExplicitAbsence?.() ?? false;
             }
-            if (current.endpoint !== subscription.endpoint || !this.canRevokeBrowserSubscription(current, session, metadata)) {
+            if (current.endpoint !== subscription.endpoint || !this.canRevokeBrowserSubscription(current, session)) {
                 return false;
             }
             const removed = await firstValueFrom(from(current.unsubscribe()).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)));
             if (!removed) {
-                return this.confirmExplicitSubscriptionAbsenceAsync(metadata, onExplicitAbsence);
+                return this.confirmExplicitSubscriptionAbsenceAsync(onExplicitAbsence);
             }
             if (onExplicitAbsence === undefined) {
                 this.forgetSubscription(current);
@@ -821,23 +839,17 @@ export class PushNotificationService {
         }).catch(() => false);
     }
 
-    private async confirmExplicitSubscriptionAbsenceAsync(
-        metadata: AuthMetadataStorageService,
-        onExplicitAbsence: ((metadata: AuthMetadataStorageService) => boolean) | undefined,
-    ): Promise<boolean> {
+    private async confirmExplicitSubscriptionAbsenceAsync(onExplicitAbsence: (() => boolean) | undefined): Promise<boolean> {
         // Native unsubscribe returns false if the subscription was already deactivated.
-        return onExplicitAbsence !== undefined && (await this.readCurrentSubscriptionAsync()) === null && onExplicitAbsence(metadata);
+        return onExplicitAbsence !== undefined && (await this.readCurrentSubscriptionAsync()) === null && onExplicitAbsence();
     }
 
-    private canRevokeBrowserSubscription(
-        subscription: PushSubscription,
-        session: PushSession | null,
-        metadata: AuthMetadataStorageService,
-    ): boolean {
+    private canRevokeBrowserSubscription(subscription: PushSubscription, session: PushBrowserSession): boolean {
         if (this.authService.isImpersonating() || this.localSessionInvalidated) {
             return false;
         }
-        if (session === null) {
+        const { metadata } = session.browser;
+        if (session.owner === null) {
             return this.readSessionOwner() === null && !metadata.hasPublishedSession();
         }
         return (
@@ -871,14 +883,14 @@ export class PushNotificationService {
         try {
             await pending;
             if (this.isCurrentSession(session)) {
-                await this.runBrowserMutationAsync(async () => {
+                await this.runBrowserMutationAsync(session.browser, async () => {
                     this.requireCurrentSession(session);
                     const current = await this.readCurrentSubscriptionAsync();
                     this.requireCurrentSession(session);
                     if (current?.endpoint !== subscription.endpoint) {
                         throw new Error('The browser push subscription has changed.');
                     }
-                    this.browserContext?.storage.setJson('local', PUSH_OWNER_STORAGE_KEY, {
+                    session.browser.storage.setJson('local', PUSH_OWNER_STORAGE_KEY, {
                         endpoint: subscription.endpoint,
                         userId: session.owner,
                     });
@@ -896,7 +908,7 @@ export class PushNotificationService {
         return this.authService.isAuthenticated() && !this.authService.isImpersonating() ? this.authService.getUserId() : null;
     }
 
-    private captureSession(): PushSession | null {
+    private captureSession(browser: PushBrowserContext): PushSession | null {
         const owner = this.readSessionOwner();
         if (owner !== this.sessionOwner) {
             this.sessionOwner = owner;
@@ -912,7 +924,7 @@ export class PushNotificationService {
         ) {
             return null;
         }
-        const session = { version: this.sessionVersion, owner, token, localInvalidationVersion: this.localInvalidationVersion };
+        const session = { browser, version: this.sessionVersion, owner, token, localInvalidationVersion: this.localInvalidationVersion };
         this.lastSession = session;
         return session;
     }
@@ -922,11 +934,11 @@ export class PushNotificationService {
             !this.sessionEnding &&
             session.version === this.sessionVersion &&
             session.owner === this.readSessionOwner() &&
-            this.browserContext?.metadata.hasForeignSession(session.owner) === false
+            !session.browser.metadata.hasForeignSession(session.owner)
         );
     }
 
-    private async endSessionAsync(): Promise<void> {
+    private async endSessionAsync(browser: PushBrowserContext): Promise<void> {
         if (this.localSessionInvalidated || this.authService.isImpersonating()) {
             return;
         }
@@ -936,7 +948,7 @@ export class PushNotificationService {
         if (this.sessionEnding) {
             return;
         }
-        const session = this.captureSession() ?? this.lastSession;
+        const session: PushBrowserSession = this.captureSession(browser) ?? this.lastSession ?? { browser, owner: null };
         this.lastSession = null;
         this.sessionEnding = true;
         this.sessionVersion++;
@@ -948,7 +960,7 @@ export class PushNotificationService {
         }
         this.knownSubscriptions.clear();
         this.currentSubscription = null;
-        if (session !== null && !this.subscriptionObserved) {
+        if (session.owner !== null && !this.subscriptionObserved) {
             this.pendingDiscoveryRevocations.set(session.owner, session);
         }
         const discovery = this.discoverSubscriptionAsync();
@@ -959,7 +971,7 @@ export class PushNotificationService {
             }
             await this.revokeSubscriptionsAsync(subscriptions, session);
         })();
-        return this.trackSessionCleanupAsync(cleanup);
+        return this.trackSessionCleanupAsync(browser, cleanup);
     }
 
     private async discoverSubscriptionAsync(): Promise<PushSubscription | null> {
@@ -969,7 +981,7 @@ export class PushNotificationService {
         return firstValueFrom(this.swPush.subscription.pipe(take(1), timeout(PUSH_REQUEST_TIMEOUT_MS))).catch(() => null);
     }
 
-    private async revokeSubscriptionsAsync(subscriptions: Map<string, PushSubscription>, session: PushSession | null): Promise<void> {
+    private async revokeSubscriptionsAsync(subscriptions: Map<string, PushSubscription>, session: PushBrowserSession): Promise<void> {
         // Browser revocation runs even offline. Wait for already-sent registrations
         // before deleting their server records, always using their original owner.
         const unsubscribe = Promise.allSettled(
@@ -977,7 +989,7 @@ export class PushNotificationService {
         );
         const upserts = Promise.allSettled(this.pendingUpserts);
         await Promise.allSettled([unsubscribe, upserts]);
-        if (session !== null) {
+        if (session.owner !== null) {
             await Promise.allSettled(
                 [...subscriptions.keys()].map(async endpoint =>
                     firstValueFrom(
@@ -993,7 +1005,7 @@ export class PushNotificationService {
         this.currentSubscriptionEndpoint.set(subscription?.endpoint ?? null);
     }
 
-    private invalidateLocalSession(): void {
+    private invalidateLocalSession(browser: PushBrowserContext): void {
         if (this.localSessionInvalidated) {
             return;
         }
@@ -1001,7 +1013,7 @@ export class PushNotificationService {
         const token = this.authService.getSessionKey();
         const session =
             owner !== null && token !== null
-                ? { version: this.sessionVersion, owner, token, localInvalidationVersion: this.localInvalidationVersion }
+                ? { browser, version: this.sessionVersion, owner, token, localInvalidationVersion: this.localInvalidationVersion }
                 : this.lastSession;
         const subscriptions = new Map(this.knownSubscriptions);
         if (this.currentSubscription !== null) {
@@ -1029,11 +1041,14 @@ export class PushNotificationService {
                 }
                 await this.revokeSubscriptionsAsync(subscriptions, session);
             })();
-            void this.trackSessionCleanupAsync(Promise.allSettled([pendingCleanup, cleanup]).then(() => {}));
+            void this.trackSessionCleanupAsync(
+                browser,
+                Promise.allSettled([pendingCleanup, cleanup]).then(() => {}),
+            );
         }
     }
 
-    private async trackSessionCleanupAsync(cleanup: Promise<void>): Promise<void> {
+    private async trackSessionCleanupAsync(browser: PushBrowserContext, cleanup: Promise<void>): Promise<void> {
         const tracked = cleanup.finally(() => {
             if (this.sessionCleanup === tracked) {
                 this.sessionCleanup = null;
@@ -1043,7 +1058,7 @@ export class PushNotificationService {
                     !this.localSessionInvalidated &&
                     this.readSessionOwner() !== null
                 ) {
-                    void this.syncExistingSubscriptionAsync();
+                    void this.syncExistingSubscriptionAsync(browser);
                 }
             }
         });

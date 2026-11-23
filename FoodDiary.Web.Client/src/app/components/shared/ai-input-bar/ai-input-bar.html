@@ -97,31 +97,33 @@
         <fd-ui-inline-alert appearance="notice" severity="danger" role="alert" [message]="'AI_RECOGNITION.ERROR_CONSENT' | translate" />
     }
 
-    <div #actionsElement class="ai-input-bar__actions fd-row fd-justify-between fd-gap-xs">
-        <div #manualActionsElement class="ai-input-bar__manual-actions">
+    <div class="ai-input-bar__actions fd-row fd-gap-xs">
+        <div class="ai-input-bar__manual-actions">
             <ng-content select="[inputActions]" />
         </div>
-        <fd-ui-button
-            #historyElement
-            class="ai-input-bar__history"
-            type="button"
-            icon="history"
-            variant="secondary"
-            fill="text"
-            size="sm"
-            iconSize="sm"
-            [class.ai-input-bar__history--labeled]="historyLabelKey() !== null"
-            [class.ai-input-bar__history--compact]="isHistoryLabelCompact()"
-            [ariaLabel]="'AI_RECOGNITION.SHOW_RECENT' | translate"
-            [fdUiHint]="'AI_RECOGNITION.SHOW_RECENT' | translate"
-            [disabled]="isDisabled()"
-            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-            (click)="openRecognitionHistory()"
-        >
-            <span #historyLabelElement class="ai-input-bar__history-label">{{
-                historyLabelKey() ?? 'AI_RECOGNITION.SHOW_RECENT' | translate
-            }}</span>
-        </fd-ui-button>
+        <div #historySpaceElement class="ai-input-bar__history-space">
+            <fd-ui-button
+                class="ai-input-bar__history"
+                type="button"
+                icon="history"
+                variant="secondary"
+                fill="text"
+                size="sm"
+                iconSize="sm"
+                [class.ai-input-bar__history--labeled]="historyLabelKey() !== null"
+                [class.ai-input-bar__history--compact]="isHistoryLabelCompact()"
+                [ariaLabel]="'AI_RECOGNITION.SHOW_RECENT' | translate"
+                [fdUiHint]="'AI_RECOGNITION.SHOW_RECENT' | translate"
+                [disabled]="isDisabled()"
+                [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                (click)="openRecognitionHistory()"
+            >
+                <span #historyLabelElement class="ai-input-bar__history-label">{{
+                    historyLabelKey() ?? 'AI_RECOGNITION.SHOW_RECENT' | translate
+                }}</span>
+                <span #historyButtonOverhead class="ai-input-bar__history-overhead" aria-hidden="true"></span>
+            </fd-ui-button>
+        </div>
     </div>
 </div>
 

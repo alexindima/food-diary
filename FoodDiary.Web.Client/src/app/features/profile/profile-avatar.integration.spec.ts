@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, type Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastHostComponent } from 'fd-ui-kit/toast/fd-ui-toast-host';
 import { defer, firstValueFrom, of, Subject, throwError } from 'rxjs';
@@ -568,6 +569,75 @@ describe('Profile time zone editor', () => {
         });
         expect(update).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ timeZoneId: REPLACEMENT_ZONE }));
         expect(field.value).toBe(REPLACEMENT_ZONE);
+    });
+});
+
+describe('Profile pending account save and leave', () => {
+    it('waits for the pending profile PATCH, retaining a failed draft and leaving after a successful retry', async () => {
+        // Keep this route fixture isolated from jsdom's delayed native history traversal between tests.
+        vi.spyOn(window.history, 'pushState').mockImplementation(() => {
+            throw new Error('History entry unavailable');
+        });
+        const { router } = await renderProfileAsync({
+            providers: [provideFdUiDialogNavigation(), provideHttpClient(), provideHttpClientTesting(), UserService],
+        });
+        const http = TestBed.inject(HttpTestingController);
+        onTestFinished(() => {
+            http.verify();
+        });
+        const loaded = profileOverview();
+        http.expectOne({ method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` }).flush([]);
+        http.expectOne({ method: 'GET', url: `${environment.apiUrls.users}/overview` }).flush(loaded);
+        router.detectChanges();
+
+        const profile = profilePage(router);
+        const firstName = accountField(profile, '[data-user-field="firstName"] input');
+        const draft = 'Pending profile name';
+        typeIntoProfile(firstName, draft, router);
+        const angularRouter = TestBed.inject(Router);
+        const updateRequest = { method: 'PATCH', url: `${environment.apiUrls.users}/info` };
+
+        for (const accepted of [false, true]) {
+            const pageSave = getButton(profile, 'UNSAVED_CHANGES.SAVE');
+            expect(pageSave.disabled).toBe(false);
+            pageSave.click();
+            const patch = http.expectOne(updateRequest);
+            expect(patch.request.body).toHaveProperty('firstName', draft);
+            router.detectChanges();
+            expect(pageSave.disabled).toBe(true);
+
+            const routeSettled = vi.fn<(navigated: boolean) => void>();
+            const departure = angularRouter.navigateByUrl(OTHER_URL);
+            void departure.then(routeSettled);
+            await chooseProfileSaveAsync(router);
+            await new Promise<void>(resolve => {
+                setTimeout(resolve, 0);
+            });
+            expect(routeSettled).not.toHaveBeenCalled();
+            expect(patch.cancelled).toBe(false);
+            http.expectNone(updateRequest);
+
+            if (accepted) {
+                patch.flush({ ...loaded.user, firstName: draft });
+            } else {
+                patch.flush(
+                    { error: 'User.UpdateUnavailable' },
+                    { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' },
+                );
+            }
+            expect(await departure).toBe(accepted);
+            router.detectChanges();
+            http.expectNone(updateRequest);
+
+            if (!accepted) {
+                expect(angularRouter.url).toBe(PROFILE_URL);
+                expect(profilePage(router)).toBe(profile);
+                expect(firstName.value).toBe(draft);
+                expect(profile.querySelector('.user-manage__error [role="alert"]')?.textContent).toContain('USER_MANAGE.UPDATE_ERROR');
+            }
+        }
+        expect(angularRouter.url).toBe(OTHER_URL);
+        expect(router.routeNativeElement?.textContent).toContain('Another page');
     });
 });
 
@@ -1830,5 +1900,7 @@ async function chooseProfileSaveAsync(router: RouterTestingHarness): Promise<voi
         }
         return current;
     });
-    getButton(dialog, 'UNSAVED_CHANGES.SAVE').click();
+    const save = getButton(dialog, 'UNSAVED_CHANGES.SAVE');
+    expect(save.disabled).toBe(false);
+    save.click();
 }

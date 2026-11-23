@@ -89,7 +89,7 @@
         />
     }
 
-    @if (selectedId()) {
+    @if (selectedId(); as revisionId) {
         <section #detailPanel tabindex="-1" class="detail-panel" [attr.aria-label]="'ADMIN_RECIPE_MODERATION.DETAILS' | translate">
             <fd-admin-recipe-moderation-detail
                 [item]="selected()"
@@ -98,7 +98,7 @@
                 [actionInProgress]="actionInProgress()"
                 [actionError]="actionError()"
                 [(reason)]="reason"
-                (retryDetails)="loadDetails()"
+                (retryDetails)="retryDetails(revisionId)"
                 (submitAction)="submit($event)"
             />
         </section>

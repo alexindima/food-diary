@@ -6,6 +6,7 @@ import { firstValueFrom, type Observable, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { recipeFromSdk } from '../../../../../shared/api/sdk/recipe-sdk.mapper';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
@@ -98,6 +99,53 @@ const FILLED_SUMMARY: RecipeNutritionSummary = {
     fiber: SUMMARY_FIBER,
     alcohol: SUMMARY_ALCOHOL,
 };
+
+describe('RecipeManageComponent publication feedback', () => {
+    it.each([
+        {
+            scenario: 'automatic image replacement guidance',
+            status: 'ChangesRequested',
+            reason: 'ReplaceImage',
+            expectedReason: 'RECIPE_PUBLICATION.REPLACE_IMAGE',
+        },
+        {
+            scenario: 'the reviewer note',
+            status: 'ChangesRequested',
+            reason: 'Please replace the cover with the plated dish.',
+            expectedReason: 'Please replace the cover with the plated dish.',
+        },
+        { scenario: 'a changes request without a reason', status: 'ChangesRequested', reason: null, expectedReason: null },
+        { scenario: 'a pending review without a reason', status: 'Pending', reason: null, expectedReason: null },
+    ] as const)('renders $scenario in the publication notice', async ({ status, reason, expectedReason }) => {
+        const { fixture } = await setupComponentAsync();
+        const recipe = recipeFromSdk({
+            id: RECIPE_ID,
+            name: 'Initial recipe',
+            servings: DEFAULT_SERVINGS,
+            visibility: RecipeVisibility.Public,
+            usageCount: 0,
+            createdAt: '2026-01-01T00:00:00Z',
+            isOwnedByCurrentUser: true,
+            isNutritionAutoCalculated: true,
+            steps: [{ id: 'step-1', stepNumber: 1, instruction: 'Cook', ingredients: [] }],
+            publicationStatus: status,
+            publicationReason: reason,
+        });
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const notice = host.querySelector<HTMLDivElement>('.recipe-manage__form > div[role="status"]');
+        const detail = notice?.querySelector('p');
+        if (notice === null || detail === undefined || detail === null) {
+            throw new Error('Expected the mounted recipe publication notice and reason');
+        }
+        expect(notice.hidden).toBe(false);
+        expect(notice.textContent).toContain(`RECIPE_PUBLICATION.${status}`);
+        expect(detail.hidden).toBe(expectedReason === null);
+        expect(detail.textContent.trim()).toBe(expectedReason ?? '');
+    });
+});
 
 describe('RecipeManageComponent form population', () => {
     it('should create one empty step for new recipes', async () => {

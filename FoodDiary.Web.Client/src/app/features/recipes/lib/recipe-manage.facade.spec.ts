@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { Injector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -463,39 +464,72 @@ describe('RecipeManageFacade nutrition boundaries', () => {
     });
 });
 
-describe('RecipeManageFacade submission recovery', () => {
-    const dto = {
-        name: 'Recipe',
-        steps: [],
-        servings: 1,
-        cookTime: 1,
-        prepTime: 0,
-        visibility: RecipeVisibility.Public,
-        calculateNutritionAutomatically: true,
-    };
+const recoveryRecipe = {
+    name: 'Recipe',
+    steps: [],
+    servings: 1,
+    cookTime: 1,
+    prepTime: 0,
+    visibility: RecipeVisibility.Public,
+    calculateNutritionAutomatically: true,
+};
 
-    it.each([null, undefined, 'offline', [], { error: {} }])('uses a safe fallback error and permits update retry: %s', error => {
+describe('RecipeManageFacade submission recovery', () => {
+    it.each([
+        null,
+        undefined,
+        'offline',
+        [],
+        { error: {} },
+        new HttpErrorResponse({ status: HttpStatusCode.BadGateway, statusText: 'Bad Gateway', error: '<html>Bad gateway</html>' }),
+    ])('uses a safe fallback error and permits update retry: %s', error => {
         recipeService.update.mockReturnValueOnce(throwError(() => error));
-        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), recoveryRecipe);
         expect(facade.isSubmitting()).toBe(false);
         expect(facade.globalError()).toBe('FORM_ERRORS.UNKNOWN');
-        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
+        expect(navigationService.navigateToRecipeListAsync).not.toHaveBeenCalled();
+        facade.updateRecipe(entityId<'recipe'>('r1'), recoveryRecipe);
         expect(facade.globalError()).toBeNull();
         expect(recipeService.update).toHaveBeenCalledTimes(2);
     });
 
+    it('explains how to replace a publication photo rejected by the server and accepts the corrected save', () => {
+        const id = entityId<'recipe'>('r1');
+        const draft = { ...recoveryRecipe, imageAssetId: entityId<'image-asset'>('public-cover') };
+        const replacement = { ...recoveryRecipe, imageAssetId: entityId<'image-asset'>('private-cover') };
+        const rejected = new HttpErrorResponse({
+            status: HttpStatusCode.BadRequest,
+            error: {
+                error: 'Recipe.PublicationImageRequiresPrivateUpload',
+                message: 'Upload new public recipe photos through the recipe editor.',
+            },
+        });
+        recipeService.update.mockReturnValueOnce(throwError(() => rejected));
+        facade.updateRecipe(id, draft);
+        expect(facade.globalError()).toBe('RECIPE_PUBLICATION.REPLACE_IMAGE');
+        expect(facade.isSubmitting()).toBe(false);
+        expect(navigationService.navigateToRecipeListAsync).not.toHaveBeenCalled();
+
+        facade.updateRecipe(id, replacement);
+        expect(recipeService.update.mock.calls).toEqual([
+            [id, draft],
+            [id, replacement],
+        ]);
+        expect(facade.globalError()).toBeNull();
+    });
+
     it('prevents a duplicate update', () => {
         facade.isSubmitting.set(true);
-        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), recoveryRecipe);
         expect(recipeService.update).not.toHaveBeenCalled();
     });
 
     it('shows a localized connection error and allows retry after an offline save', () => {
         recipeService.update.mockReturnValueOnce(throwError(() => ({ status: 0, error: { message: 'Failed to fetch' } })));
-        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), recoveryRecipe);
         expect(facade.globalError()).toBe('FORM_ERRORS.SAVE_CONNECTION');
         expect(facade.isSubmitting()).toBe(false);
-        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), recoveryRecipe);
         expect(recipeService.update).toHaveBeenCalledTimes(2);
         expect(facade.globalError()).toBeNull();
     });
@@ -509,7 +543,7 @@ describe('RecipeManageFacade submission recovery', () => {
             });
             return injector.get(RecipeManageFacade);
         });
-        scoped.addRecipe(dto);
+        scoped.addRecipe(recoveryRecipe);
         await waitForAsyncTasksAsync();
         expect(close).toHaveBeenCalledWith({ id: 'recipe-1', name: 'Recipe' });
         expect(navigationService.navigateToRecipeListAsync).not.toHaveBeenCalled();

@@ -35,7 +35,7 @@ export class ShoppingListFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly saveQueue = createAutosaveQueue<void>({
         debounceMs: 500,
-        isBusy: () => this.isSaving() || this.isLoading() || this.conflictListId() !== null,
+        isBusy: () => !this.canPersistList(this.list()),
         persist: () => {
             this.persistList();
         },
@@ -58,7 +58,7 @@ export class ShoppingListFacade {
         while (this.activeSave !== null || this.saveQueue.hasPending()) {
             const save = this.activeSave;
             if (save === null) {
-                if (this.isSaving() || this.isLoading()) {
+                if (!this.canPersistList(this.list())) {
                     return false;
                 }
                 this.saveQueue.flushNow();
@@ -450,12 +450,15 @@ export class ShoppingListFacade {
             .subscribe({
                 next: () => {
                     this.isSaving.set(false);
+                    this.pendingSave = false;
                     this.removeDeletedListSummary(listId);
                     this.loadLists();
                 },
                 error: () => {
                     this.isSaving.set(false);
                     this.lists.set(previousLists);
+                    this.pendingSave = false;
+                    this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
                 },
             });
@@ -516,6 +519,7 @@ export class ShoppingListFacade {
             .subscribe({
                 next: lists => {
                     this.isLoading.set(false);
+                    this.saveQueue.scheduleIfPending();
                     if (lists.length === 0) {
                         // The create response may arrive before the new list appears in the directory.
                         if (this.list() === null) {
@@ -535,6 +539,10 @@ export class ShoppingListFacade {
                     if (selected !== null && !lists.some(entry => entry.id === selected.id)) {
                         this.upsertListSummary(selected);
                     }
+                    // Refresh the directory without replacing items that are waiting to be saved.
+                    if (this.saveQueue.hasPending()) {
+                        return;
+                    }
                     const currentSelection = this.selectedListId();
                     const selectedId =
                         currentSelection !== null && this.lists().some(list => list.id === currentSelection)
@@ -544,6 +552,7 @@ export class ShoppingListFacade {
                 },
                 error: () => {
                     this.isLoading.set(false);
+                    this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
             });
@@ -656,14 +665,20 @@ export class ShoppingListFacade {
     }
 
     public retrySave(): void {
-        if (this.conflictListId() === null && !this.isSaving() && !this.isLoading() && this.saveQueue.hasPending()) {
+        if (this.canPersistList(this.list()) && this.saveQueue.hasPending()) {
             this.saveQueue.flushNow();
         }
     }
 
+    private canPersistList(current: ShoppingList | null): current is ShoppingList {
+        return current !== null && this.conflictListId() === null && !this.isSaving() && !this.isLoading();
+    }
+
     private persistList(): void {
         const current = this.list();
-        if (current === null || this.conflictListId() !== null || this.isSaving() || this.isLoading()) {
+        if (!this.canPersistList(current)) {
+            // An immediate flush clears the queue before attempting to persist the draft.
+            this.saveQueue.restore();
             return;
         }
 

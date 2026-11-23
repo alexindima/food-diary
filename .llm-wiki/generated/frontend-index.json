@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2940,
+    "typescriptFiles": 2952,
     "symbols": 885,
     "routes": 115,
     "features": 46,
-    "specs": 957,
+    "specs": 969,
     "localeFiles": 5,
     "roles": {
       "Component": 507,
@@ -359,9 +359,19 @@
         "rules"
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation-navigation.integration.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation-pagination.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-recipe-moderation-route.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation-sdk.mapper.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/lib/admin-recipe-moderation.facade.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.spec.ts"
       ]
     },
@@ -1396,6 +1406,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.interactions.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-favorites/recipe-list-favorites.spec.ts",
@@ -4067,7 +4078,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-factor.facade.ts",
-      "line": 26
+      "line": 23
     },
     {
       "name": "CycleSettingsFacade",
@@ -7686,7 +7697,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "line": 40
+      "line": 50
     },
     {
       "name": "ClientTelemetrySessionService",

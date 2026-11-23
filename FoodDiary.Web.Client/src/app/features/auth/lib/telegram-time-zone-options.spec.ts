@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { telegramTimeZoneOptions } from './telegram-time-zone-options';
 
@@ -21,5 +21,22 @@ describe('telegramTimeZoneOptions', () => {
         const options = telegramTimeZoneOptions('Asia/Kathmandu', new Date('2026-01-15T12:00:00Z'));
         expect(options.find(option => option.value === 'Asia/Kathmandu')?.label).toContain('UTC+05:45');
         expect(telegramTimeZoneOptions('Invalid/Zone', new Date()).some(option => option.value === 'Invalid/Zone')).toBe(false);
+    });
+
+    it('keeps a zone selectable without claiming it is UTC if the formatter omits the offset', () => {
+        const timeZone = 'America/New_York';
+        const date = new Date('2026-01-15T12:00:00Z');
+        const NativeDateTimeFormat = Intl.DateTimeFormat;
+        const matcher = vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(function (locales, options) {
+            const format = options?.timeZone === timeZone ? { ...options, timeZoneName: undefined } : options;
+            return new NativeDateTimeFormat(locales, format);
+        });
+
+        try {
+            const options = telegramTimeZoneOptions(timeZone, date);
+            expect(options.find(option => option.value === timeZone)).toEqual({ value: timeZone, label: 'America/New York' });
+        } finally {
+            matcher.mockRestore();
+        }
     });
 });

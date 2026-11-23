@@ -201,7 +201,7 @@ describe('ShoppingListFacade restoring list availability', () => {
         expect(facade.overviewLoadError()).toBe(false);
     });
 
-    it('restores an inactive list after failed deletion without replacing the active list', () => {
+    it.each(['success', 'offline'] as const)('saves active-list edits after an inactive list deletion (%s)', outcome => {
         const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
         const inactiveId = entityId<'shopping-list'>('inactive-list');
         const active = { id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: list.items.length };
@@ -209,21 +209,101 @@ describe('ShoppingListFacade restoring list availability', () => {
         const overview: ShoppingListOverview = { selectedList: list, lists: { items: [active, inactive], hasMore: false, nextPage: null } };
         shoppingListService.getOverview.mockReturnValueOnce(of(overview));
         const removal = new Subject<void>();
+        const directory = new Subject<ShoppingListSummary[]>();
+        const saved = new Subject<ShoppingList>();
         shoppingListService.deleteById.mockReturnValueOnce(removal);
+        shoppingListService.getPage.mockReturnValueOnce(directory);
+        shoppingListService.update.mockReturnValueOnce(saved);
         facade.initialize();
 
         facade.deleteListById(inactiveId);
         expect(facade.lists().map(item => item.id)).toEqual([list.id]);
         expect(facade.isSaving()).toBe(true);
-        removal.error(new Error('offline'));
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
+
+        if (outcome === 'success') {
+            removal.next();
+            removal.complete();
+            expect(facade.isLoading()).toBe(true);
+            vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+            expect(shoppingListService.update).not.toHaveBeenCalled();
+            directory.next([active]);
+            directory.complete();
+            expect(facade.lists().map(item => item.id)).toEqual([list.id]);
+            expect(shoppingListService.getPage).toHaveBeenCalledOnce();
+            expect(toastService.error).not.toHaveBeenCalled();
+        } else {
+            removal.error(new Error('offline'));
+            expect(facade.lists().map(item => item.id)).toEqual([list.id, inactiveId]);
+            expect(shoppingListService.getPage).not.toHaveBeenCalled();
+            expect(toastService.error).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.DELETE_ERROR');
+        }
 
         expect(shoppingListService.deleteById).toHaveBeenCalledExactlyOnceWith(inactiveId);
-        expect(facade.isSaving()).toBe(false);
-        expect(facade.lists().map(item => item.id)).toEqual([list.id, inactiveId]);
-        expect(facade.list()).toEqual(list);
+        expect(facade.isLoading()).toBe(false);
         expect(facade.selectedListId()).toBe(list.id);
-        expect(shoppingListService.getPage).not.toHaveBeenCalled();
-        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.DELETE_ERROR');
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(list.id, {
+            expectedRevision: list.revision,
+            items: [expect.objectContaining({ name: 'Milk' })],
+        });
+        saved.next({ ...list, items: facade.items() });
+        saved.complete();
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
+        expect(facade.hasUnsavedChanges()).toBe(false);
+    });
+});
+
+describe('ShoppingListFacade selection during a directory refresh', () => {
+    it('saves the active draft before opening a list chosen during a directory refresh', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const inactive = { id: entityId<'shopping-list'>('inactive'), name: 'Old list', createdAt: list.createdAt, itemsCount: 0 };
+        const travel = { ...list, id: entityId<'shopping-list'>('travel'), name: 'Travel' };
+        const active = { id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: list.items.length };
+        const destination = { id: travel.id, name: travel.name, createdAt: travel.createdAt, itemsCount: travel.items.length };
+        const overview: ShoppingListOverview = {
+            selectedList: list,
+            lists: { items: [active, inactive, destination], hasMore: false, nextPage: null },
+        };
+        const directory = new Subject<ShoppingListSummary[]>();
+        const removing = new Subject<void>();
+        const saving = new Subject<ShoppingList>();
+        shoppingListService.getOverview.mockReturnValueOnce(of(overview));
+        shoppingListService.deleteById.mockReturnValueOnce(removing);
+        shoppingListService.getPage.mockReturnValueOnce(directory);
+        shoppingListService.update.mockReturnValueOnce(saving);
+        shoppingListService.getById.mockReturnValueOnce(of(travel));
+        facade.initialize();
+
+        facade.deleteListById(inactive.id);
+        addMilk(facade);
+        removing.next();
+        removing.complete();
+        expect(facade.isLoading()).toBe(true);
+
+        facade.selectList(travel.id);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
+        expect(shoppingListService.getById).not.toHaveBeenCalled();
+
+        directory.next([active, destination]);
+        directory.complete();
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(list.id, {
+            expectedRevision: list.revision,
+            items: [expect.objectContaining({ name: 'Milk' })],
+        });
+        expect(shoppingListService.getById).not.toHaveBeenCalled();
+
+        saving.next({ ...list, items: facade.items() });
+        saving.complete();
+        expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith(travel.id);
+        expect(facade.selectedListId()).toBe(travel.id);
+        expect(facade.items()).toEqual(travel.items);
+        expect(facade.hasUnsavedChanges()).toBe(false);
     });
 });
 

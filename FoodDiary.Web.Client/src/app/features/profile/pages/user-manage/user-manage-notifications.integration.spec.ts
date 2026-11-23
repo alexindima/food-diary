@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, type Provider, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, type Routes } from '@angular/router';
+import { provideRouter, Router, type Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { SwPush } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
@@ -110,11 +110,18 @@ function configureProfileNotifications(
     return { account, browser, toast, recordSubscription };
 }
 
-async function setupRoutedProfileAsync(): Promise<ProfileNotificationBoundaries & { harness: RouterTestingHarness; profile: HTMLElement }> {
-    const boundaries = configureProfileNotifications(initialPreferences, [
-        { path: 'profile', component: UserManageComponent, canDeactivate: [unsavedChangesGuard] },
-        { path: 'diary', component: NotificationDepartureComponent },
-    ]);
+async function setupRoutedProfileAsync(
+    providers: Provider[] = [],
+): Promise<ProfileNotificationBoundaries & { harness: RouterTestingHarness; profile: HTMLElement }> {
+    const boundaries = configureProfileNotifications(
+        initialPreferences,
+        [
+            { path: 'profile', component: UserManageComponent, canDeactivate: [unsavedChangesGuard] },
+            { path: 'diary', component: NotificationDepartureComponent },
+        ],
+        knownDevices,
+        providers,
+    );
     const harness = await RouterTestingHarness.create('/profile');
     const profile = harness.routeNativeElement;
     if (profile === null) {
@@ -371,6 +378,82 @@ describe('Profile and notification saves', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-unsaved-changes-bar')).toBeNull();
         expect(firstName.value).toBe('New profile name');
         expect(fasting.getAttribute('aria-checked')).toBe('false');
+    });
+});
+
+describe('Profile save ownership during route departure', () => {
+    it('keeps the second profile draft when a prior save is acknowledged before the leave confirmation', async () => {
+        vi.stubGlobal('matchMedia', (): Pick<MediaQueryList, 'matches'> => ({ matches: false }));
+        onTestFinished(() => {
+            vi.unstubAllGlobals();
+        });
+        const overview = createProfileOverview(initialPreferences, knownDevices);
+        const firstSave = new Subject<UserProfileOverview['user']>();
+        const secondSave = new Subject<null>();
+        const updateProfile = vi.fn<UserService['update']>().mockReturnValueOnce(firstSave).mockReturnValueOnce(secondSave);
+        const { harness, profile } = await setupRoutedProfileAsync([
+            {
+                provide: UserService,
+                useValue: { getOverview: (): ReturnType<UserService['getOverview']> => of(overview), update: updateProfile },
+            },
+        ]);
+        const firstName = profile.querySelector<HTMLInputElement>('[data-user-field="firstName"] input');
+        if (firstName === null) {
+            throw new Error('Expected the editable profile first name');
+        }
+
+        firstName.value = 'First submitted profile name';
+        firstName.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        const save = profile.querySelector<HTMLButtonElement>('fd-unsaved-changes-bar fd-ui-button:last-child button');
+        if (save === null) {
+            throw new Error('Expected the first profile Save action');
+        }
+        save.click();
+        expect(firstSave.observed).toBe(true);
+        expect(updateProfile).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ firstName: 'First submitted profile name' }));
+
+        firstName.value = 'Second submitted profile name';
+        firstName.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        expect(save.disabled).toBe(true);
+        const router = TestBed.inject(Router);
+        const departure = router.navigateByUrl('/diary');
+        const guardSave = await vi.waitFor(() => {
+            const button = profile.ownerDocument.querySelector<HTMLButtonElement>('.unsaved-changes-dialog__action--primary button');
+            if (button === null || button.disabled) {
+                throw new Error('Expected the enabled Save action in the leave confirmation');
+            }
+            return button;
+        });
+
+        firstSave.next({ ...overview.user, firstName: 'First submitted profile name' });
+        firstSave.complete();
+        // The HTTP promise can settle before the view tick while the separate guard button remains available.
+        await waitForAsyncTasksAsync();
+        expect(save.disabled).toBe(true);
+        guardSave.click();
+        expect(secondSave.observed).toBe(true);
+        expect(updateProfile).toHaveBeenNthCalledWith(2, expect.objectContaining({ firstName: 'Second submitted profile name' }));
+        harness.detectChanges();
+        const draftWhileSaving = firstName.value;
+
+        // UserService.update converts a rejected PATCH to a null result.
+        secondSave.next(null);
+        secondSave.complete();
+        expect(await departure).toBe(false);
+        harness.detectChanges();
+        expect([draftWhileSaving, firstName.value]).toEqual(['Second submitted profile name', 'Second submitted profile name']);
+        expect(router.url).toBe('/profile');
+        expect(harness.routeNativeElement).toBe(profile);
+        expect(updateProfile).toHaveBeenCalledTimes(2);
+        expect(profile.querySelector('fd-unsaved-changes-bar')).not.toBeNull();
+
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(profile.querySelector('.user-manage__form > .user-manage__error [role="alert"]')?.textContent).toContain(
+            'USER_MANAGE.UPDATE_ERROR',
+        );
     });
 });
 
@@ -1257,7 +1340,12 @@ it('finishes an account reminder save without showing its Profile toast on the d
     await waitForAsyncTasksAsync();
 
     expect(harness.routeNativeElement?.textContent).toContain('Diary opened');
-    expect(recordTiming).toHaveBeenCalledExactlyOnceWith({ firstReminderHours, followUpReminderHours, source: 'preset', presetId: 'steady' });
+    expect(recordTiming).toHaveBeenCalledExactlyOnceWith({
+        firstReminderHours,
+        followUpReminderHours,
+        source: 'preset',
+        presetId: 'steady',
+    });
     expect(toast.info).not.toHaveBeenCalled();
 });
 

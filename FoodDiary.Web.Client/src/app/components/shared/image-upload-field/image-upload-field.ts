@@ -112,6 +112,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly value = model<ImageSelection | null>(null);
     public readonly touched = model(false);
     public readonly disabled = input(false);
+    public readonly fileSelectionLocked = input<() => boolean>((): boolean => false);
     public readonly appearance = input<'default' | 'compact' | 'preview' | 'step' | 'tile' | 'hidden'>('default');
 
     public readonly imageChanged = output<ImageSelection | null>();
@@ -133,7 +134,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         () => this.previewUrl() !== null || (this.keepPrivate() && this.selection().assetId !== null),
     );
     protected readonly isUploading = signal(false);
-    private readonly isInputBlocked = computed(() => this.disabled() || this.isUploading());
+    private readonly isInputBlocked = computed(() => this.disabled() || this.isUploading() || this.fileSelectionLocked()());
     protected readonly isDragging = linkedSignal({
         source: this.isInputBlocked,
         computation: () => false,

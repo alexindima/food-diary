@@ -61,6 +61,7 @@
                 <fd-image-gallery-editor
                     [photos]="photos()"
                     [disabled]="isBusy()"
+                    [photoEditsLocked]="isBusy"
                     [scanning]="isBusy()"
                     [cover]="cover()"
                     [(uploading)]="photoUploading"

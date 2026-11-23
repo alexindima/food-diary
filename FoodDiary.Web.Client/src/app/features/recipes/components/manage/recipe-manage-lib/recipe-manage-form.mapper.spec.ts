@@ -226,6 +226,25 @@ describe('recipe manage DTO mapping', () => {
     });
 });
 
+describe('recipe manage incomplete ingredient draft mapping', () => {
+    it('keeps the selected nested recipe when its amount is cleared and then corrected', () => {
+        const ingredient = createRecipeIngredientValue({ nestedRecipe: RECIPE, nestedRecipeId: RECIPE.id, amount: DEFAULT_SERVINGS });
+        const clearedIngredient = { ...ingredient, amount: null };
+        const step = { ...createRecipeStepValue(), description: 'Cook', ingredients: [clearedIngredient] };
+        const clearedForm = { ...createRecipeFormValue(), steps: [step] };
+
+        const clearedDto = buildRecipeDto(clearedForm, 'recipe', DEFAULT_SERVINGS, scaleValue);
+
+        expect(clearedDto.steps[0]?.ingredients).toEqual([{ productId: undefined, nestedRecipeId: RECIPE.id, amount: 0 }]);
+        expect(clearedForm.steps[0]?.ingredients[0]).toMatchObject({ nestedRecipeId: RECIPE.id, amount: null });
+
+        const correctedForm = { ...clearedForm, steps: [{ ...step, ingredients: [ingredient] }] };
+        const correctedDto = buildRecipeDto(correctedForm, 'recipe', DEFAULT_SERVINGS, scaleValue);
+
+        expect(correctedDto.steps[0]?.ingredients).toEqual([{ productId: undefined, nestedRecipeId: RECIPE.id, amount: DEFAULT_SERVINGS }]);
+    });
+});
+
 describe('recipe manage edit mapping', () => {
     it('keeps the publication intent when a first public version still has private visibility', () => {
         const form = buildRecipeFormPatchValue({ ...RECIPE, visibility: RecipeVisibility.Private, publicationStatus: 'Pending' });

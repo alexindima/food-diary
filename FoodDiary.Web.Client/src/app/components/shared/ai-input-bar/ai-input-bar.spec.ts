@@ -1961,26 +1961,20 @@ describe('AI input history label space', () => {
         vi.stubGlobal('ResizeObserver', observesResize ? HistoryResizeObserver : undefined);
         const { dialogService, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
-        const actions = selectRecognitionControl(fixture, '.ai-input-bar__actions', HTMLElement);
+        const space = selectRecognitionControl(fixture, '.ai-input-bar__history-space', HTMLElement);
         const history = selectRecognitionControl(fixture, '.ai-input-bar__history', HTMLElement);
-        const manual = selectRecognitionControl(fixture, '.ai-input-bar__manual-actions', HTMLElement);
         const button = selectRecognitionControl(fixture, '.ai-input-bar__history button', HTMLButtonElement);
         const label = selectRecognitionControl(fixture, '.ai-input-bar__history-label', HTMLElement);
-        const icon = selectRecognitionControl(fixture, '.ai-input-bar__history fd-ui-icon', HTMLElement);
-        const roomyWidth = 400;
-        const crampedWidth = 100;
-        const manualWidth = 120;
+        const overhead = selectRecognitionControl(fixture, '.ai-input-bar__history-overhead', HTMLElement);
+        const roomyWidth = 180;
+        const crampedWidth = 60;
         const labelWidth = 88;
-        const iconSize = 16;
-        actions.style.padding = '0px';
-        actions.style.columnGap = '8px';
-        button.style.padding = '0px';
-        button.style.borderWidth = '0px';
-        button.style.columnGap = '8px';
-        Object.defineProperty(actions, 'clientWidth', { configurable: true, value: observesResize ? roomyWidth : crampedWidth });
-        vi.spyOn(manual, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, manualWidth, iconSize));
-        vi.spyOn(label, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, labelWidth, iconSize));
-        vi.spyOn(icon, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, iconSize, iconSize));
+        const overheadWidth = 32;
+        const spaceRect = vi
+            .spyOn(space, 'getBoundingClientRect')
+            .mockReturnValue(new DOMRect(0, 0, observesResize ? roomyWidth : crampedWidth));
+        vi.spyOn(label, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, labelWidth));
+        vi.spyOn(overhead, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, overheadWidth));
 
         fixture.componentRef.setInput('historyLabelKey', 'AI_RECOGNITION.SHOW_RECENT');
         fixture.detectChanges();
@@ -1990,20 +1984,28 @@ describe('AI input history label space', () => {
             expect(button.getAttribute('aria-label')).toBe('AI_RECOGNITION.SHOW_RECENT');
             button.click();
             expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(FoodRecognitionHistoryDialogComponent, expect.anything());
+
+            fixture.componentRef.setInput('active', false);
+            fixture.detectChanges();
+            spaceRect.mockReturnValue(new DOMRect(0, 0, roomyWidth));
+            fixture.componentRef.setInput('active', true);
+            fixture.detectChanges();
+
+            expect(history.classList.contains('ai-input-bar__history--compact')).toBe(false);
             return;
         }
 
         expect(history.classList.contains('ai-input-bar__history--compact')).toBe(false);
-        expect(observe).toHaveBeenCalledWith(actions);
+        expect(observe.mock.calls).toEqual([[space], [label], [overhead]]);
 
-        Object.defineProperty(actions, 'clientWidth', { configurable: true, value: crampedWidth });
+        spaceRect.mockReturnValue(new DOMRect(0, 0, crampedWidth));
         resize.next();
         fixture.detectChanges();
 
         expect(history.classList.contains('ai-input-bar__history--compact')).toBe(true);
         expect(button.getAttribute('aria-label')).toBe('AI_RECOGNITION.SHOW_RECENT');
 
-        Object.defineProperty(actions, 'clientWidth', { configurable: true, value: roomyWidth });
+        spaceRect.mockReturnValue(new DOMRect(0, 0, roomyWidth));
         resize.next();
         fixture.detectChanges();
 

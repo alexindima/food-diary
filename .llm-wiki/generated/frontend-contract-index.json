@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "summary": {
     "components": 517,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1704,
+    "componentsWithoutDirectSpecs": 124,
+    "inputs": 1706,
     "outputs": 566,
     "apiCalls": 344,
     "templatesWithTranslations": 376,
@@ -791,7 +791,7 @@
       ],
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.spec.ts"
     },
     {
       "class": "AdminRecipeModerationComponent",
@@ -861,7 +861,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.spec.ts"
     },
     {
       "class": "AdminRecipeModerationEvidenceComponent",
@@ -880,7 +880,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.spec.ts"
     },
     {
       "class": "AdminRecipeModerationRuleCategoriesComponent",
@@ -919,7 +919,7 @@
           "type": "{ category: string; selected: boolean }"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.spec.ts"
     },
     {
       "class": "AdminRecipeModerationRuleHistoryComponent",
@@ -958,7 +958,7 @@
           "type": "RecipeModerationPolicyId"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.spec.ts"
     },
     {
       "class": "AdminOutgoingEmailsComponent",
@@ -13139,7 +13139,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.spec.ts"
     },
     {
       "class": "RecipeRecognitionComponent",
@@ -14968,6 +14968,11 @@
           "required": false
         },
         {
+          "name": "photoEditsLocked",
+          "type": "() => boolean",
+          "required": false
+        },
+        {
           "name": "scanning",
           "type": "",
           "required": false
@@ -15132,6 +15137,11 @@
         {
           "name": "disabled",
           "type": "",
+          "required": false
+        },
+        {
+          "name": "fileSelectionLocked",
+          "type": "() => boolean",
           "required": false
         },
         {
@@ -43547,6 +43557,7 @@
       "inputsUsed": [
         "cover",
         "disabled",
+        "photoEditsLocked",
         "photos",
         "scanning",
         "uploading"

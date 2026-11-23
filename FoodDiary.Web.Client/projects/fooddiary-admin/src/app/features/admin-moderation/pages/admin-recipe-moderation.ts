@@ -112,18 +112,24 @@ export class AdminRecipeModerationComponent {
     }
 
     protected select(id: RecipeModerationRevisionId): void {
+        if (this.actionInProgress()) {
+            return;
+        }
+
         this.reason.set('');
         this.actionError.set(null);
         this.selectedId.set(id);
-        this.loadDetails();
+        this.loadDetails(id);
         afterNextRender(() => this.detailPanel()?.nativeElement.focus(), { injector: this.injector });
     }
 
-    protected loadDetails(): void {
-        const id = this.selectedId();
-        if (id === null) {
-            return;
+    protected retryDetails(id: RecipeModerationRevisionId): void {
+        if (this.selectedId() === id) {
+            this.loadDetails(id);
         }
+    }
+
+    private loadDetails(id: RecipeModerationRevisionId): void {
         this.detailsRequest?.unsubscribe();
         this.selected.set(null);
         this.detailsLoading.set(true);
@@ -149,7 +155,8 @@ export class AdminRecipeModerationComponent {
             return;
         }
 
-        const operation = this.moderation.applyAction(item.revisionId, action, this.reason());
+        const revisionId = item.revisionId;
+        const operation = this.moderation.applyAction(revisionId, action, this.reason());
         this.actionError.set(null);
         this.actionInProgress.set(true);
         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -157,14 +164,14 @@ export class AdminRecipeModerationComponent {
                 this.actionInProgress.set(false);
                 this.reason.set('');
                 this.loadQueue();
-                this.loadDetails();
+                this.loadDetails(revisionId);
             },
             error: (error: unknown) => {
                 this.actionInProgress.set(false);
                 if (error instanceof HttpErrorResponse && error.status === REVISION_CONFLICT_STATUS) {
                     this.actionError.set('ADMIN_RECIPE_MODERATION.STALE');
                     this.loadQueue();
-                    this.loadDetails();
+                    this.loadDetails(revisionId);
                     return;
                 }
                 this.actionError.set('ADMIN_MODERATION.ACTION_ERROR');

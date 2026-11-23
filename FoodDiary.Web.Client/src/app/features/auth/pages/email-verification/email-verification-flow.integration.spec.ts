@@ -223,14 +223,20 @@ describe('Telegram diary transfer through the verification route', () => {
         confirm.click();
         expect(confirm.disabled).toBe(false);
         confirm.click();
-        expect(auth.transferTelegramDiary.mock.calls).toEqual([
+        const expectedTransferCalls = [
             [TICKET, undefined],
             [TICKET, undefined],
             [TICKET, true],
-        ]);
+        ];
+        expect(auth.transferTelegramDiary.mock.calls).toEqual(expectedTransferCalls);
 
         confirmation.next(PREVIEW);
         confirmation.complete();
+        // The response has arrived, but the native review button is still in the DOM.
+        expect(confirm.isConnected).toBe(true);
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+        expect(auth.transferTelegramDiary.mock.calls).toEqual(expectedTransferCalls);
         await expectVerificationTextAsync(harness, 'AUTH.TELEGRAM_DIARY.DONE');
         expect(auth.transferTelegramDiary).toHaveBeenLastCalledWith(TICKET, true);
         verificationControl(harness, 'AUTH.VERIFY.BACK_TO_LOGIN').click();

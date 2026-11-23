@@ -35,6 +35,7 @@ export class ImageGalleryEditorComponent {
     public readonly keepPrivate = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
+    public readonly photoEditsLocked = input<() => boolean>((): boolean => false);
     public readonly scanning = input(false);
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
@@ -89,8 +90,15 @@ export class ImageGalleryEditorComponent {
         }
         this.photos.set([...this.photos(), ...photos].slice(0, MAX_PHOTOS));
     }
+
+    protected chooseCover(photo: ImageSelection): void {
+        if (!this.arePhotoActionsBlocked()) {
+            this.cover.set(photo);
+        }
+    }
+
     protected remove(photo: ImageSelection): void {
-        if (this.disabled() || this.uploading()) {
+        if (this.arePhotoActionsBlocked()) {
             return;
         }
         const matchesPhoto = (selection: ImageSelection): boolean =>
@@ -100,5 +108,10 @@ export class ImageGalleryEditorComponent {
             this.cover.set(null);
         }
         this.photos.set(this.photos().filter(item => !matchesPhoto(item)));
+    }
+
+    private arePhotoActionsBlocked(): boolean {
+        // The owner can start a request before Angular refreshes the menu bindings.
+        return this.disabled() || this.uploading() || this.photoEditsLocked()();
     }
 }

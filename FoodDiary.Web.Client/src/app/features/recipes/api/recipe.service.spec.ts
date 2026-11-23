@@ -54,6 +54,17 @@ const MOCK_RECIPE: Recipe = {
     isNutritionAutoCalculated: true,
     steps: [],
 };
+const PUBLICATION_RECIPE_RESPONSE = {
+    id: MOCK_RECIPE.id,
+    name: MOCK_RECIPE.name,
+    servings: MOCK_RECIPE.servings,
+    visibility: MOCK_RECIPE.visibility,
+    usageCount: MOCK_RECIPE.usageCount,
+    createdAt: MOCK_RECIPE.createdAt,
+    isOwnedByCurrentUser: MOCK_RECIPE.isOwnedByCurrentUser,
+    isNutritionAutoCalculated: MOCK_RECIPE.isNutritionAutoCalculated,
+    steps: [],
+} satisfies RecipeHttpResponse;
 const MOCK_PAGE: PageOf<Recipe> = {
     data: [MOCK_RECIPE],
     page: 1,
@@ -136,6 +147,27 @@ describe('RecipeService reads', () => {
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush(MOCK_RECIPE);
+    });
+
+    it.each(['ChangesRequested', null] as const)(
+        'preserves the publication status %s returned by the recipe API',
+        async publicationStatus => {
+            const result = firstValueFrom(service.getById(MOCK_RECIPE.id, false));
+            const request = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${MOCK_RECIPE.id}?includePublic=false` });
+            const response: RecipeHttpResponse = { ...PUBLICATION_RECIPE_RESPONSE, publicationStatus };
+            request.flush(response);
+
+            await expect(result).resolves.toMatchObject({ id: MOCK_RECIPE.id, publicationStatus });
+        },
+    );
+
+    it('returns an unavailable recipe for an unsupported publication status', async () => {
+        const result = firstValueFrom(service.getById(MOCK_RECIPE.id, false));
+        const request = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${MOCK_RECIPE.id}?includePublic=false` });
+        const response: RecipeHttpResponse = { ...PUBLICATION_RECIPE_RESPONSE, publicationStatus: 'Unknown' };
+        request.flush(response);
+
+        await expect(result).resolves.toBeNull();
     });
 
     it('should return null on getById failure', () => {

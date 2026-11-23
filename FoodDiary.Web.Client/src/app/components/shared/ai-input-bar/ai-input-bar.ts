@@ -5,7 +5,7 @@ import {
     computed,
     DestroyRef,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     output,
@@ -81,12 +81,9 @@ export class AiInputBarComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly speechOwner = {};
-    private readonly actionsElement = viewChild.required<ElementRef<HTMLElement>>('actionsElement');
-    private readonly manualActionsElement = viewChild.required<ElementRef<HTMLElement>>('manualActionsElement');
-    private readonly historyElement = viewChild.required<FdUiButtonComponent, ElementRef<HTMLElement>>('historyElement', {
-        read: ElementRef,
-    });
+    private readonly historySpaceElement = viewChild.required<ElementRef<HTMLElement>>('historySpaceElement');
     private readonly historyLabelElement = viewChild.required<ElementRef<HTMLElement>>('historyLabelElement');
+    private readonly historyButtonOverhead = viewChild.required<ElementRef<HTMLElement>>('historyButtonOverhead');
     private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
     private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
     private recognitionActionVersion = 0;
@@ -178,40 +175,21 @@ export class AiInputBarComponent {
             });
         });
         afterRenderEffect(onCleanup => {
-            if (this.historyLabelKey() === null) {
+            if (!this.active() || this.historyLabelKey() === null) {
                 return;
             }
-            const actions = this.actionsElement().nativeElement;
-            const manualActions = this.manualActionsElement().nativeElement;
-            const history = this.historyElement().nativeElement;
+            const space = this.historySpaceElement().nativeElement;
             const label = this.historyLabelElement().nativeElement;
-            const control = history.querySelector('button');
-            const icon = history.querySelector('fd-ui-icon');
-            const windowRef = actions.ownerDocument.defaultView;
-            const Observer = windowRef?.ResizeObserver;
-            if (control === null || icon === null || windowRef === null) {
-                return;
-            }
+            const overhead = this.historyButtonOverhead().nativeElement;
+            const Observer = space.ownerDocument.defaultView?.ResizeObserver;
             const update = (): void => {
-                const footerStyle = windowRef.getComputedStyle(actions);
-                const buttonStyle = windowRef.getComputedStyle(control);
-                const availableWidth =
-                    actions.clientWidth - Number.parseFloat(footerStyle.paddingLeft) - Number.parseFloat(footerStyle.paddingRight);
-                const historyWidth =
-                    icon.getBoundingClientRect().width +
-                    label.getBoundingClientRect().width +
-                    Number.parseFloat(buttonStyle.columnGap) +
-                    Number.parseFloat(buttonStyle.paddingLeft) +
-                    Number.parseFloat(buttonStyle.paddingRight) +
-                    Number.parseFloat(buttonStyle.borderLeftWidth) +
-                    Number.parseFloat(buttonStyle.borderRightWidth);
-                const requiredWidth = manualActions.getBoundingClientRect().width + Number.parseFloat(footerStyle.columnGap) + historyWidth;
-                this.isHistoryLabelCompact.set(requiredWidth > availableWidth);
+                const historyWidth = label.getBoundingClientRect().width + overhead.getBoundingClientRect().width;
+                this.isHistoryLabelCompact.set(historyWidth > space.getBoundingClientRect().width);
             };
             update();
             if (Observer !== undefined) {
                 const observer = new Observer(update);
-                for (const element of [actions, manualActions, label, control, icon]) {
+                for (const element of [space, label, overhead]) {
                     observer.observe(element);
                 }
                 onCleanup(() => {

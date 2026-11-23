@@ -75,21 +75,16 @@ export class RecipeDetailFacade {
                     this.publicationLoading.set(false);
                 }),
             )
-            .subscribe({
-                next: latest => {
-                    if (latest === null) {
-                        this.publicationRefreshFailed.set(true);
-                        return;
-                    }
-                    this.refreshedRecipe.set(latest);
-                    this.publicationStatus.set(
-                        latest.publicationStatus ?? (latest.visibility === RecipeVisibility.Public ? 'Published' : null),
-                    );
-                    this.publicationReason.set(latest.publicationReason ?? null);
-                },
-                error: () => {
+            .subscribe(latest => {
+                if (latest === null) {
                     this.publicationRefreshFailed.set(true);
-                },
+                    return;
+                }
+                this.refreshedRecipe.set(latest);
+                this.publicationStatus.set(
+                    latest.publicationStatus ?? (latest.visibility === RecipeVisibility.Public ? 'Published' : null),
+                );
+                this.publicationReason.set(latest.publicationReason ?? null);
             });
     }
 
