@@ -171,7 +171,7 @@
         "@storybook/angular-vite": "^10.6.7",
         "@types/express": "^5.0.6",
         "@types/node": "^26.6.6",
-        "@typescript-eslint/eslint-plugin": "^8.72.2",
+        "@typescript-eslint/eslint-plugin": "^8.73.0",
         "@typescript-eslint/parser": "^8.73.0",
         "@vitest/coverage-v8": "^5.1.1",
         "ajv": "8.20.0",
