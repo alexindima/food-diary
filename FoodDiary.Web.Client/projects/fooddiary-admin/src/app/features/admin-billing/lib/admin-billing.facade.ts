@@ -1,18 +1,17 @@
 import { formatDate } from '@angular/common';
-import { computed, DestroyRef, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import type { Subscription } from 'rxjs';
+import { catchError, map, type Observable, throwError } from 'rxjs';
 
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminExclusiveDatePeriod, type AdminPeriod } from '../../../shared/period/admin-period';
 import { adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminBillingService } from '../api/admin-billing.service';
-import type { AdminBillingCancellation, AdminBillingCancellationReason } from '../models/admin-billing.models';
 import type {
+    AdminBillingCancellationReport,
     AdminBillingFilters,
     AdminBillingPayment,
-    AdminBillingRevenueSummary,
     AdminBillingSubscription,
     AdminBillingTab,
     AdminBillingWebhookEvent,
@@ -29,27 +28,80 @@ const SHORT_ID_MIN_LENGTH = 18;
 const SHORT_ID_PREFIX_LENGTH = 8;
 const SHORT_ID_SUFFIX_START = -6;
 const PAYMENT_DECIMAL_PLACES = 3;
+const BILLING_QUERY_FIELDS = ['tab', 'page', 'search', 'provider', 'status', 'kind', 'period', 'from', 'to'] as const;
+
+type BillingRequest = {
+    tab: AdminBillingTab;
+    page: number;
+    queryKey: string;
+    filters: AdminBillingFilters;
+    revenueFilters?: AdminBillingFilters;
+};
+
+type BillingRecords =
+    | { tab: 'subscriptions'; data: PagedResponse<AdminBillingSubscription> }
+    | { tab: 'payments'; data: PagedResponse<AdminBillingPayment> }
+    | { tab: 'webhook-events'; data: PagedResponse<AdminBillingWebhookEvent> }
+    | { tab: 'cancellations'; data: AdminBillingCancellationReport };
 
 @Injectable()
 export class AdminBillingFacade {
     private readonly billingService = inject(AdminBillingService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
-    private loadRequestId = 0;
-    private revenueRequest?: Subscription;
     private periodRange = { from: '', to: '' };
-    public readonly revenueFailed = signal(false);
+    private readonly requestedLoad = signal<BillingRequest | undefined>(undefined);
+    private readonly recordsResource = rxResource({
+        params: this.requestedLoad,
+        stream: ({ params }) =>
+            this.loadRecords(params).pipe(
+                map(records => {
+                    // The router commits its snapshot before updating the page inputs.
+                    if (this.requestedLoad() !== params || this.activeTab() !== params.tab || this.queryKey() !== params.queryKey) {
+                        return null;
+                    }
+                    const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                        totalItems: records.data.totalItems,
+                        pageSize: this.limit,
+                    });
+                    return correctingPage ? null : records;
+                }),
+                catchError((error: unknown) =>
+                    throwError(() =>
+                        error instanceof Error && error.message.length > 0 ? error : new Error('Failed to load billing records.'),
+                    ),
+                ),
+            ),
+    });
+    private readonly revenueResource = rxResource({
+        params: () => this.requestedLoad()?.revenueFilters,
+        stream: ({ params }) => this.billingService.getRevenueSummary(params),
+    });
+    private readonly records = computed(() => (this.recordsResource.hasValue() ? this.recordsResource.value() : null));
+    private readonly cancellationReport = computed(() => {
+        const records = this.records();
+        return records?.tab === 'cancellations' ? records.data : null;
+    });
 
-    public readonly cancellations = signal<AdminBillingCancellation[]>([]);
-    public readonly cancellationReasons = signal<AdminBillingCancellationReason[]>([]);
-    public readonly cancellationFeedbackCount = signal(0);
+    public readonly revenueSummary = computed(() => (this.revenueResource.hasValue() ? this.revenueResource.value() : null));
+    public readonly revenueFailed = computed(() => this.revenueResource.error() !== undefined);
+    public readonly cancellations = computed(() => this.cancellationReport()?.items ?? []);
+    public readonly cancellationReasons = computed(() => this.cancellationReport()?.reasons ?? []);
+    public readonly cancellationFeedbackCount = computed(() => this.cancellationReport()?.feedbackCount ?? 0);
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
-    public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
-    public readonly payments = signal<AdminBillingPayment[]>([]);
-    public readonly webhookEvents = signal<AdminBillingWebhookEvent[]>([]);
-    public readonly revenueSummary = signal<AdminBillingRevenueSummary | null>(null);
+    public readonly subscriptions = computed(() => {
+        const records = this.records();
+        return records?.tab === 'subscriptions' ? records.data.items : [];
+    });
+    public readonly payments = computed(() => {
+        const records = this.records();
+        return records?.tab === 'payments' ? records.data.items : [];
+    });
+    public readonly webhookEvents = computed(() => {
+        const records = this.records();
+        return records?.tab === 'webhook-events' ? records.data.items : [];
+    });
     public readonly subscriptionItems = computed<AdminBillingSubscriptionViewModel[]>(() =>
         this.subscriptions().map(subscription => ({
             ...subscription,
@@ -81,12 +133,18 @@ export class AdminBillingFacade {
         })),
     );
     public readonly selectedMetadata = signal<string | null>(null);
-    public readonly totalPages = signal(1);
-    public readonly totalItems = signal(0);
+    public readonly totalPages = computed(() => {
+        const total = this.records()?.data.totalPages ?? 1;
+        return total > 0 ? total : 1;
+    });
+    public readonly totalItems = computed(() => this.records()?.data.totalItems ?? 0);
     public readonly page = signal(1);
     public readonly limit = DEFAULT_PAGE_SIZE;
-    public readonly isLoading = signal(false);
-    public readonly errorMessage = signal<string | null>(null);
+    // A corrected page stays loading until its URL triggers the next request.
+    public readonly isLoading = computed(
+        () => this.recordsResource.isLoading() || (this.recordsResource.hasValue() && this.records() === null),
+    );
+    public readonly errorMessage = computed(() => this.recordsResource.error()?.message ?? null);
     public readonly provider = signal('');
     public readonly status = signal('');
     public readonly kind = signal('');
@@ -129,7 +187,7 @@ export class AdminBillingFacade {
     }
 
     public goToPage(page: number): void {
-        if (page < 1 || page > this.totalPages()) {
+        if (this.router.currentNavigation() !== null || this.isLoading() || page < 1 || page > this.totalPages()) {
             return;
         }
 
@@ -165,182 +223,56 @@ export class AdminBillingFacade {
     }
 
     public load(): void {
-        const requestId = ++this.loadRequestId;
         const tab = this.activeTab();
-        this.isLoading.set(true);
-        this.errorMessage.set(null);
-        const filters = this.buildFilters();
-        if (tab === 'cancellations') {
-            this.revenueRequest?.unsubscribe();
-            this.revenueSummary.set(null);
-            this.revenueFailed.set(false);
-            this.billingService
-                .getCancellations(this.page(), this.limit, filters)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe({
-                    next: response => {
-                        if (!this.isCurrentLoad(requestId, tab)) {
-                            return;
-                        }
-                        this.cancellations.set(response.items);
-                        this.cancellationReasons.set(response.reasons);
-                        this.cancellationFeedbackCount.set(response.feedbackCount);
-                        this.applyPageData(response);
-                    },
-                    error: (error: unknown) => {
-                        this.applyLoadError(requestId, tab, error);
-                    },
-                });
-            return;
-        }
-
-        this.loadRevenueSummary();
-
-        if (tab === 'subscriptions') {
-            this.billingService
-                .getSubscriptions(this.page(), this.limit, filters)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe({
-                    next: response => {
-                        this.applySubscriptions(response, requestId, tab);
-                    },
-                    error: (error: unknown) => {
-                        this.applyLoadError(requestId, tab, error);
-                    },
-                });
-            return;
-        }
-
-        if (tab === 'payments') {
-            this.billingService
-                .getPayments(this.page(), this.limit, filters)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe({
-                    next: response => {
-                        this.applyPayments(response, requestId, tab);
-                    },
-                    error: (error: unknown) => {
-                        this.applyLoadError(requestId, tab, error);
-                    },
-                });
-            return;
-        }
-
-        this.billingService
-            .getWebhookEvents(this.page(), this.limit, filters)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.applyWebhookEvents(response, requestId, tab);
-                },
-                error: (error: unknown) => {
-                    this.applyLoadError(requestId, tab, error);
-                },
-            });
-    }
-
-    private applySubscriptions(response: PagedResponse<AdminBillingSubscription>, requestId: number, tab: AdminBillingTab): void {
-        if (this.isCurrentLoad(requestId, tab)) {
-            this.subscriptions.set(response.items);
-            this.applyPageData(response);
-        }
-    }
-
-    private loadRevenueSummary(): void {
-        this.revenueRequest?.unsubscribe();
-        this.revenueSummary.set(null);
-        this.revenueFailed.set(false);
-        const range = adminExclusiveDatePeriod({
-            from: this.fromDate().length > 0 ? this.fromDate() : undefined,
-            to: this.toDate().length > 0 ? this.toDate() : undefined,
+        this.requestedLoad.set({
+            tab,
+            page: this.page(),
+            queryKey: this.queryKey(),
+            filters: this.buildFilters(tab),
+            revenueFilters: tab === 'cancellations' ? undefined : this.revenueFilters(),
         });
-        this.revenueRequest = this.billingService
-            .getRevenueSummary({ fromUtc: `${range.from}T00:00:00Z`, toUtc: `${range.to}T00:00:00Z` })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => {
-                    this.revenueSummary.set(summary);
-                },
-                error: () => {
-                    this.revenueSummary.set(null);
-                    this.revenueFailed.set(true);
-                },
-            });
+    }
+
+    private queryKey(): string {
+        const query = this.route.snapshot.queryParams;
+        const values = BILLING_QUERY_FIELDS.map(field => {
+            const value: unknown = query[field];
+            const first: unknown = Array.isArray(value) ? value[0] : value;
+            return typeof first === 'string' ? first : undefined;
+        });
+        return JSON.stringify(values);
     }
 
     public clearInvalidPeriod(): void {
-        this.loadRequestId++;
-        this.revenueRequest?.unsubscribe();
-        this.revenueSummary.set(null);
-        this.revenueFailed.set(false);
-        this.subscriptions.set([]);
-        this.payments.set([]);
-        this.webhookEvents.set([]);
-        this.cancellations.set([]);
-        this.cancellationReasons.set([]);
-        this.cancellationFeedbackCount.set(0);
-        this.totalItems.set(0);
-        this.totalPages.set(1);
-        this.errorMessage.set(null);
-        this.isLoading.set(false);
+        this.requestedLoad.set(undefined);
         this.selectedMetadata.set(null);
     }
 
-    private applyPayments(response: PagedResponse<AdminBillingPayment>, requestId: number, tab: AdminBillingTab): void {
-        if (this.isCurrentLoad(requestId, tab)) {
-            this.payments.set(response.items);
-            this.applyPageData(response);
+    private loadRecords({ tab, page, filters }: BillingRequest): Observable<BillingRecords> {
+        switch (tab) {
+            case 'subscriptions': {
+                return this.billingService.getSubscriptions(page, this.limit, filters).pipe(map(data => ({ tab, data })));
+            }
+            case 'payments': {
+                return this.billingService.getPayments(page, this.limit, filters).pipe(map(data => ({ tab, data })));
+            }
+            case 'webhook-events': {
+                return this.billingService.getWebhookEvents(page, this.limit, filters).pipe(map(data => ({ tab, data })));
+            }
+            case 'cancellations': {
+                return this.billingService.getCancellations(page, this.limit, filters).pipe(map(data => ({ tab, data })));
+            }
         }
     }
 
-    private applyWebhookEvents(response: PagedResponse<AdminBillingWebhookEvent>, requestId: number, tab: AdminBillingTab): void {
-        if (this.isCurrentLoad(requestId, tab)) {
-            this.webhookEvents.set(response.items);
-            this.applyPageData(response);
-        }
+    private revenueFilters(): AdminBillingFilters {
+        const from = this.fromDate();
+        const to = this.toDate();
+        const range = adminExclusiveDatePeriod({ from: from.length > 0 ? from : undefined, to: to.length > 0 ? to : undefined });
+        return { fromUtc: `${range.from}T00:00:00Z`, toUtc: `${range.to}T00:00:00Z` };
     }
 
-    private applyPageData<T>(response: PagedResponse<T>): void {
-        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.limit })) {
-            return;
-        }
-        this.totalPages.set(response.totalPages > 0 ? response.totalPages : 1);
-        this.totalItems.set(response.totalItems);
-        this.isLoading.set(false);
-    }
-
-    private applyLoadError(requestId: number, tab: AdminBillingTab, error: unknown): void {
-        if (!this.isCurrentLoad(requestId, tab)) {
-            return;
-        }
-
-        this.errorMessage.set(error instanceof Error && error.message.length > 0 ? error.message : 'Failed to load billing records.');
-        this.clearData(tab);
-    }
-
-    private clearData(tab: AdminBillingTab): void {
-        if (tab === 'subscriptions') {
-            this.subscriptions.set([]);
-        } else if (tab === 'payments') {
-            this.payments.set([]);
-        } else if (tab === 'cancellations') {
-            this.cancellations.set([]);
-            this.cancellationReasons.set([]);
-            this.cancellationFeedbackCount.set(0);
-        } else {
-            this.webhookEvents.set([]);
-        }
-
-        this.totalPages.set(1);
-        this.totalItems.set(0);
-        this.isLoading.set(false);
-    }
-
-    private isCurrentLoad(requestId: number, tab: AdminBillingTab): boolean {
-        return requestId === this.loadRequestId && tab === this.activeTab();
-    }
-
-    private buildFilters(): AdminBillingFilters {
+    private buildFilters(tab: AdminBillingTab): AdminBillingFilters {
         const optional = (value: string): string | null => {
             const trimmed = value.trim();
             return trimmed.length > 0 ? trimmed : null;
@@ -349,11 +281,11 @@ export class AdminBillingFacade {
         return {
             provider: optional(this.provider()),
             status: optional(this.status()),
-            kind: this.activeTab() === 'payments' ? optional(this.kind()) : null,
+            kind: tab === 'payments' ? optional(this.kind()) : null,
             search: optional(this.search()),
             fromUtc: this.toUtcStart(this.fromDate()),
             toUtc:
-                this.toDate().length > 0 && this.activeTab() === 'cancellations'
+                tab === 'cancellations' && this.toDate().length > 0
                     ? `${adminExclusiveDatePeriod({ to: this.toDate() }).to}T00:00:00Z`
                     : this.toUtcEnd(this.toDate()),
         };

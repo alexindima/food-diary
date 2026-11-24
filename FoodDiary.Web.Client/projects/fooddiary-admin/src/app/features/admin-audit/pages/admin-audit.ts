@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
-import { ActivatedRoute, type ParamMap, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { map } from 'rxjs';
@@ -11,7 +11,7 @@ import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-err
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminAuditFacade } from '../lib/admin-audit.facade';
 
 const ACTION_MAX_LENGTH = 200;
@@ -39,10 +39,31 @@ type AuditPageQuery = Record<string, string | number> & { page: number };
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAuditPageComponent {
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly actorUserId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly subjectClientUserId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly action = input(undefined, { transform: firstAdminQueryValue });
+    public readonly targetType = input(undefined, { transform: firstAdminQueryValue });
+    public readonly targetId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly api = inject(AdminAuditFacade);
-    private readonly requestedPage = signal<AuditPageQuery | undefined>(undefined);
+    private readonly appliedQuery = computed(() => ({
+        page: adminPage(this.page() ?? null),
+        filters: {
+            actorUserId: this.actorUserId() ?? '',
+            subjectClientUserId: this.subjectClientUserId() ?? '',
+            action: this.action() ?? '',
+            targetType: this.targetType() ?? '',
+            targetId: this.targetId() ?? '',
+        },
+        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    }));
+    private readonly requestedPage = linkedSignal(() => this.buildRequest());
     private readonly pageResource = rxResource({
         params: this.requestedPage,
         stream: ({ params }) =>
@@ -65,14 +86,8 @@ export class AdminAuditPageComponent {
         () => this.pageResource.isLoading() || (this.pageResource.hasValue() && this.pageResource.value() === null),
     );
     protected readonly failed = computed(() => this.pageResource.error() !== undefined);
-    protected readonly page = signal(1);
-    protected readonly formModel = signal({
-        actorUserId: '',
-        subjectClientUserId: '',
-        action: '',
-        targetType: '',
-        targetId: '',
-    });
+    protected readonly currentPage = computed(() => this.appliedQuery().page);
+    protected readonly formModel = linkedSignal(() => this.appliedQuery().filters);
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.applyAsync();
     };
@@ -85,12 +100,6 @@ export class AdminAuditPageComponent {
         },
         { submission: { action: this.submitFormAsync } },
     );
-
-    public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(query => {
-            this.loadPage(query);
-        });
-    }
 
     protected async applyAsync(): Promise<boolean> {
         return this.router.navigate([], {
@@ -105,21 +114,13 @@ export class AdminAuditPageComponent {
     }
 
     protected retry(): void {
-        this.loadPage(this.route.snapshot.queryParamMap);
+        this.formModel.set(this.appliedQuery().filters);
+        this.requestedPage.set(this.buildRequest());
     }
 
-    private loadPage(query: ParamMap): void {
-        const page = adminPage(query.get('page'));
-        const filters = {
-            actorUserId: query.get('actorUserId') ?? '',
-            subjectClientUserId: query.get('subjectClientUserId') ?? '',
-            action: query.get('action') ?? '',
-            targetType: query.get('targetType') ?? '',
-            targetId: query.get('targetId') ?? '',
-        };
-        this.page.set(page);
-        this.formModel.set(filters);
-        const period = adminPeriod(query);
-        this.requestedPage.set(period === null ? undefined : { page, limit: PAGE_SIZE, ...filters, ...adminUtcPeriod(period) });
+    private buildRequest(): AuditPageQuery | undefined {
+        const { page, filters, periodParams } = this.appliedQuery();
+        const period = adminPeriod(periodParams);
+        return period === null ? undefined : { page, limit: PAGE_SIZE, ...filters, ...adminUtcPeriod(period) };
     }
 }

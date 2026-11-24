@@ -4,7 +4,7 @@
         <a routerLink="/ai-usage" queryParamsHandling="merge" [queryParams]="{ userId: null }">{{ 'ADMIN_COMMON.ALL' | translate }}</a>
     </p>
 }
-<fd-admin-period />
+<fd-admin-period [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
 @if (isLoading()) {
     <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
 } @else if (failed()) {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -665,11 +665,14 @@ async function openReportAsync(
     TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
-            provideRouter([
-                { path: 'statistics', component: StatisticsComponent },
-                { path: 'waist-history', component: StatisticsHistoryRouteComponent },
-                { path: 'weight-history', component: StatisticsWeightHistoryRouteComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'statistics', component: StatisticsComponent },
+                    { path: 'waist-history', component: StatisticsHistoryRouteComponent },
+                    { path: 'weight-history', component: StatisticsWeightHistoryRouteComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             {
                 provide: DEVELOPMENT_SCREENS,
                 useValue: {

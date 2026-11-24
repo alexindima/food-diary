@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -12,6 +12,7 @@ import type { MealPlanId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanListFacade } from '../../lib/list/meal-plan-list.facade';
+import { readMealPlanListQuery } from '../../lib/list/meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE } from '../../lib/list/meal-plan-list-query-state';
 import { MealPlanListRouteStateFacade } from '../../lib/list/meal-plan-list-route-state.facade';
 import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
@@ -19,6 +20,10 @@ import type { DietType } from '../../models/meal-plan.data';
 import { MealPlanListContentComponent } from './meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content';
 import { MealPlanListFiltersComponent } from './meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters';
 import { MEAL_PLANS_LIST_TOUR } from './meal-plans-list-tour';
+
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
 
 @Component({
     selector: 'fd-meal-plans-list-page',
@@ -43,11 +48,24 @@ import { MEAL_PLANS_LIST_TOUR } from './meal-plans-list-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealPlansListPageComponent {
+    public readonly page = input(undefined, { transform: firstQueryValue });
+    public readonly dietType = input(undefined, { transform: firstQueryValue });
+    public readonly source = input(undefined, { transform: firstQueryValue });
+
     private readonly router = inject(Router);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     protected readonly facade = inject(MealPlanListFacade);
     protected readonly planCards = computed(() => buildMealPlanCards(this.facade.plans()));
+
+    public constructor() {
+        const routeQuery = computed(() =>
+            readMealPlanListQuery(
+                convertToParamMap({ page: this.page() ?? null, dietType: this.dietType() ?? null, source: this.source() ?? null }),
+            ),
+        );
+        inject(MealPlanListRouteStateFacade).bind(routeQuery);
+    }
 
     protected filterByDiet(type: DietType | null): void {
         this.facade.loadPlans(type);

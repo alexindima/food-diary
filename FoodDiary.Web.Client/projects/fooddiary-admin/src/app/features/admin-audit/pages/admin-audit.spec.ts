@@ -1,6 +1,6 @@
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -26,21 +26,27 @@ const ENTRY: AdminAuditEntry = {
     metadata: '{"adminNote":"Verified content"}',
     createdAtUtc: adminUtcInstant('2026-08-01T12:30:00Z'),
 };
-type AuditFixture = ComponentFixture<AdminAuditPageComponent>;
 const getPage = vi.fn<AdminAuditService['getPage']>();
 
 beforeEach(async () => {
     getPage.mockReset().mockReturnValue(of({ items: [ENTRY], totalItems: PAGE_SIZE + 1 }));
     await TestBed.configureTestingModule({
         imports: [AdminAuditPageComponent],
-        providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAuditService, useValue: { getPage } }],
+        providers: [
+            provideRouter(
+                [{ path: '', component: AdminAuditPageComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
+            ...provideTranslateTesting(),
+            { provide: AdminAuditService, useValue: { getPage } },
+        ],
     }).compileComponents();
 });
 
 describe('AdminAuditPageComponent filters', () => {
     it('restores identity and target filters from the URL and submits edited values once with page reset', async () => {
         const fixture = await renderAsync(
-            '?page=2&actorUserId=actor-old&subjectClientUserId=client-old&action=old-action&targetType=Recipe&targetId=old-target&period=custom&from=2026-08-01&to=2026-08-03',
+            '?page=2&actorUserId=actor-old&actorUserId=ignored&subjectClientUserId=client-old&action=old-action&targetType=Recipe&targetId=old-target&period=custom&from=2026-08-01&to=2026-08-03',
         );
         expect(getPage).toHaveBeenCalledWith({
             page: SECOND_PAGE,
@@ -214,24 +220,23 @@ describe('AdminAuditPageComponent results and pagination', () => {
     });
 });
 
-async function renderAsync(query = '', request: 'pending' | 'settled' = 'settled'): Promise<AuditFixture> {
-    await TestBed.inject(Router).navigateByUrl(`/${query}`);
-    const fixture = TestBed.createComponent(AdminAuditPageComponent);
+async function renderAsync(query = '', request: 'pending' | 'settled' = 'settled'): Promise<RouterTestingHarness> {
+    const fixture = await RouterTestingHarness.create(`/${query}`);
     await settleAsync(fixture, request);
     return fixture;
 }
 
-async function settleAsync(fixture: AuditFixture, request: 'pending' | 'settled' = 'settled'): Promise<void> {
+async function settleAsync(fixture: RouterTestingHarness, request: 'pending' | 'settled' = 'settled'): Promise<void> {
     fixture.detectChanges();
     await waitForAsyncTasksAsync();
     if (request === 'settled') {
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
     }
     fixture.detectChanges();
 }
 
-function element(fixture: AuditFixture): HTMLElement {
-    return fixture.nativeElement as HTMLElement;
+function element(fixture: RouterTestingHarness): HTMLElement {
+    return required(fixture.routeNativeElement);
 }
 
 function required<T>(value: T | null | undefined): T {
@@ -241,15 +246,15 @@ function required<T>(value: T | null | undefined): T {
     return value;
 }
 
-function button(fixture: AuditFixture, text: string): HTMLButtonElement {
+function button(fixture: RouterTestingHarness, text: string): HTMLButtonElement {
     return required([...element(fixture).querySelectorAll('button')].find(control => control.textContent.trim() === text));
 }
 
-function input(fixture: AuditFixture, label: string): HTMLInputElement {
+function input(fixture: RouterTestingHarness, label: string): HTMLInputElement {
     return required([...element(fixture).querySelectorAll('input')].find(control => control.getAttribute('aria-label') === label));
 }
 
-function edit(fixture: AuditFixture, label: string, value: string): void {
+function edit(fixture: RouterTestingHarness, label: string, value: string): void {
     const control = input(fixture, label);
     control.value = value;
     control.dispatchEvent(new Event('input', { bubbles: true }));

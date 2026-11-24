@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { convertToParamMap, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { firstValueFrom, type Observable, ReplaySubject, Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
+import { readLessonListQuery } from './lesson-list-query';
 import { LessonListRouteStateFacade } from './lesson-list-route-state.facade';
 
 @Component({
@@ -13,12 +14,35 @@ import { LessonListRouteStateFacade } from './lesson-list-route-state.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ListRoute {
+    public readonly page = input<string | string[]>();
+    public readonly search = input<string | string[]>();
+    public readonly category = input<string | string[]>();
+    public readonly difficulty = input<string | string[]>();
+    public readonly sort = input<string | string[]>();
     public readonly state = inject(LessonListRouteStateFacade);
+
+    public constructor() {
+        this.state.bind(
+            computed(() =>
+                readLessonListQuery(
+                    convertToParamMap({
+                        page: this.page() ?? null,
+                        search: this.search() ?? null,
+                        category: this.category() ?? null,
+                        difficulty: this.difficulty() ?? null,
+                        sort: this.sort() ?? null,
+                    }),
+                ),
+            ),
+        );
+    }
 }
 
 describe('Lesson list route query ownership', () => {
     it('writes owned filters, preserves unrelated query keys and restores committed queries', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'lessons', component: ListRoute }])] });
+        TestBed.configureTestingModule({
+            providers: [provideRouter([{ path: 'lessons', component: ListRoute }], withComponentInputBinding())],
+        });
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/lessons?page=2&category=Micronutrients&search=iron&campaign=qa', ListRoute);
         const subscription = page.state.changes.subscribe();
@@ -27,12 +51,15 @@ describe('Lesson list route query ownership', () => {
         const router = TestBed.inject(Router);
         expect(router.parseUrl(router.url).queryParams).toEqual({ sort: 'shortest', campaign: 'qa' });
         await harness.navigateByUrl('/lessons?page=2&category=Micronutrients&search=iron&campaign=qa', ListRoute);
+        await harness.fixture.whenStable();
         expect(page.state.current()).toEqual(page.state.initial);
         subscription.unsubscribe();
     });
 
     it('replaces a malformed page without dropping filters and skips unchanged writes', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'lessons', component: ListRoute }])] });
+        TestBed.configureTestingModule({
+            providers: [provideRouter([{ path: 'lessons', component: ListRoute }], withComponentInputBinding())],
+        });
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/lessons?page=-2&difficulty=Advanced&campaign=qa', ListRoute);
         const subscription = page.state.changes.subscribe();
@@ -48,23 +75,28 @@ describe('Lesson list route query ownership', () => {
         const latest = { search: 'fiber', entered: new Subject<void>(), decision: new ReplaySubject<boolean>(1) };
         TestBed.configureTestingModule({
             providers: [
-                provideRouter([
-                    {
-                        path: 'lessons',
-                        component: ListRoute,
-                        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-                        canActivate: [
-                            (route): boolean | Observable<boolean> => {
-                                const pending = [older, latest].find(navigation => navigation.search === route.queryParamMap.get('search'));
-                                if (pending === undefined) {
-                                    return true;
-                                }
-                                pending.entered.next();
-                                return pending.decision;
-                            },
-                        ],
-                    },
-                ]),
+                provideRouter(
+                    [
+                        {
+                            path: 'lessons',
+                            component: ListRoute,
+                            runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+                            canActivate: [
+                                (route): boolean | Observable<boolean> => {
+                                    const pending = [older, latest].find(
+                                        navigation => navigation.search === route.queryParamMap.get('search'),
+                                    );
+                                    if (pending === undefined) {
+                                        return true;
+                                    }
+                                    pending.entered.next();
+                                    return pending.decision;
+                                },
+                            ],
+                        },
+                    ],
+                    withComponentInputBinding(),
+                ),
             ],
         });
         const harness = await RouterTestingHarness.create();

@@ -2392,7 +2392,7 @@
       "role": "Component",
       "selector": "fd-admin-acquisition",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.ts",
-      "line": 56
+      "line": 57
     },
     {
       "name": "AdminAiPromptsService",
@@ -2455,7 +2455,7 @@
       "role": "Component",
       "selector": "fd-admin-ai-usage",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.ts",
-      "line": 27
+      "line": 28
     },
     {
       "name": "AdminAuditService",
@@ -2511,7 +2511,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/lib/admin-billing.facade.ts",
-      "line": 34
+      "line": 48
     },
     {
       "name": "AdminBillingCancellationsTableComponent",
@@ -2903,7 +2903,7 @@
       "role": "Component",
       "selector": "fd-admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.ts",
-      "line": 54
+      "line": 57
     },
     {
       "name": "AdminRecipeModerationComponent",
@@ -2973,7 +2973,7 @@
       "role": "Component",
       "selector": "fd-admin-retention",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.ts",
-      "line": 23
+      "line": 24
     },
     {
       "name": "AdminTemplateHistoryService",
@@ -3953,7 +3953,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 58
+      "line": 60
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -3995,7 +3995,7 @@
       "role": "Component",
       "selector": "fd-email-verification-pending",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.ts",
-      "line": 26
+      "line": 25
     },
     {
       "name": "EmailVerificationComponent",
@@ -4492,7 +4492,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 119
+      "line": 121
     },
     {
       "name": "DietologistService",
@@ -4961,7 +4961,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/lessons/lib/list/lesson-list-route-state.facade.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "LessonListFacade",
@@ -4989,7 +4989,7 @@
       "role": "Component",
       "selector": "fd-lessons-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.ts",
-      "line": 54
+      "line": 59
     },
     {
       "name": "LessonsListFiltersComponent",
@@ -5024,7 +5024,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/list/meal-plan-list-route-state.facade.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "MealPlanListFacade",
@@ -5080,7 +5080,7 @@
       "role": "Component",
       "selector": "fd-meal-plans-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.ts",
-      "line": 45
+      "line": 50
     },
     {
       "name": "FavoriteMealService",
@@ -5164,7 +5164,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 118
+      "line": 117
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -5276,7 +5276,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list-route-state.facade.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealListFacade",
@@ -5353,7 +5353,7 @@
       "role": "Component",
       "selector": "fd-meal-add",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-add/meal-add.ts",
-      "line": 13
+      "line": 20
     },
     {
       "name": "MealEditComponent",
@@ -5668,7 +5668,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list-route-state.facade.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ProductListFacade",
@@ -5822,7 +5822,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProfileDietologistFacade",
@@ -5927,7 +5927,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 96
+      "line": 101
     },
     {
       "name": "DietologistPromoComponent",
@@ -6004,7 +6004,7 @@
       "role": "Component",
       "selector": "fd-main",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/landing/main.ts",
-      "line": 37
+      "line": 41
     },
     {
       "name": "NotFoundComponent",
@@ -6333,7 +6333,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/list/recipe-list-route-state.facade.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "PublicCatalogFavorites",
@@ -6403,7 +6403,7 @@
       "role": "Component",
       "selector": "fd-recipe-list",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts",
-      "line": 82
+      "line": 87
     },
     {
       "name": "RecipeAddComponent",
@@ -6466,7 +6466,7 @@
       "role": "Component",
       "selector": "fd-recommendations-page",
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.ts",
-      "line": 49
+      "line": 59
     },
     {
       "name": "ShoppingListService",
@@ -6606,7 +6606,7 @@
       "role": "Component",
       "selector": "fd-statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-      "line": 66
+      "line": 67
     },
     {
       "name": "UsdaService",
@@ -8071,7 +8071,7 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
-      "line": 8
+      "line": 7
     },
     {
       "path": "",

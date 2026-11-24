@@ -3,7 +3,7 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type Signal, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
@@ -60,7 +60,7 @@ type AuthComponentTestContext = {
 type AuthFixtureOptions = { authenticated?: Signal<boolean>; location?: Pick<Location, 'origin' | 'assign'> };
 
 function createComponent(
-    mode = 'login',
+    mode: 'login' | 'register' = 'login',
     renderTemplate = false,
     inputs: Record<string, unknown> = {},
     { authenticated = signal(false), location }: AuthFixtureOptions = {},
@@ -106,7 +106,6 @@ function createComponent(
             { provide: NavigationService, useValue: navigationServiceSpy },
             { provide: Router, useValue: routerSpy },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
-            { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ auth: mode }) } } },
             { provide: AUTH_PASSWORD_RESET_COOLDOWN_SECONDS, useValue: 2 },
         ],
     });
@@ -122,6 +121,7 @@ function createComponent(
     vi.spyOn(translateService, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
 
     const fixture = TestBed.createComponent(AuthComponent);
+    fixture.componentRef.setInput('initialMode', mode);
     for (const [name, value] of Object.entries(inputs)) {
         fixture.componentRef.setInput(name, value);
     }
@@ -159,19 +159,19 @@ describe('AuthComponent tabs', () => {
         expect(dialogRefSpy.close).toHaveBeenCalledOnce();
     });
 
-    it('should reset transient auth state and navigate when mode changes', async () => {
+    it('resets transient auth state locally when the mode changes', () => {
         const { component, routerSpy } = createComponent();
         component['loginModel'].update(value => ({ ...value, email: 'user@example.com' }));
         component['showPasswordReset'].set(true);
         component['passwordResetSent'].set(true);
 
-        await component['onTabChangeAsync']('register');
+        component['changeAuthMode']('register');
 
         expect(component['authMode']).toBe('register');
         expect(component['loginModel']().email).toBe('');
         expect(component['showPasswordReset']()).toBe(false);
         expect(component['passwordResetSent']()).toBe(false);
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
+        expect(routerSpy.navigate).not.toHaveBeenCalled();
     });
 });
 
@@ -336,14 +336,32 @@ describe('AuthComponent login', () => {
 
 describe('AuthComponent Google login', () => {
     it('should explain the required password login and retain the credential only in memory', async () => {
-        const { component } = createComponent('register');
+        const { authFlowFacadeSpy, component, fixture, initializeGoogle } = createComponent('register');
+        authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('accountLinkRequired'));
 
-        await component['prepareGoogleLinkLoginAsync']('google-credential');
+        initializeGoogle.mock.calls[0][0]('google-credential');
+        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(component['authMode']).toBe('login');
         expect(component['googleLinkRequired']()).toBe(true);
         expect(component['pendingGoogleLinkCredential']).toBe('google-credential');
         expect(component['globalError']()).toBe('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
+    });
+
+    it('discards a pending Google link prompt when the user switches tabs before render', async () => {
+        const { authFlowFacadeSpy, component, fixture, initializeGoogle } = createComponent('register');
+        authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('accountLinkRequired'));
+
+        initializeGoogle.mock.calls[0][0]('google-credential');
+        expect(component['authMode']).toBe('login');
+        component['changeAuthMode']('register');
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component['authMode']).toBe('register');
+        expect(component['googleLinkRequired']()).toBe(false);
+        expect(component['pendingGoogleLinkCredential']).toBeNull();
     });
 });
 
@@ -375,7 +393,6 @@ describe('AuthComponent rendered Google confirmation', () => {
         async destination => {
             const inline = destination === 'inline';
             const { fixture, authFlowFacadeSpy, authServiceSpy, initializeGoogle, navigationServiceSpy } = createComponent('login', true, {
-                useRouting: false,
                 initialReturnUrl: '/profile?tab=security',
                 inlineSignIn: inline,
             });
@@ -440,14 +457,13 @@ describe('AuthComponent Google results after switching tabs', () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        expect(routerSpy.navigate).toHaveBeenCalledTimes(2);
+        expect(routerSpy.navigate).not.toHaveBeenCalled();
         expect(host.querySelector('fd-auth-register-form')).not.toBeNull();
         expect(host.querySelector('[role="alert"]')).toBeNull();
     });
 
     it('still continues a successful Google sign-in after changing tabs', async () => {
         const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy } = createComponent('login', true, {
-            useRouting: false,
             initialReturnUrl: '/profile?tab=security',
         });
         const host = fixture.nativeElement as HTMLElement;
@@ -472,7 +488,7 @@ describe('Admin handoff after a rendered sign-in', () => {
         const { fixture, authServiceSpy, authFlowFacadeSpy } = createComponent(
             'login',
             true,
-            { useRouting: false, initialAdminReturnUrl: '/users?tab=active' },
+            { initialAdminReturnUrl: '/users?tab=active' },
             { authenticated },
         );
         const login = new Subject<AuthLoginResult>();
@@ -512,7 +528,7 @@ describe('Admin handoff results from a rendered sign-in', () => {
         const context = createComponent(
             'login',
             true,
-            { useRouting: false, initialAdminReturnUrl: returnPath },
+            { initialAdminReturnUrl: returnPath },
             {
                 location: { origin: 'https://diary.example.test', assign },
             },
@@ -570,7 +586,7 @@ describe('Rendered navigation after sign-in with an unavailable admin destinatio
         const { fixture, authServiceSpy, authFlowFacadeSpy } = createComponent(
             'login',
             true,
-            { useRouting: false, initialAdminReturnUrl: 'https://[' },
+            { initialAdminReturnUrl: 'https://[' },
             { location: { origin: 'https://diary.example.test', assign } },
         );
         const code = 'fixture-handoff';
@@ -594,7 +610,7 @@ describe('Rendered navigation after sign-in with an unavailable admin destinatio
             const { fixture, authServiceSpy, authFlowFacadeSpy, navigationServiceSpy } = createComponent(
                 'login',
                 true,
-                { useRouting: false, initialReturnUrl: returnUrl, initialAdminReturnUrl: '/users' },
+                { initialReturnUrl: returnUrl, initialAdminReturnUrl: '/users' },
                 { location: { origin: 'https://diary.example.test', assign } },
             );
             authServiceSpy.isAdmin.mockReturnValue(true);
@@ -901,10 +917,7 @@ describe('AuthComponent password reset', () => {
 
 describe('rendered auth form ownership', () => {
     it('follows the password link flow from Google and reports a rejected link on the profile', async () => {
-        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy, dialogRefSpy } = createComponent('register', true, {
-            initialMode: 'register',
-            useRouting: false,
-        });
+        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy, dialogRefSpy } = createComponent('register', true);
         authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('accountLinkRequired'));
         authFlowFacadeSpy.login.mockReturnValueOnce(of('success'));
         authFlowFacadeSpy.linkGoogle.mockReturnValueOnce(of(false));
@@ -928,7 +941,6 @@ describe('rendered auth form ownership', () => {
 
     it('leaves navigation to the current page when a password login completes after the form closes', async () => {
         const { fixture, authFlowFacadeSpy, navigationServiceSpy, dialogRefSpy } = createComponent('login', true, {
-            useRouting: false,
             initialReturnUrl: '/profile',
         });
         const login = new Subject<AuthLoginResult>();
@@ -949,7 +961,6 @@ describe('rendered auth form ownership', () => {
 
     it('leaves navigation to the current page when Google sign-in completes after the form closes', async () => {
         const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy, dialogRefSpy } = createComponent('login', true, {
-            useRouting: false,
             initialReturnUrl: '/profile',
         });
         const login = new Subject<GoogleLoginResult>();
@@ -996,7 +1007,7 @@ describe('AuthComponent native navigation controls', () => {
         authButton(host, 'button[role="tab"]', 'AUTH.REGISTER.TITLE').click();
         fixture.detectChanges();
         expect(host.querySelector('fd-auth-register-form')).not.toBeNull();
-        expect(routerSpy.navigate).toHaveBeenCalledExactlyOnceWith(['/'], { queryParams: { auth: 'register' } });
+        expect(routerSpy.navigate).not.toHaveBeenCalled();
         authFlowFacadeSpy.register.mockReturnValueOnce(of('rateLimited'));
 
         fillRenderedRegistration(fixture);
@@ -1552,9 +1563,7 @@ describe('Completed registration during a tab change', () => {
 
 describe('AuthComponent additional request ownership', () => {
     it.each([true, false])('does not open the profile when account linking finishes after dismissal (success=%s)', async linked => {
-        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy, dialogRefSpy } = createComponent('login', true, {
-            useRouting: false,
-        });
+        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy, dialogRefSpy } = createComponent('login', true);
         const pending = new Subject<boolean>();
         authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('accountLinkRequired'));
         authFlowFacadeSpy.login.mockReturnValueOnce(of('success'));
@@ -1632,10 +1641,7 @@ describe('AuthComponent additional request ownership', () => {
 
 describe('Google response during a submitted password form', () => {
     it.each(['login', 'register'] as const)('keeps the pending %s in control and allows Google afterward', async mode => {
-        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy } = createComponent(mode, true, {
-            useRouting: false,
-            initialMode: mode,
-        });
+        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy } = createComponent(mode, true);
         const host = fixture.nativeElement as HTMLElement;
         const submitted = authFlowFacadeSpy[mode];
         const pending = new Subject<'unknown'>();
@@ -1684,7 +1690,7 @@ describe('Reselecting the active authentication tab', () => {
         { mode: 'login', label: 'AUTH.LOGIN.TITLE' },
         { mode: 'register', label: 'AUTH.REGISTER.TITLE' },
     ] as const)('preserves the draft in the active $mode tab', ({ mode, label }) => {
-        const { fixture, authFlowFacadeSpy, routerSpy } = createComponent(mode, true, { useRouting: false, initialMode: mode });
+        const { fixture, authFlowFacadeSpy, routerSpy } = createComponent(mode, true);
         const host = fixture.nativeElement as HTMLElement;
         const tab = authButton(host, 'button[role="tab"]', label);
         enterAuthEmail(fixture, 'draft@example.test');
@@ -1702,7 +1708,7 @@ describe('Reselecting the active authentication tab', () => {
 
 describe('Password reset from an autofilled login', () => {
     it('prefills password reset once when the autofilled login control is activated twice before redraw', async () => {
-        const { fixture, authFlowFacadeSpy } = createComponent('login', true, { useRouting: false });
+        const { fixture, authFlowFacadeSpy } = createComponent('login', true);
         const host = fixture.nativeElement as HTMLElement;
         enterAuthEmail(fixture, 'previous-address@example.test');
 
@@ -1732,7 +1738,7 @@ describe('Password reset from an autofilled login', () => {
 
 describe('Rendered password reset validation and retry', () => {
     it('focuses an invalid address and sends only one request at a time through a failed retry', async () => {
-        const { fixture, authFlowFacadeSpy } = createComponent('login', true, { useRouting: false });
+        const { fixture, authFlowFacadeSpy } = createComponent('login', true);
         const host = fixture.nativeElement as HTMLElement;
         authButton(host, 'button', 'AUTH.LOGIN.FORGOT_PASSWORD').click();
         fixture.detectChanges();

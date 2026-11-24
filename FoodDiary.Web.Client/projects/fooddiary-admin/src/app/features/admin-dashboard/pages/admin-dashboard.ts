@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 
 import { validAdminDate } from '../../../shared/period/admin-period';
+import { firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminDashboardContentComponent } from '../components/admin-dashboard-content';
 import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import type { DashboardRange } from '../models/admin-dashboard-overview.data';
@@ -35,25 +35,29 @@ const dashboardPreset = (value: string | null): Preset => PRESETS.find(item => i
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     protected readonly dashboard = inject(AdminDashboardFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly appliedRange = signal<DashboardRange | null>(null);
-    protected readonly allTime = computed(() => this.appliedRange()?.allTime === true);
-    protected readonly preset = signal<Preset>('month');
-    protected readonly from = signal<string | Date | null>(null);
-    protected readonly to = signal<string | Date | null>(null);
-    protected readonly invalid = signal(false);
     protected readonly today = isoDate(new Date());
+    private readonly appliedPeriod = computed(() => {
+        const preset = dashboardPreset(this.period() ?? null);
+        const from = this.from() ?? null;
+        const to = this.to() ?? null;
+        return { preset, from, to, range: this.range(preset, from, to) };
+    });
+    protected readonly allTime = computed(() => this.appliedPeriod().range?.allTime === true);
+    protected readonly preset = linkedSignal(() => this.appliedPeriod().preset);
+    protected readonly draftFrom = linkedSignal<string | Date | null>(() => this.appliedPeriod().from);
+    protected readonly draftTo = linkedSignal<string | Date | null>(() => this.appliedPeriod().to);
+    protected readonly invalid = linkedSignal(() => this.appliedPeriod().range === null);
     protected readonly data = this.dashboard.overview;
 
     public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            this.preset.set(dashboardPreset(params.get('period')));
-            this.from.set(params.get('from'));
-            this.to.set(params.get('to'));
-            this.appliedRange.set(this.range());
+        effect(() => {
             this.reload();
         });
     }
@@ -67,11 +71,12 @@ export class AdminDashboardComponent {
     }
 
     protected apply(): void {
-        const range = this.range();
+        const preset = this.preset();
+        const range = this.range(preset, this.draftFrom(), this.draftTo());
+        this.invalid.set(range === null);
         if (range === null) {
             return;
         }
-        const preset = this.preset();
         void this.router.navigate([], {
             relativeTo: this.route,
             queryParams: {
@@ -84,7 +89,7 @@ export class AdminDashboardComponent {
     }
 
     protected reload(): void {
-        const range = this.appliedRange();
+        const range = this.appliedPeriod().range;
         if (range !== null) {
             this.dashboard.load(range);
         } else {
@@ -92,15 +97,14 @@ export class AdminDashboardComponent {
         }
     }
 
-    private range(): DashboardRange | null {
-        this.invalid.set(false);
-        if (this.preset() === 'all') {
+    private range(preset: Preset, draftFrom: string | Date | null, draftTo: string | Date | null): DashboardRange | null {
+        if (preset === 'all') {
             return { allTime: true };
         }
         const today = new Date(`${this.today}T00:00:00Z`);
-        if (this.preset() === 'custom') {
-            const from = this.dateValue(this.from());
-            const to = this.dateValue(this.to());
+        if (preset === 'custom') {
+            const from = this.dateValue(draftFrom);
+            const to = this.dateValue(draftTo);
             if (
                 from === null ||
                 to === null ||
@@ -109,16 +113,15 @@ export class AdminDashboardComponent {
                 from < '1970-01-01' ||
                 (Date.parse(to) - Date.parse(from)) / DAY_MS > MAX_DAYS
             ) {
-                this.invalid.set(true);
                 return null;
             }
             return { from, to };
         }
         const start = new Date(today);
-        if (this.preset() === 'month') {
+        if (preset === 'month') {
             start.setUTCDate(1);
         } else {
-            start.setUTCDate(start.getUTCDate() - PRESET_OFFSET[this.preset()]);
+            start.setUTCDate(start.getUTCDate() - PRESET_OFFSET[preset]);
         }
         return { from: isoDate(start), to: this.today };
     }

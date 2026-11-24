@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { convertToParamMap, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ProductType } from '../../../../shared/models/product.data';
-import type { ProductListQuery } from './product-list-query';
+import { type ProductListQuery, readProductListQuery } from './product-list-query';
 import { ProductListRouteStateFacade } from './product-list-route-state.facade';
 
 @Component({
@@ -14,7 +14,26 @@ import { ProductListRouteStateFacade } from './product-list-route-state.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ListRoute {
+    public readonly search = input<string | string[]>();
+    public readonly page = input<string | string[]>();
+    public readonly onlyMine = input<string | string[]>();
+    public readonly types = input<string | string[]>();
     public readonly state = inject(ProductListRouteStateFacade);
+
+    public constructor() {
+        this.state.bind(
+            computed(() =>
+                readProductListQuery(
+                    convertToParamMap({
+                        search: this.search() ?? null,
+                        page: this.page() ?? null,
+                        onlyMine: this.onlyMine() ?? null,
+                        types: this.types() ?? [],
+                    }),
+                ),
+            ),
+        );
+    }
 }
 
 const DEFAULT_QUERY: ProductListQuery = {
@@ -28,7 +47,9 @@ const DEFAULT_QUERY: ProductListQuery = {
 };
 
 beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'products', component: ListRoute }])] });
+    TestBed.configureTestingModule({
+        providers: [provideRouter([{ path: 'products', component: ListRoute }], withComponentInputBinding())],
+    });
 });
 
 describe('Product list route query ownership', () => {
@@ -114,10 +135,13 @@ describe('Product list route query equivalence', () => {
         const subscription = page.state.changes.subscribe(onChange);
 
         expect(onChange).toHaveBeenCalledExactlyOnceWith(page.state.initial);
-        await harness.navigateByUrl('/products?search=%20tea%20&types=Meat,Fruit,Fruit&campaign=second', ListRoute);
+        await harness.navigateByUrl('/products?search=%20tea%20&types=Meat&types=Fruit,Fruit&campaign=second', ListRoute);
         expect(onChange).toHaveBeenCalledOnce();
 
-        await harness.navigateByUrl('/products?search=coffee&page=2&onlyMine=true&types=Fruit,Meat&campaign=second', ListRoute);
+        await harness.navigateByUrl(
+            '/products?search=coffee&search=ignored&page=2&onlyMine=true&types=Fruit&types=Meat&campaign=second',
+            ListRoute,
+        );
         expect(onChange).toHaveBeenCalledTimes(2);
         expect(onChange).toHaveBeenLastCalledWith({
             ...DEFAULT_QUERY,
@@ -128,8 +152,12 @@ describe('Product list route query equivalence', () => {
         });
         expect(page.state.initial.search).toBe('tea');
 
-        subscription.unsubscribe();
+        onChange.mockClear();
         await harness.navigateByUrl('/products', ListRoute);
-        expect(onChange).toHaveBeenCalledTimes(2);
+        expect(onChange).toHaveBeenCalledExactlyOnceWith(DEFAULT_QUERY);
+
+        subscription.unsubscribe();
+        await harness.navigateByUrl('/products?search=cocoa', ListRoute);
+        expect(onChange).toHaveBeenCalledOnce();
     });
 });

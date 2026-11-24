@@ -1,9 +1,10 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiTabsComponent } from 'fd-ui-kit';
-import { of, Subject } from 'rxjs';
+import { filter, of, Subject, take } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
@@ -12,6 +13,13 @@ import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminBillingRoutes } from './admin-billing.routes';
 import { AdminBillingService } from './api/admin-billing.service';
 import { AdminBillingFacade } from './lib/admin-billing.facade';
+import type { AdminBillingRevenueSummary } from './models/admin-billing.models';
+
+@Component({
+    template: '',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OtherPage {}
 
 const PAGE_SIZE = 20;
 const TOTAL_PAGES = 2;
@@ -48,7 +56,8 @@ const createBillingServiceMock = (): BillingApiMock => ({
 describe('Protected billing route and filters', () => {
     it('normalizes the filtered list page and clears an unrelated status on cancellation tab changes', async () => {
         const api = createBillingServiceMock();
-        const harness = await openBillingRouteAsync(api, `/billing?page=${STALE_PAGE}&status=active&provider=Paddle`);
+        const harness = await openBillingRouteAsync(api, `/billing?page=${STALE_PAGE}&status=active&status=ignored&provider=Paddle`);
+        await harness.fixture.whenStable();
         const router = TestBed.inject(Router);
         expect(api.getSubscriptions).toHaveBeenCalledWith(
             STALE_PAGE,
@@ -60,7 +69,9 @@ describe('Protected billing route and filters', () => {
             PAGE_SIZE,
             expect.objectContaining({ status: 'active', provider: 'Paddle' }),
         );
-        expect(router.parseUrl(router.url).queryParams).toMatchObject({ page: '2', status: 'active' });
+        const settledQuery = router.parseUrl(router.url).queryParamMap;
+        expect(settledQuery.get('page')).toBe('2');
+        expect(settledQuery.get('status')).toBe('active');
 
         const host = requireBillingHost(harness);
         enterBillingFilter(host, 'Search billing records', ' owned@example.test ');
@@ -81,6 +92,7 @@ describe('Protected billing route and filters', () => {
     it('keeps the selected page and does not send a request for invalid pagination intents', async () => {
         const api = createBillingServiceMock();
         const harness = await openBillingRouteAsync(api, '/billing?page=2');
+        await harness.fixture.whenStable();
         const billing = harness.routeDebugElement?.injector.get(AdminBillingFacade);
         expect(billing).toBeDefined();
         api.getSubscriptions.mockClear();
@@ -129,6 +141,43 @@ describe('Billing tab changes', () => {
 });
 
 describe('Billing report supersession', () => {
+    it('refreshes current drafts and cancels both outstanding reads on departure', async () => {
+        const api = createBillingServiceMock();
+        const firstRecords = new Subject<typeof empty>();
+        const refreshedRecords = new Subject<typeof empty>();
+        const firstRevenue = new Subject<AdminBillingRevenueSummary>();
+        const refreshedRevenue = new Subject<AdminBillingRevenueSummary>();
+        api.getSubscriptions.mockReturnValueOnce(firstRecords).mockReturnValueOnce(refreshedRecords);
+        api.getRevenueSummary.mockReturnValueOnce(firstRevenue).mockReturnValueOnce(refreshedRevenue);
+        const url = '/billing?search=applied&period=custom&from=2024-02-29&to=2024-02-29';
+        const harness = await openBillingRouteAsync(api, url);
+        expect(firstRecords.observed).toBe(true);
+        expect(firstRevenue.observed).toBe(true);
+        const host = requireBillingHost(harness);
+
+        enterBillingFilter(host, 'Search billing records', 'draft');
+        harness.detectChanges();
+        expect(api.getSubscriptions).toHaveBeenCalledOnce();
+        clickBillingButton(host, 'Refresh');
+        harness.detectChanges();
+
+        expect(firstRecords.observed).toBe(false);
+        expect(firstRevenue.observed).toBe(false);
+        expect(refreshedRecords.observed).toBe(true);
+        expect(refreshedRevenue.observed).toBe(true);
+        expect(api.getSubscriptions).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ search: 'draft', fromUtc: '2024-02-29T00:00:00.000Z', toUtc: '2024-02-29T23:59:59.9999999Z' }),
+        );
+        expect(api.getRevenueSummary).toHaveBeenLastCalledWith({ fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00Z' });
+        expect(TestBed.inject(Router).url).toBe(url);
+
+        await harness.navigateByUrl('/other', OtherPage);
+        expect(refreshedRecords.observed).toBe(false);
+        expect(refreshedRevenue.observed).toBe(false);
+    });
+
     it.each([
         ['payments', 'getPayments'],
         ['webhook-events', 'getWebhookEvents'],
@@ -139,9 +188,12 @@ describe('Billing report supersession', () => {
         api[request].mockReturnValueOnce(pending);
         const harness = await openBillingRouteAsync(api, `/billing?tab=${tab}`);
         expect(requireBillingHost(harness).textContent).toContain('Loading billing records');
+        expect(pending.observed).toBe(true);
 
         const router = TestBed.inject(Router);
         await router.navigateByUrl('/billing?tab=subscriptions');
+        await harness.fixture.whenStable();
+        expect(pending.observed).toBe(false);
         pending.next({ ...empty, reasons: [], feedbackCount: 0 });
         pending.error(new Error('obsolete request failed'));
         harness.detectChanges();
@@ -153,10 +205,44 @@ describe('Billing report supersession', () => {
     });
 });
 
+it('keeps the new URL when the previous page responds during navigation', async () => {
+    const api = createBillingServiceMock();
+    const pending = new Subject<typeof empty>();
+    api.getSubscriptions.mockReturnValueOnce(pending);
+    const harness = await openBillingRouteAsync(api, '/billing?page=2&search=previous');
+    const router = TestBed.inject(Router);
+    const restoredUrl = '/billing?search=restored';
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restoredUrl),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ ...empty, page: TOTAL_PAGES, totalPages: TOTAL_PAGES, totalItems: TOTAL_ITEMS });
+        });
+
+    await router.navigateByUrl(restoredUrl);
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restoredUrl);
+    expect(api.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ search: 'restored' }));
+    expect(requireBillingHost(harness).textContent).toContain(subscription.userEmail);
+});
+
 async function openBillingRouteAsync(api: BillingApiMock, url: string): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'billing', children: adminBillingRoutes }]),
+            provideRouter(
+                [
+                    { path: 'billing', children: adminBillingRoutes },
+                    { path: 'other', component: OtherPage },
+                ],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             { provide: AdminBillingService, useValue: api },
             {

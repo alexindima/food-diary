@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiLevelIndicatorComponent, FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit';
@@ -17,12 +17,17 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { buildLessonListItems, buildLessonProgress } from '../../lib/lesson-view.mapper';
 import { LessonListFacade } from '../../lib/list/lesson-list.facade';
+import { readLessonListQuery } from '../../lib/list/lesson-list-query';
 import { LESSON_LIST_QUERY_STATE } from '../../lib/list/lesson-list-query-state';
 import { LessonListRouteStateFacade } from '../../lib/list/lesson-list-route-state.facade';
 import { LessonsListFiltersComponent } from './lessons-list-sections/lessons-list-filters/lessons-list-filters';
 import { LessonsListGridComponent } from './lessons-list-sections/lessons-list-grid/lessons-list-grid';
 import { LessonsListProgressComponent } from './lessons-list-sections/lessons-list-progress/lessons-list-progress';
 import { LESSONS_LIST_TOUR } from './lessons-list-tour';
+
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
 
 @Component({
     selector: 'fd-lessons-list-page',
@@ -52,6 +57,12 @@ import { LESSONS_LIST_TOUR } from './lessons-list-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonsListPageComponent {
+    public readonly page = input(undefined, { transform: firstQueryValue });
+    public readonly search = input(undefined, { transform: firstQueryValue });
+    public readonly category = input(undefined, { transform: firstQueryValue });
+    public readonly difficulty = input(undefined, { transform: firstQueryValue });
+    public readonly sort = input(undefined, { transform: firstQueryValue });
+
     private readonly router = inject(Router);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -91,6 +102,21 @@ export class LessonsListPageComponent {
         const nextLesson = this.nextLesson();
         return this.lessons().find(lesson => !lesson.isRead && lesson.id !== nextLesson?.id) ?? nextLesson;
     });
+
+    public constructor() {
+        const routeQuery = computed(() =>
+            readLessonListQuery(
+                convertToParamMap({
+                    page: this.page() ?? null,
+                    search: this.search() ?? null,
+                    category: this.category() ?? null,
+                    difficulty: this.difficulty() ?? null,
+                    sort: this.sort() ?? null,
+                }),
+            ),
+        );
+        inject(LessonListRouteStateFacade).bind(routeQuery);
+    }
 
     protected filterByCategory(category: string | null): void {
         this.selectedCategory.set(category);

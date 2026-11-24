@@ -6,6 +6,7 @@ export type MealPlanListQueryState = {
     readonly initial: MealPlanListQuery;
     readonly current: Signal<MealPlanListQuery>;
     readonly changes: Observable<MealPlanListQuery>;
+    isCurrent: (query: MealPlanListQuery) => boolean;
     writeAsync: (query: MealPlanListQuery, options?: { replaceUrl?: boolean }) => Promise<boolean>;
     normalizePageAsync: () => Promise<boolean>;
 };

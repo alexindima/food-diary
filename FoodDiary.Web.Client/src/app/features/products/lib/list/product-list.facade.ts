@@ -698,10 +698,13 @@ export class ProductListFacade {
     }
 
     private isCurrentPageRequest(requestId: number, query: ProductListQuery): boolean {
+        const appliedQuery = this.activeRouteQuery;
         return (
             this.productData.isCurrent(requestId) &&
             (this.queryState === null ||
-                productListQueryKey(query) === productListQueryKey(this.currentQuery(this.currentPageIndex + 1, this.searchValue())))
+                (productListQueryKey(query) === productListQueryKey(this.currentQuery(this.currentPageIndex + 1, this.searchValue())) &&
+                    // Route input binding can trail the URL commit.
+                    (appliedQuery === null || this.queryState.matchesCommittedQuery?.(appliedQuery) !== false)))
         );
     }
 

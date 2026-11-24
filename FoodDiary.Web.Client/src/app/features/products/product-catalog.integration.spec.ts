@@ -19,7 +19,7 @@ import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { filter, firstValueFrom, type Observable, of, Subject, tap, throwError } from 'rxjs';
+import { filter, firstValueFrom, type Observable, of, Subject, take, tap, throwError } from 'rxjs';
 import { beforeAll, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -1110,6 +1110,36 @@ describe('Routed catalog language changes', () => {
 });
 
 describe('Catalog request lifecycle', () => {
+    it('does not normalize an obsolete page when the next URL commits before its inputs update', async () => {
+        const { products } = configureCatalog();
+        const stale = new Subject<ProductOverview>();
+        products.queryOverview.mockReturnValueOnce(stale);
+        products.query.mockReturnValueOnce(of(page([COFFEE_ITEM])));
+        const harness = await RouterTestingHarness.create(`/products?page=${REQUESTED_PAGE}&search=olive`);
+        const router = TestBed.inject(Router);
+        const replacement = '/products?search=coffee';
+        router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === replacement),
+                take(1),
+            )
+            .subscribe(() => {
+                stale.next({
+                    allProducts: page([], REQUESTED_PAGE, LAST_AVAILABLE_PAGE),
+                    recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
+                });
+            });
+
+        await harness.navigateByUrl(replacement);
+        await waitForCatalogAsync(harness, COFFEE_ITEM.name);
+
+        expect(router.url).toBe(replacement);
+        expect(products.query).toHaveBeenCalledTimes(1);
+        expect(products.query.mock.calls[0]?.[2]?.search).toBe('coffee');
+    });
+
     it('cancels superseded search requests and keeps the current results when the external lookup fails', async () => {
         const { products, lookup } = configureCatalog();
         const oldProducts = new Subject<PageOf<Product>>();

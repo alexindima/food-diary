@@ -63,6 +63,7 @@ beforeEach(() => {
         initial,
         current,
         changes: EMPTY,
+        isCurrent: query => mealPlanListQueryKey(query) === mealPlanListQueryKey(current()),
         writeAsync: async (query): Promise<boolean> => {
             current.set(query);
             return commitAsync();
@@ -132,6 +133,7 @@ describe('MealPlanFacade request lifetime', () => {
                         initial: query,
                         current: signal(query),
                         changes: EMPTY,
+                        isCurrent: (): boolean => true,
                         writeAsync,
                         normalizePageAsync: vi.fn().mockResolvedValue(false),
                     },
@@ -430,6 +432,7 @@ describe('MealPlanListFacade catalogue navigation', () => {
             initial: query,
             current: signal(query),
             changes: EMPTY,
+            isCurrent: candidate => mealPlanListQueryKey(candidate) === mealPlanListQueryKey(query),
             normalizePageAsync: vi.fn().mockRejectedValue(new Error('Could not normalize the catalogue URL')),
             writeAsync: vi.fn().mockRejectedValue(new Error('Could not update the catalogue URL')),
         };

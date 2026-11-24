@@ -6,7 +6,14 @@
 <section aria-labelledby="retention-activity-title">
     <h2 id="retention-activity-title" class="fd-ui-title-sm">{{ 'ADMIN_RETENTION.ACTIVITY_TITLE' | translate }}</h2>
     <p>{{ 'ADMIN_RETENTION.ACTIVITY_NOTE' | translate }}</p>
-    <fd-admin-period defaultPeriod="30d" label="ADMIN_RETENTION.ACTIVITY_PERIOD" queryPrefix="activity_" />
+    <fd-admin-period
+        defaultPeriod="30d"
+        label="ADMIN_RETENTION.ACTIVITY_PERIOD"
+        queryPrefix="activity_"
+        [period]="activity_period()"
+        [periodFrom]="activity_from()"
+        [periodTo]="activity_to()"
+    />
     @if (report(); as data) {
         <p>{{ 'ADMIN_RETENTION.AS_OF' | translate }}: {{ data.asOfUtc | date: 'medium' : 'UTC' }} UTC</p>
         <div class="retention-summary">
@@ -53,7 +60,13 @@
 <section aria-labelledby="retention-cohorts-title">
     <h2 id="retention-cohorts-title" class="fd-ui-title-sm">{{ 'ADMIN_RETENTION.COHORTS_TITLE' | translate }}</h2>
     <p>{{ 'ADMIN_RETENTION.DEFINITION' | translate }}</p>
-    <fd-admin-period defaultPeriod="90d" label="ADMIN_RETENTION.COHORT_PERIOD" />
+    <fd-admin-period
+        defaultPeriod="90d"
+        label="ADMIN_RETENTION.COHORT_PERIOD"
+        [period]="period()"
+        [periodFrom]="from()"
+        [periodTo]="to()"
+    />
     <p>{{ 'ADMIN_RETENTION.WINDOW_NOTE' | translate }}</p>
     @if (report(); as data) {
         <div class="retention-table-wrap" tabindex="0" role="region" aria-labelledby="retention-cohorts-title">

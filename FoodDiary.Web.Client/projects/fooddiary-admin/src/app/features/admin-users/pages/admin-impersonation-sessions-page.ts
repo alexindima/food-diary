@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { map } from 'rxjs';
@@ -9,7 +9,7 @@ import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-err
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
-import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
+import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminSessionsSectionComponent } from './admin-sessions-section';
 
@@ -35,10 +35,27 @@ type SessionsRequest = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminImpersonationSessionsPageComponent {
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly actorId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly targetId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly usersService = inject(AdminUsersFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly sessionsRequest = signal<SessionsRequest | undefined>(undefined);
+    private readonly appliedQuery = computed(() => ({
+        page: adminPage(this.page() ?? null),
+        search: this.search() ?? '',
+        filters: { actorId: this.actorId() ?? '', targetId: this.targetId() ?? '' },
+        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    }));
+    private readonly sessionsRequest = linkedSignal(() => {
+        const { page, search, filters } = this.appliedQuery();
+        return this.buildRequest(page, search, filters);
+    });
     private readonly sessionsResource = rxResource({
         params: this.sessionsRequest,
         stream: ({ params }) =>
@@ -60,28 +77,18 @@ export class AdminImpersonationSessionsPageComponent {
     private readonly pageResult = computed(() => (this.sessionsResource.hasValue() ? this.sessionsResource.value() : null));
 
     protected readonly loadFailed = computed(() => this.sessionsResource.error() !== undefined);
-    protected readonly firstFilter = signal('');
-    protected readonly secondFilter = signal('');
+    protected readonly firstFilter = linkedSignal(() => this.appliedQuery().filters.actorId);
+    protected readonly secondFilter = linkedSignal(() => this.appliedQuery().filters.targetId);
     protected readonly pageSize = ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE;
 
     protected readonly sessions = computed(() => this.pageResult()?.items ?? []);
-    protected readonly sessionsPage = signal(1);
+    protected readonly sessionsPage = linkedSignal(() => this.appliedQuery().page);
     protected readonly sessionsTotalPages = computed(() => this.pageResult()?.totalPages ?? 1);
     protected readonly sessionsTotalItems = computed(() => this.pageResult()?.totalItems ?? 0);
-    protected readonly sessionsSearch = signal('');
+    protected readonly sessionsSearch = linkedSignal(() => this.appliedQuery().search);
     protected readonly isSessionsLoading = computed(
         () => this.sessionsResource.isLoading() || (this.sessionsResource.hasValue() && this.sessionsResource.value() === null),
     );
-
-    public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.sessionsSearch.set(params.get('search') ?? '');
-            this.sessionsPage.set(adminPage(params.get('page')));
-            this.firstFilter.set(params.get('actorId') ?? '');
-            this.secondFilter.set(params.get('targetId') ?? '');
-            this.loadSessions();
-        });
-    }
 
     protected onSessionsSearchChange(value: string): void {
         this.sessionsSearch.set(value);
@@ -90,7 +97,7 @@ export class AdminImpersonationSessionsPageComponent {
     }
 
     protected goToSessionsPage(page: number): void {
-        if (this.isSessionsLoading() || page < 1 || page > this.sessionsTotalPages()) {
+        if (this.router.currentNavigation() !== null || this.isSessionsLoading() || page < 1 || page > this.sessionsTotalPages()) {
             return;
         }
 
@@ -112,16 +119,20 @@ export class AdminImpersonationSessionsPageComponent {
     }
 
     protected loadSessions(): void {
-        const range = adminPeriod(this.route.snapshot.queryParamMap);
+        this.sessionsRequest.set(
+            this.buildRequest(this.sessionsPage(), this.sessionsSearch(), {
+                actorId: this.firstFilter(),
+                targetId: this.secondFilter(),
+            }),
+        );
+    }
+
+    private buildRequest(page: number, search: string, filters: Record<string, string>): SessionsRequest | undefined {
+        const { periodParams } = this.appliedQuery();
+        const range = adminPeriod(periodParams);
         if (range === null) {
-            this.sessionsRequest.set(undefined);
-            return;
+            return undefined;
         }
-        const search = this.sessionsSearch().trim();
-        this.sessionsRequest.set({
-            page: this.sessionsPage(),
-            search: search.length > 0 ? search : null,
-            filters: { ...adminUtcPeriod(range), actorId: this.firstFilter(), targetId: this.secondFilter() },
-        });
+        return { page, search: adminQueryValue(search.trim()), filters: { ...adminUtcPeriod(range), ...filters } };
     }
 }

@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, firstValueFrom } from 'rxjs';
 import { expect, it, vi } from 'vitest';
@@ -29,7 +29,10 @@ const EMPTY_CHECKS: RecipeModerationPage = {
 it('navigates among the mounted moderation pages and identifies the current destination to assistive technology', async () => {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'moderation', children: adminModerationRoutes }]),
+            provideRouter(
+                [{ path: 'moderation', children: adminModerationRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideHttpClient(),
             provideHttpClientTesting(),
             ...provideTranslateTesting(),

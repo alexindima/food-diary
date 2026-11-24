@@ -1,7 +1,7 @@
 <div class="fd-grid fd-gap-md">
     <fd-outgoing-status-counts [counts]="statusCounts()" (selected)="draftStatus.set($event); load(true)" />
     <div class="admin-filter-bar">
-        <fd-admin-period [inline]="true" />
+        <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
         <fd-ui-input
             [label]="'ADMIN_OUTGOING.RECIPIENT' | translate"
             [value]="draftRecipient()"

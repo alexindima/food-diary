@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -164,6 +164,10 @@ type TaskFormModel = {
     styleUrls: ['./client-dashboard.scss'],
 })
 export class ClientDashboardComponent {
+    public readonly recommendationId = input<string | null, string | string[] | undefined>(null, {
+        transform: value => (Array.isArray(value) ? value[0] : value) ?? null,
+    });
+
     protected readonly locale = injectCurrentLanguage();
     private readonly templateNameInput = viewChild<FdUiInputComponent>('templateNameInput');
     private readonly route = inject(ActivatedRoute);
@@ -198,7 +202,7 @@ export class ClientDashboardComponent {
     protected readonly archivingTemplateIds = signal<ReadonlySet<RecommendationTemplate['id']>>(new Set());
     protected readonly savingTask = signal(false);
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
-    protected readonly openDiscussionId = signal<string | null>(null);
+    protected readonly openDiscussionId = linkedSignal(this.recommendationId);
     protected readonly error = signal<string | null>(null);
     protected readonly sectionLoadError = signal<string | null>(null);
     private readonly selectedPeriod = signal(toCalendarPeriod(this.recentPeriod(DEFAULT_PERIOD_DAYS)));
@@ -389,15 +393,6 @@ export class ClientDashboardComponent {
 
     public constructor() {
         this.connectDevelopmentTools();
-        this.route.queryParamMap
-            .pipe(
-                map(params => params.get('recommendationId')),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(id => {
-                this.openDiscussionId.set(id);
-            });
         this.route.paramMap
             .pipe(
                 map(params => params.get('clientId')),
@@ -453,7 +448,7 @@ export class ClientDashboardComponent {
         this.loadedMealPage = 1;
         this.error.set(null);
         this.sectionLoadError.set(null);
-        this.openDiscussionId.set(this.route.snapshot.queryParamMap.get('recommendationId'));
+        this.openDiscussionId.set(this.recommendationId());
         this.recommendationForm().reset({ text: '', templateName: '' });
         this.taskForm().reset({ title: '', details: '', dueDate: '' });
     }
@@ -1000,8 +995,8 @@ export class ClientDashboardComponent {
                     dueDate: { type: 'string' },
                 },
             },
-            fillDraft: input => {
-                this.fillDevelopmentDraft(input);
+            fillDraft: draftInput => {
+                this.fillDevelopmentDraft(draftInput);
             },
             clearDraft: () => {
                 if (this.isDevelopmentDraftSaving()) {
@@ -1010,8 +1005,8 @@ export class ClientDashboardComponent {
                 this.recommendationForm().reset({ text: '', templateName: '' });
                 this.taskForm().reset({ title: '', details: '', dueDate: '' });
             },
-            setFilters: input => {
-                const filters = devRecord(input, ['dateFrom', 'dateTo', 'timeZone']);
+            setFilters: filterInput => {
+                const filters = devRecord(filterInput, ['dateFrom', 'dateTo', 'timeZone']);
                 const dateFrom = devDay(filters['dateFrom']);
                 const dateTo = devDay(filters['dateTo']);
                 const period = this.parsePeriod({ dateFrom, dateTo });
@@ -1024,11 +1019,11 @@ export class ClientDashboardComponent {
         });
     }
 
-    private fillDevelopmentDraft(input: unknown): void {
+    private fillDevelopmentDraft(draftInput: unknown): void {
         if (this.loading() || this.detailsLoading() || this.client() === null || this.isDevelopmentDraftSaving()) {
             throw new DevelopmentToolError('Client is not ready.');
         }
-        const draft = devRecord(input, ['type', 'text', 'title', 'details', 'dueDate']);
+        const draft = devRecord(draftInput, ['type', 'text', 'title', 'details', 'dueDate']);
         const type = devEnum(draft['type'], ['recommendation', 'task']);
         if (type === 'recommendation') {
             if (!this.canRecommend()) {

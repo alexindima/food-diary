@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -55,6 +55,15 @@ import { MEAL_LIST_TOUR } from './meal-list-tour';
     providers: [AiMealCreateFacade, MealListFacade, MealListRouteStateFacade],
 })
 export class MealListComponent {
+    public readonly page = input<string | string[]>();
+    public readonly dateFrom = input<string | string[]>();
+    public readonly dateTo = input<string | string[]>();
+    public readonly mealTypes = input<string | string[]>();
+    public readonly caloriesFrom = input<string | string[]>();
+    public readonly caloriesTo = input<string | string[]>();
+    public readonly hasImage = input<string | string[]>();
+    public readonly hasAiSession = input<string | string[]>();
+
     private readonly mealListFacade = inject(MealListFacade);
     private readonly routeState = inject(MealListRouteStateFacade);
     private activeQueryKey = mealListQueryKey(this.routeState.initial);
@@ -119,6 +128,20 @@ export class MealListComponent {
     });
     protected readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
+    private readonly routeQuery = computed(() =>
+        readMealListQuery(
+            convertToParamMap({
+                page: this.page() ?? null,
+                dateFrom: this.dateFrom() ?? null,
+                dateTo: this.dateTo() ?? null,
+                mealTypes: this.mealTypes() ?? [],
+                caloriesFrom: this.caloriesFrom() ?? null,
+                caloriesTo: this.caloriesTo() ?? null,
+                hasImage: this.hasImage() ?? null,
+                hasAiSession: this.hasAiSession() ?? null,
+            }),
+        ),
+    );
 
     public constructor() {
         const router = inject(Router);
@@ -176,6 +199,7 @@ export class MealListComponent {
             );
         }
         this.mealListFacade.currentPageIndex.set(this.routeState.initial.page - 1);
+        this.routeState.bind(this.routeQuery);
         this.routeState.changes
             .pipe(
                 filter(query => mealListQueryKey(query) !== this.activeQueryKey),

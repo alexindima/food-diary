@@ -1,6 +1,6 @@
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -32,7 +32,7 @@ const REPORT: AdminContentReport = {
     targetExcerpt: 'Recipe ingredients and description',
 };
 type ReportPage = PagedResponse<AdminContentReport>;
-type ModerationFixture = ComponentFixture<AdminModerationComponent>;
+type ModerationFixture = RouterTestingHarness['fixture'];
 
 const getReports = vi.fn<AdminModerationService['getReports']>();
 let closed: Subject<AdminModerationActionDialogResult | undefined>;
@@ -53,9 +53,11 @@ beforeEach(async () => {
         Object.defineProperty(Element.prototype, 'scrollIntoView', { configurable: true, value: vi.fn() });
     }
     await TestBed.configureTestingModule({
-        imports: [AdminModerationComponent],
         providers: [
-            provideRouter([]),
+            provideRouter(
+                [{ path: '', component: AdminModerationComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             ...provideTranslateTesting(),
             { provide: AdminModerationService, useValue: { getReports } },
             { provide: FdUiDialogService, useValue: { open } },
@@ -129,7 +131,7 @@ describe('AdminModerationComponent filters', () => {
     it('replaces an obsolete request error with period validation when the URL becomes invalid', async () => {
         const pending = new Subject<ReportPage>();
         getReports.mockReturnValueOnce(pending);
-        const fixture = await renderAsync('?status=Reviewed');
+        const fixture = await renderAsync('?status=Reviewed', true);
         pending.error(new Error('unavailable'));
         await settleAsync(fixture);
         expect(element(fixture).querySelector('fd-admin-load-error')).toBeTruthy();
@@ -150,16 +152,18 @@ describe('AdminModerationComponent loading and pagination', () => {
         const first = new Subject<ReportPage>();
         const second = new Subject<ReportPage>();
         getReports.mockReturnValueOnce(first).mockReturnValueOnce(second);
-        const fixture = await renderAsync();
+        const fixture = await renderAsync('', true);
         expect(element(fixture).textContent).toContain('ADMIN_COMMON.LOADING');
         expect(element(fixture).querySelector('tbody')).toBeNull();
         expect(element(fixture).querySelector('fd-ui-pagination')).toBeNull();
         edit(fixture, 'ADMIN_MODERATION.TARGET_ID', 'new-target');
-        await settleAsync(fixture);
+        await settleAsync(fixture, true);
         expect(getReports).toHaveBeenCalledTimes(1);
         button(fixture, 'ADMIN_COMMON.APPLY').click();
-        await settleAsync(fixture);
-        expect(getReports).toHaveBeenCalledTimes(2);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(getReports).toHaveBeenCalledTimes(2);
+        });
         expect(first.observed).toBe(false);
         first.next(reportPage([REPORT]));
         expect(element(fixture).textContent).toContain('ADMIN_COMMON.LOADING');
@@ -197,7 +201,7 @@ describe('AdminModerationComponent loading and pagination', () => {
     it('shows a load error and retries the same filters before rendering an empty response', async () => {
         const pending = new Subject<ReportPage>();
         getReports.mockReturnValueOnce(pending).mockReturnValueOnce(of(reportPage([])));
-        const fixture = await renderAsync('?status=Reviewed&reporterId=reporter-2');
+        const fixture = await renderAsync('?status=Reviewed&reporterId=reporter-2', true);
         pending.error(new Error('unavailable'));
         await settleAsync(fixture);
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
@@ -295,17 +299,18 @@ function reportPage(items: AdminContentReport[]): ReportPage {
     return { items, totalPages: items.length > 0 ? SECOND_PAGE : 1, totalItems: items.length > 0 ? PAGE_SIZE + 1 : 0 };
 }
 
-async function renderAsync(query = ''): Promise<ModerationFixture> {
-    await TestBed.inject(Router).navigateByUrl(`/${query}`);
-    const fixture = TestBed.createComponent(AdminModerationComponent);
-    await settleAsync(fixture);
+async function renderAsync(query = '', requestPending = false): Promise<ModerationFixture> {
+    const { fixture } = await RouterTestingHarness.create(`/${query}`);
+    await settleAsync(fixture, requestPending);
     return fixture;
 }
 
-async function settleAsync(fixture: ModerationFixture): Promise<void> {
+async function settleAsync(fixture: ModerationFixture, requestPending = false): Promise<void> {
     fixture.detectChanges();
     await waitForAsyncTasksAsync();
-    await fixture.whenStable();
+    if (!requestPending) {
+        await fixture.whenStable();
+    }
     fixture.detectChanges();
 }
 

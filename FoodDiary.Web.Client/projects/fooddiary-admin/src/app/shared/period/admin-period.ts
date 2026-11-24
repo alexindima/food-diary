@@ -1,4 +1,4 @@
-import { convertToParamMap, type ParamMap } from '@angular/router';
+import type { ParamMap } from '@angular/router';
 
 import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
@@ -42,12 +42,6 @@ function customPeriod(params: ParamMap, today: string): AdminPeriod | null {
     return from >= '1970-01-01' && from <= to && to <= today && Date.parse(to) - Date.parse(from) <= MAX_RANGE_DAYS * DAY_MS
         ? { from, to }
         : null;
-}
-
-export function adminPeriodParams(params: ParamMap, prefix: string): ParamMap {
-    return prefix === ''
-        ? params
-        : convertToParamMap({ period: params.get(`${prefix}period`), from: params.get(`${prefix}from`), to: params.get(`${prefix}to`) });
 }
 
 export function adminPeriod(params: ParamMap, defaultPeriod = 'all', now = new Date()): AdminPeriod | null {

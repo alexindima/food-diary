@@ -1,7 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of } from 'rxjs';
@@ -45,7 +45,10 @@ function configureRoute(): ReturnType<typeof vi.fn<AdminBugsService['getPage']>>
     TestBed.configureTestingModule({
         providers: [
             ...provideTranslateTesting(),
-            provideRouter([{ path: 'bugs', children: adminBugsRoutes }]),
+            provideRouter(
+                [{ path: 'bugs', children: adminBugsRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             { provide: AdminBugsService, useValue: { getPage } },
             {
                 provide: AdminAuthService,
@@ -75,6 +78,15 @@ async function updateViewAsync(harness: RouterTestingHarness): Promise<void> {
 }
 
 describe('Admin bug journal route', () => {
+    it('treats a query ID on the list URL as an unrelated parameter', async () => {
+        const getPage = configureRoute();
+        const harness = await RouterTestingHarness.create('/bugs?id=finding-1&source=logs');
+        await updateViewAsync(harness);
+
+        expect(getPage).toHaveBeenCalledExactlyOnceWith({ page: 1, limit: 25, source: 'logs', search: '', status: '' });
+        expect(harness.routeNativeElement?.textContent).not.toContain('ADMIN_BUGS.BACK');
+    });
+
     it('restores a stale page, preserves filters through pagination, and lets the operator apply and reset them', async () => {
         const getPage = configureRoute();
         const harness = await RouterTestingHarness.create(

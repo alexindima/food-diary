@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, take } from 'rxjs';
 import { expect, it, vi } from 'vitest';
@@ -23,7 +23,10 @@ it.each([
 ])('ignores pending pagination when filtered $path results shrink before rendering', async ({ path, endpoint }) => {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'users', children: adminUsersRoutes }]),
+            provideRouter(
+                [{ path: 'users', children: adminUsersRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),

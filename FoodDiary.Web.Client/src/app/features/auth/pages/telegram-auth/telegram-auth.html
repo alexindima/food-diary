@@ -17,7 +17,7 @@
             } @else if (showExistingLogin()) {
                 <fd-ui-button variant="ghost" (click)="backToChoice()">{{ 'AUTH.TELEGRAM.BACK_TO_CHOICE' | translate }}</fd-ui-button>
                 <p>{{ 'AUTH.TELEGRAM.EXISTING_HINT' | translate }}</p>
-                <fd-auth initialReturnUrl="/auth/telegram" [useRouting]="false" [hideTelegram]="true" />
+                <fd-auth initialReturnUrl="/auth/telegram" [hideTelegram]="true" />
             } @else if (facade.intent(); as intent) {
                 @if (intent.nextAction === 'login') {
                     <fd-ui-button [fullWidth]="true" (click)="complete('login')">{{ 'AUTH.TELEGRAM.SIGN_IN' | translate }}</fd-ui-button>

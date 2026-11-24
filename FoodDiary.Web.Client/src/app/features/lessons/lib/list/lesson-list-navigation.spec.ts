@@ -64,7 +64,14 @@ beforeEach(() => {
             { provide: TranslateService, useValue: { getCurrentLang: (): string => locale(), getFallbackLang: (): string => 'en' } },
             {
                 provide: LESSON_LIST_QUERY_STATE,
-                useValue: { initial, current, changes, writeAsync, normalizePageAsync },
+                useValue: {
+                    initial,
+                    current,
+                    changes,
+                    isCurrent: (query: LessonListQuery): boolean => lessonListQueryKey(query) === lessonListQueryKey(current()),
+                    writeAsync,
+                    normalizePageAsync,
+                },
             },
         ],
     });

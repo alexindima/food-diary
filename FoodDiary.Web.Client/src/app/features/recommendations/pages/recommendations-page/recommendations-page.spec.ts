@@ -1,7 +1,6 @@
-import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdTourService } from 'fd-tour';
-import { BehaviorSubject, type Observable, of, Subject, throwError } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -139,11 +138,11 @@ describe('RecommendationsPageComponent mark read', () => {
 
 describe('RecommendationsPageComponent route and tour', () => {
     it('marks a recommendation when query params select it after initial load', () => {
-        const queryParams$ = new BehaviorSubject(convertToParamMap({}));
         const recommendation = createRecommendation({ id: entityId<'recommendation'>('recommendation-1'), isRead: false });
-        const { facade } = createComponent({ recommendations: [recommendation], queryParams$ });
+        const { facade, fixture } = createComponent({ recommendations: [recommendation] });
 
-        queryParams$.next(convertToParamMap({ recommendationId: recommendation.id }));
+        fixture.componentRef.setInput('recommendationId', recommendation.id);
+        fixture.detectChanges();
 
         expect(facade.markAsRead).toHaveBeenCalledWith(recommendation.id);
     });
@@ -221,13 +220,13 @@ type CreateComponentOptions = {
     markRead$?: Subject<void>;
     markReadError?: boolean;
     recommendationId?: string;
-    queryParams$?: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
     tourService?: { start: ReturnType<typeof vi.fn> };
     localizedTour?: { build: ReturnType<typeof vi.fn> };
 };
 
 function createComponent(options: CreateComponentOptions = {}): {
     component: RecommendationsPageComponent;
+    fixture: ComponentFixture<RecommendationsPageComponent>;
     facade: {
         getMyRecommendations: ReturnType<typeof vi.fn>;
         markAsRead: ReturnType<typeof vi.fn>;
@@ -235,7 +234,6 @@ function createComponent(options: CreateComponentOptions = {}): {
         changeTaskStatus: ReturnType<typeof vi.fn>;
     };
 } {
-    const queryParams$ = createQueryParams(options);
     const recommendations$ = createRecommendationsStream(options);
     const markRead$ = createMarkReadStream(options);
     const facade = {
@@ -252,28 +250,20 @@ function createComponent(options: CreateComponentOptions = {}): {
         providers: [
             provideTranslateTesting(),
             { provide: RecommendationsFacade, useValue: facade },
-            { provide: ActivatedRoute, useValue: { queryParamMap: queryParams$.asObservable() } },
             { provide: FdTourService, useValue: tourService },
             { provide: LocalizedTourDefinitionService, useValue: localizedTour },
         ],
-    });
+    }).overrideComponent(RecommendationsPageComponent, { set: { template: '' } });
+
+    const fixture = TestBed.createComponent(RecommendationsPageComponent);
+    fixture.componentRef.setInput('recommendationId', options.recommendationId);
+    fixture.detectChanges();
 
     return {
-        component: TestBed.runInInjectionContext(() => new RecommendationsPageComponent()),
+        component: fixture.componentInstance,
+        fixture,
         facade,
     };
-}
-
-function createQueryParams(options: CreateComponentOptions): BehaviorSubject<ReturnType<typeof convertToParamMap>> {
-    if (options.queryParams$ !== undefined) {
-        return options.queryParams$;
-    }
-
-    return new BehaviorSubject(
-        convertToParamMap(
-            options.recommendationId === undefined ? {} : { recommendationId: entityId<'recommendation'>(options.recommendationId) },
-        ),
-    );
 }
 
 function createRecommendationsStream(options: CreateComponentOptions): Observable<DietologistRecommendation[]> {

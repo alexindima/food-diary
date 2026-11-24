@@ -3,12 +3,12 @@ import ru from '@angular/common/locales/ru';
 import { type DebugElement, NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, type MockInstance, onTestFinished, vi } from 'vitest';
 
 import { nutritionMealFixture } from '../../../../testing/nutrition-details.fixtures';
@@ -165,7 +165,7 @@ it('renders a zero-meal summary without a snapshot and updates it when the snaps
     expect(child('fd-dashboard-summary-block').properties['data']).toEqual(expect.objectContaining({ mealCount: 1, dailyConsumed: 0 }));
 });
 
-describe('Dashboard page actions and localization', () => {
+describe('Dashboard page actions', () => {
     it('disables date editing, hides quick add and toggles cards instead of navigating in layout mode', async () => {
         const { fixture, layout, host, child, navigation, facade } = await setupAsync();
         layout.isEditingLayout.set(true);
@@ -201,9 +201,11 @@ describe('Dashboard page actions and localization', () => {
         expect(navigation.navigateToMealListAsync).toHaveBeenCalledOnce();
         expect(navigation.navigateToFastingAsync).toHaveBeenCalledOnce();
     });
+});
 
+describe('Dashboard calendar and route lifetime', () => {
     it('updates the URL from the calendar and responds to browser date navigation', async () => {
-        const { child, router, params, facade } = await setupAsync();
+        const { child, router, fixture, facade } = await setupAsync();
         child('fd-ui-date-picker-button').triggerEventHandler('valueChange', new Date('2026-09-03T00:00:00'));
         expect(router.navigate).toHaveBeenCalledWith(
             [],
@@ -212,17 +214,23 @@ describe('Dashboard page actions and localization', () => {
         router.navigate.mockClear();
         child('fd-ui-date-picker-button').triggerEventHandler('valueChange', null);
         expect(router.navigate).not.toHaveBeenCalled();
-        params.next(convertToParamMap({ date: '2026-09-02' }));
+        fixture.componentRef.setInput('date', ['2026-09-02', '2026-09-03']);
+        fixture.detectChanges();
         expect(facade.setSelectedDate).toHaveBeenLastCalledWith(new Date('2026-09-02T00:00:00'));
-        params.next(convertToParamMap({ date: '2026-09-03' }));
+        fixture.componentRef.setInput('date', '2026-09-03');
+        fixture.detectChanges();
         expect(facade.setSelectedDate).toHaveBeenLastCalledWith(new Date('2026-09-03T00:00:00'));
     });
 
     it('follows today when the route has no valid explicit date', async () => {
-        const { facade, params } = await setupAsync();
-        params.next(convertToParamMap({}));
+        const { facade, fixture } = await setupAsync();
+        fixture.componentRef.setInput('date', '2026-09-03');
+        fixture.detectChanges();
+        fixture.componentRef.setInput('date', undefined);
+        fixture.detectChanges();
         expect(facade.setSelectedDate).toHaveBeenLastCalledWith(undefined);
-        params.next(convertToParamMap({ date: 'invalid' }));
+        fixture.componentRef.setInput('date', 'invalid');
+        fixture.detectChanges();
         expect(facade.setSelectedDate).toHaveBeenLastCalledWith(undefined);
     });
 
@@ -509,7 +517,6 @@ class DashboardTestState {
         updateViewportWidth: vi.fn(),
     };
     public readonly viewport = { isMobile: signal(false) };
-    public readonly params = new BehaviorSubject(convertToParamMap({}));
     public readonly navigation = {
         navigateToFastingAsync: vi.fn(),
         navigateToGoalsAsync: vi.fn(),
@@ -523,7 +530,7 @@ class DashboardTestState {
 }
 
 async function setupAsync(fasting = false, initiallyLoading = false, options?: { renderTdee?: boolean }): Promise<DashboardTestContext> {
-    const { facade, layout, viewport, params, navigation, unsaved, user } = new DashboardTestState();
+    const { facade, layout, viewport, navigation, unsaved, user } = new DashboardTestState();
     const dialog = { open: vi.fn() };
     facade.isLoading.set(initiallyLoading);
     facade.hasSnapshot.set(!initiallyLoading);
@@ -535,7 +542,6 @@ async function setupAsync(fasting = false, initiallyLoading = false, options?: {
             { provide: UserFacade, useValue: { user, getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
             provideRouter([]),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
-            { provide: ActivatedRoute, useValue: { queryParamMap: params } },
             { provide: NavigationService, useValue: navigation },
             { provide: UnsavedChangesService, useValue: unsaved },
             { provide: ViewportService, useValue: viewport },
@@ -577,7 +583,7 @@ async function setupAsync(fasting = false, initiallyLoading = false, options?: {
         expect(element, `Missing rendered child ${selector}`).not.toBeNull();
         return element;
     };
-    return { fixture, facade, layout, viewport, params, navigation, unsaved, host, child, router, user, dialog };
+    return { fixture, facade, layout, viewport, navigation, unsaved, host, child, router, user, dialog };
 }
 
 function activeFast(): FastingSession {
@@ -617,7 +623,6 @@ type DashboardTestContext = {
     facade: DashboardTestState['facade'];
     layout: DashboardTestState['layout'];
     viewport: DashboardTestState['viewport'];
-    params: DashboardTestState['params'];
     navigation: DashboardTestState['navigation'];
     unsaved: DashboardTestState['unsaved'];
     host: HTMLElement;

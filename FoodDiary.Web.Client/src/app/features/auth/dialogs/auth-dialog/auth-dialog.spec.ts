@@ -15,7 +15,6 @@ import { AuthDialogComponent } from './auth-dialog';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class AuthDialogAuthStubComponent {
-    public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialPasswordReset = input(false);
     public readonly initialReturnUrl = input<string | null>(null);
@@ -57,7 +56,6 @@ describe('AuthDialogComponent', () => {
 
         expect(closeButton?.getAttribute('aria-label')).toBe('COMMON.CLOSE');
         expect(root.querySelector('.auth-dialog__context')?.textContent).toContain('PUBLIC_RECIPES.SIGN_IN_TO_SAVE');
-        expect(authStub.useRouting()).toBe(false);
         expect(authStub.initialMode()).toBe('register');
         expect(authStub.initialReturnUrl()).toBe('/meals');
         expect(authStub.initialAdminReturnUrl()).toBe('/admin/users');

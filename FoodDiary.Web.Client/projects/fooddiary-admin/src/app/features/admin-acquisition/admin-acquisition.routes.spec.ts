@@ -1,7 +1,7 @@
 import type { ProviderToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiInputComponent, FdUiLineChartComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { of } from 'rxjs';
@@ -165,7 +165,10 @@ function boundControl<T>(harness: RouterTestingHarness, selector: string, token:
 async function openAcquisitionRouteAsync(getRange: ReturnType<typeof vi.fn>, url: string): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'acquisition', children: adminAcquisitionRoutes }]),
+            provideRouter(
+                [{ path: 'acquisition', children: adminAcquisitionRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             { provide: AdminAcquisitionFacade, useValue: { getRange } },
             {

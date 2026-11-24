@@ -2,17 +2,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, convertToParamMap, type Params, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { EMPTY, firstValueFrom, of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field';
 import { NavigationService } from '../../../../services/navigation.service';
+import type { MealTypeOption } from '../../../../shared/lib/meal-type.util';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -101,6 +102,23 @@ describe('MealManageFormComponent input behavior', () => {
         fixture.detectChanges();
 
         expect(component['mealFormModel']().comment).toBe('Updated comment');
+    });
+
+    it('preserves the editor when the launch inputs change after initialization', async () => {
+        const picker = new Subject<MealItemFormValues | null>();
+        const { fixture, openDialog } = await setupComponentAsync(undefined, { initialMealType: 'DINNER', picker });
+        const host = fixture.nativeElement as HTMLElement;
+        const mealType = requiredMealButton(host, 'fd-meal-general-info button[aria-haspopup="listbox"]');
+        expect(mealType.textContent).toContain('MEAL_TYPES.DINNER');
+
+        fixture.componentRef.setInput('initialMealType', 'BREAKFAST');
+        fixture.componentRef.setInput('openManualItem', true);
+        fixture.detectChanges();
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
+        expect(mealType.textContent).toContain('MEAL_TYPES.DINNER');
+        expect(openDialog).not.toHaveBeenCalled();
     });
 });
 
@@ -699,7 +717,7 @@ describe('Meal editor route departure', () => {
 
 async function setupComponentAsync(
     developmentTools?: MealDevelopmentTools,
-    launch?: { query: Params; picker: Subject<MealItemFormValues | null> },
+    launch?: { openManualItem?: boolean; initialMealType?: MealTypeOption; picker: Subject<MealItemFormValues | null> },
 ): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
     const openDialog = vi.fn().mockReturnValue({ afterClosed: () => launch?.picker ?? of(true) });
@@ -711,6 +729,7 @@ async function setupComponentAsync(
         imports: [MealManageFormComponent],
         providers: [
             ...(developmentTools === undefined ? [] : [{ provide: MEAL_DEVELOPMENT_TOOLS, useValue: developmentTools }]),
+            provideRouter([]),
             provideTranslateTesting(),
             { provide: MealManageFacade, useValue: mealManageFacade },
             {
@@ -727,25 +746,16 @@ async function setupComponentAsync(
                 provide: FdUiDialogService,
                 useValue: { open: openDialog },
             },
-            {
-                provide: Router,
-                useValue: {
-                    currentNavigation: vi.fn().mockReturnValue(null),
-                    events: EMPTY,
-                },
-            },
-            {
-                provide: ActivatedRoute,
-                useValue: {
-                    snapshot: {
-                        queryParamMap: convertToParamMap(launch?.query ?? {}),
-                    },
-                },
-            },
         ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealManageFormComponent);
+    if (launch?.openManualItem !== undefined) {
+        fixture.componentRef.setInput('openManualItem', launch.openManualItem);
+    }
+    if (launch?.initialMealType !== undefined) {
+        fixture.componentRef.setInput('initialMealType', launch.initialMealType);
+    }
     fixture.detectChanges();
 
     return {
@@ -1445,10 +1455,11 @@ it('does not redirect from a newer page when a pending save completes after the 
 });
 
 describe('Meal editor launch and item picker', () => {
-    it('opens the meal-type bookmark and reports removal of its last item', async () => {
+    it('opens the initial manual picker and reports removal of the last item', async () => {
         const picker = new Subject<MealItemFormValues | null>();
         const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, {
-            query: { manual: '1', mealType: ' dinner ' },
+            openManualItem: true,
+            initialMealType: 'DINNER',
             picker,
         });
         await vi.waitFor(() => {
@@ -1479,7 +1490,7 @@ describe('Meal editor launch and item picker', () => {
 
     it('adds a distinct second item through the manual action and edits the visible list', async () => {
         const picker = new Subject<MealItemFormValues | null>();
-        const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, { query: {}, picker });
+        const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, { picker });
         fixture.componentRef.setInput(
             'meal',
             createMeal({

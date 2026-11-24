@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { EMPTY, type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -13,6 +14,7 @@ import {
 } from '../../../../shared/models/product.data';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
+import { ProductListRouteStateFacade } from '../../lib/list/product-list-route-state.facade';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { ProductListPageComponent } from './product-list-page';
 
@@ -55,12 +57,12 @@ function setupComponent(): {
 
     TestBed.configureTestingModule({
         imports: [ProductListPageComponent],
-        providers: [],
+        providers: [provideRouter([])],
     });
     TestBed.overrideComponent(ProductListPageComponent, {
         set: {
             template: '',
-            providers: [{ provide: ProductListFacade, useValue: facade }],
+            providers: [ProductListRouteStateFacade, { provide: ProductListFacade, useValue: facade }],
         },
     });
 

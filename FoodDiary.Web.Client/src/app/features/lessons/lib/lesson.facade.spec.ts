@@ -81,13 +81,7 @@ describe('Lesson list and detail request lifetime', () => {
                 { provide: TranslateService, useValue: translateService },
                 {
                     provide: LESSON_LIST_QUERY_STATE,
-                    useValue: {
-                        initial: query,
-                        current: signal(query),
-                        changes: EMPTY,
-                        writeAsync,
-                        normalizePageAsync: vi.fn().mockResolvedValue(false),
-                    },
+                    useValue: { ...createCatalogueRoute(query), writeAsync },
                 },
             ],
         });
@@ -330,14 +324,15 @@ function setupLessonProviders(): void {
     });
 }
 
-function createCatalogueRoute(): LessonListQueryState {
-    const initial: LessonListQuery = { page: 1, search: '', category: null, difficulty: null, sort: 'recommended' };
+function createCatalogueRoute(bookmark?: LessonListQuery): LessonListQueryState {
+    const initial: LessonListQuery = bookmark ?? { page: 1, search: '', category: null, difficulty: null, sort: 'recommended' };
     const current = signal(initial, { equal: (left, right) => lessonListQueryKey(left) === lessonListQueryKey(right) });
     const commitAsync = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
     return {
         initial,
         current,
         changes: EMPTY,
+        isCurrent: query => lessonListQueryKey(query) === lessonListQueryKey(current()),
         writeAsync: async (query): Promise<boolean> => {
             current.set(query);
             return commitAsync();

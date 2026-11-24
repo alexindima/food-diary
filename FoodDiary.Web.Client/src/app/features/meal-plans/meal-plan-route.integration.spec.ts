@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -100,10 +100,13 @@ function setupMealPlans(getRecipe = vi.fn<RecipeLookup['getById']>()): MealPlans
     };
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                { path: 'meal-plans', children: mealPlanRoutes },
-                { path: 'shopping-lists', component: MealPlanShoppingDestinationComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'meal-plans', children: mealPlanRoutes },
+                    { path: 'shopping-lists', component: MealPlanShoppingDestinationComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),

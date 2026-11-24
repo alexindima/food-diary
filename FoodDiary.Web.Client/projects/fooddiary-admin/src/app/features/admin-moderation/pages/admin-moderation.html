@@ -1,7 +1,7 @@
 <div class="admin-moderation">
     <fd-admin-moderation-navigation active="/moderation" />
     <div class="admin-filter-bar">
-        <fd-admin-period [inline]="true" />
+        <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
         <fd-ui-select
             [label]="'ADMIN_MODERATION.STATUS' | translate"
             [value]="statusFilter()"
@@ -15,23 +15,23 @@
         />
         <fd-ui-select
             [label]="'ADMIN_MODERATION.TYPE' | translate"
-            [value]="targetType()"
+            [value]="draftTargetType()"
             [options]="[
                 { value: '', label: 'ADMIN_COMMON.ALL' | translate },
                 { value: 'Recipe', label: 'ADMIN_MODERATION.RECIPE' | translate },
                 { value: 'Comment', label: 'ADMIN_MODERATION.COMMENT' | translate },
             ]"
-            (valueChange)="targetType.set($event?.toString() ?? '')"
+            (valueChange)="draftTargetType.set($event?.toString() ?? '')"
         />
         <fd-ui-input
             [label]="'ADMIN_MODERATION.REPORTER_ID' | translate"
-            [value]="reporterId()"
-            (valueChange)="reporterId.set($event?.toString() ?? '')"
+            [value]="draftReporterId()"
+            (valueChange)="draftReporterId.set($event?.toString() ?? '')"
         />
         <fd-ui-input
             [label]="'ADMIN_MODERATION.TARGET_ID' | translate"
-            [value]="targetId()"
-            (valueChange)="targetId.set($event?.toString() ?? '')"
+            [value]="draftTargetId()"
+            (valueChange)="draftTargetId.set($event?.toString() ?? '')"
         />
         <fd-ui-button (click)="applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
     </div>
@@ -85,6 +85,11 @@
             </tbody>
         </table>
 
-        <fd-ui-pagination [length]="totalItems()" [pageSize]="limit" [pageIndex]="page() - 1" (pageIndexChange)="goToPage($event + 1)" />
+        <fd-ui-pagination
+            [length]="totalItems()"
+            [pageSize]="limit"
+            [pageIndex]="pageNumber() - 1"
+            (pageIndexChange)="goToPage($event + 1)"
+        />
     }
 </div>

@@ -6,6 +6,7 @@ import {
     effect,
     type ElementRef,
     inject,
+    input,
     signal,
     viewChild,
 } from '@angular/core';
@@ -52,6 +53,10 @@ import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { RecipeCardViewModel } from '../../lib/recipe-list.types';
 import { RECIPE_LIST_TOUR } from './recipe-list-tour';
 
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
+
 @Component({
     selector: 'fd-recipe-list',
     templateUrl: './recipe-list.html',
@@ -80,6 +85,15 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
     ],
 })
 export class RecipeListComponent {
+    public readonly page = input(undefined, { transform: firstQueryValue });
+    public readonly search = input(undefined, { transform: firstQueryValue });
+    public readonly onlyMine = input(undefined, { transform: firstQueryValue });
+    public readonly category = input(undefined, { transform: firstQueryValue });
+    public readonly maxTotalTime = input(undefined, { transform: firstQueryValue });
+    public readonly caloriesFrom = input(undefined, { transform: firstQueryValue });
+    public readonly caloriesTo = input(undefined, { transform: firstQueryValue });
+    public readonly hasImage = input(undefined, { transform: firstQueryValue });
+
     private readonly translateService = inject(TranslateService);
     private readonly currentLanguage = injectCurrentLanguage();
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -141,6 +155,22 @@ export class RecipeListComponent {
     protected readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
 
     public constructor() {
+        this.routeState.bind(
+            computed(() =>
+                readRecipeListQuery(
+                    convertToParamMap({
+                        page: this.page() ?? null,
+                        search: this.search() ?? null,
+                        onlyMine: this.onlyMine() ?? null,
+                        category: this.category() ?? null,
+                        maxTotalTime: this.maxTotalTime() ?? null,
+                        caloriesFrom: this.caloriesFrom() ?? null,
+                        caloriesTo: this.caloriesTo() ?? null,
+                        hasImage: this.hasImage() ?? null,
+                    }),
+                ),
+            ),
+        );
         const router = inject(Router);
         const fields = ['search', 'page', 'onlyMine', 'category', 'maxTotalTime', 'caloriesFrom', 'caloriesTo', 'hasImage'];
         connectDevelopmentScreen({

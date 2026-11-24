@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,6 +20,10 @@ type LandingAuthRequest = {
     adminReturnUrl: string | null;
 };
 
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
+
 @Component({
     selector: 'fd-main',
     imports: [
@@ -35,6 +39,10 @@ type LandingAuthRequest = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
+    public readonly auth = input(undefined, { transform: firstQueryValue });
+    public readonly returnUrl = input(undefined, { transform: firstQueryValue });
+    public readonly adminReturnUrl = input(undefined, { transform: firstQueryValue });
+
     private readonly authService = inject(AuthService);
     private readonly authDialogService = inject(PublicAuthDialogService);
     private readonly navigationService = inject(NavigationService);
@@ -45,6 +53,16 @@ export class MainComponent {
     protected readonly seoGuides = LANDING_SEO_GUIDES;
     private authDialogOpen = false;
     private authRequest: LandingAuthRequest | null = null;
+    private readonly requestedAuth = computed((): LandingAuthRequest | null => {
+        const authParam = this.auth();
+        if (authParam === undefined) {
+            return null;
+        }
+        const mode = authParam === 'register' ? 'register' : 'login';
+        const returnUrl = this.returnUrl() ?? null;
+        const adminReturnUrl = this.adminReturnUrl() ?? null;
+        return { key: JSON.stringify({ mode, returnUrl, adminReturnUrl }), mode, returnUrl, adminReturnUrl };
+    });
 
     public constructor() {
         effect(() => {
@@ -52,31 +70,26 @@ export class MainComponent {
                 return;
             }
 
-            if (this.authDialogOpen || this.route.snapshot.queryParamMap.has('auth')) {
+            if (this.authDialogOpen || this.auth() !== undefined) {
                 return;
             }
 
             void this.navigationService.navigateToHomeAsync();
         });
 
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            const authParam = params.get('auth');
-            if (authParam === null) {
+        effect(() => {
+            const request = this.requestedAuth();
+            if (request === null) {
                 this.authRequest = null;
                 return;
             }
-
-            const mode: PublicAuthMode = authParam === 'register' ? 'register' : 'login';
-            const returnUrl = params.get('returnUrl');
-            const adminReturnUrl = params.get('adminReturnUrl');
-            const key = JSON.stringify({ mode, returnUrl, adminReturnUrl });
-            if (this.authRequest?.key === key) {
+            if (this.authRequest?.key === request.key) {
                 return;
             }
-
-            const request = { key, mode, returnUrl, adminReturnUrl };
             this.authRequest = request;
-            void this.openAuthDialogAsync(request);
+            untracked(() => {
+                void this.openAuthDialogAsync(request);
+            });
         });
     }
 
@@ -92,7 +105,7 @@ export class MainComponent {
             returnUrl,
             adminReturnUrl,
             destroyRef: this.destroyRef,
-            canOpen: () => this.authRequest === request,
+            canOpen: () => this.authRequest === request && this.requestedAuth()?.key === request.key,
         });
         if (dialogRef === null || this.destroyRef.destroyed) {
             this.authDialogOpen = false;

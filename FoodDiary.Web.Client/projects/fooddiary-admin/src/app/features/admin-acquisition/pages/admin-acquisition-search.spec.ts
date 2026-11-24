@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
@@ -18,7 +18,7 @@ const UNAVAILABLE = 503;
 const HOUR_MS = 3_600_000;
 
 describe('AdminAcquisition search boundaries and error recovery', () => {
-    let fixture: ComponentFixture<AdminAcquisitionComponent>;
+    let fixture: RouterTestingHarness;
     const getRange: RangeRequest = vi.fn(params => of(emptyRange(params)));
 
     beforeEach(async () => {
@@ -26,16 +26,22 @@ describe('AdminAcquisition search boundaries and error recovery', () => {
         getRange.mockImplementation(params => of(emptyRange(params)));
         await TestBed.configureTestingModule({
             imports: [AdminAcquisitionComponent],
-            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAcquisitionFacade, useValue: { getRange } }],
+            providers: [
+                provideRouter(
+                    [{ path: '', component: AdminAcquisitionComponent }],
+                    withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+                ),
+                ...provideTranslateTesting(),
+                { provide: AdminAcquisitionFacade, useValue: { getRange } },
+            ],
         }).compileComponents();
-        fixture = TestBed.createComponent(AdminAcquisitionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
+        fixture = await RouterTestingHarness.create('/');
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
     });
 
     it('limits the native search field to the API boundary', () => {
-        const search = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input#acquisition-event-search');
+        const search = fixture.routeNativeElement?.querySelector<HTMLInputElement>('input#acquisition-event-search');
         expect(search?.maxLength).toBe(SEARCH_LIMIT);
     });
 
@@ -45,21 +51,35 @@ describe('AdminAcquisition search boundaries and error recovery', () => {
             await verifyEditableRecoveryAsync(fixture, getRange, status);
         },
     );
+
+    it('retries the search draft while keeping the applied search in the URL', async () => {
+        getRange.mockImplementationOnce(() => throwError(() => new HttpErrorResponse({ status: UNAVAILABLE })));
+        await fixture.navigateByUrl('/?period=7d&search=applied');
+        await fixture.fixture.whenStable();
+        const search = fixture.routeNativeElement?.querySelector<HTMLInputElement>('input#acquisition-event-search');
+        const retry = fixture.routeNativeElement?.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+        if (search === null || search === undefined || retry === null || retry === undefined) {
+            throw new Error('Expected an editable search field and a retry button');
+        }
+        search.value = 'draft';
+        search.dispatchEvent(new Event('input', { bubbles: true }));
+        retry.click();
+        await fixture.fixture.whenStable();
+
+        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ search: 'draft' }));
+        expect(TestBed.inject(Router).url).toBe('/?period=7d&search=applied');
+    });
 });
 
-async function verifyEditableRecoveryAsync(
-    fixture: ComponentFixture<AdminAcquisitionComponent>,
-    getRange: RangeRequest,
-    status: number,
-): Promise<void> {
+async function verifyEditableRecoveryAsync(fixture: RouterTestingHarness, getRange: RangeRequest, status: number): Promise<void> {
     const original = status === BAD_REQUEST ? 'q'.repeat(SEARCH_LIMIT + 1) : 'retryable';
     getRange.mockImplementationOnce(() => throwError(() => new HttpErrorResponse({ status })));
     await TestBed.inject(Router).navigate([], {
         queryParams: { period: '7d', search: original, eventType: 'page_landing', channel: 'tracked', page: 2 },
     });
-    await fixture.whenStable();
+    await fixture.fixture.whenStable();
     fixture.detectChanges();
-    const element = fixture.nativeElement as HTMLElement;
+    const element = fixture.routeNativeElement as HTMLElement;
     const search = element.querySelector<HTMLInputElement>('input#acquisition-event-search');
     expect(element.querySelector('[role=alert]')).not.toBeNull();
     expect(search, 'failed reports must retain an editable search filter').not.toBeNull();
@@ -74,7 +94,7 @@ async function verifyEditableRecoveryAsync(
     const apply = element.querySelector<HTMLButtonElement>('.admin-filter-bar fd-ui-button button');
     expect(apply).toBeDefined();
     apply?.click();
-    await fixture.whenStable();
+    await fixture.fixture.whenStable();
     fixture.detectChanges();
     expect(getRange).toHaveBeenLastCalledWith(
         expect.objectContaining({ search: 'recovered', eventType: 'page_landing', channel: 'tracked', page: 1 }),

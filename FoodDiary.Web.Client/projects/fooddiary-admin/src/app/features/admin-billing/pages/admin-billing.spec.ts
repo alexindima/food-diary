@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -31,23 +32,28 @@ type BillingTestContext = {
     billingApi: BillingApiMock;
     billing: AdminBillingFacade;
     component: AdminBillingComponent;
-    fixture: ComponentFixture<AdminBillingComponent>;
+    fixture: RouterTestingHarness['fixture'];
 };
 
 async function setupBillingAsync(billingApi: BillingApiMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
-        imports: [AdminBillingComponent],
         providers: [
-            provideRouter([]),
+            provideRouter(
+                [{ path: '', component: AdminBillingComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
-            AdminBillingFacade,
             { provide: AdminBillingService, useValue: billingApi },
         ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(AdminBillingComponent);
-    const component = fixture.componentInstance;
-    const billing = TestBed.inject(AdminBillingFacade);
+    const harness = await RouterTestingHarness.create();
+    const component = await harness.navigateByUrl('/', AdminBillingComponent);
+    const fixture = harness.fixture;
+    const billing = harness.routeDebugElement?.injector.get(AdminBillingFacade);
+    if (billing === undefined) {
+        throw new Error('Expected the billing page facade');
+    }
     fixture.detectChanges();
 
     return { billingApi, billing, component, fixture };
@@ -139,22 +145,23 @@ describe('AdminBillingComponent loading', () => {
         [TWO_DECIMAL_AMOUNT, '7.99 BHD'],
         [0, '0.00 BHD'],
     ])('should preserve payment precision for %s', async (amount, expected) => {
-        const { billing, fixture } = await setupBillingAsync();
+        const api = createBillingServiceMock();
+        const payment: AdminBillingPayment = {
+            id: adminId<'billing-payment'>('payment-precision'),
+            userId: adminId<'user'>('user-1'),
+            userEmail: null,
+            provider: 'Stripe',
+            externalPaymentId: 'in_paid',
+            status: 'completed',
+            kind: 'transaction',
+            createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
+            amount,
+            currency: 'BHD',
+        };
+        api.getPayments.mockReturnValueOnce(of({ items: [payment], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 1 }));
+        const { billing, fixture } = await setupBillingAsync(api);
+        await TestBed.inject(Router).navigateByUrl('/?tab=payments');
         await fixture.whenStable();
-        billing.payments.set([
-            {
-                id: adminId<'billing-payment'>('payment-precision'),
-                userId: adminId<'user'>('user-1'),
-                userEmail: null,
-                provider: 'Stripe',
-                externalPaymentId: 'in_paid',
-                status: 'completed',
-                kind: 'transaction',
-                createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
-                amount,
-                currency: 'BHD',
-            },
-        ]);
 
         expect(billing.paymentItems()[0]?.amountText).toBe(expected);
     });
@@ -183,6 +190,7 @@ describe('AdminBillingComponent loading', () => {
         billingApi.getSubscriptions.mockReturnValueOnce(throwError(() => new Error('network')));
 
         billing.load();
+        await fixture.whenStable();
 
         expect(billing.subscriptions()).toEqual([]);
         expect(billing.totalItems()).toBe(0);
@@ -195,10 +203,11 @@ describe('AdminBillingComponent loading', () => {
         const pendingSubscriptions = new Subject<SubscriptionsPage>();
         billingApi.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
         const { billing, fixture } = await setupBillingAsync(billingApi);
-        await fixture.whenStable();
+        expect(pendingSubscriptions.observed).toBe(true);
 
         billing.setTab('payments');
         await fixture.whenStable();
+        expect(pendingSubscriptions.observed).toBe(false);
         pendingSubscriptions.next({
             ...subscriptionsPage,
             totalItems: 99,
@@ -421,6 +430,7 @@ describe('Billing record and revenue failures', () => {
         const refresh = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'Refresh');
         expect(refresh).toBeDefined();
         refresh?.click();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('Failed to load billing records.');
@@ -533,9 +543,10 @@ describe('Admin cancellation report', () => {
             }),
         );
         const { billing, fixture } = await setupBillingAsync(api);
+        await fixture.whenStable();
         api.getRevenueSummary.mockClear();
-        billing.activeTab.set('cancellations');
-        billing.load();
+        await TestBed.inject(Router).navigateByUrl('/?tab=cancellations');
+        await fixture.whenStable();
         expect(api.getRevenueSummary).not.toHaveBeenCalled();
         fixture.detectChanges();
         expect(api.getCancellations).toHaveBeenCalledOnce();

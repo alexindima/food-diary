@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -30,16 +29,18 @@ export class EmailVerificationPendingComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly realtimeService = inject(EmailVerificationRealtimeService);
-    private readonly route = inject(ActivatedRoute);
     private readonly cooldown = inject(EmailVerificationCooldownService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly pageWork = new Subscription();
-    private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
     private readonly userId = this.authService.getUserId();
     private autoResendAttempted = false;
     private verificationCompleted = false;
     private cooldownIntervalId: number | null = null;
+
+    public readonly autoResend = input(false, {
+        transform: (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) === 'true',
+    });
 
     protected readonly email = signal<string | null>(null);
     protected readonly statusMessage = signal<string | null>(null);
@@ -64,7 +65,13 @@ export class EmailVerificationPendingComponent {
         );
         this.startResendCooldown();
         this.startRealtime();
-        this.loadCurrentUser();
+        effect(() => {
+            untracked(() => {
+                if (this.ensureCurrentOwner()) {
+                    this.loadCurrentUser(this.autoResend());
+                }
+            });
+        });
     }
 
     protected onRefreshStatus(): void {
@@ -160,8 +167,8 @@ export class EmailVerificationPendingComponent {
         this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESEND_ERROR'));
     }
 
-    private tryAutoResendEmail(): void {
-        if (!this.shouldAutoResend || this.autoResendAttempted || this.resendCooldownSeconds() > 0) {
+    private tryAutoResendEmail(shouldAutoResend: boolean): void {
+        if (!shouldAutoResend || this.autoResendAttempted || this.resendCooldownSeconds() > 0) {
             return;
         }
 
@@ -186,7 +193,7 @@ export class EmailVerificationPendingComponent {
         }, MS_PER_SECOND);
     }
 
-    private loadCurrentUser(): void {
+    private loadCurrentUser(shouldAutoResend: boolean): void {
         this.pageWork.add(
             this.userFacade
                 .getInfo()
@@ -206,7 +213,7 @@ export class EmailVerificationPendingComponent {
                         void this.navigationService.navigateToHomeAsync();
                     } else {
                         this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.INITIAL'));
-                        this.tryAutoResendEmail();
+                        this.tryAutoResendEmail(shouldAutoResend);
                     }
                 }),
         );

@@ -4,7 +4,7 @@ import { provideLocationMocks } from '@angular/common/testing';
 import type { DebugElement } from '@angular/core';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit';
 import { of, Subject } from 'rxjs';
@@ -31,7 +31,7 @@ beforeEach(() => {
     queryOverview.mockReset().mockImplementation(query => of(overview(query.page)));
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'recipes', component: RecipeListComponent }]),
+            provideRouter([{ path: 'recipes', component: RecipeListComponent }], withComponentInputBinding()),
             provideLocationMocks(),
             provideTranslateTesting(),
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: 0 },
@@ -48,7 +48,7 @@ beforeEach(() => {
 
 it('restores the full bookmarked query and keeps its page when signal form effects settle', async () => {
     const harness = await RouterTestingHarness.create(
-        '/recipes?page=2&search=Rice&onlyMine=false&category=soups&maxTotalTime=60&caloriesFrom=100&caloriesTo=1000&hasImage=false',
+        '/recipes?page=2&page=1&search=Rice&search=wrong&onlyMine=false&category=soups&maxTotalTime=60&caloriesFrom=100&caloriesTo=1000&hasImage=false',
     );
     await settleAsync(harness);
     expect(queryOverview).toHaveBeenCalledTimes(1);

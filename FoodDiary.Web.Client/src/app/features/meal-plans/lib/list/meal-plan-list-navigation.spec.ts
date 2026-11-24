@@ -48,7 +48,14 @@ beforeEach(() => {
             { provide: MealPlanService, useValue: { getPage } },
             {
                 provide: MEAL_PLAN_LIST_QUERY_STATE,
-                useValue: { initial, current, changes, writeAsync, normalizePageAsync: vi.fn().mockResolvedValue(false) },
+                useValue: {
+                    initial,
+                    current,
+                    changes,
+                    isCurrent: (query: MealPlanListQuery): boolean => mealPlanListQueryKey(query) === mealPlanListQueryKey(current()),
+                    writeAsync,
+                    normalizePageAsync: vi.fn().mockResolvedValue(false),
+                },
             },
         ],
     });

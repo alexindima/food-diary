@@ -1,8 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { BehaviorSubject, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../../services/auth.service';
@@ -19,7 +19,6 @@ let authServiceMock: {
     isAuthReady: ReturnType<typeof signal<boolean>>;
 };
 let navigationServiceMock: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
-let queryParamMapSubject: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
 let routerMock: { navigate: ReturnType<typeof vi.fn> };
 let routeStub: object;
 
@@ -35,21 +34,15 @@ beforeEach(() => {
     navigationServiceMock = {
         navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
-    queryParamMapSubject = new BehaviorSubject(convertToParamMap({}));
     routerMock = { navigate: vi.fn().mockResolvedValue(true) };
 });
 
 afterEach(() => {
     fixture.destroy();
-    queryParamMapSubject.complete();
     vi.clearAllMocks();
 });
 
-async function createComponentAsync(
-    path: string,
-    params: Record<string, string> = {},
-    queryParams: Record<string, string> = {},
-): Promise<void> {
+async function createComponentAsync(queryParams: Record<string, string | string[]> = {}): Promise<void> {
     TestBed.overrideComponent(MainComponent, {
         set: {
             imports: [],
@@ -57,14 +50,7 @@ async function createComponentAsync(
         },
     });
 
-    routeStub = {
-        queryParamMap: queryParamMapSubject.asObservable(),
-        snapshot: {
-            routeConfig: { path },
-            paramMap: convertToParamMap(params),
-            queryParamMap: convertToParamMap(queryParams),
-        },
-    };
+    routeStub = {};
 
     await TestBed.configureTestingModule({
         imports: [MainComponent],
@@ -77,8 +63,14 @@ async function createComponentAsync(
         ],
     }).compileComponents();
 
-    queryParamMapSubject.next(convertToParamMap(queryParams));
     fixture = TestBed.createComponent(MainComponent);
+    setAuthInputs(queryParams);
+}
+
+function setAuthInputs(queryParams: Record<string, string | string[]>): void {
+    for (const name of ['auth', 'returnUrl', 'adminReturnUrl']) {
+        fixture.componentRef.setInput(name, queryParams[name]);
+    }
 }
 
 async function createRenderedComponentAsync(): Promise<void> {
@@ -89,14 +81,7 @@ async function createRenderedComponentAsync(): Promise<void> {
         },
     });
 
-    routeStub = {
-        queryParamMap: queryParamMapSubject.asObservable(),
-        snapshot: {
-            routeConfig: { path: '' },
-            paramMap: convertToParamMap({}),
-            queryParamMap: convertToParamMap({}),
-        },
-    };
+    routeStub = {};
 
     await TestBed.configureTestingModule({
         deferBlockBehavior: DeferBlockBehavior.Manual,
@@ -157,7 +142,7 @@ describe('MainComponent deferred preview', () => {
 
 describe('MainComponent', () => {
     it('opens auth dialog from auth query param with return query params', async () => {
-        await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard', adminReturnUrl: '/users' });
+        await createComponentAsync({ auth: ['login', 'register'], returnUrl: '/dashboard', adminReturnUrl: '/users' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -173,7 +158,7 @@ describe('MainComponent', () => {
     });
 
     it('opens register dialog from auth query param', async () => {
-        await createComponentAsync('', {}, { auth: 'register' });
+        await createComponentAsync({ auth: 'register' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -190,20 +175,21 @@ describe('MainComponent', () => {
 
     it('does not reopen auth dialog for duplicate auth query param emissions', async () => {
         const authParams = { auth: 'login', returnUrl: '/dashboard' };
-        await createComponentAsync('', {}, authParams);
+        await createComponentAsync(authParams);
 
         fixture.detectChanges();
         await vi.waitFor(() => {
             expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
         });
 
-        queryParamMapSubject.next(convertToParamMap(authParams));
+        setAuthInputs(authParams);
+        fixture.detectChanges();
 
         expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
     });
 
     it('does not open auth dialog without auth query param', async () => {
-        await createComponentAsync('');
+        await createComponentAsync();
 
         fixture.detectChanges();
 
@@ -212,7 +198,7 @@ describe('MainComponent', () => {
 
     it('redirects to dashboard if landing is mounted while authenticated', async () => {
         authServiceMock.isAuthenticated.set(true);
-        await createComponentAsync('');
+        await createComponentAsync();
 
         fixture.detectChanges();
 
@@ -220,7 +206,7 @@ describe('MainComponent', () => {
     });
 
     it('clears auth query params when dialog closes', async () => {
-        await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard' });
+        await createComponentAsync({ auth: 'login', returnUrl: '/dashboard' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -236,7 +222,7 @@ describe('MainComponent', () => {
 
     it('does not clear auth query params after successful authentication redirects away', async () => {
         authServiceMock.isAuthenticated.set(true);
-        await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard' });
+        await createComponentAsync({ auth: 'login', returnUrl: '/dashboard' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -251,14 +237,15 @@ describe('MainComponent', () => {
 describe('MainComponent auth dialog cancellation', () => {
     it('allows a later auth dialog when lazy dialog loading is cancelled', async () => {
         authDialogServiceMock.openAsync.mockResolvedValueOnce(null).mockResolvedValueOnce({ afterClosed: () => of(void 0) });
-        await createComponentAsync('', {}, { auth: 'login' });
+        await createComponentAsync({ auth: 'login' });
 
         fixture.detectChanges();
         await vi.waitFor(() => {
             expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
         });
 
-        queryParamMapSubject.next(convertToParamMap({ auth: 'register' }));
+        setAuthInputs({ auth: 'register' });
+        fixture.detectChanges();
 
         await vi.waitFor(() => {
             expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(2);

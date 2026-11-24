@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -40,7 +40,7 @@ afterEach(() => {
 async function renderRecommendationsAsync(url = RECOMMENDATIONS_PATH): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'recommendations', children: recommendationsRoutes }]),
+            provideRouter([{ path: 'recommendations', children: recommendationsRoutes }], withComponentInputBinding()),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -131,7 +131,9 @@ const secondTask = {
 
 describe('Recommendation discussions on the lazy route', () => {
     it('switches from a deep-linked unread discussion without leaving its old request active', async () => {
-        const harness = await renderRecommendationsAsync(`${RECOMMENDATIONS_PATH}?recommendationId=${FIRST_RECOMMENDATION_ID}`);
+        const harness = await renderRecommendationsAsync(
+            `${RECOMMENDATIONS_PATH}?recommendationId=${FIRST_RECOMMENDATION_ID}&recommendationId=${SECOND_RECOMMENDATION_ID}`,
+        );
         const http = TestBed.inject(HttpTestingController);
         expectList(http, TASKS_URL).flush([]);
         loadRecommendations(http);
@@ -186,6 +188,9 @@ describe('Recommendation discussions on the lazy route', () => {
         expect(root.querySelector('fd-recommendation-thread')?.textContent).toContain('client@example.test');
         expect(root.querySelector('fd-recommendation-thread')?.textContent).toContain('Thank you for the dinner suggestion.');
         expect(composer.value).toBe('');
+
+        await harness.navigateByUrl(RECOMMENDATIONS_PATH);
+        expect(view(harness).querySelector('fd-recommendation-thread')).toBeNull();
     });
 });
 

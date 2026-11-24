@@ -6,6 +6,7 @@ import type { ProductListQuery } from './product-list-query';
 export type ProductListQueryState = {
     readonly initial: ProductListQuery;
     readonly changes: Observable<ProductListQuery>;
+    matchesCommittedQuery?: (query: ProductListQuery) => boolean;
     writeAsync: (query: ProductListQuery, options?: { replaceUrl?: boolean }) => Promise<boolean>;
     normalizePageAsync?: (query: ProductListQuery) => Promise<boolean>;
 };

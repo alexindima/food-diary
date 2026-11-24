@@ -1,13 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { convertToParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { adminPeriod, adminPeriodParams } from '../../../shared/period/admin-period';
+import { adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
+import { firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminRetentionFacade } from '../lib/admin-retention.facade';
 
 const PERCENT_SCALE = 100;
@@ -21,16 +22,34 @@ const PERCENT_SCALE = 100;
     host: { class: 'fd-grid fd-gap-md' },
 })
 export class AdminRetentionComponent {
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly api = inject(AdminRetentionFacade);
     private readonly translate = inject(TranslateService);
-    private readonly query = toSignal(inject(ActivatedRoute).queryParamMap, { requireSync: true });
+    private readonly activityPeriod = computed(() =>
+        adminPeriod(
+            convertToParamMap({
+                period: this.activity_period() ?? null,
+                from: this.activity_from() ?? null,
+                to: this.activity_to() ?? null,
+            }),
+            '30d',
+        ),
+    );
+    private readonly cohortPeriod = computed(() =>
+        adminPeriod(convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }), '90d'),
+    );
     private readonly retryVersion = signal(0);
     private readonly reportResource = rxResource({
         params: () => {
             this.retryVersion();
-            const query = this.query();
-            const range = adminPeriod(adminPeriodParams(query, 'activity_'), '30d');
-            const cohorts = adminPeriod(query, '90d');
+            const range = this.activityPeriod();
+            const cohorts = this.cohortPeriod();
             if (range === null || cohorts === null) {
                 return;
             }

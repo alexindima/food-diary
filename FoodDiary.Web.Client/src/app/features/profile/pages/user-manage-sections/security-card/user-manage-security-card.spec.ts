@@ -103,7 +103,7 @@ describe('UserManageSecurityCardComponent', () => {
     });
 
     it('formats session timestamps in the selected language and updates them when the language changes', async () => {
-        await verifySessionDateLocalesAsync(await createFixtureAsync(true));
+        await verifySessionDateLocalesAsync();
     });
 
     it('keeps known sessions after a failed revoke and recovers through a scoped retry', async () => {
@@ -162,24 +162,21 @@ describe('Profile Google connection startup', () => {
         expect(host.textContent).toContain('USER_MANAGE.GOOGLE_CONNECTED_AS');
     });
 });
-async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManageSecurityCardComponent>): Promise<void> {
+async function verifySessionDateLocalesAsync(): Promise<void> {
     registerLocaleData(localeRu);
-    const translate = TestBed.inject(TranslateService);
     const timestamp = utcInstant('2026-10-02T19:37:23Z');
-    fixture.componentInstance['activeSessions'].isLoading.set(false);
-    fixture.componentInstance['activeSessions'].error.set(null);
-    fixture.componentInstance['activeSessions'].sessions.set([
-        {
-            id: entityId<'refresh-token-session'>('current-session'),
-            isCurrent: true,
-            authProvider: 'password',
-            browser: 'Edge',
-            operatingSystem: 'Windows',
-            deviceType: 'Desktop',
-            createdAtUtc: utcInstant(timestamp),
-            lastActiveAtUtc: utcInstant(timestamp),
-        },
-    ]);
+    const session: ActiveSession = {
+        id: entityId<'refresh-token-session'>('current-session'),
+        isCurrent: true,
+        authProvider: 'password',
+        browser: 'Edge',
+        operatingSystem: 'Windows',
+        deviceType: 'Desktop',
+        createdAtUtc: timestamp,
+        lastActiveAtUtc: timestamp,
+    };
+    const fixture = await createFixtureAsync(true, { getAll: () => of([session]), revoke: () => of(undefined) });
+    const translate = TestBed.inject(TranslateService);
 
     for (const language of ['ru', 'en', 'ru']) {
         await firstValueFrom(translate.use(language));
@@ -245,6 +242,7 @@ async function verifySessionRecoveryUiAsync(): Promise<void> {
 
     retry.next([currentSession]);
     retry.complete();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(section.querySelectorAll('.user-manage__login-method')).toHaveLength(1);
@@ -264,17 +262,15 @@ function sessionButton(section: Element, label: string): HTMLButtonElement {
 
 async function createFixtureAsync(
     hasGoogleIdentity: boolean,
-    sessionApi?: Pick<ActiveSessionsService, 'getAll' | 'revoke'>,
+    sessionApi: Pick<ActiveSessionsService, 'getAll' | 'revoke'> = emptySessionsApi,
 ): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
     const testingModule = TestBed.configureTestingModule({
         imports: [UserManageSecurityCardComponent],
         providers: [provideTranslateTesting(), provideRouter([]), { provide: GoogleIdentityService, useValue: googleIdentityService }],
     });
-    if (sessionApi !== undefined) {
-        testingModule.overrideComponent(UserManageSecurityCardComponent, {
-            add: { providers: [{ provide: ActiveSessionsService, useValue: sessionApi }] },
-        });
-    }
+    testingModule.overrideComponent(UserManageSecurityCardComponent, {
+        add: { providers: [{ provide: ActiveSessionsService, useValue: sessionApi }] },
+    });
     await testingModule.compileComponents();
 
     const fixture = TestBed.createComponent(UserManageSecurityCardComponent);
@@ -290,3 +286,8 @@ async function createFixtureAsync(
     fixture.detectChanges();
     return fixture;
 }
+
+const emptySessionsApi: Pick<ActiveSessionsService, 'getAll' | 'revoke'> = {
+    getAll: () => of([]),
+    revoke: () => of(undefined),
+};

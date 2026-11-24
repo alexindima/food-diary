@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDateInputComponent } from 'fd-ui-kit';
 import { of } from 'rxjs';
@@ -42,7 +42,10 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting(),
-            provideRouter([{ path: 'dashboard', children: adminDashboardRoutes }]),
+            provideRouter(
+                [{ path: 'dashboard', children: adminDashboardRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             { provide: AdminDashboardService, useValue: { getOverview } },
             {
                 provide: AdminAuthService,

@@ -1,6 +1,5 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -65,7 +64,6 @@ beforeEach(() => {
         imports: [EmailVerificationPendingComponent],
         providers: [
             ...provideTranslateTesting(),
-            { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({}) } } },
             { provide: UserFacade, useValue: { getInfo } },
             {
                 provide: AuthService,
@@ -139,6 +137,18 @@ describe('Email verification realtime presentation', () => {
 });
 
 describe('Email verification realtime ownership', () => {
+    it('does not load the profile or resend if the session is replaced before the first render', () => {
+        fixture = TestBed.createComponent(EmailVerificationPendingComponent);
+        fixture.componentRef.setInput('autoResend', 'true');
+        currentUserId.set(entityId<'user'>('replacement-user'));
+        TestBed.inject(SessionEventsService).notifyAuthenticated();
+
+        fixture.detectChanges();
+
+        expect(getInfo).not.toHaveBeenCalled();
+        expect(resend).not.toHaveBeenCalled();
+    });
+
     it('disconnects its completed connection when the page is destroyed', async () => {
         await renderPageAsync();
 
@@ -586,12 +596,9 @@ describe('Email verification cooldown ownership', () => {
 
 describe('Email verification recovery through the rendered controls', () => {
     it('keeps a failed automatic resend quiet and lets the user recheck and resend explicitly', async () => {
-        TestBed.overrideProvider(ActivatedRoute, {
-            useValue: { snapshot: { queryParamMap: convertToParamMap({ autoResend: 'true' }) } },
-        });
         const automatic = new Subject<void>();
         resend.mockReturnValueOnce(automatic);
-        const root = await renderPageAsync();
+        const root = await renderPageAsync('true');
         const resendButton = findButton(root, 'AUTH.VERIFY_PENDING.RESEND');
         expect(resend).toHaveBeenCalledOnce();
         expect(automatic.observed).toBe(true);
@@ -635,8 +642,11 @@ describe('Email verification recovery through the rendered controls', () => {
     });
 });
 
-async function renderPageAsync(): Promise<HTMLElement> {
+async function renderPageAsync(autoResend?: string): Promise<HTMLElement> {
     fixture = TestBed.createComponent(EmailVerificationPendingComponent);
+    if (autoResend !== undefined) {
+        fixture.componentRef.setInput('autoResend', autoResend);
+    }
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();

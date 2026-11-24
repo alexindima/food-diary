@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -16,7 +16,7 @@ describe('AdminAcquisitionComponent', () => {
     const EXPECTED_TABLE_COUNT = 3;
     const SEVEN_DAYS_MS = 604_800_000;
 
-    let fixture: ComponentFixture<AdminAcquisitionComponent>;
+    let fixture: RouterTestingHarness;
     const summary = createSummary();
     const facade = {
         getRange: vi.fn((params: Record<string, string | number>) => of(createRange(summary, params))),
@@ -24,19 +24,13 @@ describe('AdminAcquisitionComponent', () => {
 
     beforeEach(async () => {
         facade.getRange.mockClear();
-        await TestBed.configureTestingModule({
-            imports: [AdminAcquisitionComponent],
-            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAcquisitionFacade, useValue: facade }],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(AdminAcquisitionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
+        fixture = await createReportingFixtureAsync(facade.getRange);
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
     });
 
     it('renders analysis-first KPIs and comparable tables', () => {
-        const element = fixture.nativeElement as HTMLElement;
+        const element = fixture.routeNativeElement as HTMLElement;
 
         expect(element.textContent).toContain('Tracked visits');
         expect(element.textContent).toContain('50.0%');
@@ -49,9 +43,9 @@ describe('AdminAcquisitionComponent', () => {
 
     it('shows all-time totals without inventing a comparison with dates before the epoch', async () => {
         await TestBed.inject(Router).navigate([], { queryParams: { period: 'all' } });
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
-        const comparison = (fixture.nativeElement as HTMLElement).querySelector('fd-admin-acquisition-comparison');
+        const comparison = fixture.routeNativeElement?.querySelector('fd-admin-acquisition-comparison');
         expect(comparison?.textContent).not.toContain('Δ');
         expect(comparison?.querySelectorAll(':scope > p')).toHaveLength(1);
         const values = Array.from(comparison?.querySelectorAll('fd-ui-card p') ?? []).map(element => element.textContent.trim());
@@ -60,14 +54,14 @@ describe('AdminAcquisitionComponent', () => {
 
     it('reloads data when the reporting period changes', async () => {
         await TestBed.inject(Router).navigate([], { queryParams: { period: '7d' } });
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         const params = facade.getRange.mock.lastCall?.[0];
         expect(Date.parse(String(params?.['toUtc'])) - Date.parse(String(params?.['fromUtc']))).toBe(SEVEN_DAYS_MS);
     });
 
     it('filters the event log by attribution state', async () => {
         stubScrollIntoView();
-        const element = fixture.nativeElement as HTMLElement;
+        const element = fixture.routeNativeElement as HTMLElement;
         const select = element.querySelector<HTMLButtonElement>('button#admin-acquisition-channel');
         expect(select).not.toBeNull();
         select?.click();
@@ -77,7 +71,7 @@ describe('AdminAcquisitionComponent', () => {
         );
         expect(option).toBeDefined();
         option?.click();
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
 
         expect(facade.getRange).toHaveBeenLastCalledWith(expect.objectContaining({ channel: 'tracked', page: 1 }));
@@ -90,9 +84,9 @@ describe('AdminAcquisitionComponent', () => {
         facade.getRange.mockImplementationOnce(params => of(createRange(createTiedSummary(summary), params)));
         try {
             await TestBed.inject(Router).navigate([], { queryParams: { search: 'tied-events' } });
-            await fixture.whenStable();
+            await fixture.fixture.whenStable();
             fixture.detectChanges();
-            assertTiedJournalRows(fixture.nativeElement as HTMLElement);
+            assertTiedJournalRows(fixture.routeNativeElement as HTMLElement);
             expect(warning.mock.calls.some(call => call.some(value => /NG095[56]/u.test(String(value))))).toBe(false);
         } finally {
             warning.mockRestore();
@@ -104,9 +98,9 @@ describe('Acquisition reporting boundaries', () => {
     it('hides stale journal results and aborts the pending leap-day report when the URL range becomes invalid', async () => {
         const pending = new Subject<MarketingAttributionRange>();
         const getRange = vi.fn().mockReturnValue(pending);
-        const fixture = createReportingFixture(getRange);
+        const fixture = await createReportingFixtureAsync(getRange);
         const router = TestBed.inject(Router);
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         await router.navigateByUrl('/?period=custom&from=2024-02-29&to=2024-02-29&eventType=unknown&channel=unknown');
         fixture.detectChanges();
         expect(getRange).toHaveBeenLastCalledWith(
@@ -134,16 +128,16 @@ describe('Acquisition reporting boundaries', () => {
                 eventTotal: 51,
             }),
         );
-        const fixture = createReportingFixture(getRange);
+        const fixture = await createReportingFixtureAsync(getRange);
         const router = TestBed.inject(Router);
         await router.navigateByUrl('/?period=7d&search=partner');
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         const next = Array.from(host.querySelectorAll('button')).find(button => button.textContent.includes('ADMIN_COMMON.NEXT'));
         expect(next).toBeDefined();
         next?.click();
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
 
         expect(router.parseUrl(router.url).queryParams).toMatchObject({ period: '7d', search: 'partner', page: '2' });
@@ -165,11 +159,11 @@ describe('Acquisition event selector', () => {
             const recentEvents = params['eventType'] === 'premium_started' ? [] : summary.recentEvents;
             return of(createRange({ ...summary, recentEvents }, params));
         });
-        const fixture = createReportingFixture(getRange);
+        const fixture = await createReportingFixtureAsync(getRange);
         const router = TestBed.inject(Router);
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         await router.navigateByUrl('/?period=7d&page=9&channel=tracked');
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
         expect(getRange).toHaveBeenCalledWith(expect.objectContaining({ page: 9, channel: 'tracked' }));
         expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, channel: 'tracked' }));
@@ -183,7 +177,7 @@ describe('Acquisition event selector', () => {
         const premium = Array.from(options).find(option => option.textContent.trim() === 'Premium starts');
         expect(premium).toBeDefined();
         premium?.click();
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         fixture.detectChanges();
 
         expect(router.parseUrl(router.url).queryParams).toMatchObject({
@@ -197,14 +191,19 @@ describe('Acquisition event selector', () => {
     });
 });
 
-function createReportingFixture(getRange: ReturnType<typeof vi.fn>): ComponentFixture<AdminAcquisitionComponent> {
+async function createReportingFixtureAsync(getRange: ReturnType<typeof vi.fn>): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         imports: [AdminAcquisitionComponent],
-        providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAcquisitionFacade, useValue: { getRange } }],
+        providers: [
+            provideRouter(
+                [{ path: '', component: AdminAcquisitionComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
+            ...provideTranslateTesting(),
+            { provide: AdminAcquisitionFacade, useValue: { getRange } },
+        ],
     });
-    const fixture = TestBed.createComponent(AdminAcquisitionComponent);
-    fixture.detectChanges();
-    return fixture;
+    return RouterTestingHarness.create('/');
 }
 
 function assertTiedJournalRows(element: HTMLElement): void {

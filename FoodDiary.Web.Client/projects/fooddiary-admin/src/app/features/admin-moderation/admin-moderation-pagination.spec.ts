@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, take } from 'rxjs';
 import { expect, it, vi } from 'vitest';
@@ -20,7 +20,10 @@ const filteredPage = { ...originalPage, totalItems: 0, totalPages: 1 };
 it('keeps the selected filter when an earlier Next click reaches a now-empty moderation list', async () => {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'moderation', children: adminModerationRoutes }]),
+            provideRouter(
+                [{ path: 'moderation', children: adminModerationRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -40,6 +43,7 @@ it('keeps the selected filter when an earlier Next click reaches a now-empty mod
     const initial = http.expectOne(request => request.url === API);
     expect(initial.request.params.get('status')).toBe('Pending');
     initial.flush(originalPage);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     const next = harness.routeNativeElement?.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
     if (next === null || next === undefined) {
@@ -56,11 +60,12 @@ it('keeps the selected filter when an earlier Next click reaches a now-empty mod
             take(1),
         )
         .subscribe(() => {
-            http.expectOne(request => request.url === API && request.params.get('targetId') === 'selected-recipe').flush(filteredPage);
             beforeRender(next.isConnected);
             next.click();
         });
     await router.navigateByUrl(filtered);
+    harness.detectChanges();
+    http.expectOne(request => request.url === API && request.params.get('targetId') === 'selected-recipe').flush(filteredPage);
     await harness.fixture.whenStable();
     harness.detectChanges();
 

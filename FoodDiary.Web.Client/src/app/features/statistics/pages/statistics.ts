@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import {
@@ -29,6 +29,7 @@ import { StatisticsOverviewCardComponent } from '../components/statistics-overvi
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { connectStatisticsDevelopmentScreen } from '../lib/statistics-development';
+import { firstStatisticsQueryValue } from '../lib/statistics-route-query';
 import { connectStatisticsRouteState } from '../lib/statistics-route-state';
 import { STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
 import { STATISTICS_TOUR } from './statistics-tour';
@@ -64,14 +65,23 @@ import { STATISTICS_TOUR } from './statistics-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsComponent {
+    public readonly range = input(null, { transform: firstStatisticsQueryValue });
+    public readonly nutritionTab = input(null, { transform: firstStatisticsQueryValue });
+    public readonly dateFrom = input(null, { transform: firstStatisticsQueryValue });
+    public readonly dateTo = input(null, { transform: firstStatisticsQueryValue });
+
     protected readonly facade = inject(StatisticsFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     public constructor() {
         connectStatisticsDevelopmentScreen(this.facade);
-        connectStatisticsRouteState(this.facade);
-        this.facade.initialize();
+        connectStatisticsRouteState(this.facade, () => ({
+            range: this.range(),
+            nutritionTab: this.nutritionTab(),
+            dateFrom: this.dateFrom(),
+            dateTo: this.dateTo(),
+        }));
     }
 
     protected readonly rangeTabs = STATISTICS_RANGE_TABS;

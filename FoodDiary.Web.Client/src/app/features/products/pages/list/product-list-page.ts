@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Injector, input } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -56,8 +56,30 @@ import { ProductListRouteStateFacade } from '../../lib/list/product-list-route-s
     ],
 })
 export class ProductListPageComponent extends ProductListBaseComponent {
+    public readonly search = input<string | string[]>();
+    public readonly page = input<string | string[]>();
+    public readonly onlyMine = input<string | string[]>();
+    public readonly types = input<string | string[]>();
+    public readonly caloriesFrom = input<string | string[]>();
+    public readonly caloriesTo = input<string | string[]>();
+    public readonly hasImage = input<string | string[]>();
+
     public constructor() {
         super();
+        const routeQuery = computed(() =>
+            readProductListQuery(
+                convertToParamMap({
+                    search: this.search() ?? null,
+                    page: this.page() ?? null,
+                    onlyMine: this.onlyMine() ?? null,
+                    types: this.types() ?? [],
+                    caloriesFrom: this.caloriesFrom() ?? null,
+                    caloriesTo: this.caloriesTo() ?? null,
+                    hasImage: this.hasImage() ?? null,
+                }),
+            ),
+        );
+        inject(ProductListRouteStateFacade).bind(routeQuery);
         const injector = inject(Injector);
         const fields = ['search', 'page', 'onlyMine', 'types', 'caloriesFrom', 'caloriesTo', 'hasImage'];
         connectDevelopmentScreen({

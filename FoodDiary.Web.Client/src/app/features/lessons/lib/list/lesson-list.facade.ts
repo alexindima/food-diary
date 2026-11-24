@@ -1,7 +1,7 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, type Observable, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, type Observable } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
@@ -113,8 +113,7 @@ export class LessonListFacade {
         return loaded?.key === this.listRequestKey(this.queryState.current(), this.getCurrentLocale()) ? loaded.page : null;
     }
 
-    private loadListPage(query: LessonListQuery & { locale: string }): Observable<LessonPage> {
-        const key = this.listRequestKey(query, query.locale);
+    private loadListPage(query: LessonListQuery & { locale: string }): Observable<LessonPage | null> {
         return this.service
             .getAll({
                 ...query,
@@ -124,18 +123,19 @@ export class LessonListFacade {
                 pageSize: LESSON_PAGE_SIZE,
             })
             .pipe(
-                tap(page => {
-                    if (
-                        !this.destroyRef.destroyed &&
-                        key === this.listRequestKey(this.queryState.current(), this.getCurrentLocale()) &&
-                        this.searchQuery().trim() === this.debouncedSearchQuery().trim()
-                    ) {
+                map(page => {
+                    if (this.destroyRef.destroyed || !this.queryState.isCurrent(query) || query.locale !== this.getCurrentLocale()) {
+                        return null;
+                    }
+                    if (this.searchQuery().trim() === this.debouncedSearchQuery().trim()) {
                         const resolved = resolvePaginationPage(query.page, page.totalPages);
                         if (resolved !== query.page) {
                             this.pageIndex.set(resolved - 1);
                             this.writeListQuery({ ...this.queryState.current(), page: resolved }, true);
+                            return null;
                         }
                     }
+                    return page;
                 }),
             );
     }

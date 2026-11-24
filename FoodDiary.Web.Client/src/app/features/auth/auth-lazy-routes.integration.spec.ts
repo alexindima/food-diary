@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/c
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { EMPTY, firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
@@ -171,11 +171,14 @@ function configureAuthRoutes(authenticated = false, requiresPasswordChange = fal
     TestBed.configureTestingModule({
         imports: [AuthComponent],
         providers: [
-            provideRouter([
-                ...authRoutes,
-                { path: 'dashboard', component: DashboardDestinationComponent },
-                { path: '', pathMatch: 'full', component: LoginDestinationComponent },
-            ]),
+            provideRouter(
+                [
+                    ...authRoutes,
+                    { path: 'dashboard', component: DashboardDestinationComponent },
+                    { path: '', pathMatch: 'full', component: LoginDestinationComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -443,6 +446,32 @@ describe('Mobile password reset cooldown lifetime', () => {
 });
 
 describe('Lazy verification routes', () => {
+    it.each([
+        { initialQuery: '?autoResend=true&autoResend=false', nextQuery: '', resends: 1 },
+        { initialQuery: '?autoResend=false&autoResend=true', nextQuery: '?autoResend=true', resends: 0 },
+    ])('keeps the initial auto-resend choice after navigation from $initialQuery', async ({ initialQuery, nextQuery, resends }) => {
+        const { auth, users } = configureAuthRoutes(true);
+        const pendingUser = new Subject<User | null>();
+        users.getInfo.mockReturnValueOnce(pendingUser.asObservable());
+        const harness = await RouterTestingHarness.create(`/verify-pending${initialQuery}`);
+        const pendingScreen = root(harness);
+        await vi.waitFor(() => {
+            expect(users.getInfo).toHaveBeenCalledOnce();
+        });
+        expect(auth.resendEmailVerification).not.toHaveBeenCalled();
+
+        await harness.navigateByUrl(`/verify-pending${nextQuery}`);
+        expect(root(harness)).toBe(pendingScreen);
+        expect(auth.resendEmailVerification).not.toHaveBeenCalled();
+        pendingUser.next({ ...signedInUser, isEmailConfirmed: false });
+        pendingUser.complete();
+        await harness.fixture.whenStable();
+
+        expect(users.getInfo).toHaveBeenCalledOnce();
+        expect(auth.setEmailConfirmed).toHaveBeenCalledExactlyOnceWith(false);
+        expect(auth.resendEmailVerification).toHaveBeenCalledTimes(resends);
+    });
+
     it('resends from the pending screen and follows manual confirmation to the diary', async () => {
         const { auth, users, realtime } = configureAuthRoutes(true);
         users.getInfo.mockReturnValueOnce(of({ ...signedInUser, isEmailConfirmed: false }));

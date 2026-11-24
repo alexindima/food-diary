@@ -1,6 +1,7 @@
 import { ApplicationRef } from '@angular/core';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -26,21 +27,21 @@ const overview: AdminDashboardOverview = {
     pendingReportsNow: 2,
 };
 
-async function renderDashboardAsync(
-    getOverview = vi.fn().mockReturnValue(of(overview)),
-): Promise<ComponentFixture<AdminDashboardComponent>> {
+async function renderDashboardAsync(getOverview = vi.fn().mockReturnValue(of(overview))): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         imports: [AdminDashboardComponent],
         providers: [
-            provideRouter([]),
+            provideRouter(
+                [{ path: '', component: AdminDashboardComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             AdminDashboardFacade,
             { provide: AdminDashboardService, useValue: { getOverview } },
         ],
     });
-    const fixture = TestBed.createComponent(AdminDashboardComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
+    const fixture = await RouterTestingHarness.create('/');
+    await fixture.fixture.whenStable();
     return fixture;
 }
 
@@ -113,7 +114,7 @@ describe('dashboard calendar validation', () => {
         getOverview.mockClear();
         await TestBed.inject(Router).navigateByUrl(`/?period=custom&from=${from}&to=${to}`);
         fixture.detectChanges();
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         expect(getOverview).not.toHaveBeenCalled();
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.INVALID');
         expect(host.querySelector('fd-admin-dashboard-content')).toBeNull();
@@ -125,7 +126,7 @@ describe('Admin dashboard page states', () => {
         const pending = new Subject<AdminDashboardOverview>();
         const getOverview = vi.fn().mockReturnValueOnce(of(overview)).mockReturnValueOnce(pending).mockReturnValue(of(overview));
         const fixture = await renderDashboardAsync(getOverview);
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         const content = 'fd-admin-dashboard-content';
         expect(host.querySelector(content)).not.toBeNull();
 
@@ -136,14 +137,14 @@ describe('Admin dashboard page states', () => {
         expect(host.querySelector(content)).toBeNull();
 
         pending.error(new Error('report unavailable'));
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.ERROR');
         expect(host.querySelector(content)).toBeNull();
 
         const refresh = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'ADMIN_OVERVIEW.REFRESH');
         expect(refresh).toBeDefined();
         refresh?.click();
-        await fixture.whenStable();
+        await fixture.fixture.whenStable();
         expect(getOverview).toHaveBeenLastCalledWith({ allTime: true });
         expect(host.querySelector('[role="alert"]')).toBeNull();
         expect(host.querySelector(content)).not.toBeNull();
@@ -154,7 +155,7 @@ describe('Admin dashboard page states', () => {
         const getOverview = vi.fn().mockReturnValue(of(overview));
         const fixture = await renderDashboardAsync(getOverview);
         const router = TestBed.inject(Router);
-        const host = fixture.nativeElement as HTMLElement;
+        const host = fixture.routeNativeElement as HTMLElement;
         getOverview.mockReturnValueOnce(pending);
         await router.navigateByUrl('/?period=custom&from=2024-02-29&to=2024-02-29');
         fixture.detectChanges();

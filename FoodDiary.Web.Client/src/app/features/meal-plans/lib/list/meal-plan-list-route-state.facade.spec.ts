@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { convertToParamMap, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { describe, expect, it } from 'vitest';
 
+import { readMealPlanListQuery } from './meal-plan-list-query';
 import { MealPlanListRouteStateFacade } from './meal-plan-list-route-state.facade';
 
 @Component({
@@ -12,12 +13,31 @@ import { MealPlanListRouteStateFacade } from './meal-plan-list-route-state.facad
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ListRoute {
+    public readonly page = input<string | string[]>();
+    public readonly dietType = input<string | string[]>();
+    public readonly source = input<string | string[]>();
     public readonly state = inject(MealPlanListRouteStateFacade);
+
+    public constructor() {
+        this.state.bind(
+            computed(() =>
+                readMealPlanListQuery(
+                    convertToParamMap({ page: this.page() ?? null, dietType: this.dietType() ?? null, source: this.source() ?? null }),
+                ),
+            ),
+        );
+    }
+}
+
+function setupRoute(): void {
+    TestBed.configureTestingModule({
+        providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }], withComponentInputBinding())],
+    });
 }
 
 describe('Meal plan list route query ownership', () => {
     it('restores saved plans from the URL and preserves source when changing diet', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
+        setupRoute();
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/meal-plans?source=saved&dietType=Balanced&page=2&campaign=qa', ListRoute);
         expect(page.state.initial).toEqual({ page: 2, dietType: 'Balanced', source: 'saved' });
@@ -26,7 +46,7 @@ describe('Meal plan list route query ownership', () => {
         expect(router.parseUrl(router.url).queryParams).toEqual({ source: 'saved', dietType: 'Keto', campaign: 'qa' });
     });
     it('writes the diet filter and page while preserving unrelated query keys', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
+        setupRoute();
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/meal-plans?page=2&dietType=Balanced&campaign=qa', ListRoute);
         const subscription = page.state.changes.subscribe();
@@ -35,12 +55,13 @@ describe('Meal plan list route query ownership', () => {
         const router = TestBed.inject(Router);
         expect(router.parseUrl(router.url).queryParams).toEqual({ dietType: 'Keto', campaign: 'qa' });
         await harness.navigateByUrl('/meal-plans?page=2&dietType=Balanced&campaign=qa', ListRoute);
+        await harness.fixture.whenStable();
         expect(page.state.current()).toEqual(page.state.initial);
         subscription.unsubscribe();
     });
 
     it('keeps the newest filter when routing cancels an older filter write', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
+        setupRoute();
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/meal-plans?dietType=Balanced&page=2&campaign=qa', ListRoute);
         const savedKeto = { page: 1, dietType: 'Keto', source: 'saved' } as const;
@@ -56,7 +77,7 @@ describe('Meal plan list route query ownership', () => {
     });
 
     it('normalizes invalid API pages and clears only its own keys when reset', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
+        setupRoute();
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/meal-plans?page=99999&dietType=Balanced&campaign=qa', ListRoute);
         const subscription = page.state.changes.subscribe();

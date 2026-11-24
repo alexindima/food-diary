@@ -7,6 +7,7 @@ import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LessonListFacade } from '../../lib/list/lesson-list.facade';
+import { LessonListRouteStateFacade } from '../../lib/list/lesson-list-route-state.facade';
 import type { LessonSummary } from '../../models/lesson.data';
 import { LessonsListPageComponent } from './lessons-list-page';
 
@@ -82,7 +83,12 @@ type FacadeStub = {
 
 function createComponent(facade: FacadeStub, router = createRouterStub()): LessonsListPageComponent {
     TestBed.configureTestingModule({
-        providers: [provideTranslateTesting(), { provide: LessonListFacade, useValue: facade }, { provide: Router, useValue: router }],
+        providers: [
+            provideTranslateTesting(),
+            { provide: LessonListFacade, useValue: facade },
+            { provide: LessonListRouteStateFacade, useValue: { bind: vi.fn() } },
+            { provide: Router, useValue: router },
+        ],
     });
 
     return TestBed.runInInjectionContext(() => new LessonsListPageComponent());

@@ -7,6 +7,7 @@ import {
     effect,
     type ElementRef,
     inject,
+    input,
     PLATFORM_ID,
     Renderer2,
     signal,
@@ -68,6 +69,10 @@ type ProfileSaveSnapshot = {
 };
 const MAX_PROFILE_HEIGHT_CM = 300;
 
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
+
 @Component({
     selector: 'fd-user-manage',
     imports: [
@@ -94,6 +99,9 @@ const MAX_PROFILE_HEIGHT_CM = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent {
+    public readonly intent = input(undefined, { transform: firstQueryValue });
+    public readonly googleLink = input(undefined, { transform: firstQueryValue });
+
     private readonly dietologist = inject(ProfileDietologistFacade);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
@@ -234,21 +242,25 @@ export class UserManageComponent {
     }
 
     private watchPasswordSetupIntent(): void {
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            this.pendingPasswordSetupIntent.set(params.get('intent') === 'set-password');
+        effect(() => {
+            this.pendingPasswordSetupIntent.set(this.intent() === 'set-password');
         });
     }
 
     private watchGoogleLinkResult(): void {
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            const result = params.get('googleLink');
-            if (result === 'success') {
-                this.toastService.success(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_SUCCESS'));
-                void this.clearGoogleLinkQueryParamAsync();
-            } else if (result === 'failed') {
-                this.toastService.error(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_ERROR'));
-                void this.clearGoogleLinkQueryParamAsync();
+        effect(() => {
+            const result = this.googleLink();
+            if (result !== 'success' && result !== 'failed') {
+                return;
             }
+            untracked(() => {
+                if (result === 'success') {
+                    this.toastService.success(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_SUCCESS'));
+                } else {
+                    this.toastService.error(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_ERROR'));
+                }
+                void this.clearGoogleLinkQueryParamAsync();
+            });
         });
     }
 

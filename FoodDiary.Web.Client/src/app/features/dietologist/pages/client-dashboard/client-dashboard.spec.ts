@@ -1784,11 +1784,6 @@ function createComponent(clientId: string, fullAccess = false, language: 'en' | 
                 provide: ActivatedRoute,
                 useValue: {
                     paramMap: of(convertToParamMap({ clientId })),
-                    queryParamMap: of(convertToParamMap({})),
-                    snapshot: {
-                        paramMap: convertToParamMap({ clientId }),
-                        queryParamMap: convertToParamMap({}),
-                    },
                 },
             },
         ],

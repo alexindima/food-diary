@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 
-import { adminPeriod, adminPeriodParams } from './admin-period';
+import { adminPeriod } from './admin-period';
 import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
 @Component({
@@ -20,7 +20,9 @@ export class AdminPeriodControlComponent {
     private readonly router = inject(Router);
     private readonly translate = inject(TranslateService);
     private readonly language = toSignal(this.translate.onLangChange);
-    private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
+    public readonly period = input.required<string | undefined>();
+    public readonly periodFrom = input.required<string | undefined>();
+    public readonly periodTo = input.required<string | undefined>();
     public readonly queryPrefix = input('');
     public readonly inline = input(false);
     public readonly defaultPeriod = input('all');
@@ -40,10 +42,13 @@ export class AdminPeriodControlComponent {
 
     public constructor() {
         effect(() => {
-            const params = adminPeriodParams(this.params(), this.queryPrefix());
-            this.preset.set(params.get('period') ?? this.defaultPeriod());
-            this.from.set(params.get('from'));
-            this.to.set(params.get('to'));
+            const period = this.period() ?? this.defaultPeriod();
+            const from = this.periodFrom() ?? null;
+            const to = this.periodTo() ?? null;
+            const params = convertToParamMap({ period, from, to });
+            this.preset.set(period);
+            this.from.set(from);
+            this.to.set(to);
             this.invalid.set(adminPeriod(params, this.defaultPeriod()) === null);
         });
     }

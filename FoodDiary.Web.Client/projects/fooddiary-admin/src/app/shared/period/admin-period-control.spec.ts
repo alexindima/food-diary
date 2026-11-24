@@ -1,28 +1,58 @@
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, input } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { describe, expect, it } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
 import { AdminPeriodControlComponent } from './admin-period-control';
+import { firstAdminQueryValue } from './admin-query';
 
-async function openPeriodAsync(url: string, prefix = '', defaultPeriod = 'all'): Promise<ComponentFixture<AdminPeriodControlComponent>> {
+@Component({
+    imports: [AdminPeriodControlComponent],
+    template: `
+        <fd-admin-period
+            [queryPrefix]="prefix() ?? ''"
+            [defaultPeriod]="defaultPeriod() ?? 'all'"
+            [period]="prefix() === 'activity_' ? activity_period() : period()"
+            [periodFrom]="prefix() === 'activity_' ? activity_from() : from()"
+            [periodTo]="prefix() === 'activity_' ? activity_to() : to()"
+        />
+    `,
+})
+class PeriodHost {
+    public readonly prefix = input<string>();
+    public readonly defaultPeriod = input<string>();
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly activity_to = input(undefined, { transform: firstAdminQueryValue });
+}
+
+type PeriodFixture = RouterTestingHarness['fixture'];
+
+async function openPeriodAsync(url: string, prefix = '', defaultPeriod = 'all'): Promise<PeriodFixture> {
     stubScrollIntoView();
     await TestBed.configureTestingModule({
-        imports: [AdminPeriodControlComponent],
-        providers: [provideRouter([]), ...provideTranslateTesting()],
+        providers: [
+            provideRouter(
+                [{ path: '', component: PeriodHost, data: { prefix, defaultPeriod } }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
+            ...provideTranslateTesting(),
+        ],
     }).compileComponents();
-    await TestBed.inject(Router).navigateByUrl(url);
-    const fixture = TestBed.createComponent(AdminPeriodControlComponent);
-    fixture.componentRef.setInput('queryPrefix', prefix);
-    fixture.componentRef.setInput('defaultPeriod', defaultPeriod);
+    const { fixture } = await RouterTestingHarness.create(url);
     fixture.detectChanges();
     return fixture;
 }
 
-async function choosePresetAsync(fixture: ComponentFixture<AdminPeriodControlComponent>, key: string): Promise<void> {
+async function choosePresetAsync(fixture: PeriodFixture, key: string): Promise<void> {
     const host = fixture.nativeElement as HTMLElement;
     const trigger = host.querySelector<HTMLButtonElement>('fd-ui-select button');
     trigger?.click();

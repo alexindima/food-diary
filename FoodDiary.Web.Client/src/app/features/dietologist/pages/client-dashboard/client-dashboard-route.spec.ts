@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -60,10 +60,13 @@ beforeEach(async () => {
     api.disconnectClient.mockReturnValue(of(void 0));
     await TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                { path: 'dietologist/clients/:clientId', component: ClientDashboardComponent },
-                { path: 'dietologist', component: ClientListStubComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'dietologist/clients/:clientId', component: ClientDashboardComponent },
+                    { path: 'dietologist', component: ClientListStubComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             { provide: DietologistFacade, useValue: api },
             { provide: FdUiToastService, useValue: toast },
@@ -104,13 +107,28 @@ describe('ClientDashboardComponent reused route identity', () => {
         const harness = await RouterTestingHarness.create();
         const component = await harness.navigateByUrl('/dietologist/clients/A?recommendationId=first', ClientDashboardComponent);
         component['recommendationModel'].set({ text: 'Keep same-client draft', templateName: '' });
-        const reused = await harness.navigateByUrl('/dietologist/clients/A?recommendationId=second', ClientDashboardComponent);
+        const reused = await harness.navigateByUrl(
+            '/dietologist/clients/A?recommendationId=second&recommendationId=first',
+            ClientDashboardComponent,
+        );
         expect(reused).toBe(component);
         expect(component['openDiscussionId']()).toBe('second');
         expect(api.getMyClients).toHaveBeenCalledOnce();
         expect(component['recommendationModel']().text).toBe('Keep same-client draft');
         await harness.navigateByUrl('/dietologist/clients/A', ClientDashboardComponent);
         expect(component['openDiscussionId']()).toBeNull();
+    });
+
+    it('restores the URL discussion on client change after a local close', async () => {
+        const harness = await RouterTestingHarness.create();
+        const component = await harness.navigateByUrl('/dietologist/clients/A?recommendationId=A', ClientDashboardComponent);
+        component['toggleDiscussion']('A');
+        expect(component['openDiscussionId']()).toBeNull();
+
+        await harness.navigateByUrl('/dietologist/clients/B?recommendationId=A', ClientDashboardComponent);
+        expect(component['openDiscussionId']()).toBe('A');
+        expect(component['recommendations']().map(item => item.id)).toEqual(['B']);
+        expect(api.getMyClients).toHaveBeenCalledTimes(2);
     });
 
     it('can load another client after a failed route load', async () => {

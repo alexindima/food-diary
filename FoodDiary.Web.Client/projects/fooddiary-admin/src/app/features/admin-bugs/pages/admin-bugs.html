@@ -4,11 +4,11 @@
         appearance="wrap-compact"
         [ariaLabel]="'ADMIN_BUGS.SOURCE_FILTER' | translate"
         [tabs]="tabs"
-        [selectedValue]="source()"
+        [selectedValue]="activeSource()"
         (selectedValueChange)="selectSource($event)"
     />
     <form method="post" class="admin-filter-bar" [formRoot]="form">
-        <fd-admin-period [inline]="true" />
+        <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
         <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
         <fd-ui-select [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" [options]="statusOptions()" />
         <div class="problem-filter-actions">
@@ -17,7 +17,7 @@
         </div>
     </form>
     @if (detailId()) {
-        <a routerLink="/bugs" queryParamsHandling="merge" [queryParams]="{ source: source() }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
+        <a routerLink="/bugs" queryParamsHandling="merge" [queryParams]="{ source: activeSource() }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
     }
     @if (loading()) {
         <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
@@ -27,11 +27,11 @@
         @if (!data.isConfigured) {
             <p role="status">{{ 'ADMIN_BUGS.NOT_CONFIGURED' | translate }}</p>
         } @else {
-            <fd-admin-bug-report-list [data]="data" [source]="source()" />
+            <fd-admin-bug-report-list [data]="data" [source]="activeSource()" />
             <fd-ui-pagination
                 [length]="detailId() === null ? data.totalItems : 0"
                 [pageSize]="25"
-                [pageIndex]="page() - 1"
+                [pageIndex]="currentPage() - 1"
                 (pageIndexChange)="goToPage($event + 1)"
             />
         }

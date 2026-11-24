@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required, validate } from '@angular/forms/signals';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
@@ -33,7 +32,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../services/navigation.service';
 import { createCollectionTouchedState } from '../../../../shared/lib/collection-touched-state.utils';
-import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { type MealTypeOption, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import {
     DEFAULT_CALORIE_MISMATCH_THRESHOLD,
     MANUAL_NUTRITION_MAX_CALORIES,
@@ -123,8 +122,6 @@ export class MealManageFormComponent implements UnsavedEditor {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
-    private readonly router = inject(Router);
-    private readonly route = inject(ActivatedRoute);
     private readonly privacy = inject(PrivacyConsentFacade);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -138,6 +135,8 @@ export class MealManageFormComponent implements UnsavedEditor {
     private readonly languageVersion = signal(0);
 
     public readonly meal = input<Meal | null>(null);
+    public readonly initialMealType = input<MealTypeOption | null>(null);
+    public readonly openManualItem = input(false);
     protected readonly totalCalories = signal<number>(0);
     protected readonly totalFiber = signal<number>(0);
     protected readonly totalAlcohol = signal<number>(0);
@@ -252,26 +251,15 @@ export class MealManageFormComponent implements UnsavedEditor {
     public constructor() {
         this.connectDevelopmentTools();
         afterNextRender(() => {
-            if (this.meal() === null && this.route.snapshot.queryParamMap.get('manual') === '1') {
+            if (this.meal() === null && this.openManualItem()) {
                 this.addMealItem();
             }
         });
         this.buildMealTypeOptions();
         this.watchLanguageChanges();
+        this.watchMealType();
         this.watchSignalFormModelChanges();
-
-        const presetMealType = this.resolvePresetMealType();
-        if (presetMealType !== null) {
-            this.patchMealFormModel({ mealType: presetMealType });
-        } else {
-            this.setAutoMealTypeFromDate();
-        }
-
         this.watchMealInput();
-
-        if (presetMealType === null) {
-            this.watchAutoMealTypeChanges();
-        }
     }
 
     private connectDevelopmentTools(): void {
@@ -396,9 +384,22 @@ export class MealManageFormComponent implements UnsavedEditor {
         });
     }
 
-    private watchAutoMealTypeChanges(): void {
+    private watchMealType(): void {
+        let useAutomaticMealType: boolean | undefined;
         effect(() => {
-            this.setAutoMealTypeFromDate();
+            if (useAutomaticMealType === undefined) {
+                const initialMealType = untracked(this.initialMealType);
+                useAutomaticMealType = initialMealType === null;
+                if (initialMealType !== null) {
+                    untracked(() => {
+                        this.patchMealFormModel({ mealType: initialMealType });
+                    });
+                }
+            }
+
+            if (useAutomaticMealType) {
+                this.setAutoMealTypeFromDate();
+            }
         });
     }
 
@@ -691,13 +692,6 @@ export class MealManageFormComponent implements UnsavedEditor {
     }
 
     // --- Private methods ---
-
-    private resolvePresetMealType(): string | null {
-        const navigationState: unknown = this.router.currentNavigation()?.extras.state;
-        const stateMealType = getStringProperty(navigationState, 'mealType');
-        const queryMealType = this.route.snapshot.queryParamMap.get('mealType');
-        return normalizeMealType(stateMealType ?? queryMealType);
-    }
 
     private setAutoMealTypeFromDate(): void {
         if (this.meal() !== null) {

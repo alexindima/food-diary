@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -544,10 +544,13 @@ it('publishes the visible recipes and routes only known recipe IDs from the deve
     const attach = vi.fn<(screen: DevelopmentScreen) => () => void>().mockReturnValue(detach);
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                { path: 'recipes', component: RecipeListComponent },
-                { path: 'recipes/:id/edit', component: RecipeEditTestPage },
-            ]),
+            provideRouter(
+                [
+                    { path: 'recipes', component: RecipeListComponent },
+                    { path: 'recipes/:id/edit', component: RecipeEditTestPage },
+                ],
+                withComponentInputBinding(),
+            ),
             { provide: DEVELOPMENT_SCREENS, useValue: { attach } },
         ],
     });

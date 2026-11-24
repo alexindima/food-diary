@@ -1,7 +1,7 @@
 import { type HttpRequest, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
@@ -125,7 +125,7 @@ function configureMealPlanRoute(actionProviders: typeof FEATURE_ACTION_PROVIDERS
             provideHttpClient(),
             provideHttpClientTesting(),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
-            provideRouter([{ path: 'meal-plans', children: mealPlanRoutes }]),
+            provideRouter([{ path: 'meal-plans', children: mealPlanRoutes }], withComponentInputBinding()),
             ...actionProviders,
         ],
     });

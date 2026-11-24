@@ -5,7 +5,7 @@ import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, DestroyRef, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router, type Routes } from '@angular/router';
+import { provideRouter, Router, type Routes, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -118,7 +118,7 @@ async function renderDashboardAsync(
     const testingModule = TestBed.configureTestingModule({
         imports: [DashboardComponent],
         providers: [
-            provideRouter(DASHBOARD_TEST_ROUTES),
+            provideRouter(DASHBOARD_TEST_ROUTES, withComponentInputBinding()),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),

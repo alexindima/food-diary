@@ -1,7 +1,17 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    signal,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -47,9 +57,12 @@ type RecommendationViewModel = DietologistRecommendation & {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecommendationsPageComponent {
+    public readonly recommendationId = input<string | null, string | string[] | undefined>(null, {
+        transform: value => (Array.isArray(value) ? value[0] : value) ?? null,
+    });
+
     protected readonly locale = injectCurrentLanguage();
     private readonly destroyRef = inject(DestroyRef);
-    private readonly route = inject(ActivatedRoute);
     private readonly recommendationsFacade = inject(RecommendationsFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -59,7 +72,7 @@ export class RecommendationsPageComponent {
     protected readonly tasksLoading = signal(true);
     protected readonly taskErrorKey = signal<string | null>(null);
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
-    protected readonly selectedRecommendationId = signal<string | null>(null);
+    protected readonly selectedRecommendationId = linkedSignal(this.recommendationId);
     protected readonly taskActionErrorKey = signal<string | null>(null);
     protected readonly readErrorKey = signal<string | null>(null);
     protected readonly markingReadIds = signal<ReadonlySet<string>>(new Set<string>());
@@ -75,9 +88,11 @@ export class RecommendationsPageComponent {
     );
 
     public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            this.selectedRecommendationId.set(params.get('recommendationId'));
-            this.markSelectedRecommendationAsRead();
+        effect(() => {
+            const id = this.recommendationId();
+            untracked(() => {
+                this.markRecommendationIdAsRead(id);
+            });
         });
 
         this.loadRecommendations();
@@ -169,7 +184,7 @@ export class RecommendationsPageComponent {
                 next: recommendations => {
                     this.recommendations.set(recommendations);
                     this.isLoading.set(false);
-                    this.markSelectedRecommendationAsRead();
+                    this.markRecommendationIdAsRead(this.selectedRecommendationId());
                 },
                 error: () => {
                     this.recommendations.set([]);
@@ -206,8 +221,7 @@ export class RecommendationsPageComponent {
         });
     }
 
-    private markSelectedRecommendationAsRead(): void {
-        const selectedId = this.selectedRecommendationId();
+    private markRecommendationIdAsRead(selectedId: string | null): void {
         if (selectedId === null) {
             return;
         }

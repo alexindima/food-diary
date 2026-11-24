@@ -8,7 +8,13 @@
 </header>
 <div class="admin-users fd-grid fd-gap-md">
     <div class="admin-filter-bar">
-        <fd-admin-period label="ADMIN_USER.REGISTRATION_PERIOD" [inline]="true" />
+        <fd-admin-period
+            label="ADMIN_USER.REGISTRATION_PERIOD"
+            [inline]="true"
+            [period]="period()"
+            [periodFrom]="from()"
+            [periodTo]="to()"
+        />
         <fd-ui-input label="Search users" placeholder="Email or username" [value]="draftSearch()" (valueChange)="onSearchChange($event)" />
 
         <fd-ui-select label="User status" [options]="statusOptions" [value]="draftStatus()" (valueChange)="onStatusChange($event)" />

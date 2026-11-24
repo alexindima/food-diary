@@ -2,7 +2,7 @@ import { type HttpInterceptorFn, HttpResponse, provideHttpClient, withIntercepto
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { DeferBlockBehavior, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -154,10 +154,13 @@ async function renderLandingAsync(): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         deferBlockBehavior: DeferBlockBehavior.Manual,
         providers: [
-            provideRouter([
-                { path: '', pathMatch: 'full', component: MainComponent, canActivate: [publicSiteLocaleGuard] },
-                { path: 'ru', component: MainComponent, canActivate: [publicSiteLocaleGuard] },
-            ]),
+            provideRouter(
+                [
+                    { path: '', pathMatch: 'full', component: MainComponent, canActivate: [publicSiteLocaleGuard] },
+                    { path: 'ru', component: MainComponent, canActivate: [publicSiteLocaleGuard] },
+                ],
+                withComponentInputBinding(),
+            ),
             provideHttpClient(withInterceptors([publicTranslationAssets])),
             provideHttpClientTesting(),
             provideTranslateTesting(),

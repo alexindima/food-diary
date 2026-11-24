@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -71,7 +71,7 @@ const OBSERVATIONS = [
 function configureReportHttp(): HttpTestingController {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'statistics', children: statisticsRoutes }]),
+            provideRouter([{ path: 'statistics', children: statisticsRoutes }], withComponentInputBinding()),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             provideHttpClient(),
             provideHttpClientTesting(),

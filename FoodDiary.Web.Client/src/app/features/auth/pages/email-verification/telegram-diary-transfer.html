@@ -17,7 +17,6 @@
             <p role="status" [hidden]="!busy()">{{ 'COMMON.LOADING' | translate }}</p>
             <div [hidden]="busy()">
                 <fd-auth
-                    [useRouting]="false"
                     [inlineSignIn]="true"
                     [hideTelegram]="true"
                     [confirmationUserId]="confirmationUserId()"

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
-import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -23,18 +24,18 @@ const report: AdminRetentionReport = {
     cohorts: [{ date: '2026-01-01T00:00:00Z', registered: 2, activatedWithinSevenDays: 0, day1: 0, day7: 0, day30: null }],
 };
 
-const query = new BehaviorSubject(convertToParamMap({}));
+const RETENTION_PATH = '/analytics/retention';
 const getReport = vi.fn();
 
 beforeEach(async () => {
-    query.next(convertToParamMap({}));
     getReport.mockReset().mockReturnValue(of(report));
     await TestBed.configureTestingModule({
-        imports: [AdminRetentionComponent],
         providers: [
-            provideRouter([]),
+            provideRouter(
+                [{ path: 'analytics/retention', component: AdminRetentionComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             ...provideTranslateTesting(),
-            { provide: ActivatedRoute, useValue: { queryParamMap: query } },
             { provide: AdminRetentionService, useValue: { getReport } },
         ],
     }).compileComponents();
@@ -42,53 +43,37 @@ beforeEach(async () => {
 
 describe('Admin retention display', () => {
     it('renders a mature zero separately from a cohort whose observation window is incomplete', async () => {
-        const fixture = TestBed.createComponent(AdminRetentionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        const text = (fixture.nativeElement as HTMLElement).textContent;
+        const { host } = await openRetentionAsync();
+        const text = host.textContent;
         expect(text).toContain('Jan 1, 2026');
         expect(text).toContain('0.0% (0/2)');
         expect(text).toContain('ADMIN_RETENTION.IMMATURE');
     });
 
     it('sends independent activity and cohort periods and renders zero days', async () => {
-        query.next(
-            convertToParamMap({
-                period: 'custom',
-                from: '2025-11-01',
-                to: '2025-12-01',
-                activity_period: 'custom',
-                activity_from: '2026-01-01',
-                activity_to: '2026-01-02',
-            }),
+        const { host } = await openRetentionAsync(
+            '?period=custom&from=2025-11-01&to=2025-12-01&activity_period=custom&activity_from=2026-01-01&activity_from=ignored&activity_to=2026-01-02',
         );
-        const fixture = TestBed.createComponent(AdminRetentionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
         expect(getReport).toHaveBeenLastCalledWith({
             from: '2026-01-01',
             to: '2026-01-02',
             cohortFrom: '2025-11-01',
             cohortTo: '2025-12-01',
         });
-        const element = fixture.nativeElement as HTMLElement;
-        expect(element.textContent).toContain('Jan 2, 2026');
-        expect(element.querySelectorAll('tbody')[0].rows[1].textContent).toMatch(/Jan 2, 2026\s*0\s*0/);
-        expect(element.querySelector('details')).toBeNull();
+        expect(host.textContent).toContain('Jan 2, 2026');
+        expect(host.querySelectorAll('tbody')[0].rows[1].textContent).toMatch(/Jan 2, 2026\s*0\s*0/);
+        expect(host.querySelector('details')).toBeNull();
     });
 
     it('shows failure and can retry without presenting a false empty report', async () => {
         getReport.mockReturnValueOnce(throwError(() => new Error('offline')));
-        const fixture = TestBed.createComponent(AdminRetentionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        const host = fixture.nativeElement as HTMLElement;
+        const { harness, host } = await openRetentionAsync();
         expect(host.querySelector('table')).toBeNull();
         const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
         expect(retry).not.toBeNull();
         retry?.click();
-        fixture.detectChanges();
-        await fixture.whenStable();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
         expect(host.querySelector('fd-admin-load-error')).toBeNull();
         expect(host.querySelectorAll('table')).toHaveLength(2);
     });
@@ -100,21 +85,19 @@ describe('Admin retention period transitions', () => {
         { activity_period: 'custom', activity_from: '2024-03-01', activity_to: '2024-02-29' },
     ])('hides a previous report and cancels a pending request when a filter becomes invalid %o', async invalid => {
         const pending = new Subject<AdminRetentionReport>();
-        const fixture = TestBed.createComponent(AdminRetentionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        const host = fixture.nativeElement as HTMLElement;
+        const { harness, host } = await openRetentionAsync();
         expect(host.querySelectorAll('table')).toHaveLength(2);
 
         getReport.mockReturnValueOnce(pending);
-        query.next(convertToParamMap({ period: 'all' }));
-        fixture.detectChanges();
+        await harness.navigateByUrl(`${RETENTION_PATH}?period=all`, AdminRetentionComponent);
         expect(pending.observed).toBe(true);
         expect(host.querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
         expect(host.querySelector('table')).toBeNull();
 
-        query.next(convertToParamMap(invalid));
-        fixture.detectChanges();
+        const invalidQuery = new URLSearchParams(
+            Object.entries(invalid).filter((entry): entry is [string, string] => entry[1] !== undefined),
+        );
+        await harness.navigateByUrl(`${RETENTION_PATH}?${invalidQuery}`, AdminRetentionComponent);
         expect(pending.observed).toBe(false);
         pending.next(report);
         expect(getReport).toHaveBeenCalledTimes(2);
@@ -123,13 +106,9 @@ describe('Admin retention period transitions', () => {
     });
 
     it('requests all-time activity and cohorts and displays a dash for a zero-denominator cohort', async () => {
-        query.next(convertToParamMap({ period: 'all', activity_period: 'all' }));
         const cohort = { ...report.cohorts[0], registered: 0 };
         getReport.mockReturnValueOnce(of({ ...report, activityByDay: [], cohorts: [cohort] }));
-        const fixture = TestBed.createComponent(AdminRetentionComponent);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        const host = fixture.nativeElement as HTMLElement;
+        const { host } = await openRetentionAsync('?period=all&activity_period=all');
 
         expect(getReport).toHaveBeenCalledExactlyOnceWith({ from: '1970-01-01', cohortFrom: '1970-01-01', cohortTo: undefined });
         const row = host.querySelector('[aria-labelledby="retention-cohorts-title"] tbody tr');
@@ -143,3 +122,13 @@ describe('Admin retention period transitions', () => {
         expect(host.textContent).toContain('ADMIN_RETENTION.NO_ACTIVITY');
     });
 });
+
+async function openRetentionAsync(query = ''): Promise<{ harness: RouterTestingHarness; host: HTMLElement }> {
+    const harness = await RouterTestingHarness.create(`${RETENTION_PATH}${query}`);
+    await harness.fixture.whenStable();
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the retention report to render.');
+    }
+    return { harness, host };
+}

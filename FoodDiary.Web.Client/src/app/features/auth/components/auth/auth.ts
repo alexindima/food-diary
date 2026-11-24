@@ -1,18 +1,20 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
     effect,
     inject,
+    Injector,
     input,
     output,
     PLATFORM_ID,
     signal,
     viewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
@@ -56,7 +58,6 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
     ],
 })
 export class AuthComponent {
-    public readonly useRouting = input(true);
     public readonly inlineSignIn = input(false);
     public readonly signedIn = output();
     public readonly hideTelegram = input(false);
@@ -68,12 +69,12 @@ export class AuthComponent {
     private readonly loginFormComponent = viewChild(AuthLoginFormComponent);
     private readonly registerFormComponent = viewChild(AuthRegisterFormComponent);
 
-    private readonly route = inject(ActivatedRoute, { optional: true });
     private readonly router = inject(Router, { optional: true });
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -163,13 +164,10 @@ export class AuthComponent {
             this.renderGoogleButton();
         });
         effect(() => {
-            const routeMode = this.route?.snapshot.queryParamMap.get('auth') === 'register' ? 'register' : 'login';
-            this.authMode = this.useRouting() ? routeMode : this.initialMode();
+            this.authMode = this.initialMode();
             this.showPasswordReset.set(this.initialPasswordReset());
-            this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParamMap.get('returnUrl') ?? null) : this.initialReturnUrl();
-            this.adminReturnUrl = this.useRouting()
-                ? (this.route?.snapshot.queryParamMap.get('adminReturnUrl') ?? null)
-                : this.initialAdminReturnUrl();
+            this.returnUrl = this.initialReturnUrl();
+            this.adminReturnUrl = this.initialAdminReturnUrl();
         });
         effect(() => {
             if ((this.adminReturnUrl ?? '').length === 0) {
@@ -185,25 +183,17 @@ export class AuthComponent {
     }
 
     protected changeAuthMode(value: string): void {
-        const mode: 'login' | 'register' = value === 'register' ? 'register' : 'login';
-        void this.onTabChangeAsync(mode);
-    }
-
-    protected openTelegram(): void {
-        this.dialogRef?.close();
-        void this.router?.navigate(['/auth/telegram'], { preserveFragment: true });
-    }
-
-    protected async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
-        this.authMode = mode;
+        this.authMode = value === 'register' ? 'register' : 'login';
         this.authTabVersion++;
         this.formManager.resetAll();
         this.pendingGoogleLinkCredential = null;
         this.googleLinkRequired.set(false);
         this.onPasswordResetClose();
-        if (this.useRouting() && this.router !== null) {
-            await this.router.navigate(['/'], { queryParams: { auth: mode } });
-        }
+    }
+
+    protected openTelegram(): void {
+        this.dialogRef?.close();
+        void this.router?.navigate(['/auth/telegram'], { preserveFragment: true });
     }
 
     private async loginAsync(): Promise<void> {
@@ -368,7 +358,7 @@ export class AuthComponent {
             }
 
             if (result === 'accountLinkRequired') {
-                void this.prepareGoogleLinkLoginAsync(credential);
+                this.prepareGoogleLinkLogin(credential);
                 return;
             }
 
@@ -376,14 +366,28 @@ export class AuthComponent {
         });
     }
 
-    private async prepareGoogleLinkLoginAsync(credential: string): Promise<void> {
-        if (this.authMode !== 'login') {
-            await this.onTabChangeAsync('login');
+    private prepareGoogleLinkLogin(credential: string): void {
+        const showLinkPrompt = (): void => {
+            this.pendingGoogleLinkCredential = credential;
+            this.googleLinkRequired.set(true);
+            this.setGlobalError('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
+        };
+
+        if (this.authMode === 'login') {
+            showLinkPrompt();
+            return;
         }
 
-        this.pendingGoogleLinkCredential = credential;
-        this.googleLinkRequired.set(true);
-        this.setGlobalError('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
+        this.changeAuthMode('login');
+        const tabVersion = this.authTabVersion;
+        afterNextRender(
+            () => {
+                if (this.authTabVersion === tabVersion) {
+                    showLinkPrompt();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     private async completeGoogleLinkAsync(credential: string): Promise<void> {

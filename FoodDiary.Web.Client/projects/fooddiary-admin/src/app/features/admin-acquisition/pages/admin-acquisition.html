@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="admin-acquisition__toolbar-actions">
-            <fd-admin-period defaultPeriod="30d" />
+            <fd-admin-period defaultPeriod="30d" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
             <fd-ui-button type="button" variant="secondary" [loading]="isLoading()" (click)="loadSummary()"> Refresh </fd-ui-button>
         </div>
     </div>
@@ -177,16 +177,16 @@
 
                 <div class="fd-row fd-gap-sm">
                     <fd-ui-button
-                        [disabled]="page() <= 1"
+                        [disabled]="currentPage() <= 1"
                         [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate"
-                        (click)="goToPage(page() - 1)"
+                        (click)="goToPage(currentPage() - 1)"
                         >{{ 'ADMIN_COMMON.PREVIOUS' | translate }}</fd-ui-button
                     >
-                    <span>{{ page() }}</span>
+                    <span>{{ currentPage() }}</span>
                     <fd-ui-button
-                        [disabled]="page() * eventPageSize >= (report()?.eventTotal ?? 0)"
+                        [disabled]="currentPage() * eventPageSize >= (report()?.eventTotal ?? 0)"
                         [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
-                        (click)="goToPage(page() + 1)"
+                        (click)="goToPage(currentPage() + 1)"
                         >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
                     >
                 </div>

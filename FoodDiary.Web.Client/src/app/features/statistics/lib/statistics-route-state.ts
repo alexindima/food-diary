@@ -1,11 +1,15 @@
-import { DestroyRef, effect, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, type ParamMap, Router } from '@angular/router';
+import { effect, inject, untracked } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import type { StatisticsFacade } from './statistics.facade';
-import { readStatisticsRouteQuery, type StatisticsRouteQuery, writeStatisticsRouteQuery } from './statistics-route-query';
+import {
+    readStatisticsRouteQuery,
+    type StatisticsRouteParams,
+    type StatisticsRouteQuery,
+    writeStatisticsRouteQuery,
+} from './statistics-route-query';
 
-type StatisticsRouteOwner = Pick<StatisticsFacade, 'selectedRange' | 'selectedNutritionTab' | 'customRangeModel'>;
+type StatisticsRouteOwner = Pick<StatisticsFacade, 'selectedRange' | 'selectedNutritionTab' | 'customRangeModel' | 'initialize'>;
 
 function readSelection(facade: StatisticsRouteOwner): StatisticsRouteQuery {
     const custom = facade.customRangeModel().range;
@@ -17,21 +21,20 @@ function readSelection(facade: StatisticsRouteOwner): StatisticsRouteQuery {
     };
 }
 
-function matchesParams(params: ParamMap, query: StatisticsRouteQuery): boolean {
-    return Object.entries(writeStatisticsRouteQuery(query)).every(([key, value]) => params.get(key) === value);
-}
-
-export function connectStatisticsRouteState(facade: StatisticsRouteOwner): void {
+export function connectStatisticsRouteState(facade: StatisticsRouteOwner, readParams: () => StatisticsRouteParams): void {
     const route = inject(ActivatedRoute);
     const router = inject(Router);
-    const destroyRef = inject(DestroyRef);
-    let params = route.snapshot.queryParamMap;
     let pendingKey: string | null = null;
+    let initialized = false;
     const write = (query: StatisticsRouteQuery, replaceUrl: boolean): void => {
         const serialized = writeStatisticsRouteQuery(query);
         const key = JSON.stringify(serialized);
+        const params = untracked(readParams);
         // A selection matching the current URL can still supersede a different pending destination.
-        if (pendingKey === key || (pendingKey === null && matchesParams(params, query))) {
+        if (
+            pendingKey === key ||
+            (pendingKey === null && Object.entries(serialized).every(([name, value]) => (params[name] ?? null) === value))
+        ) {
             return;
         }
         pendingKey = key;
@@ -43,18 +46,21 @@ export function connectStatisticsRouteState(facade: StatisticsRouteOwner): void 
                 }
             });
     };
-    const apply = (value: ParamMap): void => {
-        params = value;
-        const query = readStatisticsRouteQuery(value);
-        facade.selectedRange.set(query.range);
-        facade.selectedNutritionTab.set(query.nutritionTab);
-        if (query.customRange !== null) {
-            facade.customRangeModel.set({ range: query.customRange });
-        }
-        write(query, true);
-    };
-    apply(params);
-    route.queryParamMap.pipe(takeUntilDestroyed(destroyRef)).subscribe(apply);
+    effect(() => {
+        const query = readStatisticsRouteQuery(readParams());
+        untracked(() => {
+            facade.selectedRange.set(query.range);
+            facade.selectedNutritionTab.set(query.nutritionTab);
+            if (query.customRange !== null) {
+                facade.customRangeModel.set({ range: query.customRange });
+            }
+            write(query, true);
+            if (!initialized) {
+                initialized = true;
+                facade.initialize();
+            }
+        });
+    });
     effect(() => {
         write(readSelection(facade), false);
     });

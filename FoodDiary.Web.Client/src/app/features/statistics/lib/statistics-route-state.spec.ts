@@ -1,26 +1,37 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { NavigationStart, provideRouter, Router } from '@angular/router';
+import { NavigationStart, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { NutritionChartTab, StatisticsRange } from './statistics-data-mapper';
+import { firstStatisticsQueryValue } from './statistics-route-query';
 import { connectStatisticsRouteState } from './statistics-route-state';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class StatisticsRoute {
+    public readonly range = input(null, { transform: firstStatisticsQueryValue });
+    public readonly nutritionTab = input(null, { transform: firstStatisticsQueryValue });
+    public readonly dateFrom = input(null, { transform: firstStatisticsQueryValue });
+    public readonly dateTo = input(null, { transform: firstStatisticsQueryValue });
     public readonly selectedRange = signal<StatisticsRange>('week');
     public readonly selectedNutritionTab = signal<NutritionChartTab>('calories');
     public readonly customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
+    public readonly initialize = vi.fn();
     public constructor() {
-        connectStatisticsRouteState(this);
+        connectStatisticsRouteState(this, () => ({
+            range: this.range(),
+            nutritionTab: this.nutritionTab(),
+            dateFrom: this.dateFrom(),
+            dateTo: this.dateTo(),
+        }));
     }
 }
 
 describe('Statistics route state ownership', () => {
     it('preserves scrolling when report metrics change through the URL', async () => {
         TestBed.configureTestingModule({
-            providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }])],
+            providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }], withComponentInputBinding())],
         });
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/statistics?campaign=qa', StatisticsRoute);
@@ -47,9 +58,11 @@ describe('Statistics route state ownership', () => {
     });
 
     it('restores a report from its URL, writes changed selections, and restores query navigation', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }])] });
+        TestBed.configureTestingModule({
+            providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }], withComponentInputBinding())],
+        });
         const harness = await RouterTestingHarness.create();
-        const original = '/statistics?range=custom&dateFrom=2025-01-01&dateTo=2025-01-25&nutritionTab=macros&campaign=qa';
+        const original = '/statistics?range=custom&range=year&dateFrom=2025-01-01&dateTo=2025-01-25&nutritionTab=macros&campaign=qa';
         const page = await harness.navigateByUrl(original, StatisticsRoute);
         expect(page.selectedRange()).toBe('custom');
         expect(page.selectedNutritionTab()).toBe('macros');
@@ -64,10 +77,17 @@ describe('Statistics route state ownership', () => {
         expect(page.selectedRange()).toBe('custom');
         expect(page.selectedNutritionTab()).toBe('macros');
         expect(page.customRangeModel().range?.end).toEqual(new Date('2025-01-25T00:00:00'));
+        await harness.navigateByUrl('/statistics?campaign=qa', StatisticsRoute);
+        expect(page.selectedRange()).toBe('week');
+        expect(page.selectedNutritionTab()).toBe('calories');
+        expect(page.customRangeModel().range?.end).toEqual(new Date('2025-01-25T00:00:00'));
+        expect(page.initialize).toHaveBeenCalledOnce();
     });
 
     it('normalizes malformed report filters while preserving unrelated URL keys', async () => {
-        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }])] });
+        TestBed.configureTestingModule({
+            providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }], withComponentInputBinding())],
+        });
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl(
             '/statistics?range=custom&dateFrom=2025-02-29&dateTo=2025-03-01&nutritionTab=wrong&campaign=qa',

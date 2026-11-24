@@ -31,7 +31,7 @@
         (filtersApply)="billing.applyFilters()"
         (filtersReset)="billing.resetFilters()"
     >
-        <fd-admin-period [inline]="true" />
+        <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
     </fd-admin-billing-filters>
 
     @if (billing.revenueSummary(); as summary) {

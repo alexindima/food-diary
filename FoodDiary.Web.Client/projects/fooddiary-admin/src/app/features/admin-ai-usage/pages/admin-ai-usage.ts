@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { convertToParamMap, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCardComponent, FdUiLineChartComponent } from 'fd-ui-kit';
 
 import { adminExclusiveDatePeriod, adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
+import { firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
 
 @Component({
@@ -25,19 +26,24 @@ import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAiUsageComponent {
+    public readonly userId = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly aiUsageFacade = inject(AdminAiUsageFacade);
-    private readonly query = toSignal(inject(ActivatedRoute).queryParamMap, { requireSync: true });
     private readonly retryVersion = signal(0);
-    protected readonly userId = computed(() => this.query().get('userId'));
     private readonly usageResource = rxResource({
         params: () => {
             this.retryVersion();
-            const range = adminPeriod(this.query());
+            const range = adminPeriod(
+                convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+            );
             if (range === null) {
                 return;
             }
             const userId = this.userId();
-            return { ...adminExclusiveDatePeriod(range), ...(userId === null ? {} : { userId }) };
+            return { ...adminExclusiveDatePeriod(range), ...(userId === undefined ? {} : { userId }) };
         },
         stream: ({ params }) => this.aiUsageFacade.getSummary(params),
     });

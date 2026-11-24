@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, type Routes } from '@angular/router';
+import { provideRouter, Router, type Routes, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdTourService } from 'fd-tour';
 import { of, Subject, throwError } from 'rxjs';
@@ -340,15 +340,18 @@ function setupLessons(lessons: LessonSummary[] = [FIRST_LESSON, SECOND_LESSON, T
     };
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                {
-                    path: 'lessons',
-                    loadChildren: async (): Promise<Routes> => {
-                        const { default: routes } = await import('./lesson.routes');
-                        return routes;
+            provideRouter(
+                [
+                    {
+                        path: 'lessons',
+                        loadChildren: async (): Promise<Routes> => {
+                            const { default: routes } = await import('./lesson.routes');
+                            return routes;
+                        },
                     },
-                },
-            ]),
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             { provide: LessonService, useValue: api },
         ],

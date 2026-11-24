@@ -1,7 +1,7 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -1641,7 +1641,7 @@ async function createComponentAsync(
     relationship: DietologistRelationship | null,
     dialogResult = false,
     user: User | null = null,
-    queryParams: Record<string, string> = {},
+    queryParams: Record<string, string | string[]> = {},
 ): Promise<void> {
     facade = createFacadeMock(relationship, user);
     dietologistService = createDietologistServiceMock(relationship);
@@ -1658,7 +1658,7 @@ async function createComponentAsync(
 
     await TestBed.configureTestingModule({
         imports: [UserManageComponent],
-        providers: [...createTestingProviders(queryParams), provideTranslateTesting()],
+        providers: [...createTestingProviders(), provideTranslateTesting()],
     })
         .overrideComponent(UserManageComponent, {
             remove: { providers: [ProfileManageFacade, UserManageNotificationsFacade] },
@@ -1675,14 +1675,16 @@ async function createComponentAsync(
 
     fixture = TestBed.createComponent(UserManageComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('intent', queryParams['intent']);
+    fixture.componentRef.setInput('googleLink', queryParams['googleLink']);
     fixture.detectChanges();
 }
 
-function createTestingProviders(queryParams: Record<string, string>): unknown[] {
+function createTestingProviders(): unknown[] {
     return [
         { provide: DIETOLOGIST_RELATIONSHIP_ACTIONS, useValue: dietologistService },
         { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
-        { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
+        { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: router },
         { provide: LocalizationService, useValue: createLocalizationServiceMock() },
         { provide: NotificationService, useValue: notificationService },

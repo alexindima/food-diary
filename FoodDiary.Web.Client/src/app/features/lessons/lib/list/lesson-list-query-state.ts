@@ -6,6 +6,7 @@ export type LessonListQueryState = {
     readonly initial: LessonListQuery;
     readonly current: Signal<LessonListQuery>;
     readonly changes: Observable<LessonListQuery>;
+    isCurrent: (query: LessonListQuery) => boolean;
     writeAsync: (query: LessonListQuery, options?: { replaceUrl?: boolean }) => Promise<boolean>;
     normalizePageAsync: () => Promise<boolean>;
 };

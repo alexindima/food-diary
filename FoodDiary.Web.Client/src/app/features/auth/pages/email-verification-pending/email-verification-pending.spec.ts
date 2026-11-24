@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -62,21 +61,21 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers());
 
 describe('EmailVerificationPendingComponent resend', () => {
-    it('should not resend verification email on regular pending page open', () => {
-        createComponent(false);
+    it.each([
+        { autoResend: undefined, resends: 0 },
+        { autoResend: 'true', resends: 1 },
+        { autoResend: ['false', 'true'], resends: 0 },
+        { autoResend: ['true', 'false'], resends: 1 },
+    ])('sends $resends verification emails on entry with autoResend=$autoResend', ({ autoResend, resends }) => {
+        createComponent(autoResend);
 
-        expect(authServiceMock.resendEmailVerification).not.toHaveBeenCalled();
-    });
-
-    it('should resend verification email once when requested by login flow', () => {
-        createComponent(true);
-
-        expect(authServiceMock.resendEmailVerification).toHaveBeenCalledTimes(1);
+        expect(userServiceMock.getInfo).toHaveBeenCalledOnce();
+        expect(authServiceMock.resendEmailVerification).toHaveBeenCalledTimes(resends);
     });
 
     it('restores the registration pause and rejects clicks until the deadline', () => {
         vi.useFakeTimers();
-        const component = createComponent(true, true);
+        const component = createComponent('true', true);
         expect(component['resendCooldownSeconds']()).toBe(RESEND_PAUSE_SECONDS);
         component['onResendEmail']();
         expect(authServiceMock.resendEmailVerification).not.toHaveBeenCalled();
@@ -89,7 +88,7 @@ describe('EmailVerificationPendingComponent resend', () => {
     it('prevents repeated requests while sending', () => {
         const response = new Subject<void>();
         authServiceMock.resendEmailVerification.mockReturnValue(response);
-        const component = createComponent(false);
+        const component = createComponent();
         component['onResendEmail']();
         component['onResendEmail']();
         expect(authServiceMock.resendEmailVerification).toHaveBeenCalledOnce();
@@ -101,7 +100,7 @@ describe('EmailVerificationPendingComponent resend', () => {
                 error: { error: 'Validation.Invalid', errors: { EmailVerification: ['Wait before requesting another email'] } },
             })),
         );
-        const component = createComponent(false);
+        const component = createComponent();
         component['onResendEmail']();
         expect(component['resendCooldownSeconds']()).toBe(RESEND_PAUSE_SECONDS);
         expect(component['statusMessage']()).toBeNull();
@@ -113,7 +112,7 @@ describe('EmailVerificationPendingComponent resend', () => {
                 error: { error: 'Validation.Invalid', errors: { UserId: ['Invalid user'] } },
             })),
         );
-        const component = createComponent(false);
+        const component = createComponent();
         component['onResendEmail']();
         expect(component['resendCooldownSeconds']()).toBe(0);
         expect(component['statusMessage']()).toBe('AUTH.VERIFY_PENDING.RESEND_ERROR');
@@ -125,7 +124,7 @@ describe('Email verification pause before profile load', () => {
         vi.useFakeTimers();
         const profile = new Subject<{ id: string; email: string; isEmailConfirmed: boolean }>();
         userServiceMock.getInfo.mockReturnValue(profile);
-        const component = createComponent(false, true);
+        const component = createComponent(undefined, true);
         expect(component['email']()).toBeNull();
         expect(component['resendCooldownSeconds']()).toBe(RESEND_PAUSE_SECONDS);
         component['onResendEmail']();
@@ -146,14 +145,14 @@ describe('EmailVerificationPendingComponent navigation', () => {
             }),
         );
 
-        createComponent(true);
+        createComponent('true');
 
         expect(authServiceMock.resendEmailVerification).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
     });
 });
 
-function createComponent(autoResend: boolean, justRegistered = false): EmailVerificationPendingComponent {
+function createComponent(autoResend?: string | string[], justRegistered = false): EmailVerificationPendingComponent {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
         imports: [EmailVerificationPendingComponent],
@@ -163,19 +162,16 @@ function createComponent(autoResend: boolean, justRegistered = false): EmailVeri
             { provide: NavigationService, useValue: navigationServiceMock },
             { provide: EmailVerificationRealtimeService, useValue: realtimeServiceMock },
             { provide: TranslateService, useValue: { instant: (key: string): string => key } },
-            {
-                provide: ActivatedRoute,
-                useValue: {
-                    snapshot: {
-                        queryParamMap: convertToParamMap(autoResend ? { autoResend: 'true' } : {}),
-                    },
-                },
-            },
         ],
     });
     TestBed.overrideComponent(EmailVerificationPendingComponent, { set: { template: '' } });
     if (justRegistered) {
         TestBed.inject(EmailVerificationCooldownService).markSent('user-1');
     }
-    return TestBed.createComponent(EmailVerificationPendingComponent).componentInstance;
+    const fixture = TestBed.createComponent(EmailVerificationPendingComponent);
+    if (autoResend !== undefined) {
+        fixture.componentRef.setInput('autoResend', autoResend);
+    }
+    fixture.detectChanges();
+    return fixture.componentInstance;
 }

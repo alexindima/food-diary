@@ -1,12 +1,12 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type Observable, tap } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import { MealPlanService } from '../../api/meal-plan.service';
 import type { DietType, MealPlanSummary } from '../../models/meal-plan.data';
-import { type MealPlanListQuery, mealPlanListQueryKey, type MealPlanSource } from './meal-plan-list-query';
+import type { MealPlanListQuery, MealPlanSource } from './meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE } from './meal-plan-list-query-state';
 
 @Injectable()
@@ -91,18 +91,20 @@ export class MealPlanListFacade {
         return loaded?.dietType === query.dietType && loaded.source === query.source ? loaded.page : null;
     }
 
-    private loadListPage(query: MealPlanListQuery): Observable<PageOf<MealPlanSummary>> {
-        const key = mealPlanListQueryKey(query);
+    private loadListPage(query: MealPlanListQuery): Observable<PageOf<MealPlanSummary> | null> {
         const isCurated = query.source === 'all' ? undefined : query.source === 'curated';
         return this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize, isCurated).pipe(
-            tap(page => {
-                if (!this.destroyRef.destroyed && key === mealPlanListQueryKey(this.queryState.current())) {
-                    const resolved = resolvePaginationPage(query.page, page.totalPages);
-                    if (resolved !== query.page) {
-                        this.pageIndex.set(resolved - 1);
-                        this.writeListQuery({ ...query, page: resolved }, true);
-                    }
+            map(page => {
+                if (this.destroyRef.destroyed || !this.queryState.isCurrent(query)) {
+                    return null;
                 }
+                const resolved = resolvePaginationPage(query.page, page.totalPages);
+                if (resolved !== query.page) {
+                    this.pageIndex.set(resolved - 1);
+                    this.writeListQuery({ ...query, page: resolved }, true);
+                    return null;
+                }
+                return page;
             }),
         );
     }

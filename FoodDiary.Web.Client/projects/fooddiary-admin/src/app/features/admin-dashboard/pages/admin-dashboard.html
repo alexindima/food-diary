@@ -14,8 +14,8 @@
             (valueChange)="setPreset($event)"
         />
         @if (preset() === 'custom') {
-            <fd-ui-date-input [label]="'ADMIN_OVERVIEW.FROM' | translate" [max]="today" [(value)]="from" />
-            <fd-ui-date-input [label]="'ADMIN_OVERVIEW.TO' | translate" [max]="today" [(value)]="to" />
+            <fd-ui-date-input [label]="'ADMIN_OVERVIEW.FROM' | translate" [max]="today" [(value)]="draftFrom" />
+            <fd-ui-date-input [label]="'ADMIN_OVERVIEW.TO' | translate" [max]="today" [(value)]="draftTo" />
             <fd-ui-button (click)="apply()">{{ 'ADMIN_OVERVIEW.APPLY' | translate }}</fd-ui-button>
         }
         <fd-ui-button variant="secondary" (click)="reload()">{{ 'ADMIN_OVERVIEW.REFRESH' | translate }}</fd-ui-button>

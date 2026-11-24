@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -26,41 +27,74 @@ describe('ActiveSessionsFacade', () => {
         facade = TestBed.inject(ActiveSessionsFacade);
     });
 
-    it('loads minimized active-session models', () => {
+    it('loads minimized active-session models only when requested', async () => {
         api.getAll.mockReturnValue(of([currentSession, otherSession]));
+        await settleLoadAsync();
+        expect(api.getAll).not.toHaveBeenCalled();
 
         facade.load();
+        await settleLoadAsync();
 
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
         expect(facade.isLoading()).toBe(false);
         expect(facade.error()).toBeNull();
     });
 
-    it('removes a revoked session and preserves the current session when revoking others', () => {
-        api.getAll.mockReturnValue(of([currentSession, otherSession]));
-        api.revoke.mockReturnValue(of(undefined));
+    it('removes sessions only after revocation succeeds without reading again', async () => {
+        const thirdSession = createSession('third', false);
+        const pending = new Subject<void>();
+        api.getAll.mockReturnValue(of([currentSession, otherSession, thirdSession]));
+        api.revoke.mockReturnValue(pending);
         api.revokeOthers.mockReturnValue(of(undefined));
         facade.load();
+        await settleLoadAsync();
 
         facade.revoke(otherSession.id);
-        expect(facade.sessions()).toEqual([currentSession]);
+        facade.load();
+        TestBed.tick();
+        expect(facade.sessions()).toEqual([currentSession, otherSession, thirdSession]);
+        pending.next();
+        pending.complete();
+        expect(facade.sessions()).toEqual([currentSession, thirdSession]);
 
-        facade.sessions.set([currentSession, otherSession]);
         facade.revokeOthers();
         expect(facade.sessions()).toEqual([currentSession]);
         expect(facade.revocation()).toEqual({ kind: 'idle' });
+        expect(api.getAll).toHaveBeenCalledOnce();
     });
 
-    it('surfaces load and revoke failures without dropping known sessions', () => {
+    it('surfaces load and revoke failures without dropping known sessions', async () => {
         api.getAll.mockReturnValue(of([currentSession, otherSession]));
-        api.revoke.mockReturnValue(throwError(() => new Error('failed')));
         facade.load();
+        await settleLoadAsync();
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
 
+        api.getAll.mockReturnValueOnce(throwError(() => new Error('read failed')));
+        facade.load();
+        await settleLoadAsync();
+        expect(facade.error()).toBe('load');
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
+
+        const pending = new Subject<void>();
+        api.revoke.mockReturnValue(pending);
         facade.revoke(otherSession.id);
+        expect(facade.error()).toBeNull();
+        pending.error(new Error('revoke failed'));
 
         expect(facade.error()).toBe('revoke');
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
         expect(facade.revocation()).toEqual({ kind: 'idle' });
+    });
+
+    it('cancels a pending list read when its owner is destroyed', () => {
+        const pending = new Subject<ActiveSession[]>();
+        api.getAll.mockReturnValueOnce(pending);
+        facade.load();
+        TestBed.tick();
+        expect(pending.observed).toBe(true);
+
+        TestBed.resetTestingModule();
+        expect(pending.observed).toBe(false);
     });
 });
 
@@ -70,12 +104,13 @@ describe('ActiveSessionsFacade recovery', () => {
     const api = { getAll: vi.fn(), revoke: vi.fn(), revokeOthers: vi.fn() };
     let facade: ActiveSessionsFacade;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks();
         api.getAll.mockReturnValue(of([currentSession, otherSession]));
         TestBed.configureTestingModule({ providers: [ActiveSessionsFacade, { provide: ActiveSessionsService, useValue: api }] });
         facade = TestBed.inject(ActiveSessionsFacade);
         facade.load();
+        await settleLoadAsync();
     });
 
     it('clears a failed revocation when retry succeeds', () => {
@@ -102,24 +137,30 @@ describe('ActiveSessionsFacade recovery', () => {
         expect(facade.sessions()).toEqual([currentSession]);
     });
 
-    it('prevents duplicate list requests while a reload is pending', () => {
+    it('prevents duplicate list requests while a reload is pending', async () => {
         const pending = new Subject<ActiveSession[]>();
         api.getAll.mockClear().mockReturnValue(pending);
         facade.load();
         facade.load();
+        TestBed.tick();
+        facade.load();
+        TestBed.tick();
 
         expect(api.getAll).toHaveBeenCalledOnce();
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
         pending.next([currentSession]);
         pending.complete();
+        await settleLoadAsync();
         expect(facade.sessions()).toEqual([currentSession]);
         expect(facade.isLoading()).toBe(false);
     });
 
-    it('keeps an opaque session named all separate from the revoke-others action', () => {
+    it('keeps an opaque session named all separate from the revoke-others action', async () => {
         const opaque = createSession('all', false);
         const pending = new Subject<void>();
-        facade.sessions.set([currentSession, opaque]);
+        api.getAll.mockReturnValueOnce(of([currentSession, opaque]));
+        facade.load();
+        await settleLoadAsync();
         api.revoke.mockReturnValueOnce(pending);
 
         facade.revoke(opaque.id);
@@ -151,6 +192,11 @@ describe('ActiveSessionsFacade recovery', () => {
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
     });
 });
+
+async function settleLoadAsync(): Promise<void> {
+    TestBed.tick();
+    await TestBed.inject(ApplicationRef).whenStable();
+}
 
 function createSession(id: string, isCurrent: boolean): ActiveSession {
     return {

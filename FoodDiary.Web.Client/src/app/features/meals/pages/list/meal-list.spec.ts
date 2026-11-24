@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -799,10 +799,13 @@ async function renderMealDiaryAsync(overrides: Partial<Meal> = {}, initialFavori
         deferBlockBehavior: DeferBlockBehavior.Manual,
         providers: [
             provideTranslateTesting(),
-            provideRouter([
-                { path: 'meals', component: MealListComponent },
-                { path: 'statistics', component: DiaryDestinationTestPage },
-            ]),
+            provideRouter(
+                [
+                    { path: 'meals', component: MealListComponent },
+                    { path: 'statistics', component: DiaryDestinationTestPage },
+                ],
+                withComponentInputBinding(),
+            ),
             provideHttpClient(),
             provideHttpClientTesting(),
             { provide: AuthService, useValue: { isAuthenticated: signal(true), isPremium: signal(false), getUserId: (): null => null } },

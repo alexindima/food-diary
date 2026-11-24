@@ -221,10 +221,7 @@ export class RecipeListFacade {
     }
 
     private isCurrentRequest(requestId: number, query: RecipeListQuery): boolean {
-        return (
-            requestId === this.requestId &&
-            (this.queryState === null || recipeListQueryKey(query) === recipeListQueryKey(this.queryState.current()))
-        );
+        return requestId === this.requestId && (this.queryState === null || this.queryState.isCurrent(query));
     }
 
     private writeRouteQuery(query: RecipeListQuery, replaceUrl = false): void {

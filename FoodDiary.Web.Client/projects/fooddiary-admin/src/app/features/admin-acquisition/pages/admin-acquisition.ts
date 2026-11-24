@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -12,7 +12,7 @@ import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-err
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
-import { ADMIN_DATE_TEXT_LENGTH, adminPage } from '../../../shared/period/admin-query';
+import { ADMIN_DATE_TEXT_LENGTH, adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminAcquisitionComparisonComponent } from '../components/admin-acquisition-comparison';
 import { AdminAcquisitionLinkPreviewComponent } from '../components/admin-acquisition-link-preview';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
@@ -25,6 +25,7 @@ const MAX_LANDING_PATH_LENGTH = 512;
 type AttributionEventFilter = 'all' | 'page_landing' | 'signup_completed' | 'premium_started';
 type AttributionChannelFilter = 'all' | 'tracked' | 'direct';
 type AcquisitionReportQuery = Record<string, string | number> & { page: number; limit: number };
+type AcquisitionEventFilters = { search: string; eventType: AttributionEventFilter; channel: AttributionChannelFilter };
 
 type CampaignUrlBuilderModel = {
     baseUrl: string;
@@ -54,10 +55,33 @@ type CampaignUrlBuilderModel = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAcquisitionComponent {
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly eventType = input(undefined, { transform: firstAdminQueryValue });
+    public readonly channel = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly acquisitionFacade = inject(AdminAcquisitionFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly requestedReport = signal<AcquisitionReportQuery | undefined>(undefined);
+    private readonly appliedQuery = computed(() => {
+        const eventType = this.eventType() ?? 'all';
+        const channel = this.channel() ?? 'all';
+        const filters: AcquisitionEventFilters = {
+            search: this.search() ?? '',
+            eventType: this.isEventFilter(eventType) ? eventType : 'all',
+            channel: this.isChannelFilter(channel) ? channel : 'all',
+        };
+        return {
+            page: adminPage(this.page() ?? null),
+            filters,
+            periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+        };
+    });
+    protected readonly eventPageSize = 50;
+    private readonly requestedReport = linkedSignal(() => this.buildRequest(this.appliedQuery().filters));
     private readonly reportResource = rxResource({
         params: this.requestedReport,
         stream: ({ params }) =>
@@ -82,13 +106,12 @@ export class AdminAcquisitionComponent {
         () => this.reportResource.isLoading() || (this.reportResource.hasValue() && this.reportResource.value() === null),
     );
     protected readonly failed = computed(() => this.reportResource.error() !== undefined);
-    protected readonly page = signal(1);
-    protected readonly eventSearch = signal('');
+    protected readonly currentPage = computed(() => this.appliedQuery().page);
+    protected readonly eventSearch = linkedSignal(() => this.appliedQuery().filters.search);
     protected readonly eventSearchMaxLength = 320;
     protected readonly utmMaxLength = 160;
-    protected readonly eventPageSize = 50;
-    protected readonly eventTypeFilter = signal<AttributionEventFilter>('all');
-    protected readonly channelFilter = signal<AttributionChannelFilter>('all');
+    protected readonly eventTypeFilter = linkedSignal(() => this.appliedQuery().filters.eventType);
+    protected readonly channelFilter = linkedSignal(() => this.appliedQuery().filters.channel);
     protected readonly builderModel = signal<CampaignUrlBuilderModel>({
         baseUrl: 'https://fooddiary.club/',
         source: 'telegram',
@@ -116,36 +139,30 @@ export class AdminAcquisitionComponent {
 
         return ((data.attributedVisits / data.visits) * PERCENT_SCALE).toFixed(1);
     });
-    public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            const eventType = params.get('eventType') ?? 'all';
-            const channel = params.get('channel') ?? 'all';
-            this.eventTypeFilter.set(this.isEventFilter(eventType) ? eventType : 'all');
-            this.channelFilter.set(this.isChannelFilter(channel) ? channel : 'all');
-            this.eventSearch.set(params.get('search') ?? '');
-            this.page.set(adminPage(params.get('page')));
-            this.loadSummary();
-        });
+    protected loadSummary(): void {
+        this.requestedReport.set(
+            this.buildRequest({ search: this.eventSearch(), eventType: this.eventTypeFilter(), channel: this.channelFilter() }),
+        );
     }
 
-    protected loadSummary(): void {
-        const range = adminPeriod(this.route.snapshot.queryParamMap, '30d');
+    private buildRequest(filters: AcquisitionEventFilters): AcquisitionReportQuery | undefined {
+        const { page, periodParams } = this.appliedQuery();
+        const range = adminPeriod(periodParams, '30d');
         if (range === null) {
-            this.requestedReport.set(undefined);
-            return;
+            return undefined;
         }
         const dates = adminUtcPeriod({
             from: range.from ?? '1970-01-01',
             to: range.to ?? new Date().toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH),
         });
-        this.requestedReport.set({
+        return {
             ...dates,
-            page: this.page(),
+            page,
             limit: this.eventPageSize,
-            eventType: this.eventTypeFilter() === 'all' ? '' : this.eventTypeFilter(),
-            channel: this.channelFilter() === 'all' ? '' : this.channelFilter(),
-            search: this.eventSearch(),
-        });
+            eventType: filters.eventType === 'all' ? '' : filters.eventType,
+            channel: filters.channel === 'all' ? '' : filters.channel,
+            search: filters.search,
+        };
     }
 
     protected formatAttribution(event: MarketingAttributionRecentEvent): string {

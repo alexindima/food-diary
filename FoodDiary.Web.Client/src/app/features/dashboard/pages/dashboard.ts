@@ -8,8 +8,10 @@ import {
     effect,
     type ElementRef,
     inject,
+    input,
     signal,
     type Type,
+    untracked,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -117,6 +119,10 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
+    public readonly date = input<string | null, string | string[] | undefined>(null, {
+        transform: value => (Array.isArray(value) ? value[0] : value) ?? null,
+    });
+
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly navigationService = inject(NavigationService);
@@ -298,9 +304,10 @@ export class DashboardComponent {
     });
 
     public constructor() {
-        const setDateAsync = async (input: unknown): Promise<void> => {
-            const date = devDay(devRecord(input, ['date'])['date']);
-            const currentDates = this.route.snapshot.queryParamMap.getAll('date');
+        const setDateAsync = async (dateInput: unknown): Promise<void> => {
+            const date = devDay(devRecord(dateInput, ['date'])['date']);
+            const rawDate: unknown = this.route.snapshot.queryParams['date'];
+            const currentDates = Array.isArray(rawDate) ? rawDate : [rawDate];
             if (currentDates.length === 1 && currentDates[0] === date) {
                 return;
             }
@@ -333,10 +340,12 @@ export class DashboardComponent {
             }
             this.fastingPriorityOnOpen.set(shouldPrioritizeDashboardFasting(this.fastingCurrentSession(), Date.now()));
         });
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            const date = parseDashboardDate(params.get('date')) ?? undefined;
-            this.facade.initialize(date);
-            this.facade.setSelectedDate(date);
+        effect(() => {
+            const date = parseDashboardDate(this.date()) ?? undefined;
+            untracked(() => {
+                this.facade.initialize(date);
+                this.facade.setSelectedDate(date);
+            });
         });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + DASHBOARD_LANGUAGE_VERSION_INCREMENT);

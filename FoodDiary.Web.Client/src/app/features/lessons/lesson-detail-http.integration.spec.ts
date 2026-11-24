@@ -1,7 +1,7 @@
 import { type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
@@ -112,7 +112,7 @@ function setupHttp(): HttpTestingController {
             provideHttpClient(),
             provideHttpClientTesting(),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
-            provideRouter([{ path: 'lessons', children: lessonRoutes }]),
+            provideRouter([{ path: 'lessons', children: lessonRoutes }], withComponentInputBinding()),
         ],
     });
     const http = TestBed.inject(HttpTestingController);

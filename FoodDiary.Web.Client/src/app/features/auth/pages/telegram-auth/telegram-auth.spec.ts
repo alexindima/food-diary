@@ -54,7 +54,6 @@ const USER: User = {
 })
 class ExistingAuthStubComponent {
     public readonly initialReturnUrl = input('');
-    public readonly useRouting = input(true);
     public readonly hideTelegram = input(false);
 }
 
@@ -668,7 +667,6 @@ describe('Telegram existing-account choices', () => {
         const signIn = harness.fixture.debugElement.query(By.directive(ExistingAuthStubComponent))
             .componentInstance as ExistingAuthStubComponent;
         expect(signIn.initialReturnUrl()).toBe('/auth/telegram');
-        expect(signIn.useRouting()).toBe(false);
         expect(signIn.hideTelegram()).toBe(true);
         await clickAsync(harness, 'AUTH.TELEGRAM.BACK_TO_CHOICE');
         expect(harness.root.querySelector('fd-auth')).toBeNull();

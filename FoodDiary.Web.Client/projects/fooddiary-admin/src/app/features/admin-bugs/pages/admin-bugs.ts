@@ -1,24 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent, FdUiTabsComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, map, of, startWith, Subject, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminBugReportListComponent } from '../components/admin-bug-report-list';
 import { REPORT_STATUSES, reportStatusPresentation } from '../lib/admin-bug-presentation';
 import { AdminBugsFacade } from '../lib/admin-bugs.facade';
-import type { AdminBugReportPage } from '../models/admin-bug-report';
 
 const SEARCH_MAX_LENGTH = 320;
 const STATUS_MAX_LENGTH = 32;
 const PAGE_SIZE = 25;
+type BugReportRequest = Record<string, string | number> & { page: number; id?: string };
 
 @Component({
     selector: 'fd-admin-bugs',
@@ -41,19 +41,55 @@ const PAGE_SIZE = 25;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminBugsPageComponent {
+    public readonly id = input(undefined, { transform: firstAdminQueryValue });
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly source = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly status = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly api = inject(AdminBugsFacade);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly refresh = new Subject<void>();
     private readonly translate = inject(TranslateService);
     private readonly languageChange = toSignal(this.translate.onLangChange, { initialValue: null });
-    protected readonly result = signal<AdminBugReportPage | null>(null);
-    protected readonly loading = signal(true);
-    protected readonly failed = signal(false);
-    protected readonly page = signal(1);
-    protected readonly detailId = signal<string | null>(null);
-    protected readonly source = signal('email');
+    private readonly detailRoute = this.route.routeConfig?.path === ':id';
+    private readonly appliedQuery = computed(() => ({
+        id: this.detailRoute ? (this.id() ?? null) : null,
+        page: adminPage(this.page() ?? null),
+        source: this.source() === 'logs' ? 'logs' : 'email',
+        filters: { search: this.search() ?? '', status: this.status() ?? '' },
+        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    }));
+    private readonly requestedPage = linkedSignal(() => this.buildRequest());
+    private readonly reportResource = rxResource({
+        params: this.requestedPage,
+        stream: ({ params }) =>
+            this.api.getPage(params).pipe(
+                map(result => {
+                    if (this.requestedPage() !== params) {
+                        return null;
+                    }
+                    const correctingPage =
+                        params.id === undefined &&
+                        restoreAdminPage(this.router, this.route, params.page, { totalItems: result.totalItems, pageSize: PAGE_SIZE });
+                    return correctingPage ? null : result;
+                }),
+            ),
+    });
+    protected readonly result = computed(() => (this.reportResource.hasValue() ? this.reportResource.value() : null));
+    protected readonly loading = computed(
+        () => this.reportResource.isLoading() || (this.reportResource.hasValue() && this.reportResource.value() === null),
+    );
+    protected readonly failed = computed(() => this.reportResource.error() !== undefined);
+    protected readonly currentPage = computed(() => this.appliedQuery().page);
+    protected readonly detailId = computed(() => this.appliedQuery().id);
+    protected readonly activeSource = computed(() => {
+        const source = this.appliedQuery().source;
+        return this.detailId() === null ? source : (this.result()?.items[0]?.source ?? source);
+    });
     protected readonly tabs = [
         { value: 'email', labelKey: 'ADMIN_BUGS.TAB_EMAIL' },
         { value: 'logs', labelKey: 'ADMIN_BUGS.TAB_LOGS' },
@@ -65,7 +101,7 @@ export class AdminBugsPageComponent {
             ...REPORT_STATUSES.map(value => ({ value, label: this.translatedLabel(reportStatusPresentation(value).key) })),
         ];
     });
-    protected readonly formModel = signal({ search: '', status: '' });
+    protected readonly formModel = linkedSignal(() => this.appliedQuery().filters);
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.applyAsync();
     };
@@ -78,54 +114,13 @@ export class AdminBugsPageComponent {
         { submission: { action: this.submitFormAsync } },
     );
 
-    public constructor() {
-        combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh.pipe(startWith(undefined))])
-            .pipe(
-                switchMap(([path, query]) => {
-                    this.result.set(null);
-                    this.failed.set(false);
-                    this.detailId.set(path.get('id'));
-                    this.page.set(adminPage(query.get('page')));
-                    this.source.set(query.get('source') === 'logs' ? 'logs' : 'email');
-                    this.formModel.set({
-                        search: query.get('search') ?? '',
-                        status: query.get('status') ?? '',
-                    });
-                    const id = this.detailId();
-                    const period = id === null ? adminPeriod(query) : {};
-                    if (period === null) {
-                        this.loading.set(false);
-                        return of(null);
-                    }
-                    this.loading.set(true);
-                    const params: Record<string, string | number> =
-                        id === null
-                            ? { page: this.page(), limit: PAGE_SIZE, source: this.source(), ...this.formModel(), ...adminUtcPeriod(period) }
-                            : { page: 1, limit: PAGE_SIZE, id };
-                    return this.api.getPage(params).pipe(
-                        map(result => result),
-                        catchError(() => {
-                            this.failed.set(true);
-                            return of(null);
-                        }),
-                    );
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(result => {
-                if (
-                    result !== null &&
-                    this.detailId() === null &&
-                    restoreAdminPage(this.router, this.route, this.page(), { totalItems: result.totalItems, pageSize: PAGE_SIZE })
-                ) {
-                    return;
-                }
-                this.result.set(result);
-                if (this.detailId() !== null && result?.items[0] !== undefined) {
-                    this.source.set(result.items[0].source);
-                }
-                this.loading.set(false);
-            });
+    private buildRequest(): BugReportRequest | undefined {
+        const { id, page, source, filters, periodParams } = this.appliedQuery();
+        if (id !== null) {
+            return { page: 1, limit: PAGE_SIZE, id };
+        }
+        const period = adminPeriod(periodParams);
+        return period === null ? undefined : { page, limit: PAGE_SIZE, source, ...filters, ...adminUtcPeriod(period) };
     }
 
     private translatedLabel(key: string): string {
@@ -135,17 +130,19 @@ export class AdminBugsPageComponent {
 
     protected async applyAsync(): Promise<boolean> {
         const navigated = await this.router.navigate(['/bugs'], {
-            queryParams: { ...this.formModel(), source: this.source(), page: 1 },
+            queryParams: { ...this.formModel(), source: this.activeSource(), page: 1 },
             queryParamsHandling: 'merge',
         });
         if (!navigated) {
-            this.refresh.next();
+            this.retry();
         }
         return navigated;
     }
 
     protected goToPage(page: number): void {
-        void this.router.navigate([], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
+        if (this.router.currentNavigation() === null && !this.loading()) {
+            void this.router.navigate([], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
+        }
     }
 
     protected selectSource(source: string): void {
@@ -157,12 +154,13 @@ export class AdminBugsPageComponent {
 
     protected resetFilters(): void {
         void this.router.navigate(['/bugs'], {
-            queryParams: { source: this.source(), page: 1, search: null, status: null, period: null, from: null, to: null },
+            queryParams: { source: this.activeSource(), page: 1, search: null, status: null, period: null, from: null, to: null },
             queryParamsHandling: 'merge',
         });
     }
 
     protected retry(): void {
-        this.refresh.next();
+        this.formModel.set(this.appliedQuery().filters);
+        this.requestedPage.set(this.buildRequest());
     }
 }

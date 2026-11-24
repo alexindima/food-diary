@@ -3,7 +3,7 @@
     <a routerLink="/users/impersonation-sessions">{{ 'ADMIN_NAV.SESSIONS' | translate }}</a>
 </p>
 <form method="post" class="admin-filter-bar" [formRoot]="form">
-    <fd-admin-period [inline]="true" />
+    <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
     <fd-ui-input [label]="'ADMIN_AUDIT.ACTOR' | translate" [formField]="form.actorUserId" />
     <fd-ui-input [label]="'ADMIN_AUDIT.SUBJECT' | translate" [formField]="form.subjectClientUserId" />
     <fd-ui-input [label]="'ADMIN_AUDIT.ACTION' | translate" [formField]="form.action" />
@@ -40,14 +40,17 @@
     } @empty {
         <p>{{ 'ADMIN_AUDIT.EMPTY' | translate }}</p>
     }
-    <fd-ui-button [disabled]="page() <= 1" [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate" (click)="goToPage(page() - 1)">{{
-        'ADMIN_COMMON.PREVIOUS' | translate
-    }}</fd-ui-button>
-    <span>{{ page() }}</span>
     <fd-ui-button
-        [disabled]="page() * 25 >= data.totalItems"
+        [disabled]="currentPage() <= 1"
+        [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate"
+        (click)="goToPage(currentPage() - 1)"
+        >{{ 'ADMIN_COMMON.PREVIOUS' | translate }}</fd-ui-button
+    >
+    <span>{{ currentPage() }}</span>
+    <fd-ui-button
+        [disabled]="currentPage() * 25 >= data.totalItems"
         [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
-        (click)="goToPage(page() + 1)"
+        (click)="goToPage(currentPage() + 1)"
         >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
     >
 }

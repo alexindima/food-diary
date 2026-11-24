@@ -7,6 +7,7 @@ export type RecipeListQueryState = {
     readonly initial: RecipeListQuery;
     readonly current: Signal<RecipeListQuery>;
     readonly changes: Observable<RecipeListQuery>;
+    isCurrent: (query: RecipeListQuery) => boolean;
     writeAsync: (query: RecipeListQuery, options?: { replaceUrl?: boolean }) => Promise<boolean>;
 };
 

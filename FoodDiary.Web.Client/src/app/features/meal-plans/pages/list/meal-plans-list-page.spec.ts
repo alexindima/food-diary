@@ -8,6 +8,7 @@ const TEST_PLAN_DURATION_DAYS = 7;
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealPlanListFacade } from '../../lib/list/meal-plan-list.facade';
+import { MealPlanListRouteStateFacade } from '../../lib/list/meal-plan-list-route-state.facade';
 import type { DietType, MealPlanSummary } from '../../models/meal-plan.data';
 import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlansListPageComponent } from './meal-plans-list-page';
@@ -54,6 +55,7 @@ function createComponent(facade: FacadeStub, router = createRouterStub()): MealP
     TestBed.configureTestingModule({
         providers: [
             { provide: MealPlanListFacade, useValue: facade },
+            { provide: MealPlanListRouteStateFacade, useValue: { bind: vi.fn() } },
             { provide: Router, useValue: router },
         ],
     });

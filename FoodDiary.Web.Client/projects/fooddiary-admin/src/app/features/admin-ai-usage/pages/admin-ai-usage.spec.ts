@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -27,7 +27,10 @@ beforeEach(async () => {
     await TestBed.configureTestingModule({
         providers: [
             ...provideTranslateTesting(),
-            provideRouter([{ path: 'ai-usage', component: AdminAiUsageComponent }]),
+            provideRouter(
+                [{ path: 'ai-usage', component: AdminAiUsageComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             { provide: AdminAiUsageService, useValue: { getSummary } },
         ],
     }).compileComponents();
@@ -35,7 +38,9 @@ beforeEach(async () => {
 
 describe('AdminAiUsageComponent', () => {
     it('loads a filtered account and renders the daily chart and usage breakdowns', async () => {
-        const harness = await RouterTestingHarness.create('/ai-usage?userId=account-1&period=custom&from=2026-01-15&to=2026-01-16');
+        const harness = await RouterTestingHarness.create(
+            '/ai-usage?userId=account-1&userId=ignored&period=custom&from=2026-01-15&to=2026-01-16',
+        );
         await harness.fixture.whenStable();
 
         expect(getSummary).toHaveBeenCalledExactlyOnceWith({ from: '2026-01-15', to: '2026-01-17', userId: 'account-1' });

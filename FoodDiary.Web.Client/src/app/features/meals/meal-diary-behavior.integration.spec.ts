@@ -1,11 +1,11 @@
-import { PlatformLocation, registerLocaleData } from '@angular/common';
+import { Location, PlatformLocation, registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NavigationError, provideRouter, Router } from '@angular/router';
+import { NavigationError, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -74,11 +74,14 @@ function configureDiary(): DiarySetup {
     TestBed.configureTestingModule({
         deferBlockBehavior: DeferBlockBehavior.Manual,
         providers: [
-            provideRouter([
-                { path: 'meals/add', component: MealDestinationPage },
-                { path: 'meals/:id/edit', component: MealDestinationPage },
-                { path: 'meals', component: MealListComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'meals/add', component: MealDestinationPage },
+                    { path: 'meals/:id/edit', component: MealDestinationPage },
+                    { path: 'meals', component: MealListComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -203,6 +206,47 @@ describe('Routed meal diary pages', () => {
         expect(api.queryOverview.mock.lastCall?.[2]).toMatchObject({ dateFrom: new Date(`${FILTER_FROM}T00:00:00`).toISOString() });
         expect(navigate).toHaveBeenCalledWith([], expect.objectContaining({ replaceUrl: true, queryParamsHandling: 'merge' }));
         expect(routeHost(harness).textContent).toContain(MEAL.comment);
+    });
+
+    it('reads repeated filters on the reused route and clears them on browser Back', async () => {
+        const { api } = configureDiary();
+        api.queryOverview.mockImplementation(page => of(overview([MEAL], page, LAST_PAGE)));
+        const initial = '/meals?campaign=summer';
+        const harness = await RouterTestingHarness.create(initial);
+        const router = TestBed.inject(Router);
+        router.setUpLocationChangeListener();
+        const query = new URLSearchParams({
+            page: String(LAST_PAGE),
+            dateFrom: FILTER_FROM,
+            dateTo: FILTER_TO,
+            mealTypes: 'dinner,breakfast',
+            hasImage: 'false',
+            campaign: 'summer',
+        });
+        query.append('mealTypes', 'lunch');
+        query.append('hasImage', 'true');
+        await harness.navigateByUrl(`/meals?${query.toString()}`);
+        redraw(harness);
+
+        expect(api.queryOverview.mock.calls.map(([page]) => page)).toEqual([1, LAST_PAGE]);
+        expect(api.queryOverview.mock.lastCall?.[2]).toMatchObject({
+            dateFrom: new Date(`${FILTER_FROM}T00:00:00`).toISOString(),
+            dateTo: new Date(`${FILTER_TO}T23:59:59.999`).toISOString(),
+            mealTypes: 'BREAKFAST,DINNER,LUNCH',
+            hasImage: false,
+        });
+
+        TestBed.inject(Location).back();
+        await vi.waitFor(() => {
+            redraw(harness);
+            expect(router.url).toBe(initial);
+            expect(api.queryOverview.mock.calls.map(([page]) => page)).toEqual([1, LAST_PAGE, 1]);
+        });
+        const filters = api.queryOverview.mock.lastCall?.[2];
+        expect(filters?.dateFrom).toBeUndefined();
+        expect(filters?.dateTo).toBeUndefined();
+        expect(filters?.mealTypes).toBeUndefined();
+        expect(filters?.hasImage).toBeUndefined();
     });
 });
 

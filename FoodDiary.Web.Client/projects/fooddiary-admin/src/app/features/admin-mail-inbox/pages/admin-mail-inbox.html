@@ -16,7 +16,7 @@
         }}</a>
     }
     <div class="admin-filter-bar">
-        <fd-admin-period [inline]="true" />
+        <fd-admin-period [inline]="true" [period]="period()" [periodFrom]="from()" [periodTo]="to()" />
         <fd-ui-input
             [label]="'ADMIN_MAIL_INBOX.SUBJECT_FILTER' | translate"
             [value]="subjectFilter()"

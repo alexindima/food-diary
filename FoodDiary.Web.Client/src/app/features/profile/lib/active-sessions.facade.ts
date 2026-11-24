@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { finalize } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { finalize, map } from 'rxjs';
 
 import type { RefreshTokenSessionId } from '../../../shared/models/semantics/entity-id';
 import { ActiveSessionsService } from '../api/active-sessions.service';
@@ -8,10 +9,27 @@ import type { ActiveSession, SessionRevocation } from '../models/active-session.
 @Injectable()
 export class ActiveSessionsFacade {
     private readonly api = inject(ActiveSessionsService);
-    public readonly sessions = signal<ActiveSession[]>([]);
-    public readonly isLoading = signal(false);
+    private readonly loadVersion = signal<number | undefined>(undefined);
+    private readonly sessionList = signal<ActiveSession[]>([]);
+    private readonly sessionsResource = rxResource({
+        params: this.loadVersion,
+        stream: () =>
+            this.api.getAll().pipe(
+                map(sessions => {
+                    this.sessionList.set(sessions);
+                }),
+            ),
+    });
+    private readonly revokeFailed = signal(false);
+    public readonly sessions = this.sessionList.asReadonly();
+    public readonly isLoading = this.sessionsResource.isLoading;
     public readonly revocation = signal<SessionRevocation>({ kind: 'idle' });
-    public readonly error = signal<'load' | 'revoke' | null>(null);
+    public readonly error = computed<'load' | 'revoke' | null>(() => {
+        if (this.revokeFailed()) {
+            return 'revoke';
+        }
+        return this.sessionsResource.error() === undefined ? null : 'load';
+    });
     public readonly isBusy = computed(() => this.isLoading() || this.revocation().kind !== 'idle');
     public readonly isRevokingOthers = computed(() => this.revocation().kind === 'others');
 
@@ -24,31 +42,15 @@ export class ActiveSessionsFacade {
         if (this.isBusy()) {
             return;
         }
-        this.isLoading.set(true);
-        this.error.set(null);
-        this.api
-            .getAll()
-            .pipe(
-                finalize(() => {
-                    this.isLoading.set(false);
-                }),
-            )
-            .subscribe({
-                next: sessions => {
-                    this.sessions.set(sessions);
-                },
-                error: () => {
-                    this.error.set('load');
-                },
-            });
+        this.revokeFailed.set(false);
+        this.loadVersion.update(version => (version ?? 0) + 1);
     }
 
     public revoke(sessionId: RefreshTokenSessionId): void {
         if (this.isBusy()) {
             return;
         }
-        this.error.set(null);
-        this.revocation.set({ kind: 'single', sessionId });
+        this.startRevocation({ kind: 'single', sessionId });
         this.api
             .revoke(sessionId)
             .pipe(
@@ -58,10 +60,10 @@ export class ActiveSessionsFacade {
             )
             .subscribe({
                 next: () => {
-                    this.sessions.update(items => items.filter(item => item.id !== sessionId));
+                    this.sessionList.update(items => items.filter(item => item.id !== sessionId));
                 },
                 error: () => {
-                    this.error.set('revoke');
+                    this.revokeFailed.set(true);
                 },
             });
     }
@@ -70,8 +72,7 @@ export class ActiveSessionsFacade {
         if (this.isBusy()) {
             return;
         }
-        this.error.set(null);
-        this.revocation.set({ kind: 'others' });
+        this.startRevocation({ kind: 'others' });
         this.api
             .revokeOthers()
             .pipe(
@@ -81,11 +82,19 @@ export class ActiveSessionsFacade {
             )
             .subscribe({
                 next: () => {
-                    this.sessions.update(items => items.filter(item => item.isCurrent));
+                    this.sessionList.update(items => items.filter(item => item.isCurrent));
                 },
                 error: () => {
-                    this.error.set('revoke');
+                    this.revokeFailed.set(true);
                 },
             });
+    }
+
+    private startRevocation(revocation: Exclude<SessionRevocation, { kind: 'idle' }>): void {
+        this.revokeFailed.set(false);
+        if (this.sessionsResource.error() !== undefined) {
+            this.sessionsResource.set(undefined);
+        }
+        this.revocation.set(revocation);
     }
 }
