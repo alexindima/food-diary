@@ -41,16 +41,17 @@ beforeEach(async () => {
 });
 
 describe('Admin retention display', () => {
-    it('renders a mature zero separately from a cohort whose observation window is incomplete', () => {
+    it('renders a mature zero separately from a cohort whose observation window is incomplete', async () => {
         const fixture = TestBed.createComponent(AdminRetentionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const text = (fixture.nativeElement as HTMLElement).textContent;
         expect(text).toContain('Jan 1, 2026');
         expect(text).toContain('0.0% (0/2)');
         expect(text).toContain('ADMIN_RETENTION.IMMATURE');
     });
 
-    it('sends independent activity and cohort periods and renders zero days', () => {
+    it('sends independent activity and cohort periods and renders zero days', async () => {
         query.next(
             convertToParamMap({
                 period: 'custom',
@@ -63,6 +64,7 @@ describe('Admin retention display', () => {
         );
         const fixture = TestBed.createComponent(AdminRetentionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         expect(getReport).toHaveBeenLastCalledWith({
             from: '2026-01-01',
             to: '2026-01-02',
@@ -75,16 +77,18 @@ describe('Admin retention display', () => {
         expect(element.querySelector('details')).toBeNull();
     });
 
-    it('shows failure and can retry without presenting a false empty report', () => {
+    it('shows failure and can retry without presenting a false empty report', async () => {
         getReport.mockReturnValueOnce(throwError(() => new Error('offline')));
         const fixture = TestBed.createComponent(AdminRetentionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('table')).toBeNull();
         const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
         expect(retry).not.toBeNull();
         retry?.click();
         fixture.detectChanges();
+        await fixture.whenStable();
         expect(host.querySelector('fd-admin-load-error')).toBeNull();
         expect(host.querySelectorAll('table')).toHaveLength(2);
     });
@@ -94,29 +98,37 @@ describe('Admin retention period transitions', () => {
     it.each([
         { period: 'custom', from: '2024-02-30', to: '2024-03-01' },
         { activity_period: 'custom', activity_from: '2024-03-01', activity_to: '2024-02-29' },
-    ])('cancels a pending report without issuing another request for an invalid filter %o', invalid => {
+    ])('hides a previous report and cancels a pending request when a filter becomes invalid %o', async invalid => {
         const pending = new Subject<AdminRetentionReport>();
-        getReport.mockReturnValueOnce(pending);
         const fixture = TestBed.createComponent(AdminRetentionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelectorAll('table')).toHaveLength(2);
+
+        getReport.mockReturnValueOnce(pending);
+        query.next(convertToParamMap({ period: 'all' }));
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
         expect(host.querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
+        expect(host.querySelector('table')).toBeNull();
 
         query.next(convertToParamMap(invalid));
+        fixture.detectChanges();
         expect(pending.observed).toBe(false);
         pending.next(report);
-        fixture.detectChanges();
-        expect(getReport).toHaveBeenCalledOnce();
+        expect(getReport).toHaveBeenCalledTimes(2);
         expect(host.querySelector('table')).toBeNull();
         expect(host.querySelector('[role="status"]')).toBeNull();
     });
 
-    it('requests all-time activity and cohorts and displays a dash for a zero-denominator cohort', () => {
+    it('requests all-time activity and cohorts and displays a dash for a zero-denominator cohort', async () => {
         query.next(convertToParamMap({ period: 'all', activity_period: 'all' }));
         const cohort = { ...report.cohorts[0], registered: 0 };
         getReport.mockReturnValueOnce(of({ ...report, activityByDay: [], cohorts: [cohort] }));
         const fixture = TestBed.createComponent(AdminRetentionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const host = fixture.nativeElement as HTMLElement;
 
         expect(getReport).toHaveBeenCalledExactlyOnceWith({ from: '1970-01-01', cohortFrom: '1970-01-01', cohortTo: undefined });

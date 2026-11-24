@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -8,8 +9,7 @@ import { ProductService } from '../../api/product.service';
 import { PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../product-manage.constants';
 import { ProductNameSearchFacade } from './product-name-search.facade';
 
-const ZERO_DEBOUNCE_MS = 0;
-const DEBOUNCE_FLUSH_MS = 1;
+const DEBOUNCE_MS = 20;
 const USDA_FDC_ID = 12345;
 
 let facade: ProductNameSearchFacade;
@@ -24,7 +24,7 @@ beforeEach(() => {
         providers: [
             ProductNameSearchFacade,
             { provide: ProductService, useValue: productService },
-            { provide: NAME_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
+            { provide: NAME_SEARCH_DEBOUNCE_MS, useValue: DEBOUNCE_MS },
         ],
     });
 
@@ -34,7 +34,7 @@ beforeEach(() => {
 describe('ProductNameSearchFacade search', () => {
     it('clears options and skips API request when query is shorter than the minimum length', async () => {
         facade.search('ap');
-        await flushDebounceAsync();
+        await settleSearchAsync();
 
         expect(productService.searchSuggestions).not.toHaveBeenCalled();
         expect(facade.options()).toEqual([]);
@@ -60,7 +60,7 @@ describe('ProductNameSearchFacade search', () => {
         productService.searchSuggestions.mockReturnValueOnce(of(suggestions));
 
         facade.search(' apple ');
-        await flushDebounceAsync();
+        await settleSearchAsync();
 
         expect(productService.searchSuggestions).toHaveBeenCalledWith('apple', PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT);
         expect(facade.options()).toEqual([
@@ -88,17 +88,42 @@ describe('ProductNameSearchFacade search', () => {
         productService.searchSuggestions.mockReturnValueOnce(throwError(() => new Error('Search failed')));
 
         facade.search('apple');
-        await flushDebounceAsync();
+        await settleSearchAsync();
 
         expect(facade.options()).toEqual([]);
         expect(facade.isLoading()).toBe(false);
     });
+
+    it('restarts the debounce and can search for the same trimmed query again', async () => {
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        try {
+            facade.search('apple');
+            TestBed.tick();
+            vi.advanceTimersByTime(DEBOUNCE_MS - 1);
+
+            facade.search(' apple ');
+            TestBed.tick();
+            vi.advanceTimersByTime(DEBOUNCE_MS - 1);
+            expect(productService.searchSuggestions).not.toHaveBeenCalled();
+
+            vi.advanceTimersByTime(1);
+            await settleSearchAsync();
+            expect(productService.searchSuggestions).toHaveBeenCalledExactlyOnceWith('apple', PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT);
+
+            facade.search('apple');
+            TestBed.tick();
+            vi.advanceTimersByTime(DEBOUNCE_MS);
+            await settleSearchAsync();
+            expect(productService.searchSuggestions).toHaveBeenCalledTimes(2);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
 });
 
-async function flushDebounceAsync(): Promise<void> {
-    await new Promise(resolve => {
-        setTimeout(resolve, DEBOUNCE_FLUSH_MS);
-    });
+async function settleSearchAsync(): Promise<void> {
+    TestBed.tick();
+    await TestBed.inject(ApplicationRef).whenStable();
 }
 
 describe('ProductNameSearchFacade selection', () => {
@@ -114,7 +139,7 @@ describe('ProductNameSearchFacade selection', () => {
         productService.searchSuggestions.mockReturnValueOnce(of([legacy, identified]));
 
         facade.search(legacy.name);
-        await flushDebounceAsync();
+        await settleSearchAsync();
 
         expect(facade.options()).toMatchObject([
             { id: 'usda:Rice', label: 'Rice', badge: 'USDA', data: legacy },
@@ -154,12 +179,21 @@ describe('Product name search lifecycle', () => {
         const current = new Subject<ProductSearchSuggestion[]>();
         productService.searchSuggestions.mockReturnValueOnce(old).mockReturnValueOnce(current);
         facade.search('apple');
-        await flushDebounceAsync();
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(old.observed).toBe(true);
+        });
+
         facade.search('banana');
-        await flushDebounceAsync();
+        TestBed.tick();
         expect(old.observed).toBe(false);
+        expect(productService.searchSuggestions).toHaveBeenCalledOnce();
+        await vi.waitFor(() => {
+            expect(current.observed).toBe(true);
+        });
         current.next([{ source: 'usda', name: 'Banana', usdaFdcId: 7 }]);
         old.next([{ source: 'usda', name: 'Apple', usdaFdcId: 8 }]);
+        await settleSearchAsync();
         expect(facade.options()[0].label).toBe('Banana');
         expect(facade.isLoading()).toBe(false);
     });
@@ -167,8 +201,10 @@ describe('Product name search lifecycle', () => {
         const pending = new Subject<ProductSearchSuggestion[]>();
         productService.searchSuggestions.mockReturnValue(pending);
         facade.search('apple');
-        await flushDebounceAsync();
-        expect(pending.observed).toBe(true);
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(pending.observed).toBe(true);
+        });
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
     });

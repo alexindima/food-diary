@@ -208,11 +208,13 @@ describe('Dietologist attention panel recovery', () => {
             .mockReturnValueOnce(throwError(() => new Error('Attention service unavailable')))
             .mockReturnValueOnce(of([OTHER_SIGNAL]));
         const harness = await RouterTestingHarness.create(DIRECTORY);
+        await harness.fixture.whenStable();
         const panel = attention(root(harness));
         expect(panel.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('ATTENTION.LOAD_ERROR');
         expect(clientRow(harness, FIRST_CLIENT)).not.toBeNull();
 
         button(panel, 'DIETOLOGIST.CLIENTS.RETRY').click();
+        await harness.fixture.whenStable();
         expect(attention(root(harness)).querySelector('[role="alert"]:not([hidden])')).toBeNull();
         expect(panel.textContent).toContain(OTHER_SIGNAL.clientDisplayName);
         expect(api.getAttentionSignals).toHaveBeenCalledTimes(2);
@@ -232,6 +234,7 @@ describe('Dietologist attention panel recovery', () => {
             .mockReturnValue(freshRead);
         api.setAttentionSignalState.mockReturnValueOnce(acknowledgement);
         const harness = await RouterTestingHarness.create(DIRECTORY);
+        await harness.fixture.whenStable();
         const panel = attention(root(harness));
         const row = [...panel.querySelectorAll('article')].find(article => article.textContent.includes('Acknowledge this client'));
         if (row === undefined) {
@@ -244,12 +247,15 @@ describe('Dietologist attention panel recovery', () => {
             null,
         );
         setInactivityFilter(harness);
+        harness.detectChanges();
         expect(staleRead.observed).toBe(true);
         expect(api.getAttentionSignals).toHaveBeenLastCalledWith(expect.objectContaining({ inactivityDays: INACTIVITY_DAYS }));
 
         acknowledgement.next();
         acknowledgement.complete();
+        harness.detectChanges();
         expect(showSuccess).toHaveBeenCalledExactlyOnceWith('ATTENTION.ACKNOWLEDGE_SUCCESS');
+        expect(staleRead.observed).toBe(false);
         staleRead.next([ACKNOWLEDGED, OTHER_SIGNAL]);
         staleRead.complete();
         expect(attention(root(harness)).textContent).not.toContain(ACKNOWLEDGED.clientDisplayName);
@@ -257,6 +263,7 @@ describe('Dietologist attention panel recovery', () => {
 
         freshRead.next([OTHER_SIGNAL, NEW_SIGNAL]);
         freshRead.complete();
+        await harness.fixture.whenStable();
         expect(attention(root(harness)).textContent).toContain(OTHER_SIGNAL.clientDisplayName);
         expect(panel.textContent).toContain(NEW_SIGNAL.clientDisplayName);
         expect(panel.textContent).not.toContain(ACKNOWLEDGED.clientDisplayName);

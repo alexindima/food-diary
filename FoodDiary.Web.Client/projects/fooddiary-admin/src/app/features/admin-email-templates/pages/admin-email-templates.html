@@ -7,7 +7,7 @@
         <fd-ui-button type="button" (click)="openCreate()">Create template</fd-ui-button>
     </div>
 </header>
-<fd-admin-catalog-filter [categories]="categories()" [showState]="true" />
+<fd-admin-catalog-filter [appliedFilters]="appliedFilters()" [categories]="categories()" [showState]="true" />
 <div class="admin-email-templates fd-grid fd-gap-md">
     @if (isLoading()) {
         <p>Loading templates...</p>

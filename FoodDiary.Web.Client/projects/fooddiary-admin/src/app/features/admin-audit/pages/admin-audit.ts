@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, type ParamMap, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, of, startWith, Subject, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
@@ -13,12 +13,13 @@ import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminAuditFacade } from '../lib/admin-audit.facade';
-import type { AdminAuditPageResult } from '../models/admin-audit';
 
 const ACTION_MAX_LENGTH = 200;
 const TARGETTYPE_MAX_LENGTH = 100;
 const TARGETID_MAX_LENGTH = 200;
 const PAGE_SIZE = 25;
+
+type AuditPageQuery = Record<string, string | number> & { page: number };
 
 @Component({
     selector: 'fd-admin-audit',
@@ -41,11 +42,29 @@ export class AdminAuditPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly api = inject(AdminAuditFacade);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly refresh = new Subject<void>();
-    protected readonly result = signal<AdminAuditPageResult | null>(null);
-    protected readonly loading = signal(true);
-    protected readonly failed = signal(false);
+    private readonly requestedPage = signal<AuditPageQuery | undefined>(undefined);
+    private readonly pageResource = rxResource({
+        params: this.requestedPage,
+        stream: ({ params }) =>
+            this.api.getPage(params).pipe(
+                map(result => {
+                    if (this.requestedPage() !== params) {
+                        return null;
+                    }
+                    const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                        totalItems: result.totalItems,
+                        pageSize: PAGE_SIZE,
+                    });
+                    return correctingPage ? null : result;
+                }),
+            ),
+    });
+    protected readonly result = computed(() => (this.pageResource.hasValue() ? this.pageResource.value() : null));
+    // Keep the loading state while navigation to the corrected page is pending.
+    protected readonly loading = computed(
+        () => this.pageResource.isLoading() || (this.pageResource.hasValue() && this.pageResource.value() === null),
+    );
+    protected readonly failed = computed(() => this.pageResource.error() !== undefined);
     protected readonly page = signal(1);
     protected readonly formModel = signal({
         actorUserId: '',
@@ -68,44 +87,9 @@ export class AdminAuditPageComponent {
     );
 
     public constructor() {
-        combineLatest([this.route.queryParamMap, this.refresh.pipe(startWith(undefined))])
-            .pipe(
-                switchMap(([query]) => {
-                    this.result.set(null);
-                    this.failed.set(false);
-                    this.page.set(adminPage(query.get('page')));
-                    this.formModel.set({
-                        actorUserId: query.get('actorUserId') ?? '',
-                        subjectClientUserId: query.get('subjectClientUserId') ?? '',
-                        action: query.get('action') ?? '',
-                        targetType: query.get('targetType') ?? '',
-                        targetId: query.get('targetId') ?? '',
-                    });
-                    const period = adminPeriod(query);
-                    if (period === null) {
-                        this.loading.set(false);
-                        return of(null);
-                    }
-                    this.loading.set(true);
-                    return this.api.getPage({ page: this.page(), limit: 25, ...this.formModel(), ...adminUtcPeriod(period) }).pipe(
-                        catchError(() => {
-                            this.failed.set(true);
-                            return of(null);
-                        }),
-                    );
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(result => {
-                if (
-                    result !== null &&
-                    restoreAdminPage(this.router, this.route, this.page(), { totalItems: result.totalItems, pageSize: PAGE_SIZE })
-                ) {
-                    return;
-                }
-                this.result.set(result);
-                this.loading.set(false);
-            });
+        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(query => {
+            this.loadPage(query);
+        });
     }
 
     protected async applyAsync(): Promise<boolean> {
@@ -121,6 +105,21 @@ export class AdminAuditPageComponent {
     }
 
     protected retry(): void {
-        this.refresh.next();
+        this.loadPage(this.route.snapshot.queryParamMap);
+    }
+
+    private loadPage(query: ParamMap): void {
+        const page = adminPage(query.get('page'));
+        const filters = {
+            actorUserId: query.get('actorUserId') ?? '',
+            subjectClientUserId: query.get('subjectClientUserId') ?? '',
+            action: query.get('action') ?? '',
+            targetType: query.get('targetType') ?? '',
+            targetId: query.get('targetId') ?? '',
+        };
+        this.page.set(page);
+        this.formModel.set(filters);
+        const period = adminPeriod(query);
+        this.requestedPage.set(period === null ? undefined : { page, limit: PAGE_SIZE, ...filters, ...adminUtcPeriod(period) });
     }
 }

@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { afterEach, expect, it } from 'vitest';
 
@@ -35,7 +35,7 @@ it('keeps current favorites usable when an earlier account catalog lookup fails 
     };
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'explore', component: PublicRecipeCatalogComponent }]),
+            provideRouter([{ path: 'explore', component: PublicRecipeCatalogComponent }], withComponentInputBinding()),
             provideHttpClient(),
             provideHttpClientTesting(),
             provideTranslateTesting(),
@@ -54,6 +54,7 @@ it('keeps current favorites usable when an earlier account catalog lookup fails 
     const catalog = http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.recipes}/public`);
     expect(catalog.request.params.get('maxTotalTime')).toBe('30');
     catalog.flush({ data: [recipe], page: 1, limit: 20, totalPages: 1, totalItems: 1 });
+    await waitForAsyncTasksAsync();
     harness.detectChanges();
     const root = harness.routeNativeElement;
     if (root === null) {

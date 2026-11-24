@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { ActivatedRoute, type ParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
@@ -32,24 +31,17 @@ export function matchesAdminCatalog(
 export class AdminCatalogFilterComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    public readonly appliedFilters = input.required<ParamMap>();
     public readonly categories = input<string[]>([]);
     public readonly showLocale = input(true);
     public readonly showState = input(false);
     public readonly activeLabel = input('ADMIN_PROMPTS.ACTIVE');
     public readonly inactiveLabel = input('ADMIN_PROMPTS.INACTIVE');
     protected readonly categoryOptions = computed(() => this.categories().map(value => ({ value, label: value })));
-    protected readonly search = signal('');
-    protected readonly locale = signal('');
-    protected readonly category = signal('');
-    protected readonly state = signal('');
-    public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.search.set(params.get('search') ?? '');
-            this.locale.set(params.get('locale') ?? '');
-            this.category.set(params.get('category') ?? '');
-            this.state.set(params.get('state') ?? '');
-        });
-    }
+    protected readonly search = linkedSignal(() => this.appliedFilters().get('search') ?? '');
+    protected readonly locale = linkedSignal(() => this.appliedFilters().get('locale') ?? '');
+    protected readonly category = linkedSignal(() => this.appliedFilters().get('category') ?? '');
+    protected readonly state = linkedSignal(() => this.appliedFilters().get('state') ?? '');
     protected apply(): void {
         void this.router.navigate([], {
             relativeTo: this.route,

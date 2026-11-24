@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -52,22 +53,12 @@ describe('AdminEmailTemplatesComponent', () => {
         fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('pages the list and clamps the last page after records are removed', () => {
-        component['templates'].set(
-            Array.from({ length: 21 }, (_, index) => ({ ...templates[0], id: adminId<'email-template'>(`t${index}`) })),
-        );
-        expect(component['pageItems']()).toHaveLength(component['pageSize']);
-        component['requestedPage'].set(1);
-        expect(component['pageItems']().map(item => item.id)).toEqual(['t20']);
-        component['templates'].set(templates);
-        expect(component['pageIndex']()).toBe(0);
-        expect(component['pageItems']()).toEqual(templates);
     });
 
     it('should load templates on init', () => {
@@ -85,6 +76,7 @@ describe('AdminEmailTemplatesComponent', () => {
         component['openEdit'](templates[0]);
         close$.next(true);
         close$.complete();
+        fixture.detectChanges();
 
         expect(dialogService.open).toHaveBeenCalled();
         expect(templatesService.getAll).toHaveBeenCalledTimes(2);
@@ -99,6 +91,7 @@ describe('AdminEmailTemplatesComponent', () => {
         component['openCreate']();
         close$.next(true);
         close$.complete();
+        fixture.detectChanges();
 
         const serializedDialogConfig = JSON.stringify(dialogService.open.mock.calls[0]?.[1]);
         expect(serializedDialogConfig).toContain('"key":""');
@@ -115,18 +108,10 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
     beforeEach(async () => {
         vi.resetAllMocks();
         closed.mockReturnValue(of(false));
-        await TestBed.configureTestingModule({
-            imports: [AdminEmailTemplatesComponent],
-            providers: [
-                provideRouter([]),
-                ...provideTranslateTesting(),
-                { provide: AdminEmailTemplatesService, useValue: { getAll } },
-                { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof closed } => ({ afterClosed: closed }) } },
-            ],
-        }).compileComponents();
+        await configureRenderedTemplatesAsync(getAll, closed);
     });
 
-    it('keeps the newly created template visible when the original load later fails', () => {
+    it('keeps the newly created template visible when the original load later fails', async () => {
         const oldRequest = new Subject<AdminEmailTemplate[]>();
         const created = { ...templates[0], subject: 'New verification message' };
         const saved = new Subject<boolean>();
@@ -136,6 +121,7 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         expect(element.textContent).toContain('Loading templates...');
+        expect(oldRequest.observed).toBe(true);
         const createButton = Array.from(element.querySelectorAll('button')).find(button => button.textContent.trim() === 'Create template');
         if (createButton === undefined) {
             throw new Error('Missing create template button');
@@ -143,9 +129,11 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
         createButton.click();
         saved.next(true);
         saved.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(element.querySelector('tbody')?.textContent).toContain(created.subject);
 
+        expect(oldRequest.observed).toBe(false);
         oldRequest.error(new Error('Obsolete request failed'));
         fixture.detectChanges();
         expect(element.querySelector('fd-admin-load-error')).toBeNull();
@@ -153,9 +141,11 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
         expect(getAll).toHaveBeenCalledTimes(2);
     });
 
-    it('retries a current list failure from the rendered error action', () => {
+    it('retries a current list failure from the rendered error action', async () => {
         getAll.mockReturnValueOnce(throwError(() => new Error('Offline'))).mockReturnValueOnce(of(templates));
         const fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         const retry = element.querySelector<HTMLButtonElement>('fd-admin-load-error button');
@@ -163,9 +153,63 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
             throw new Error('Missing retry button for failed template load');
         }
         retry.click();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(element.querySelector('fd-admin-load-error')).toBeNull();
         expect(element.querySelector('tbody')?.textContent).toContain(templates[0].subject);
         expect(getAll).toHaveBeenCalledTimes(2);
     });
 });
+
+it('filters locally and clamps the last page after a reload removes records', async () => {
+    const matchingTemplates = Array.from({ length: 21 }, (_, index) => ({
+        ...templates[0],
+        id: adminId<'email-template'>(`template-${index}`),
+        subject: `Verify template ${index}`,
+    }));
+    const other = { ...templates[0], id: adminId<'email-template'>('other'), subject: 'Subscription renewal' };
+    const getAll = vi
+        .fn<AdminEmailTemplatesService['getAll']>()
+        .mockReturnValueOnce(of([...matchingTemplates, other]))
+        .mockReturnValueOnce(of(templates));
+    await configureRenderedTemplatesAsync(getAll, () => of(true));
+    const harness = await RouterTestingHarness.create('/email-templates?page=2');
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('tbody')?.textContent).toContain(other.subject);
+
+    await harness.navigateByUrl('/email-templates?page=2&search=Verify&search=Ignored&locale=en');
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    const rowText = harness.routeNativeElement?.querySelector('tbody')?.textContent;
+    expect(rowText).toContain(matchingTemplates.at(-1)?.subject);
+    expect(rowText).not.toContain(other.subject);
+    expect(getAll).toHaveBeenCalledOnce();
+
+    harness.routeNativeElement?.querySelector<HTMLButtonElement>('tbody button')?.click();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    const router = TestBed.inject(Router);
+    expect(router.parseUrl(router.url).queryParamMap.get('page')).toBe('1');
+    expect(router.parseUrl(router.url).queryParamMap.get('search')).toBe('Verify');
+    expect(harness.routeNativeElement?.querySelector('tbody')?.textContent).toContain(templates[0].subject);
+    expect(getAll).toHaveBeenCalledTimes(2);
+});
+
+async function configureRenderedTemplatesAsync(
+    getAll: AdminEmailTemplatesService['getAll'],
+    closed: () => Observable<boolean>,
+): Promise<void> {
+    await TestBed.configureTestingModule({
+        imports: [AdminEmailTemplatesComponent],
+        providers: [
+            provideRouter(
+                [{ path: 'email-templates', component: AdminEmailTemplatesComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
+            ...provideTranslateTesting(),
+            { provide: AdminEmailTemplatesService, useValue: { getAll } },
+            { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof closed } => ({ afterClosed: closed }) } },
+        ],
+    }).compileComponents();
+}

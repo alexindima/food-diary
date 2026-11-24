@@ -1,5 +1,5 @@
 <!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
-<fd-admin-catalog-filter [categories]="categories()" [showLocale]="false" [showState]="true" />
+<fd-admin-catalog-filter [appliedFilters]="params()" [categories]="categories()" [showLocale]="false" [showState]="true" />
 <div class="achievements-layout">
     <section class="definition-list fd-grid fd-gap-sm" [attr.aria-label]="'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate">
         <div class="fd-row fd-wrap fd-justify-between fd-align-center fd-gap-actions">

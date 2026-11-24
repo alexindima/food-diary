@@ -1138,6 +1138,7 @@ describe('Dashboard nutrition detail from the day summary', () => {
         const originalRequest = refreshSnapshot.mock.lastCall?.[0];
 
         firstRead.error(new Error('Failed to load the full day'));
+        await harness.fixture.whenStable();
         redraw(harness);
         expect(dialog.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
         expect(dialog.querySelector('.nutrition-details__summary')).toBeNull();
@@ -1146,6 +1147,7 @@ describe('Dashboard nutrition detail from the day summary', () => {
         empty.statistics.totalCalories = 0;
         refreshSnapshot.mockReturnValueOnce(of(empty));
         button(dialog, 'DASHBOARD.NUTRITION_DETAILS.RETRY').click();
+        await harness.fixture.whenStable();
         redraw(harness);
         expect(dialog.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.EMPTY');
         expect(dialog.querySelector('.nutrition-details__summary')).not.toBeNull();

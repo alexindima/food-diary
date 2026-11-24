@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, max, min, pattern, required, validate } from '@angular/forms/signals';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCheckboxComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,13 +9,12 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import type { Subscription } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type {
     AchievementMetric,
@@ -61,15 +59,30 @@ const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAchievementsComponent {
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly locale = input(undefined, { transform: firstAdminQueryValue });
+    public readonly category = input(undefined, { transform: firstAdminQueryValue });
+    public readonly state = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly facade = inject(AdminAchievementsFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
-    private loadRequest?: Subscription;
-    protected readonly definitions = signal<AdminAchievementDefinition[]>([]);
+    private readonly requestVersion = signal(0);
+    private readonly definitionsResource = rxResource({
+        params: this.requestVersion,
+        stream: () => this.facade.getAll(),
+        defaultValue: [],
+    });
+    protected readonly definitions = linkedSignal({
+        source: this.definitionsResource.snapshot,
+        computation: (snapshot, previous): AdminAchievementDefinition[] =>
+            snapshot.status === 'resolved' ? snapshot.value : (previous?.value ?? []),
+    }).asReadonly();
     protected readonly editingId = signal<string | null>(null);
     protected readonly editingVersion = signal<number | null>(null);
-    protected readonly isLoading = signal(false);
-    protected readonly loadFailed = signal(false);
+    protected readonly isLoading = this.definitionsResource.isLoading;
+    protected readonly loadFailed = computed(() => this.definitionsResource.error() !== undefined);
     protected readonly isSaving = signal(false);
     protected readonly error = signal<string | null>(null);
     protected readonly metricOptions: Array<FdUiSelectOption<AchievementMetric>> = [
@@ -105,7 +118,15 @@ export class AdminAchievementsComponent {
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+    protected readonly params = computed(() =>
+        convertToParamMap({
+            page: this.page() ?? null,
+            search: this.search() ?? null,
+            locale: this.locale() ?? null,
+            category: this.category() ?? null,
+            state: this.state() ?? null,
+        }),
+    );
     protected readonly categories = computed(() => [...new Set(this.definitions().map(item => item.category))].sort());
     protected readonly filteredItems = computed(() =>
         this.definitions().filter(item =>
@@ -117,7 +138,7 @@ export class AdminAchievementsComponent {
         ),
     );
     protected readonly pageSize = 20;
-    protected readonly requestedPage = signal(0);
+    protected readonly requestedPage = computed(() => adminPage(this.page() ?? null) - 1);
     protected readonly pageIndex = computed(() =>
         Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.filteredItems().length / this.pageSize) - 1)),
     );
@@ -128,7 +149,6 @@ export class AdminAchievementsComponent {
     protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.filteredItems().length));
 
     protected goToPage(pageIndex: number): void {
-        this.requestedPage.set(pageIndex);
         void this.router.navigate([], { relativeTo: this.route, queryParams: { page: pageIndex + 1 }, queryParamsHandling: 'merge' });
     }
 
@@ -141,29 +161,10 @@ export class AdminAchievementsComponent {
                 });
             }
         });
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.requestedPage.set(adminPage(params.get('page')) - 1);
-        });
-        this.load();
     }
 
     protected load(): void {
-        this.loadRequest?.unsubscribe();
-        this.loadFailed.set(false);
-        this.isLoading.set(true);
-        this.loadRequest = this.facade
-            .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: definitions => {
-                    this.definitions.set(definitions);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.isLoading.set(false);
-                },
-            });
+        this.requestVersion.update(version => version + 1);
     }
 
     protected edit(definition: AdminAchievementDefinition): void {

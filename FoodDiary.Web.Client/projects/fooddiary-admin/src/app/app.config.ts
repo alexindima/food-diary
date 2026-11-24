@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 
@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
         ...provideAdminWebmcp(),
         ...(environment.enableGlobalErrorHandler ? [provideBrowserGlobalErrorListeners()] : []),
         provideHttpClient(withInterceptors([adminAuthInterceptor])),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' })),
         provideFdUiDialogNavigation(),
         AdminTranslationLoader,
         provideTranslateService({

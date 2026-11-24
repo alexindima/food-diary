@@ -1,5 +1,9 @@
 export const ADMIN_DATE_TEXT_LENGTH = 10;
 const MAX_ADMIN_PAGE = 10_000;
+export function firstAdminQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
+
 export function adminPage(value: string | null): number {
     const page = Number(value);
     return Number.isFinite(page) ? Math.min(MAX_ADMIN_PAGE, Math.max(1, Math.trunc(page))) : 1;

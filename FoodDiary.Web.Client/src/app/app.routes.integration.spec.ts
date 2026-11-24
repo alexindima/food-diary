@@ -296,6 +296,7 @@ describe('Application router guest recipe catalog', () => {
 
         await harness.navigateByUrl(catalog);
         await respondWithCatalogAsync();
+        await harness.fixture.whenStable();
         harness.detectChanges();
         expect(renderedRoute(harness).querySelector('h1')?.textContent.trim()).toBe('PUBLIC_RECIPES.CATALOG');
         expect(renderedRoute(harness).querySelector('fd-public-recipe-card')?.textContent).toContain(recipe.name);

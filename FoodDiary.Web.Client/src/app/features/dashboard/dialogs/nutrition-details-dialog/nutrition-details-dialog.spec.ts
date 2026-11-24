@@ -2,13 +2,14 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../../../testing/nutrition-details.fixtures';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { DashboardSnapshot } from '../../../../shared/models/dashboard.data';
 import { DashboardService } from '../../api/dashboard.service';
+import { NutritionDetailsFacade } from '../../lib/nutrition-details.facade';
 import type { NutritionDetailsData } from '../../models/nutrition-details.types';
 import { NutritionDetailsDialogComponent } from './nutrition-details-dialog';
 
@@ -18,15 +19,16 @@ const SOURCE_VALUES = { first: 40, second: 30, third: 20, fourth: 10 };
 type DialogTestContext = {
     fixture: ComponentFixture<NutritionDetailsDialogComponent>;
     host: HTMLElement;
-    request: Mock<() => Observable<DashboardSnapshot>>;
+    request: Mock<DashboardService['getSnapshotSilentlyStrict']>;
     close: Mock;
 };
 
 async function setupAsync(
     data: Partial<NutritionDetailsData> = {},
-    request: Mock<() => Observable<DashboardSnapshot>> = vi
-        .fn<() => Observable<DashboardSnapshot>>()
+    request: Mock<DashboardService['getSnapshotSilentlyStrict']> = vi
+        .fn<DashboardService['getSnapshotSilentlyStrict']>()
         .mockReturnValue(of(nutritionSnapshotFixture())),
+    { waitForDay = true }: { waitForDay?: boolean } = {},
 ): Promise<DialogTestContext> {
     const close = vi.fn();
     await TestBed.configureTestingModule({
@@ -40,26 +42,37 @@ async function setupAsync(
     }).compileComponents();
     const fixture = TestBed.createComponent(NutritionDetailsDialogComponent);
     fixture.detectChanges();
+    if (waitForDay) {
+        await settleDialogAsync(fixture);
+    }
     return { fixture, host: fixture.nativeElement as HTMLElement, request, close };
 }
 
+async function settleDialogAsync(fixture: ComponentFixture<NutritionDetailsDialogComponent>): Promise<void> {
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
 describe('Nutrition details dialog', () => {
-    it('shows loading, retries a failed full-day request, then renders an empty day', async () => {
+    it('shows loading, retries a failed full-day request in the current language, then renders an empty day', async () => {
         const pending = new Subject<DashboardSnapshot>();
         const empty = nutritionSnapshotFixture();
         empty.statistics.averageProteins = 0;
         const request = vi.fn().mockReturnValueOnce(pending).mockReturnValueOnce(of(empty));
-        const { fixture, host } = await setupAsync({}, request);
+        const { fixture, host } = await setupAsync({}, request, { waitForDay: false });
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.LOADING');
         pending.error(new Error('offline'));
-        fixture.detectChanges();
+        await settleDialogAsync(fixture);
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
         expect(host.querySelector('.nutrition-details__summary')).toBeNull();
+        await firstValueFrom(TestBed.inject(TranslateService).use('ru'));
+        expect(request).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ locale: 'en' }));
         const retry = host.querySelector<HTMLButtonElement>('fd-ui-section-error-state button');
         expect(retry).not.toBeNull();
         retry?.click();
         fixture.detectChanges();
-        expect(request).toHaveBeenCalledTimes(2);
+        await settleDialogAsync(fixture);
+        expect(request).toHaveBeenNthCalledWith(2, expect.objectContaining({ locale: 'ru' }));
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.EMPTY');
     });
 
@@ -103,6 +116,36 @@ describe('Nutrition details dialog', () => {
     });
 });
 
+describe('Nutrition details reload', () => {
+    it('clears the shown day immediately on reload and cancels an outdated request for the same day', async () => {
+        const snapshot = nutritionSnapshotFixture();
+        snapshot.statistics.averageProteins = 0;
+        const pending = new Subject<DashboardSnapshot>();
+        const request = vi
+            .fn<DashboardService['getSnapshotSilentlyStrict']>()
+            .mockReturnValueOnce(of(snapshot))
+            .mockReturnValueOnce(pending)
+            .mockReturnValueOnce(of(snapshot));
+        const { fixture } = await setupAsync({}, request);
+        const facade = fixture.debugElement.injector.get(NutritionDetailsFacade);
+        expect(facade.day()).not.toBeNull();
+
+        facade.reload();
+        expect(facade.day()).toBeNull();
+        expect(facade.loading()).toBe(true);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
+
+        facade.reload();
+        fixture.detectChanges();
+        expect(pending.observed).toBe(false);
+        await settleDialogAsync(fixture);
+        const [initialRequest] = request.mock.calls;
+        expect(request.mock.calls).toEqual([initialRequest, initialRequest, initialRequest]);
+        expect(facade.day()).not.toBeNull();
+    });
+});
+
 describe('Nutrition detail totals after a concurrent diary edit', () => {
     it.each(['save', 'remove'] as const)('retries when statistics and meals straddle a %s', async operation => {
         const protein = 12.34;
@@ -123,6 +166,7 @@ describe('Nutrition detail totals after a concurrent diary edit', () => {
         expect(retry).not.toBeNull();
         retry?.click();
         fixture.detectChanges();
+        await settleDialogAsync(fixture);
 
         expect(request.mock.calls[1]).toEqual(request.mock.calls[0]);
         expect(host.textContent).not.toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');

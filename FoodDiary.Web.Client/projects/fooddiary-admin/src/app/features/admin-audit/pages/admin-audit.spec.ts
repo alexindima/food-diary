@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { filter, firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../../../src/testing/async-testing';
@@ -111,19 +111,23 @@ describe('AdminAuditPageComponent request states', () => {
         const first = new Subject<AdminAuditPageResult>();
         const second = new Subject<AdminAuditPageResult>();
         getPage.mockReturnValueOnce(first).mockReturnValueOnce(second);
-        const fixture = await renderAsync();
+        const fixture = await renderAsync('', 'pending');
         expect(element(fixture).querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
+        expect(first.observed).toBe(true);
         expect(element(fixture).querySelector('article')).toBeNull();
         expect([...element(fixture).querySelectorAll('button')].some(control => control.textContent.trim() === 'ADMIN_COMMON.NEXT')).toBe(
             false,
         );
         edit(fixture, 'ADMIN_AUDIT.ACTOR', 'replacement-actor');
-        await settleAsync(fixture);
+        await settleAsync(fixture, 'pending');
         expect(getPage).toHaveBeenCalledTimes(1);
+        const navigation = firstValueFrom(TestBed.inject(Router).events.pipe(filter(event => event instanceof NavigationEnd)));
         button(fixture, 'ADMIN_CATALOG.APPLY').click();
-        await settleAsync(fixture);
+        await navigation;
+        await settleAsync(fixture, 'pending');
         expect(getPage).toHaveBeenCalledTimes(2);
         expect(first.observed).toBe(false);
+        expect(second.observed).toBe(true);
         first.next({ items: [ENTRY], totalItems: 1 });
         expect(element(fixture).querySelector('[role="status"]')).not.toBeNull();
         second.next({ items: [], totalItems: 0 });
@@ -137,18 +141,22 @@ describe('AdminAuditPageComponent request states', () => {
     it('shows an error and retries the retained request without changing the URL', async () => {
         const pending = new Subject<AdminAuditPageResult>();
         getPage.mockReturnValueOnce(pending);
-        const fixture = await renderAsync('?actorUserId=admin-2&subjectClientUserId=user-2&action=User.Banned');
+        const fixture = await renderAsync('?actorUserId=admin-2&subjectClientUserId=user-2&action=User.Banned', 'pending');
         const originalUrl = TestBed.inject(Router).url;
         pending.error(new Error('unavailable'));
         await settleAsync(fixture);
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
         expect(element(fixture).querySelector('article')).toBeNull();
         expect(input(fixture, 'ADMIN_AUDIT.ACTOR').value).toBe('admin-2');
+        edit(fixture, 'ADMIN_AUDIT.ACTOR', 'unapplied-draft');
+        await settleAsync(fixture);
+        expect(getPage).toHaveBeenCalledTimes(1);
         button(fixture, 'ADMIN_COMMON.RETRY').click();
         await settleAsync(fixture);
         expect(getPage).toHaveBeenCalledTimes(2);
         expect(getPage.mock.calls[1]).toEqual(getPage.mock.calls[0]);
         expect(TestBed.inject(Router).url).toBe(originalUrl);
+        expect(input(fixture, 'ADMIN_AUDIT.ACTOR').value).toBe('admin-2');
         expect(element(fixture).querySelector('[role="alert"]')).toBeNull();
         expect(element(fixture).querySelector('h2')?.textContent).toBe(ENTRY.action);
     });
@@ -206,17 +214,19 @@ describe('AdminAuditPageComponent results and pagination', () => {
     });
 });
 
-async function renderAsync(query = ''): Promise<AuditFixture> {
+async function renderAsync(query = '', request: 'pending' | 'settled' = 'settled'): Promise<AuditFixture> {
     await TestBed.inject(Router).navigateByUrl(`/${query}`);
     const fixture = TestBed.createComponent(AdminAuditPageComponent);
-    await settleAsync(fixture);
+    await settleAsync(fixture, request);
     return fixture;
 }
 
-async function settleAsync(fixture: AuditFixture): Promise<void> {
+async function settleAsync(fixture: AuditFixture, request: 'pending' | 'settled' = 'settled'): Promise<void> {
     fixture.detectChanges();
     await waitForAsyncTasksAsync();
-    await fixture.whenStable();
+    if (request === 'settled') {
+        await fixture.whenStable();
+    }
     fixture.detectChanges();
 }
 

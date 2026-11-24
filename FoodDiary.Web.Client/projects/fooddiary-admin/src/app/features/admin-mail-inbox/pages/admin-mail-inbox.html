@@ -133,7 +133,7 @@
                 <fd-ui-pagination
                     [length]="totalItems()"
                     [pageSize]="pageSize"
-                    [pageIndex]="page() - 1"
+                    [pageIndex]="pageNumber() - 1"
                     (pageIndexChange)="goToPage($event)"
                 />
             }

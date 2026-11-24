@@ -3,7 +3,7 @@
   "summary": {
     "components": 518,
     "componentsWithoutDirectSpecs": 125,
-    "inputs": 1706,
+    "inputs": 1758,
     "outputs": 566,
     "apiCalls": 344,
     "templatesWithTranslations": 377,
@@ -22,7 +22,33 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.spec.ts"
     },
@@ -538,7 +564,13 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.html",
       "stylePaths": [],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
     },
@@ -623,7 +655,33 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.spec.ts"
     },
@@ -649,7 +707,33 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.spec.ts"
     },
@@ -662,7 +746,58 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "recipient",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "unread",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "fromAddress",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "period",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "from",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "to",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.spec.ts"
     },
@@ -969,7 +1104,53 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "purpose",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "recipient",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "period",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "from",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "to",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "correlationId",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.spec.ts"
     },
@@ -1350,7 +1531,58 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "emailConfirmed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "lastActiveFrom",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "lastActiveTo",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "period",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "from",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "to",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.spec.ts"
     },
@@ -8554,6 +8786,11 @@
       "stylePaths": [],
       "inputs": [
         {
+          "name": "appliedFilters",
+          "type": "ParamMap",
+          "required": true
+        },
+        {
           "name": "categories",
           "type": "string[]",
           "required": false
@@ -12579,7 +12816,38 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "search",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "maxTotalTime",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "sortBy",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "language",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "page",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-catalog/public-catalog.spec.ts"
     },
@@ -27392,6 +27660,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
       "occurrences": 1,
       "inputsUsed": [
+        "appliedFilters",
         "categories",
         "showLocale",
         "showState"
@@ -27406,6 +27675,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.html",
       "occurrences": 1,
       "inputsUsed": [
+        "appliedFilters",
         "categories",
         "showState"
       ],
@@ -27420,6 +27690,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "activeLabel",
+        "appliedFilters",
         "categories",
         "inactiveLabel",
         "showState"

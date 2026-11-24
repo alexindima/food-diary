@@ -1,13 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminPageWithinTotal, restoreAdminPage } from '../../../shared/period/admin-pagination';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { DailyAdviceGroupCardComponent } from '../components/daily-advice-group-card';
 import { AdminDailyAdvicesFacade } from '../lib/admin-daily-advices.facade';
 import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
@@ -20,11 +19,11 @@ import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDailyAdvicesComponent {
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
     private readonly facade = inject(AdminDailyAdvicesFacade);
     private readonly document = inject(DOCUMENT);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly requestedPage = signal(0);
     protected readonly advices = this.facade.advices;
     protected readonly loading = this.facade.loading;
     protected readonly loadFailed = this.facade.loadFailed;
@@ -33,19 +32,22 @@ export class AdminDailyAdvicesComponent {
     protected readonly importResult = this.facade.importResult;
     protected readonly showAdvices = computed(() => this.advices().length > 0 || (!this.loading() && !this.loadFailed()));
     protected readonly pageSize = 25;
-    protected readonly page = computed(() => adminPageWithinTotal(this.requestedPage() + 1, this.advices().length, this.pageSize) - 1);
-    protected readonly pageItems = computed(() => this.advices().slice(this.page() * this.pageSize, (this.page() + 1) * this.pageSize));
+    protected readonly pageIndex = computed(
+        () => adminPageWithinTotal(adminPage(this.page() ?? null), this.advices().length, this.pageSize) - 1,
+    );
+    protected readonly pageItems = computed(() =>
+        this.advices().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
+    );
 
     public constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.requestedPage.set(adminPage(params.get('page')) - 1);
-        });
         effect(() => {
             if (!this.loading() && !this.loadFailed()) {
-                restoreAdminPage(this.router, this.route, this.page() + 1, { totalItems: this.advices().length, pageSize: this.pageSize });
+                restoreAdminPage(this.router, this.route, this.pageIndex() + 1, {
+                    totalItems: this.advices().length,
+                    pageSize: this.pageSize,
+                });
             }
         });
-        this.loadAdvices();
     }
 
     protected goToPage(page: number): void {
@@ -65,12 +67,12 @@ export class AdminDailyAdvicesComponent {
         URL.revokeObjectURL(url);
     }
 
-    protected async importFileAsync(input: HTMLInputElement): Promise<void> {
-        const file = input.files?.[0];
+    protected async importFileAsync(fileInput: HTMLInputElement): Promise<void> {
+        const file = fileInput.files?.[0];
         if (file === undefined) {
             return;
         }
-        input.value = '';
+        fileInput.value = '';
         await this.facade.importFileAsync(file);
     }
 }

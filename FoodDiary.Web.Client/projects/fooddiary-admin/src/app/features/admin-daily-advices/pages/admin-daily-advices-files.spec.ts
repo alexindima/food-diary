@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Subject } from 'rxjs';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../../src/testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { environment } from '../../../../environments/environment';
 import { DAILY_ADVICE_IMPORT_EXAMPLE, MAX_ADVICE_IMPORT_BYTES } from '../lib/daily-advice-import';
@@ -25,20 +26,22 @@ beforeEach(async () => {
     translate.setTranslation('en', { ADMIN_DAILY_ADVICES: { SUCCESS: 'Imported {{imported}}, skipped {{skipped}}' } });
     await firstValueFrom(translate.use('en'));
     http = TestBed.inject(HttpTestingController);
-    renderGroups([]);
+    await renderGroupsAsync([]);
 });
 
-type AdviceWireGroup = { id: string; ru?: string; en?: string; weight: number; tag?: string };
+type AdviceWireGroup = { id: string; ru?: string; en?: string; weight: number; tag?: string | null };
 
-function renderGroups(groups: AdviceWireGroup[]): void {
+async function renderGroupsAsync(groups: AdviceWireGroup[]): Promise<void> {
     fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
     root = fixture.nativeElement as HTMLElement;
-    expectGroupReload(groups);
-    fixture.detectChanges();
+    await expectGroupReloadAsync(groups);
 }
 
-function expectGroupReload(groups: AdviceWireGroup[]): void {
+async function expectGroupReloadAsync(groups: AdviceWireGroup[]): Promise<void> {
+    fixture.detectChanges();
     http.expectOne(request => request.method === 'GET' && request.url === `${baseUrl}/groups`).flush(groups);
+    await fixture.whenStable();
+    fixture.detectChanges();
 }
 
 afterEach(() => {
@@ -109,8 +112,10 @@ it('downloads a reusable bilingual example, imports it through the SDK and rende
     expect(request.request.headers.get('Idempotency-Key')).toBeTruthy();
     expect(button('IMPORTING').disabled).toBe(true);
     request.flush({ importedCount: 2, skippedCount: 1 });
-    http.expectOne(item => item.method === 'GET' && item.url === `${baseUrl}/groups`).flush(DAILY_ADVICE_IMPORT_EXAMPLE.advices);
-    fixture.detectChanges();
+    if (DAILY_ADVICE_IMPORT_EXAMPLE.version !== 2) {
+        throw new Error('Expected the bilingual example to use version 2');
+    }
+    await expectGroupReloadAsync(DAILY_ADVICE_IMPORT_EXAMPLE.advices);
     expect(root.querySelector('[role="status"]')?.textContent).toContain('Imported 2, skipped 1');
     expect(root.querySelector('[lang="en"]')?.textContent).toBe('Drink water throughout the day.');
     expect(button('IMPORT').disabled).toBe(false);
@@ -129,10 +134,7 @@ it('ignores an empty selection, rejects an oversized file, and recovers with a l
     expect(root.querySelector('[role="alert"]')).toBeNull();
     expect(request.request.body).toEqual(legacy);
     request.flush({ importedCount: 1, skippedCount: 0 });
-    http.expectOne(item => item.method === 'GET' && item.url === `${baseUrl}/groups`).flush([
-        { id: 'legacy-advice', en: 'Build a routine', weight: 1 },
-    ]);
-    fixture.detectChanges();
+    await expectGroupReloadAsync([{ id: 'legacy-advice', en: 'Build a routine', weight: 1 }]);
 
     expect(root.querySelector('[role="status"]')?.textContent).toContain('Imported 1, skipped 0');
     expect(root.querySelector('[lang="en"]')?.textContent).toBe('Build a routine');
@@ -143,7 +145,7 @@ it.each(['ru', 'en'] as const)('repairs missing %s, rejects fractional weight an
     const id = '11111111-1111-4111-8111-111111111111';
     const existing = { id, weight: 1, ...(missing === 'ru' ? { en: 'Older English' } : { ru: 'Предыдущий совет' }) };
     fixture.destroy();
-    renderGroups([existing]);
+    await renderGroupsAsync([existing]);
     expect(root.querySelector(`[lang="${missing}"]`)?.textContent).toContain('ADMIN_DAILY_ADVICES.MISSING');
     button('EDIT').click();
     fixture.detectChanges();
@@ -167,17 +169,16 @@ it.each(['ru', 'en'] as const)('repairs missing %s, rejects fractional weight an
     const save = http.expectOne({ method: 'PUT', url: `${baseUrl}/groups/${id}` });
     expect(save.request.body).toEqual(valid);
     save.flush({ id, ...valid });
-    await fixture.whenStable();
-    expectGroupReload([{ id, ...valid }]);
-    fixture.detectChanges();
+    await waitForAsyncTasksAsync();
+    await expectGroupReloadAsync([{ id, ...valid }]);
     expect(root.querySelector('[lang="en"]')?.textContent).toBe(valid.en);
     expect(root.textContent).toContain(valid.tag);
 });
 
-it('removes a confirmed pair only after the delete request succeeds and refreshes the page', () => {
+it('removes a confirmed pair only after the delete request succeeds and refreshes the page', async () => {
     const id = '22222222-2222-4222-8222-222222222222';
     fixture.destroy();
-    renderGroups([{ id, en: 'Advice to delete', ru: 'Удаляемый совет', weight: 1 }]);
+    await renderGroupsAsync([{ id, en: 'Advice to delete', ru: 'Удаляемый совет', weight: 1 }]);
     button('DELETE').click();
     fixture.detectChanges();
     expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_DAILY_ADVICES.DELETE_CONFIRM');
@@ -187,8 +188,7 @@ it('removes a confirmed pair only after the delete request succeeds and refreshe
     const removal = http.expectOne({ method: 'DELETE', url: `${baseUrl}/groups/${id}` });
     expect(root.textContent).toContain('Advice to delete');
     removal.flush(null, { status: 204, statusText: 'No Content' });
-    expectGroupReload([]);
-    fixture.detectChanges();
+    await expectGroupReloadAsync([]);
 
     expect(root.textContent).not.toContain('Advice to delete');
     expect(root.textContent).toContain('ADMIN_DAILY_ADVICES.EMPTY');

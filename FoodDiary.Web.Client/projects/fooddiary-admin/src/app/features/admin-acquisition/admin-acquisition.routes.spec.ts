@@ -95,7 +95,7 @@ describe('Protected acquisition reporting route', () => {
         );
         expect(refresh).toBeDefined();
         refresh?.click();
-        harness.detectChanges();
+        await harness.fixture.whenStable();
 
         expect(harness.routeNativeElement?.querySelector('.admin-acquisition__meta')?.textContent).toContain('12 hours');
     });
@@ -179,7 +179,9 @@ async function openAcquisitionRouteAsync(getRange: ReturnType<typeof vi.fn>, url
             },
         ],
     });
-    return RouterTestingHarness.create(url);
+    const harness = await RouterTestingHarness.create(url);
+    await harness.fixture.whenStable();
+    return harness;
 }
 
 function createRange(current: MarketingAttributionSummary, params: Record<string, string | number>): MarketingAttributionRange {

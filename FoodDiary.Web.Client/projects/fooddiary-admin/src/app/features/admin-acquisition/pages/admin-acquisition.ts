@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
-import type { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
@@ -16,12 +16,7 @@ import { ADMIN_DATE_TEXT_LENGTH, adminPage } from '../../../shared/period/admin-
 import { AdminAcquisitionComparisonComponent } from '../components/admin-acquisition-comparison';
 import { AdminAcquisitionLinkPreviewComponent } from '../components/admin-acquisition-link-preview';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
-import type {
-    MarketingAttributionBreakdown,
-    MarketingAttributionRecentEvent,
-    MarketingAttributionSummary,
-} from '../models/admin-acquisition.data';
-import type { MarketingAttributionRange } from '../models/admin-acquisition-range';
+import type { MarketingAttributionBreakdown, MarketingAttributionRecentEvent } from '../models/admin-acquisition.data';
 
 const PERCENT_SCALE = 100;
 const HOURS_PER_DAY = 24;
@@ -29,6 +24,7 @@ const MAX_LANDING_PATH_LENGTH = 512;
 
 type AttributionEventFilter = 'all' | 'page_landing' | 'signup_completed' | 'premium_started';
 type AttributionChannelFilter = 'all' | 'tracked' | 'direct';
+type AcquisitionReportQuery = Record<string, string | number> & { page: number; limit: number };
 
 type CampaignUrlBuilderModel = {
     baseUrl: string;
@@ -59,15 +55,33 @@ type CampaignUrlBuilderModel = {
 })
 export class AdminAcquisitionComponent {
     private readonly acquisitionFacade = inject(AdminAcquisitionFacade);
-    private readonly destroyRef = inject(DestroyRef);
-
-    protected readonly summary = signal<MarketingAttributionSummary | null>(null);
-    protected readonly isLoading = signal(false);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private request?: Subscription;
-    protected readonly failed = signal(false);
-    protected readonly report = signal<MarketingAttributionRange | null>(null);
+    private readonly requestedReport = signal<AcquisitionReportQuery | undefined>(undefined);
+    private readonly reportResource = rxResource({
+        params: this.requestedReport,
+        stream: ({ params }) =>
+            this.acquisitionFacade.getRange(params).pipe(
+                map(report => {
+                    if (this.requestedReport() !== params) {
+                        return null;
+                    }
+                    const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                        totalItems: report.eventTotal,
+                        pageSize: params.limit,
+                    });
+                    return correctingPage ? null : report;
+                }),
+            ),
+    });
+
+    protected readonly report = computed(() => (this.reportResource.hasValue() ? this.reportResource.value() : null));
+    protected readonly summary = computed(() => this.report()?.current ?? null);
+    // Keep the loading state while the URL switches to the corrected page.
+    protected readonly isLoading = computed(
+        () => this.reportResource.isLoading() || (this.reportResource.hasValue() && this.reportResource.value() === null),
+    );
+    protected readonly failed = computed(() => this.reportResource.error() !== undefined);
     protected readonly page = signal(1);
     protected readonly eventSearch = signal('');
     protected readonly eventSearchMaxLength = 320;
@@ -115,49 +129,23 @@ export class AdminAcquisitionComponent {
     }
 
     protected loadSummary(): void {
-        this.request?.unsubscribe();
-        this.failed.set(false);
-        this.summary.set(null);
-        this.report.set(null);
         const range = adminPeriod(this.route.snapshot.queryParamMap, '30d');
         if (range === null) {
-            this.isLoading.set(false);
+            this.requestedReport.set(undefined);
             return;
         }
         const dates = adminUtcPeriod({
             from: range.from ?? '1970-01-01',
             to: range.to ?? new Date().toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH),
         });
-        this.isLoading.set(true);
-        this.request = this.acquisitionFacade
-            .getRange({
-                ...dates,
-                page: this.page(),
-                limit: this.eventPageSize,
-                eventType: this.eventTypeFilter() === 'all' ? '' : this.eventTypeFilter(),
-                channel: this.channelFilter() === 'all' ? '' : this.channelFilter(),
-                search: this.eventSearch(),
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.applyReport(response);
-                },
-                error: () => {
-                    this.failed.set(true);
-                    this.summary.set(null);
-                    this.isLoading.set(false);
-                },
-            });
-    }
-
-    private applyReport(response: MarketingAttributionRange): void {
-        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.eventTotal, pageSize: this.eventPageSize })) {
-            return;
-        }
-        this.summary.set(response.current);
-        this.report.set(response);
-        this.isLoading.set(false);
+        this.requestedReport.set({
+            ...dates,
+            page: this.page(),
+            limit: this.eventPageSize,
+            eventType: this.eventTypeFilter() === 'all' ? '' : this.eventTypeFilter(),
+            channel: this.channelFilter() === 'all' ? '' : this.channelFilter(),
+            search: this.eventSearch(),
+        });
     }
 
     protected formatAttribution(event: MarketingAttributionRecentEvent): string {

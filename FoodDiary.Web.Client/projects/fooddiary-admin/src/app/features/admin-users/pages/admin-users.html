@@ -9,37 +9,41 @@
 <div class="admin-users fd-grid fd-gap-md">
     <div class="admin-filter-bar">
         <fd-admin-period label="ADMIN_USER.REGISTRATION_PERIOD" [inline]="true" />
-        <fd-ui-input label="Search users" placeholder="Email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
+        <fd-ui-input label="Search users" placeholder="Email or username" [value]="draftSearch()" (valueChange)="onSearchChange($event)" />
 
-        <fd-ui-select label="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
+        <fd-ui-select label="User status" [options]="statusOptions" [value]="draftStatus()" (valueChange)="onStatusChange($event)" />
 
-        <fd-ui-input [label]="'ADMIN_USER.ROLES' | translate" [value]="role()" (valueChange)="role.set($event?.toString() || '')" />
+        <fd-ui-input
+            [label]="'ADMIN_USER.ROLES' | translate"
+            [value]="draftRole()"
+            (valueChange)="draftRole.set($event?.toString() || '')"
+        />
         <fd-ui-select
             [id]="'admin-users-field-1'"
             [label]="'ADMIN_USER.CONFIRMED' | translate"
-            [value]="confirmed()"
+            [value]="draftConfirmed()"
             [options]="[
                 { value: '', label: ('ADMIN_COMMON.ALL' | translate) },
                 { value: 'true', label: ('ADMIN_USER.YES' | translate) },
                 { value: 'false', label: ('ADMIN_USER.NO' | translate) },
             ]"
-            (valueChange)="confirmed.set($event?.toString() ?? '')"
+            (valueChange)="draftConfirmed.set($event?.toString() ?? '')"
         />
         <fd-ui-date-input
             [id]="'admin-users-field-2'"
             [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.ACTIVE_FROM' | translate)}`"
             [label]="'ADMIN_USER.ACTIVE_FROM' | translate"
-            [value]="lastActiveFrom()"
-            (valueChange)="lastActiveFrom.set($event?.toString() ?? '')"
+            [value]="draftLastActiveFrom()"
+            (valueChange)="draftLastActiveFrom.set($event?.toString() ?? '')"
         />
         <fd-ui-date-input
             [id]="'admin-users-field-3'"
             [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.ACTIVE_TO' | translate)}`"
             [label]="'ADMIN_USER.ACTIVE_TO' | translate"
-            [value]="lastActiveTo()"
-            (valueChange)="lastActiveTo.set($event?.toString() ?? '')"
+            [value]="draftLastActiveTo()"
+            (valueChange)="draftLastActiveTo.set($event?.toString() ?? '')"
         />
-        <fd-ui-button (click)="page.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+        <fd-ui-button (click)="draftPage.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
     </div>
 
     @if (isLoading()) {
@@ -50,7 +54,7 @@
         <fd-admin-users-table
             [users]="users()"
             [totalItems]="totalItems()"
-            [page]="page()"
+            [page]="draftPage()"
             [pageSize]="limit"
             [totalPages]="totalPages()"
             (details)="openDetails($event)"

@@ -113,11 +113,13 @@ describe('Acquisition reporting boundaries', () => {
             expect.objectContaining({ fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00.000Z', eventType: '', channel: '' }),
         );
         expect(host.textContent).toContain('Loading acquisition data...');
+        expect(pending.observed).toBe(true);
         getRange.mockClear();
 
         await router.navigateByUrl('/?period=custom&from=2024-02-30&to=2024-03-01');
-        pending.next(createRange(createSummary(), { fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00.000Z' }));
         fixture.detectChanges();
+        expect(pending.observed).toBe(false);
+        pending.next(createRange(createSummary(), { fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00.000Z' }));
         expect(getRange).not.toHaveBeenCalled();
         expect(host.textContent).not.toContain('Loading acquisition data...');
         expect(host.querySelector('[aria-labelledby="acquisition-events-title"]')).toBeNull();
@@ -135,6 +137,7 @@ describe('Acquisition reporting boundaries', () => {
         const fixture = createReportingFixture(getRange);
         const router = TestBed.inject(Router);
         await router.navigateByUrl('/?period=7d&search=partner');
+        await fixture.whenStable();
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
         const next = Array.from(host.querySelectorAll('button')).find(button => button.textContent.includes('ADMIN_COMMON.NEXT'));

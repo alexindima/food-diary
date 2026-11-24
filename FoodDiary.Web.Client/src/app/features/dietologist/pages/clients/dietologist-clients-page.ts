@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -69,12 +69,26 @@ export class DietologistClientsPageComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
-    private attentionLoadSequence = 0;
 
     protected readonly clients = signal<ClientSummary[]>([]);
     protected readonly loading = signal(true);
     protected readonly loadError = signal(false);
-    protected readonly attentionSignals = signal<AttentionSignal[]>([]);
+    protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
+    protected readonly attentionSettings = signal<AttentionSignalSettings>({
+        inactivityDays: 3,
+        calorieDeviationPercent: 25,
+        sustainedDays: 3,
+        weightChangePercent: 3,
+        lookbackDays: 14,
+    });
+    private readonly appliedAttentionSettings = signal(this.attentionSettings());
+    private readonly attentionResource = rxResource({
+        params: this.appliedAttentionSettings,
+        stream: ({ params }) => this.dietologistFacade.getAttentionSignals(params),
+    });
+    protected readonly attentionSignals = linkedSignal(() => (this.attentionResource.hasValue() ? this.attentionResource.value() : []));
+    protected readonly attentionLoading = this.attentionResource.isLoading;
+    protected readonly attentionError = computed(() => this.attentionResource.error() !== undefined);
     protected readonly pendingAttentionIds = signal<ReadonlySet<AttentionSignalId>>(new Set<AttentionSignalId>());
     protected readonly attentionItems = computed(() => {
         this.languageVersion();
@@ -83,16 +97,6 @@ export class DietologistClientsPageComponent {
             ...attentionSignal,
             detectedDateLabel: formatDietologistDate(attentionSignal.detectedAtUtc, language),
         }));
-    });
-    protected readonly attentionLoading = signal(true);
-    protected readonly attentionError = signal(false);
-    protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
-    protected readonly attentionSettings = signal<AttentionSignalSettings>({
-        inactivityDays: 3,
-        calorieDeviationPercent: 25,
-        sustainedDays: 3,
-        weightChangePercent: 3,
-        lookbackDays: 14,
     });
     protected readonly selectedClientIds = signal<ReadonlySet<UserId>>(new Set<UserId>());
     protected readonly bulkSending = signal(false);
@@ -138,12 +142,11 @@ export class DietologistClientsPageComponent {
         });
 
         this.loadClients();
-        this.loadAttentionSignals();
     }
 
     protected retryLoad(): void {
         this.loadClients();
-        this.loadAttentionSignals();
+        this.reloadAttentionSignals();
     }
 
     protected updateAttentionSetting(key: keyof AttentionSignalSettings, rawValue: string): void {
@@ -174,7 +177,7 @@ export class DietologistClientsPageComponent {
             fields.find(field => !field.validity.valid)?.focus();
             return;
         }
-        this.loadAttentionSignals();
+        this.appliedAttentionSettings.set({ ...this.attentionSettings() });
     }
 
     protected acknowledgeSignal(attentionSignal: AttentionSignal): void {
@@ -253,30 +256,8 @@ export class DietologistClientsPageComponent {
             });
     }
 
-    private loadAttentionSignals(): void {
-        const sequence = ++this.attentionLoadSequence;
-        this.attentionLoading.set(true);
-        this.attentionError.set(false);
-        this.dietologistFacade
-            .getAttentionSignals(this.attentionSettings())
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: signals => {
-                    if (sequence !== this.attentionLoadSequence) {
-                        return;
-                    }
-                    this.attentionSignals.set(signals);
-                    this.attentionLoading.set(false);
-                },
-                error: () => {
-                    if (sequence !== this.attentionLoadSequence) {
-                        return;
-                    }
-                    this.attentionSignals.set([]);
-                    this.attentionLoading.set(false);
-                    this.attentionError.set(true);
-                },
-            });
+    private reloadAttentionSignals(): void {
+        this.appliedAttentionSettings.update(settings => ({ ...settings }));
     }
 
     private setAttentionState(
@@ -304,7 +285,7 @@ export class DietologistClientsPageComponent {
                 next: () => {
                     this.attentionSignals.update(signals => signals.filter(item => item.id !== attentionSignal.id));
                     if (this.attentionLoading()) {
-                        this.loadAttentionSignals();
+                        this.reloadAttentionSignals();
                     }
                     this.toastService.success(
                         this.translateService.instant(action === 'Snooze' ? 'ATTENTION.SNOOZE_SUCCESS' : 'ATTENTION.ACKNOWLEDGE_SUCCESS'),

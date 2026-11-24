@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiLoaderComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, debounceTime, map, of, skip, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, map, of, skip, throwError } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -17,7 +17,26 @@ import { PublicRecipeNavigationComponent } from '../../components/public-navigat
 import { PublicCatalogFavorites } from '../../lib/public-catalog-favorites.facade';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import { normalizeRecipeLanguage } from '../../lib/recipe-language.utils';
-import type { PublicRecipe } from '../../models/public-recipe.data';
+import type { PublicRecipe, PublicRecipeFilters } from '../../models/public-recipe.data';
+
+type CatalogFilters = {
+    search: string;
+    category: string;
+    maxTotalTime: string;
+    sortBy: string;
+    language: string;
+};
+
+type CatalogRequest = {
+    query: PublicRecipeFilters;
+    filters: CatalogFilters;
+    filterKey: string;
+    invalidPage: boolean;
+};
+
+function firstQueryValue(value: string | string[] | undefined): string | undefined {
+    return Array.isArray(value) ? value[0] : value;
+}
 
 @Component({
     selector: 'fd-public-recipe-catalog',
@@ -42,6 +61,13 @@ import type { PublicRecipe } from '../../models/public-recipe.data';
     ],
 })
 export class PublicRecipeCatalogComponent {
+    public readonly search = input(undefined, { transform: firstQueryValue });
+    public readonly category = input(undefined, { transform: firstQueryValue });
+    public readonly maxTotalTime = input(undefined, { transform: firstQueryValue });
+    public readonly sortBy = input(undefined, { transform: firstQueryValue });
+    public readonly language = input(undefined, { transform: firstQueryValue });
+    public readonly page = input(undefined, { transform: firstQueryValue });
+
     protected readonly favorites = inject(PublicCatalogFavorites);
     protected readonly timePresets = ['15', '30', '60'];
     protected readonly customTime = computed(() => {
@@ -49,96 +75,78 @@ export class PublicRecipeCatalogComponent {
         return value !== null && !this.timePresets.includes(String(value)) ? value : null;
     });
     private readonly translate = inject(TranslateService);
-    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+    private readonly appLanguage = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
         initialValue: this.translate.getCurrentLang() ?? 'en',
     });
     protected readonly countKey = computed(
-        () => `PUBLIC_RECIPES.COUNT_${new Intl.PluralRules(this.language()).select(this.result()?.totalItems ?? 0).toUpperCase()}`,
+        () => `PUBLIC_RECIPES.COUNT_${new Intl.PluralRules(this.appLanguage()).select(this.result()?.totalItems ?? 0).toUpperCase()}`,
     );
     private readonly facade = inject(PublicRecipesFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly destroyRef = inject(DestroyRef);
-    protected readonly filters = signal({
-        search: '',
-        category: '',
-        maxTotalTime: '',
-        sortBy: 'newest',
-        language: String(normalizeRecipeLanguage(this.language())),
+    private readonly catalogRequest = computed<CatalogRequest>(() => {
+        const page = this.page() ?? null;
+        const fallbackLanguage = normalizeRecipeLanguage(this.appLanguage());
+        const filters = {
+            search: this.search() ?? '',
+            category: this.category() ?? '',
+            maxTotalTime: this.maxTotalTime() ?? '',
+            sortBy: this.normalizeSort(this.sortBy()),
+            language: this.catalogLanguage(this.language(), fallbackLanguage),
+        };
+        return {
+            filters,
+            query: {
+                ...filters,
+                page: readPaginationPage(page),
+                maxTotalTime: this.positiveNumber(filters.maxTotalTime) ?? undefined,
+                language: filters.language === '' ? undefined : filters.language,
+            },
+            filterKey: JSON.stringify(filters),
+            invalidPage: hasInvalidPaginationPage(page),
+        };
     });
+    protected readonly filters = linkedSignal(() => this.catalogRequest().filters);
     protected readonly filterForm = form(this.filters);
-    private readonly reload = new Subject<void>();
     private readonly searchDebounceMs = 350;
-    protected readonly result = signal<PageOf<PublicRecipe> | null>(null);
-    protected readonly loading = signal(true);
-    protected readonly failed = signal(false);
+    private readonly catalog = rxResource({
+        params: this.catalogRequest,
+        stream: ({ params }) =>
+            this.facade.query(params.query).pipe(
+                map(result => this.resolveResult(params, result)),
+                catchError((error: unknown) => (this.isCurrentRequest(params) ? throwError(() => error) : of(null))),
+            ),
+    });
+    protected readonly result = computed(() => (this.catalog.hasValue() ? this.catalog.value() : null));
+    protected readonly failed = computed(() => this.catalog.error() !== undefined);
+    // Keep the loader visible until the URL reflects the latest filters and a valid page.
+    protected readonly loading = computed(() => this.catalog.isLoading() || (!this.failed() && this.result() === null));
     protected readonly showCount = computed(() => !this.loading() && !this.failed() && this.result() !== null);
 
     public constructor() {
-        combineLatest([this.route.queryParamMap, this.reload.pipe(startWith(undefined)), toObservable(this.language)])
-            .pipe(
-                tap(([params]) => {
-                    this.filters.set({
-                        search: params.get('search') ?? '',
-                        category: params.get('category') ?? '',
-                        maxTotalTime: params.get('maxTotalTime') ?? '',
-                        sortBy: this.normalizeSort(params.get('sortBy')),
-                        language: this.catalogLanguage(params.get('language')),
-                    });
-                    this.loading.set(true);
-                    this.failed.set(false);
-                }),
-                switchMap(([params]) => {
-                    const requestedPage = readPaginationPage(params.get('page'));
-                    const filterKey = JSON.stringify(this.filters());
-                    return this.facade
-                        .query({
-                            page: requestedPage,
-                            ...this.filters(),
-                            maxTotalTime: this.positiveNumber(this.filters().maxTotalTime) ?? undefined,
-                            language: this.filters().language === '' ? undefined : this.filters().language,
-                        })
-                        .pipe(
-                            map(result => ({
-                                result,
-                                requestedPage,
-                                filterKey,
-                                invalidPage: hasInvalidPaginationPage(params.get('page')),
-                            })),
-                            catchError(() => of({ result: null, requestedPage, filterKey, invalidPage: false })),
-                        );
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(response => {
-                if (response.filterKey !== JSON.stringify(this.filters())) {
-                    return;
-                }
-                if (response.result !== null) {
-                    const page = resolvePaginationPage(response.requestedPage, response.result.totalPages);
-                    if (response.invalidPage || page !== response.requestedPage) {
-                        void this.writePageAsync(page, true);
-                        return;
-                    }
-                }
-                this.failed.set(response.result === null);
-                this.result.set(response.result);
-                this.loading.set(false);
-            });
         toObservable(this.filters)
-            .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed(this.destroyRef))
+            .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed())
             .subscribe(filters => {
-                const params = this.route.snapshot.queryParamMap;
-                if (
-                    filters.search !== (params.get('search') ?? '') ||
-                    filters.category !== (params.get('category') ?? '') ||
-                    filters.maxTotalTime !== (params.get('maxTotalTime') ?? '') ||
-                    filters.sortBy !== this.normalizeSort(params.get('sortBy')) ||
-                    filters.language !== this.catalogLanguage(params.get('language'))
-                ) {
+                if (JSON.stringify(filters) !== this.catalogRequest().filterKey) {
                     this.changePage(0);
                 }
             });
+    }
+
+    private resolveResult(request: CatalogRequest, result: PageOf<PublicRecipe>): PageOf<PublicRecipe> | null {
+        if (!this.isCurrentRequest(request)) {
+            return null;
+        }
+        const page = resolvePaginationPage(request.query.page, result.totalPages);
+        if (request.invalidPage || page !== request.query.page) {
+            void this.writePageAsync(page, true);
+            return null;
+        }
+        return result;
+    }
+
+    private isCurrentRequest(request: CatalogRequest): boolean {
+        return this.catalogRequest() === request && request.filterKey === JSON.stringify(this.filters());
     }
 
     protected changePage(index: number): void {
@@ -166,7 +174,8 @@ export class PublicRecipeCatalogComponent {
     }
 
     protected retry(): void {
-        this.reload.next();
+        this.filters.set(this.catalogRequest().filters);
+        this.catalog.reload();
     }
 
     protected reset(): void {
@@ -175,17 +184,17 @@ export class PublicRecipeCatalogComponent {
             category: '',
             maxTotalTime: '',
             sortBy: value.sortBy,
-            language: String(normalizeRecipeLanguage(this.language())),
+            language: normalizeRecipeLanguage(this.appLanguage()),
         }));
         this.changePage(0);
     }
 
-    private catalogLanguage(value: string | null): string {
-        return value === 'all' ? '' : value === 'en' || value === 'ru' ? value : normalizeRecipeLanguage(this.language());
+    private catalogLanguage(value: string | undefined, fallback: string): string {
+        return value === 'all' ? '' : value === 'en' || value === 'ru' ? value : fallback;
     }
 
-    private normalizeSort(value: string | null): string {
-        return value !== null && ['newest', 'oldest', 'fastest', 'slowest', 'name', 'name_desc'].includes(value) ? value : 'newest';
+    private normalizeSort(value: string | undefined): string {
+        return value !== undefined && ['newest', 'oldest', 'fastest', 'slowest', 'name', 'name_desc'].includes(value) ? value : 'newest';
     }
 
     private positiveNumber(value: string | null): number | null {

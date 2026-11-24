@@ -1,8 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -10,13 +9,13 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { filter, finalize, type Observable, type Subscription, switchMap, tap } from 'rxjs';
+import { filter, finalize, type Observable, switchMap, tap } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
 import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import type { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
@@ -40,27 +39,53 @@ const EXPORT_DATE_LENGTH = 10;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLessonsComponent {
-    protected readonly loadFailed = signal(false);
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly locale = input(undefined, { transform: firstAdminQueryValue });
+    public readonly category = input(undefined, { transform: firstAdminQueryValue });
+    public readonly state = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly lessonsFacade = inject(AdminLessonsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
-    private loadRequest?: Subscription;
+    private readonly reloadVersion = signal(0);
+    private readonly lessonsResource = rxResource({
+        params: this.reloadVersion,
+        stream: () => this.lessonsFacade.getAll(),
+    });
 
-    protected readonly lessons = signal<AdminLesson[]>([]);
-    protected readonly isLoading = signal(false);
+    protected readonly lessons = linkedSignal({
+        source: this.lessonsResource.snapshot,
+        computation: (snapshot, previous): AdminLesson[] => {
+            if (snapshot.status === 'loading') {
+                return previous?.value ?? [];
+            }
+            return snapshot.status === 'resolved' ? (snapshot.value ?? []) : [];
+        },
+    }).asReadonly();
+    protected readonly isLoading = this.lessonsResource.isLoading;
+    protected readonly loadFailed = computed(() => this.lessonsResource.error() !== undefined);
     protected readonly isImporting = signal(false);
     protected readonly importMessage = signal<string | null>(null);
     protected readonly deleteError = signal<string | null>(null);
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+    protected readonly appliedFilters = computed(() =>
+        convertToParamMap({
+            page: this.page() ?? null,
+            search: this.search() ?? null,
+            locale: this.locale() ?? null,
+            category: this.category() ?? null,
+            state: this.state() ?? null,
+        }),
+    );
     protected readonly categories = computed(() => [...new Set(this.lessons().map(item => item.category))].sort());
     protected readonly filteredItems = computed(() =>
         this.lessons().filter(item =>
-            matchesAdminCatalog(this.params(), {
+            matchesAdminCatalog(this.appliedFilters(), {
                 text: `${item.title} ${item.summary ?? ''}`,
                 locale: item.locale,
                 category: item.category,
@@ -69,7 +94,7 @@ export class AdminLessonsComponent {
         ),
     );
     protected readonly pageSize = 20;
-    protected readonly requestedPage = signal(0);
+    protected readonly requestedPage = computed(() => adminPage(this.page() ?? null) - 1);
     protected readonly pageIndex = computed(() =>
         Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.filteredItems().length / this.pageSize) - 1)),
     );
@@ -80,43 +105,22 @@ export class AdminLessonsComponent {
     protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.filteredItems().length));
 
     protected goToPage(pageIndex: number): void {
-        this.requestedPage.set(pageIndex);
         void this.router.navigate([], { relativeTo: this.route, queryParams: { page: pageIndex + 1 }, queryParamsHandling: 'merge' });
     }
 
     public constructor() {
         effect(() => {
-            if (!this.isLoading() && !this.loadFailed()) {
+            if (this.lessonsResource.hasValue()) {
                 restoreAdminPage(this.router, this.route, this.pageIndex() + 1, {
                     totalItems: this.filteredItems().length,
                     pageSize: this.pageSize,
                 });
             }
         });
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.requestedPage.set(adminPage(params.get('page')) - 1);
-        });
-        this.loadLessons();
     }
 
     protected loadLessons(): void {
-        this.loadRequest?.unsubscribe();
-        this.loadFailed.set(false);
-        this.isLoading.set(true);
-        this.loadRequest = this.lessonsFacade
-            .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.lessons.set(response);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.lessons.set([]);
-                    this.isLoading.set(false);
-                },
-            });
+        this.reloadVersion.update(version => version + 1);
     }
 
     protected openCreate(): void {
@@ -214,24 +218,24 @@ export class AdminLessonsComponent {
         URL.revokeObjectURL(url);
     }
 
-    protected importLessons(input: HTMLInputElement): void {
-        const file = input.files?.[0];
+    protected importLessons(fileInput: HTMLInputElement): void {
+        const file = fileInput.files?.[0];
         if (file === undefined || this.isImporting()) {
             return;
         }
 
         this.importMessage.set(null);
         this.isImporting.set(true);
-        void this.importLessonsFileAsync(file, input);
+        void this.importLessonsFileAsync(file, fileInput);
     }
 
-    private async importLessonsFileAsync(file: File, input: HTMLInputElement): Promise<void> {
+    private async importLessonsFileAsync(file: File, fileInput: HTMLInputElement): Promise<void> {
         try {
             const payload = JSON.parse(await file.text()) as unknown;
             if (!this.isImportPayload(payload)) {
                 this.importMessage.set('Import file has an invalid lesson format.');
                 this.isImporting.set(false);
-                input.value = '';
+                fileInput.value = '';
                 return;
             }
 
@@ -242,19 +246,19 @@ export class AdminLessonsComponent {
                     next: response => {
                         this.importMessage.set(`Imported ${response.importedCount} lessons.`);
                         this.isImporting.set(false);
-                        input.value = '';
+                        fileInput.value = '';
                         this.loadLessons();
                     },
                     error: () => {
                         this.importMessage.set('Lesson import failed.');
                         this.isImporting.set(false);
-                        input.value = '';
+                        fileInput.value = '';
                     },
                 });
         } catch {
             this.importMessage.set('Import file is not valid JSON.');
             this.isImporting.set(false);
-            input.value = '';
+            fileInput.value = '';
         }
     }
 

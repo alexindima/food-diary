@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,7 +18,7 @@ describe('AdminDailyAdvicesFacade refresh ordering', () => {
         });
     });
 
-    it('retains the refreshed advice list when an older request completes or fails', () => {
+    it('retains the refreshed advice list when an older request completes or fails', async () => {
         const previous = new Subject<AdminDailyAdvice[]>();
         const refresh = new Subject<AdminDailyAdvice[]>();
         getAll.mockReturnValueOnce(previous).mockReturnValueOnce(refresh);
@@ -30,11 +31,17 @@ describe('AdminDailyAdvicesFacade refresh ordering', () => {
             tag: null,
         };
 
+        TestBed.tick();
+        expect(previous.observed).toBe(true);
         facade.loadAdvices();
-        facade.loadAdvices();
+        TestBed.tick();
+        expect(previous.observed).toBe(false);
+        expect(refresh.observed).toBe(true);
         refresh.next([advice]);
+        refresh.complete();
         previous.next([]);
         previous.error(new Error('obsolete request failed'));
+        await TestBed.inject(ApplicationRef).whenStable();
 
         expect(facade.advices()).toEqual([advice]);
         expect(facade.loading()).toBe(false);

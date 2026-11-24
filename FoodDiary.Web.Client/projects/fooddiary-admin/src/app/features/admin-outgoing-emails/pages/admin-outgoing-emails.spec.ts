@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, of, Subject, take } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
@@ -18,23 +18,23 @@ describe('AdminOutgoingEmailsComponent', () => {
     it('shows a failed request and recovers to the empty state after refresh', async () => {
         const first = new Subject<OutgoingEmailPage>();
         const retry = new Subject<OutgoingEmailPage>();
-        const getPage = vi.fn().mockReturnValueOnce(first).mockReturnValueOnce(retry);
-        await TestBed.configureTestingModule({
-            imports: [AdminOutgoingEmailsComponent],
-            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminOutgoingEmailsFacade, useValue: { getPage } }],
-        }).compileComponents();
-        const fixture = TestBed.createComponent(AdminOutgoingEmailsComponent);
-        const element = fixture.nativeElement as HTMLElement;
-        fixture.detectChanges();
+        const getPage = vi.fn<AdminOutgoingEmailsFacade['getPage']>().mockReturnValueOnce(first).mockReturnValueOnce(retry);
+        const { harness, element } = await setupOutboxAsync(OUTBOX, getPage, { waitForResult: false });
+        const { fixture } = harness;
         expect(element.querySelector('[role="status"]')).not.toBeNull();
         first.error(new Error('Unavailable'));
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(element.querySelector('[role="alert"]')).not.toBeNull();
         const refresh = element.querySelector<HTMLButtonElement>('fd-ui-button button');
         expect(refresh).not.toBeNull();
         refresh?.click();
-        await fixture.whenStable();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(retry.observed).toBe(true);
+        });
         retry.next({ items: [], totalItems: 0 });
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(element.querySelector('[role="alert"]')).toBeNull();
         expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
@@ -69,18 +69,25 @@ const MAIL: OutgoingEmail = {
 async function setupOutboxAsync(
     url: string,
     getPage: Mock<AdminOutgoingEmailsFacade['getPage']>,
-    attach?: (screen: AdminDevelopmentScreen) => () => void,
+    { attach, waitForResult = true }: { attach?: (screen: AdminDevelopmentScreen) => () => void; waitForResult?: boolean } = {},
 ): Promise<{ harness: RouterTestingHarness; element: HTMLElement; router: Router }> {
     await TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }]),
+            provideRouter(
+                [{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             ...provideTranslateTesting(),
             { provide: AdminOutgoingEmailsFacade, useValue: { getPage } },
             { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: attach === undefined ? null : { attach } },
         ],
     }).compileComponents();
     const harness = await RouterTestingHarness.create(url);
-    await renderOutboxAsync(harness);
+    if (waitForResult) {
+        await renderOutboxAsync(harness);
+    } else {
+        harness.detectChanges();
+    }
     const element = harness.routeNativeElement;
     if (element === null) {
         throw new Error('Expected the outgoing mail route');
@@ -104,7 +111,10 @@ function requireOutboxButton(element: HTMLElement, name: string): HTMLButtonElem
 it('keeps the requested page when a final detail click follows a return to the list', async () => {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }]),
+            provideRouter(
+                [{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -116,7 +126,7 @@ it('keeps the requested page when a final detail click follows a return to the l
     const api = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/outgoing-emails`;
     const request = requests.expectOne(candidate => candidate.url === api && candidate.params.get('id') === MAIL.id);
     request.flush({ items: [MAIL], totalItems: 1 });
-    harness.detectChanges();
+    await renderOutboxAsync(harness);
     const element = harness.routeNativeElement;
     if (element === null) {
         throw new Error('Expected the outgoing email reader.');
@@ -135,6 +145,7 @@ it('keeps the requested page when a final detail click follows a return to the l
         });
     await router.navigateByUrl(list);
     expect(clickBeforeRender).toHaveBeenCalledExactlyOnceWith(true);
+    harness.detectChanges();
     const listRequest = requests.expectOne(candidate => candidate.url === api && !candidate.params.has('id'));
     expect(listRequest.request.params.get('page')).toBe(String(LAST_PAGE));
     listRequest.flush({ items: [MAIL], totalItems: OUTBOX_TOTAL });
@@ -144,6 +155,27 @@ it('keeps the requested page when a final detail click follows a return to the l
     expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
     expect(element.querySelector('tbody')?.textContent).toContain(RECIPIENT);
     requests.verify();
+});
+
+it('uses the first repeated URL values and clears the message and filters when they are removed', async () => {
+    const getPage = vi.fn<AdminOutgoingEmailsFacade['getPage']>().mockReturnValue(of({ items: [MAIL], totalItems: 1 }));
+    const { element, harness } = await setupOutboxAsync(
+        `${OUTBOX}?id=${MAIL.id}&id=ignored&recipient=${RECIPIENT}&recipient=ignored&correlationId=request-1&status=sent`,
+        getPage,
+    );
+
+    expect(getPage).toHaveBeenCalledExactlyOnceWith(1, '', 'sent', {
+        recipient: RECIPIENT,
+        id: MAIL.id,
+        correlationId: 'request-1',
+    });
+    expect(element.querySelector('fd-outgoing-email-details .mail-body')?.textContent).toBe(MAIL.textBody);
+
+    await harness.navigateByUrl(OUTBOX);
+    await renderOutboxAsync(harness);
+
+    expect(getPage).toHaveBeenLastCalledWith(1, '', '', { recipient: '', id: '', correlationId: '' });
+    expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
 });
 
 describe('outgoing mail route state', () => {
@@ -218,7 +250,7 @@ describe('outgoing mail applied filters', () => {
         const getPage = vi
             .fn<AdminOutgoingEmailsFacade['getPage']>()
             .mockReturnValue(of({ items: [MAIL], totalItems: 1, statusCounts: { sent: 1 } }));
-        const { element, harness, router } = await setupOutboxAsync(OUTBOX, getPage, attach);
+        const { element, harness, router } = await setupOutboxAsync(OUTBOX, getPage, { attach });
         const screen = attach.mock.lastCall?.[0];
         expect(screen?.kind).toBe('admin-outgoing-emails');
         await screen?.setFiltersAsync?.({ page: '1', status: 'sent', recipient: RECIPIENT });
@@ -233,11 +265,24 @@ describe('outgoing mail applied filters', () => {
         expect(state).not.toMatchObject({ items: [{ textBody: MAIL.textBody }] });
         const appliedUrl = router.url;
         const callsBeforeRefresh = getPage.mock.calls.length;
-        requireOutboxButton(element, 'ADMIN_OUTGOING.REFRESH').click();
+        const pending = new Subject<OutgoingEmailPage>();
+        getPage.mockReturnValueOnce(pending);
+        const refresh = requireOutboxButton(element, 'ADMIN_OUTGOING.REFRESH');
+        refresh.click();
+        harness.detectChanges();
+        expect(pending.observed).toBe(true);
+        expect(screen?.read()).toMatchObject({
+            loading: true,
+            statusCounts: null,
+            totalItems: 1,
+            items: [{ id: MAIL.id, correlationId: MAIL.correlationId }],
+        });
+        refresh.click();
         await renderOutboxAsync(harness);
 
+        expect(pending.observed).toBe(false);
         expect(router.url).toBe(appliedUrl);
-        expect(getPage).toHaveBeenCalledTimes(callsBeforeRefresh + 1);
+        expect(getPage).toHaveBeenCalledTimes(callsBeforeRefresh + 2);
         expect(getPage).toHaveBeenLastCalledWith(1, '', 'sent', expect.objectContaining({ recipient: RECIPIENT }));
     });
 });

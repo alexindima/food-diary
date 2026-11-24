@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
-import type { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
@@ -11,10 +11,15 @@ import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type { AdminImpersonationSession, PagedResponse } from '../models/admin-user.models';
 import { AdminSessionsSectionComponent } from './admin-sessions-section';
 
 const ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE = 20;
+
+type SessionsRequest = {
+    page: number;
+    search: string | null;
+    filters: Record<string, string>;
+};
 
 @Component({
     selector: 'fd-admin-impersonation-sessions-page',
@@ -30,22 +35,43 @@ const ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminImpersonationSessionsPageComponent {
-    protected readonly loadFailed = signal(false);
     private readonly usersService = inject(AdminUsersFacade);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private request?: Subscription;
+    private readonly sessionsRequest = signal<SessionsRequest | undefined>(undefined);
+    private readonly sessionsResource = rxResource({
+        params: this.sessionsRequest,
+        stream: ({ params }) =>
+            this.usersService
+                .getImpersonationSessions(params.page, ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE, params.search, params.filters)
+                .pipe(
+                    map(response => {
+                        if (this.sessionsRequest() !== params) {
+                            return null;
+                        }
+                        const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                            totalItems: response.totalItems,
+                            pageSize: ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE,
+                        });
+                        return correctingPage ? null : response;
+                    }),
+                ),
+    });
+    private readonly pageResult = computed(() => (this.sessionsResource.hasValue() ? this.sessionsResource.value() : null));
+
+    protected readonly loadFailed = computed(() => this.sessionsResource.error() !== undefined);
     protected readonly firstFilter = signal('');
     protected readonly secondFilter = signal('');
     protected readonly pageSize = ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE;
 
-    protected readonly sessions = signal<AdminImpersonationSession[]>([]);
+    protected readonly sessions = computed(() => this.pageResult()?.items ?? []);
     protected readonly sessionsPage = signal(1);
-    protected readonly sessionsTotalPages = signal(1);
-    protected readonly sessionsTotalItems = signal(0);
+    protected readonly sessionsTotalPages = computed(() => this.pageResult()?.totalPages ?? 1);
+    protected readonly sessionsTotalItems = computed(() => this.pageResult()?.totalItems ?? 0);
     protected readonly sessionsSearch = signal('');
-    protected readonly isSessionsLoading = signal(false);
+    protected readonly isSessionsLoading = computed(
+        () => this.sessionsResource.isLoading() || (this.sessionsResource.hasValue() && this.sessionsResource.value() === null),
+    );
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
@@ -64,7 +90,7 @@ export class AdminImpersonationSessionsPageComponent {
     }
 
     protected goToSessionsPage(page: number): void {
-        if (page < 1 || page > this.sessionsTotalPages()) {
+        if (this.isSessionsLoading() || page < 1 || page > this.sessionsTotalPages()) {
             return;
         }
 
@@ -86,58 +112,16 @@ export class AdminImpersonationSessionsPageComponent {
     }
 
     protected loadSessions(): void {
-        this.request?.unsubscribe();
         const range = adminPeriod(this.route.snapshot.queryParamMap);
         if (range === null) {
-            this.sessions.set([]);
-            this.sessionsTotalPages.set(1);
-            this.sessionsTotalItems.set(0);
-            this.loadFailed.set(false);
-            this.isSessionsLoading.set(false);
+            this.sessionsRequest.set(undefined);
             return;
         }
-        const filters = { ...adminUtcPeriod(range), actorId: this.firstFilter(), targetId: this.secondFilter() };
-        this.loadFailed.set(false);
-        this.isSessionsLoading.set(true);
-        this.request = this.usersService
-            .getImpersonationSessions(
-                this.sessionsPage(),
-                ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE,
-                this.resolveSearchQuery(this.sessionsSearch()),
-                filters,
-            )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.applySessionsPage(response);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.sessions.set([]);
-                    this.sessionsTotalPages.set(1);
-                    this.sessionsTotalItems.set(0);
-                    this.isSessionsLoading.set(false);
-                },
-            });
-    }
-
-    private applySessionsPage(response: PagedResponse<AdminImpersonationSession>): void {
-        if (
-            restoreAdminPage(this.router, this.route, this.sessionsPage(), {
-                totalItems: response.totalItems,
-                pageSize: ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE,
-            })
-        ) {
-            return;
-        }
-        this.sessions.set(response.items);
-        this.sessionsTotalPages.set(response.totalPages);
-        this.sessionsTotalItems.set(response.totalItems);
-        this.isSessionsLoading.set(false);
-    }
-
-    private resolveSearchQuery(value: string): string | null {
-        const trimmed = value.trim();
-        return trimmed.length > 0 ? trimmed : null;
+        const search = this.sessionsSearch().trim();
+        this.sessionsRequest.set({
+            page: this.sessionsPage(),
+            search: search.length > 0 ? search : null,
+            filters: { ...adminUtcPeriod(range), actorId: this.firstFilter(), targetId: this.secondFilter() },
+        });
     }
 }

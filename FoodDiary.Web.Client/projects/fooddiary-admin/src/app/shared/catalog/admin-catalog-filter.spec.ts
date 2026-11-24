@@ -19,7 +19,7 @@ const records = [
 @Component({
     imports: [AdminCatalogFilterComponent],
     template: `
-        <fd-admin-catalog-filter [categories]="['Breakfast', 'Dinner']" [showState]="true" />
+        <fd-admin-catalog-filter [appliedFilters]="params()" [categories]="['Breakfast', 'Dinner']" [showState]="true" />
         <ul>
             @for (record of filtered(); track record.text) {
                 <li>{{ record.text }}</li>
@@ -28,7 +28,7 @@ const records = [
     `,
 })
 class CatalogFilterHost {
-    private readonly params = toSignal(inject(ActivatedRoute).queryParamMap, { requireSync: true });
+    protected readonly params = toSignal(inject(ActivatedRoute).queryParamMap, { requireSync: true });
     protected readonly filtered = computed(() => records.filter(record => matchesAdminCatalog(this.params(), record)));
 }
 

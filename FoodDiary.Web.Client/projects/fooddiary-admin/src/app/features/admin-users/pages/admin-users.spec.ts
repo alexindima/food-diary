@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
@@ -25,7 +26,7 @@ const USER_TOTAL_ITEMS = 21;
 const OUT_OF_RANGE_PAGE = 99;
 
 let component: AdminUsersComponent;
-let fixture: ComponentFixture<AdminUsersComponent>;
+let fixture: RouterTestingHarness['fixture'];
 let usersService: {
     getUsers: ReturnType<typeof vi.fn>;
 };
@@ -93,8 +94,8 @@ describe('AdminUsersComponent', () => {
         component['onSearchChange']('john');
         await fixture.whenStable();
 
-        expect(component['search']()).toBe('john');
-        expect(component['page']()).toBe(FIRST_PAGE);
+        expect(component['draftSearch']()).toBe('john');
+        expect(component['draftPage']()).toBe(FIRST_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'john', {
             status: 'active',
             role: '',
@@ -108,8 +109,8 @@ describe('AdminUsersComponent', () => {
         component['onStatusChange']('inactive');
         await fixture.whenStable();
 
-        expect(component['status']()).toBe('inactive');
-        expect(component['page']()).toBe(FIRST_PAGE);
+        expect(component['draftStatus']()).toBe('inactive');
+        expect(component['draftPage']()).toBe(FIRST_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, {
             status: 'inactive',
             role: '',
@@ -122,7 +123,7 @@ describe('AdminUsersComponent', () => {
     it('should change page only within valid bounds', async () => {
         component['goToPage'](SECOND_PAGE);
         await fixture.whenStable();
-        expect(component['page']()).toBe(SECOND_PAGE);
+        expect(component['draftPage']()).toBe(SECOND_PAGE);
         expect(usersService.getUsers).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, null, {
             status: 'active',
             role: '',
@@ -149,7 +150,9 @@ describe('AdminUsersComponent activity', () => {
         const translate = TestBed.inject(TranslateService);
         translate.setTranslation('ru', ruCore);
         await firstValueFrom(translate.use('ru'));
-        component['users'].set([{ ...pagedUsers.items[0], lastActiveAtUtc: null }]);
+        usersService.getUsers.mockReturnValueOnce(of({ ...pagedUsers, items: [{ ...pagedUsers.items[0], lastActiveAtUtc: null }] }));
+        component['loadUsers']();
+        await fixture.whenStable();
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         expect(element.querySelectorAll('th')[3].textContent).toBe('Был активен');
@@ -159,9 +162,9 @@ describe('AdminUsersComponent activity', () => {
         expect(element.textContent).not.toContain('\uFFFD');
     });
 
-    it('restores activity filters from the URL and preserves them when applying filters', async () => {
+    it('preserves the first activity filter from the URL on apply and resets it when removed', async () => {
         const router = TestBed.inject(Router);
-        await router.navigate([], { queryParams: { lastActiveFrom: '2030-01-02', lastActiveTo: '2030-01-03' } });
+        await router.navigateByUrl('/?lastActiveFrom=2030-01-02&lastActiveFrom=2030-02-01&lastActiveTo=2030-01-03');
         await fixture.whenStable();
         expect(usersService.getUsers).toHaveBeenLastCalledWith(
             FIRST_PAGE,
@@ -176,6 +179,15 @@ describe('AdminUsersComponent activity', () => {
         await fixture.whenStable();
         expect(router.url).toContain('lastActiveFrom=2030-01-02');
         expect(router.url).not.toContain('lastLogin');
+
+        await router.navigateByUrl('/');
+        await fixture.whenStable();
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(
+            FIRST_PAGE,
+            PAGE_SIZE,
+            null,
+            expect.objectContaining({ lastActiveFrom: '', lastActiveTo: '' }),
+        );
     });
 });
 
@@ -198,18 +210,29 @@ describe('AdminUsersComponent dialogs', () => {
         expect(router.parseUrl(router.url).queryParams).toEqual({ page: '2', status: 'inactive' });
     });
 
-    it('should reload users after successful dialog close', () => {
+    it('reloads the first page once with the applied filters after account creation', async () => {
+        const router = TestBed.inject(Router);
+        await router.navigate([], { queryParams: { page: SECOND_PAGE, status: 'inactive' } });
+        await fixture.whenStable();
         const close$ = new Subject<boolean>();
         dialogService.open.mockReturnValue({
             afterClosed: () => close$.asObservable(),
         });
 
+        usersService.getUsers.mockClear();
         (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('header fd-ui-button button')?.click();
         close$.next(true);
         close$.complete();
+        await fixture.whenStable();
 
         expect(dialogService.open).toHaveBeenCalled();
-        expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ page: '1', status: 'inactive' });
+        expect(usersService.getUsers).toHaveBeenCalledExactlyOnceWith(
+            FIRST_PAGE,
+            PAGE_SIZE,
+            null,
+            expect.objectContaining({ status: 'inactive' }),
+        );
     });
 
     it('closes an open create dialog when leaving the page and ignores a late result', () => {
@@ -227,7 +250,7 @@ describe('AdminUsersComponent dialogs', () => {
         expect(usersService.getUsers).toHaveBeenCalledTimes(loadsBeforeLeaving);
     });
 
-    it('releases the page cleanup after the create dialog has already closed', () => {
+    it('releases the page cleanup after the create dialog has already closed', async () => {
         const closed = new Subject<boolean>();
         const close = vi.fn();
         dialogService.open.mockReturnValue({ afterClosed: () => closed.asObservable(), close });
@@ -235,6 +258,7 @@ describe('AdminUsersComponent dialogs', () => {
 
         closed.next(true);
         closed.complete();
+        await fixture.whenStable();
         fixture.destroy();
 
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
@@ -367,16 +391,20 @@ async function setupComponentAsync(): Promise<void> {
     });
 
     await TestBed.configureTestingModule({
-        imports: [AdminUsersComponent],
         providers: [
-            provideRouter([]),
+            provideRouter(
+                [{ path: '', component: AdminUsersComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersService },
             { provide: FdUiDialogService, useValue: dialogService },
         ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminUsersComponent);
-    component = fixture.componentInstance;
+    const harness = await RouterTestingHarness.create();
+    component = await harness.navigateByUrl('/', AdminUsersComponent);
+    fixture = harness.fixture;
+    await fixture.whenStable();
     fixture.detectChanges();
 }

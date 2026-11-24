@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
-import type { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
@@ -11,10 +11,11 @@ import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type { AdminUserLoginEvent, PagedResponse } from '../models/admin-user.models';
 import { AdminLoginActivitySectionComponent } from './admin-login-activity-section';
 
 const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
+
+type LoginEventsRequest = { page: number; search: string | null; filters: Record<string, string> };
 
 @Component({
     selector: 'fd-admin-login-activity-page',
@@ -30,22 +31,42 @@ const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLoginActivityPageComponent {
-    protected readonly loadFailed = signal(false);
     private readonly usersService = inject(AdminUsersFacade);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private request?: Subscription;
+    private readonly request = signal<LoginEventsRequest | undefined>(undefined);
+    private readonly loginEventsResource = rxResource({
+        params: this.request,
+        stream: ({ params }) =>
+            this.usersService.getLoginEvents(params.page, ADMIN_LOGIN_ACTIVITY_PAGE_SIZE, params.search, params.filters).pipe(
+                map(response => {
+                    if (this.request() !== params) {
+                        return null;
+                    }
+                    const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                        totalItems: response.totalItems,
+                        pageSize: ADMIN_LOGIN_ACTIVITY_PAGE_SIZE,
+                    });
+                    return correctingPage ? null : response;
+                }),
+            ),
+    });
+    private readonly loginEventsResult = computed(() => (this.loginEventsResource.hasValue() ? this.loginEventsResource.value() : null));
+
+    protected readonly loadFailed = computed(() => this.loginEventsResource.error() !== undefined);
     protected readonly firstFilter = signal('');
     protected readonly secondFilter = signal('');
     protected readonly pageSize = ADMIN_LOGIN_ACTIVITY_PAGE_SIZE;
 
-    protected readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
+    protected readonly loginEvents = computed(() => this.loginEventsResult()?.items ?? []);
     protected readonly loginEventsPage = signal(1);
-    protected readonly loginEventsTotalPages = signal(1);
-    protected readonly loginEventsTotalItems = signal(0);
+    protected readonly loginEventsTotalPages = computed(() => this.loginEventsResult()?.totalPages ?? 1);
+    protected readonly loginEventsTotalItems = computed(() => this.loginEventsResult()?.totalItems ?? 0);
     protected readonly loginEventsSearch = signal('');
-    protected readonly isLoginEventsLoading = signal(false);
+    // Keep the pager hidden until navigation to the corrected page finishes.
+    protected readonly isLoginEventsLoading = computed(
+        () => this.loginEventsResource.isLoading() || (this.loginEventsResource.hasValue() && this.loginEventsResult() === null),
+    );
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
@@ -64,7 +85,7 @@ export class AdminLoginActivityPageComponent {
     }
 
     protected goToLoginEventsPage(page: number): void {
-        if (page < 1 || page > this.loginEventsTotalPages()) {
+        if (this.isLoginEventsLoading() || page < 1 || page > this.loginEventsTotalPages()) {
             return;
         }
 
@@ -86,56 +107,22 @@ export class AdminLoginActivityPageComponent {
     }
 
     protected loadLoginEvents(): void {
-        this.request?.unsubscribe();
-        const range = adminPeriod(this.route.snapshot.queryParamMap);
+        const query = this.route.snapshot.queryParamMap;
+        const range = adminPeriod(query);
         if (range === null) {
-            this.loginEvents.set([]);
-            this.loginEventsTotalPages.set(1);
-            this.loginEventsTotalItems.set(0);
-            this.loadFailed.set(false);
-            this.isLoginEventsLoading.set(false);
+            this.request.set(undefined);
             return;
         }
-        const filters = { ...adminUtcPeriod(range), provider: this.firstFilter(), device: this.secondFilter() };
-        this.loadFailed.set(false);
-        this.isLoginEventsLoading.set(true);
-        this.request = this.usersService
-            .getLoginEvents(this.loginEventsPage(), ADMIN_LOGIN_ACTIVITY_PAGE_SIZE, this.resolveSearchQuery(this.loginEventsSearch()), {
-                ...filters,
-                userId: this.route.snapshot.queryParamMap.get('userId') ?? '',
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.applyLoginPage(response);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.loginEvents.set([]);
-                    this.loginEventsTotalPages.set(1);
-                    this.loginEventsTotalItems.set(0);
-                    this.isLoginEventsLoading.set(false);
-                },
-            });
-    }
-
-    private applyLoginPage(response: PagedResponse<AdminUserLoginEvent>): void {
-        if (
-            restoreAdminPage(this.router, this.route, this.loginEventsPage(), {
-                totalItems: response.totalItems,
-                pageSize: ADMIN_LOGIN_ACTIVITY_PAGE_SIZE,
-            })
-        ) {
-            return;
-        }
-        this.loginEvents.set(response.items);
-        this.loginEventsTotalPages.set(response.totalPages);
-        this.loginEventsTotalItems.set(response.totalItems);
-        this.isLoginEventsLoading.set(false);
-    }
-
-    private resolveSearchQuery(value: string): string | null {
-        const trimmed = value.trim();
-        return trimmed.length > 0 ? trimmed : null;
+        const search = this.loginEventsSearch().trim();
+        this.request.set({
+            page: this.loginEventsPage(),
+            search: search.length > 0 ? search : null,
+            filters: {
+                ...adminUtcPeriod(range),
+                provider: this.firstFilter(),
+                device: this.secondFilter(),
+                userId: query.get('userId') ?? '',
+            },
+        });
     }
 }

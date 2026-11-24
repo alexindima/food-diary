@@ -43,6 +43,7 @@ it.each([
     const harness = await RouterTestingHarness.create(url);
     const requests = TestBed.inject(HttpTestingController);
     requests.expectOne(request => request.url === api).flush(ORIGINAL_PAGE);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     const next = harness.routeNativeElement?.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
     if (next === null || next === undefined) {
@@ -59,11 +60,12 @@ it.each([
             take(1),
         )
         .subscribe(() => {
-            requests.expectOne(request => request.url === api && request.params.get('search') === 'recent').flush(FILTERED_PAGE);
             beforeRender(next.isConnected);
             next.click();
         });
     await router.navigateByUrl(filtered);
+    harness.detectChanges();
+    requests.expectOne(request => request.url === api && request.params.get('search') === 'recent').flush(FILTERED_PAGE);
     await harness.fixture.whenStable();
     harness.detectChanges();
 

@@ -1,6 +1,6 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Observable, Subscription } from 'rxjs';
+import { computed, DestroyRef, inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { Observable } from 'rxjs';
 
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
@@ -11,10 +11,18 @@ import { isDailyAdviceImport, MAX_ADVICE_IMPORT_BYTES } from './daily-advice-imp
 export class AdminDailyAdvicesFacade {
     private readonly api = inject(AdminDailyAdvicesService);
     private readonly destroyRef = inject(DestroyRef);
-    private loadRequest?: Subscription;
-    public readonly advices = signal<AdminDailyAdvice[]>([]);
-    public readonly loading = signal(false);
-    public readonly loadFailed = signal(false);
+    private readonly reloadVersion = signal(0);
+    private readonly advicesResource = rxResource({
+        params: this.reloadVersion,
+        stream: () => this.api.getAll(),
+    });
+    public readonly advices = linkedSignal({
+        source: this.advicesResource.snapshot,
+        computation: (snapshot, previous): AdminDailyAdvice[] =>
+            snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
+    }).asReadonly();
+    public readonly loading = this.advicesResource.isLoading;
+    public readonly loadFailed = computed(() => this.advicesResource.error() !== undefined);
     public readonly importing = signal(false);
     public readonly importError = signal<string | null>(null);
     public readonly importResult = signal<AdminDailyAdvicesImportResponse | null>(null);
@@ -28,22 +36,7 @@ export class AdminDailyAdvicesFacade {
     }
 
     public loadAdvices(): void {
-        this.loadRequest?.unsubscribe();
-        this.loading.set(true);
-        this.loadFailed.set(false);
-        this.loadRequest = this.api
-            .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: items => {
-                    this.advices.set(items);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.loading.set(false);
-                },
-            });
+        this.reloadVersion.update(version => version + 1);
     }
 
     public async importFileAsync(file: File): Promise<void> {

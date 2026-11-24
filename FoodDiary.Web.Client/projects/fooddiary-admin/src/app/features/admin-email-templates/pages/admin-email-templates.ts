@@ -1,19 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import type { Subscription } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
-import { adminPage } from '../../../shared/period/admin-query';
+import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
@@ -33,22 +31,48 @@ import type { AdminEmailTemplate } from '../models/admin-email-template.data';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEmailTemplatesComponent {
-    protected readonly loadFailed = signal(false);
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly locale = input(undefined, { transform: firstAdminQueryValue });
+    public readonly category = input(undefined, { transform: firstAdminQueryValue });
+    public readonly state = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
     private readonly dialogService = inject(FdUiDialogService);
-    private readonly destroyRef = inject(DestroyRef);
-    private loadRequest?: Subscription;
+    private readonly requestVersion = signal(0);
+    private readonly templatesResource = rxResource({
+        params: this.requestVersion,
+        stream: () => this.templatesFacade.getAll(),
+        defaultValue: [],
+    });
 
-    protected readonly templates = signal<AdminEmailTemplate[]>([]);
-    protected readonly isLoading = signal(false);
+    protected readonly templates = linkedSignal({
+        source: this.templatesResource.snapshot,
+        computation: (snapshot, previous): AdminEmailTemplate[] => {
+            if (snapshot.status === 'error') {
+                return [];
+            }
+            return snapshot.status === 'loading' ? (previous?.value ?? snapshot.value) : snapshot.value;
+        },
+    }).asReadonly();
+    protected readonly isLoading = this.templatesResource.isLoading;
+    protected readonly loadFailed = computed(() => this.templatesResource.error() !== undefined);
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+    protected readonly appliedFilters = computed(() =>
+        convertToParamMap({
+            page: this.page() ?? null,
+            search: this.search() ?? null,
+            locale: this.locale() ?? null,
+            category: this.category() ?? null,
+            state: this.state() ?? null,
+        }),
+    );
     protected readonly categories = computed(() => [...new Set(this.templates().map(item => item.key))].sort());
     protected readonly filteredItems = computed(() =>
         this.templates().filter(item =>
-            matchesAdminCatalog(this.params(), {
+            matchesAdminCatalog(this.appliedFilters(), {
                 text: `${item.key} ${item.subject}`,
                 locale: item.locale,
                 category: item.key,
@@ -57,7 +81,7 @@ export class AdminEmailTemplatesComponent {
         ),
     );
     protected readonly pageSize = 20;
-    protected readonly requestedPage = signal(0);
+    protected readonly requestedPage = computed(() => adminPage(this.page() ?? null) - 1);
     protected readonly pageIndex = computed(() =>
         Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.filteredItems().length / this.pageSize) - 1)),
     );
@@ -68,7 +92,6 @@ export class AdminEmailTemplatesComponent {
     protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.filteredItems().length));
 
     protected goToPage(pageIndex: number): void {
-        this.requestedPage.set(pageIndex);
         void this.router.navigate([], { relativeTo: this.route, queryParams: { page: pageIndex + 1 }, queryParamsHandling: 'merge' });
     }
 
@@ -81,30 +104,10 @@ export class AdminEmailTemplatesComponent {
                 });
             }
         });
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.requestedPage.set(adminPage(params.get('page')) - 1);
-        });
-        this.loadTemplates();
     }
 
     protected loadTemplates(): void {
-        this.loadRequest?.unsubscribe();
-        this.loadFailed.set(false);
-        this.isLoading.set(true);
-        this.loadRequest = this.templatesFacade
-            .getAll()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.templates.set(response);
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.templates.set([]);
-                    this.isLoading.set(false);
-                },
-            });
+        this.requestVersion.update(version => version + 1);
     }
 
     protected openEdit(template: AdminEmailTemplate): void {

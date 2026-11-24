@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -44,6 +45,7 @@ describe('daily advices page', () => {
     it('shows empty state and import result, then reloads the list', async () => {
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_DAILY_ADVICES.EMPTY');
         await selectFileAsync(fixture, JSON.stringify(DAILY_ADVICE_IMPORT_EXAMPLE));
         fixture.detectChanges();
@@ -78,12 +80,15 @@ describe('daily advices page', () => {
         expect(importAdvices).toHaveBeenCalledTimes(2);
     });
 
-    it('shows load error and can retry', () => {
+    it('shows load error and can retry', async () => {
         getAll.mockReturnValueOnce(throwError(() => new Error('offline')));
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-admin-load-error')).not.toBeNull();
         fixture.componentInstance['loadAdvices']();
+        fixture.detectChanges();
+        await fixture.whenStable();
         expect(fixture.componentInstance['loadFailed']()).toBe(false);
     });
 });
@@ -93,8 +98,14 @@ describe('daily advices pagination', () => {
     beforeEach(async () => {
         getAll.mockReset().mockReturnValue(of([]));
         await TestBed.configureTestingModule({
-            imports: [AdminDailyAdvicesComponent],
-            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminDailyAdvicesService, useValue: { getAll } }],
+            providers: [
+                provideRouter(
+                    [{ path: 'daily-advices', component: AdminDailyAdvicesComponent }],
+                    withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+                ),
+                ...provideTranslateTesting(),
+                { provide: AdminDailyAdvicesService, useValue: { getAll } },
+            ],
         }).compileComponents();
     });
 
@@ -108,28 +119,34 @@ describe('daily advices pagination', () => {
         }));
         getAll.mockReturnValue(of(items));
         const router = TestBed.inject(Router);
-        await router.navigateByUrl('/?page=2');
-        const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
-        await fixture.whenStable();
-        fixture.detectChanges();
-        expect(fixture.componentInstance['page']()).toBe(1);
-        expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-25');
+        const harness = await RouterTestingHarness.create();
+        const component = await harness.navigateByUrl('/daily-advices?page=2&page=1', AdminDailyAdvicesComponent);
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(component['pageIndex']()).toBe(1);
+        expect(component['pageItems']()[0]?.id).toBe('advice-25');
         expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('2');
-        const host = fixture.nativeElement as HTMLElement;
-        const previous = host.querySelector<HTMLButtonElement>('fd-ui-pagination button:first-child');
+        const host = harness.routeNativeElement;
+        const previous = host?.querySelector<HTMLButtonElement>('fd-ui-pagination button:first-child');
         expect(previous).not.toBeNull();
         previous?.click();
-        await fixture.whenStable();
-        fixture.detectChanges();
-        expect(host.querySelector('fd-admin-daily-advice-group-card [lang="en"]')?.textContent).toBe('Advice 0');
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(host?.querySelector('fd-admin-daily-advice-group-card [lang="en"]')?.textContent).toBe('Advice 0');
         expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('1');
-        await router.navigateByUrl('/?page=2');
-        await fixture.whenStable();
+        await harness.navigateByUrl('/daily-advices');
+        await harness.fixture.whenStable();
+        expect(component['pageItems']()[0]?.id).toBe('advice-0');
+        expect(getAll).toHaveBeenCalledOnce();
+        await harness.navigateByUrl('/daily-advices?page=2');
+        await harness.fixture.whenStable();
         getAll.mockReturnValueOnce(of(items.slice(0, 1)));
-        fixture.componentInstance['loadAdvices']();
-        await fixture.whenStable();
-        fixture.detectChanges();
-        expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-0');
+        component['loadAdvices']();
+        harness.detectChanges();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(getAll).toHaveBeenCalledTimes(2);
+        expect(component['pageItems']()[0]?.id).toBe('advice-0');
         expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('1');
     });
 });
@@ -156,6 +173,7 @@ describe('daily advice mutation refresh', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const cards = (): DailyAdviceGroupCardComponent[] =>
             fixture.debugElement
                 .queryAll(By.directive(DailyAdviceGroupCardComponent))
@@ -174,8 +192,9 @@ describe('daily advice mutation refresh', () => {
             refresh.error(new Error('offline'));
         } else {
             refresh.next(items.map(item => ({ ...item })));
+            refresh.complete();
         }
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(cards()[1]).toBe(second);
         expect(second['editing']()).toBe(true);
         expect(second['formModel']().en).toBe('Newer unsaved draft');

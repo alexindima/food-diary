@@ -1,23 +1,23 @@
 <div class="fd-grid fd-gap-md">
-    <fd-outgoing-status-counts [counts]="statusCounts()" (selected)="status.set($event); load(true)" />
+    <fd-outgoing-status-counts [counts]="statusCounts()" (selected)="draftStatus.set($event); load(true)" />
     <div class="admin-filter-bar">
         <fd-admin-period [inline]="true" />
         <fd-ui-input
             [label]="'ADMIN_OUTGOING.RECIPIENT' | translate"
-            [value]="recipient()"
-            (valueChange)="recipient.set($event?.toString() || '')"
+            [value]="draftRecipient()"
+            (valueChange)="draftRecipient.set($event?.toString() || '')"
         />
         <fd-ui-select
             [label]="'ADMIN_OUTGOING.PURPOSE' | translate"
-            [value]="purpose()"
+            [value]="draftPurpose()"
             [options]="purposeOptions()"
-            (valueChange)="purpose.set($event?.toString() || ''); load(true)"
+            (valueChange)="draftPurpose.set($event?.toString() || ''); load(true)"
         />
         <fd-ui-select
             [label]="'ADMIN_OUTGOING.STATUS' | translate"
-            [value]="status()"
+            [value]="draftStatus()"
             [options]="statusOptions()"
-            (valueChange)="status.set($event?.toString() || ''); load(true)"
+            (valueChange)="draftStatus.set($event?.toString() || ''); load(true)"
         />
         <fd-ui-button (click)="load(true)">{{ 'ADMIN_OUTGOING.REFRESH' | translate }}</fd-ui-button>
     </div>
@@ -59,7 +59,7 @@
                 </tbody>
             </table>
         </div>
-        <fd-ui-pagination [length]="total()" [pageSize]="50" [pageIndex]="page() - 1" (pageIndexChange)="goToPage($event)" />
+        <fd-ui-pagination [length]="total()" [pageSize]="50" [pageIndex]="draftPage() - 1" (pageIndexChange)="goToPage($event)" />
     }
     @if (selected(); as mail) {
         <fd-outgoing-email-details [mail]="mail" (closed)="closeDetails()" />

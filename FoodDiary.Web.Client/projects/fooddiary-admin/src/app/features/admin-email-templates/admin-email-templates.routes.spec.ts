@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
@@ -38,7 +38,10 @@ it('pages filtered templates through the lazy route and preserves the list after
     const afterClosed = vi.fn<() => Observable<boolean>>().mockReturnValue(of(false));
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'email-templates', children: adminEmailTemplatesRoutes }]),
+            provideRouter(
+                [{ path: 'email-templates', children: adminEmailTemplatesRoutes }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             { provide: AdminEmailTemplatesFacade, useValue: { getAll } },
             { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof afterClosed } => ({ afterClosed }) } },

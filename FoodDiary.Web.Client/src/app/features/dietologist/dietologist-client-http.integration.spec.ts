@@ -219,7 +219,9 @@ it('applies the directory attention threshold and lets the dietologist retry a f
     inactivityDays.value = '5';
     inactivityDays.dispatchEvent(new Event('change', { bubbles: true }));
     button(attention, 'ATTENTION.APPLY').click();
+    harness.detectChanges();
     attentionRequest('5').flush([ATTENTION_SIGNAL]);
+    await harness.fixture.whenStable();
     harness.detectChanges();
 
     expect(attention.textContent).toContain('ATTENTION.UNNAMED_CLIENT');

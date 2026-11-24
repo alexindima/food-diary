@@ -1,3 +1,4 @@
+import { ApplicationRef } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -25,7 +26,9 @@ const overview: AdminDashboardOverview = {
     pendingReportsNow: 2,
 };
 
-function renderDashboard(getOverview = vi.fn().mockReturnValue(of(overview))): ComponentFixture<AdminDashboardComponent> {
+async function renderDashboardAsync(
+    getOverview = vi.fn().mockReturnValue(of(overview)),
+): Promise<ComponentFixture<AdminDashboardComponent>> {
     TestBed.configureTestingModule({
         imports: [AdminDashboardComponent],
         providers: [
@@ -37,6 +40,7 @@ function renderDashboard(getOverview = vi.fn().mockReturnValue(of(overview))): C
     });
     const fixture = TestBed.createComponent(AdminDashboardComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
     return fixture;
 }
 
@@ -47,31 +51,49 @@ function setup(): { facade: AdminDashboardFacade; getOverview: ReturnType<typeof
 }
 
 describe('Admin dashboard overview', () => {
-    it('loads the selected range and keeps current state separate', () => {
+    it('loads the selected range and keeps current state separate', async () => {
         const { facade, getOverview } = setup();
         facade.load({ from: '2026-09-01', to: '2026-09-07' });
+        TestBed.tick();
+        await TestBed.inject(ApplicationRef).whenStable();
         expect(getOverview).toHaveBeenCalledWith({ from: '2026-09-01', to: '2026-09-07' });
         expect(facade.overview()?.period.metrics.registrations).toBe(overview.period.metrics.registrations);
         expect(facade.overview()?.totalUsersNow).toBe(overview.totalUsersNow);
         expect(facade.isLoading()).toBe(false);
     });
-    it('does not display failed requests as zero activity and supports retry', () => {
+    it('does not display failed requests as zero activity and supports retry', async () => {
         const { facade, getOverview } = setup();
         getOverview.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
         facade.load();
+        TestBed.tick();
+        await TestBed.inject(ApplicationRef).whenStable();
         expect(facade.failed()).toBe(true);
         expect(facade.overview()).toBeNull();
         facade.load();
+        TestBed.tick();
+        await TestBed.inject(ApplicationRef).whenStable();
         expect(facade.failed()).toBe(false);
         expect(facade.overview()).toEqual(overview);
     });
-    it('cancels stale responses after changing the period', () => {
+    it.each([
+        { action: 'changing the period', nextRange: { allTime: true } },
+        { action: 'refreshing the same period', nextRange: undefined },
+    ])('cancels stale responses when $action', async ({ nextRange }) => {
         const { facade, getOverview } = setup();
         const old = new Subject<AdminDashboardOverview>();
+        const range = { from: '2026-09-01', to: '2026-09-07' };
         getOverview.mockReturnValueOnce(old);
-        facade.load();
-        facade.load({ allTime: true });
+        facade.load(range);
+        TestBed.tick();
+        expect(old.observed).toBe(true);
+
+        facade.load(nextRange ?? range);
+        TestBed.tick();
+        expect(old.observed).toBe(false);
+        expect(getOverview).toHaveBeenCalledTimes(2);
+        expect(getOverview).toHaveBeenLastCalledWith(nextRange ?? range);
         old.next({ ...overview, totalUsersNow: 999 });
+        await TestBed.inject(ApplicationRef).whenStable();
         expect(facade.overview()?.totalUsersNow).toBe(overview.totalUsersNow);
     });
 });
@@ -87,7 +109,7 @@ describe('dashboard calendar validation', () => {
         ['2000-01-01', '2011-01-01'],
     ])('rejects out-of-bounds URL range %s to %s without issuing a report request', async (from, to) => {
         const getOverview = vi.fn().mockReturnValue(of(overview));
-        const fixture = renderDashboard(getOverview);
+        const fixture = await renderDashboardAsync(getOverview);
         getOverview.mockClear();
         await TestBed.inject(Router).navigateByUrl(`/?period=custom&from=${from}&to=${to}`);
         fixture.detectChanges();
@@ -102,7 +124,7 @@ describe('Admin dashboard page states', () => {
     it('replaces stale counts with loading and an error, then renders the fresh result after a visible refresh', async () => {
         const pending = new Subject<AdminDashboardOverview>();
         const getOverview = vi.fn().mockReturnValueOnce(of(overview)).mockReturnValueOnce(pending).mockReturnValue(of(overview));
-        const fixture = renderDashboard(getOverview);
+        const fixture = await renderDashboardAsync(getOverview);
         const host = fixture.nativeElement as HTMLElement;
         const content = 'fd-admin-dashboard-content';
         expect(host.querySelector(content)).not.toBeNull();
@@ -114,14 +136,14 @@ describe('Admin dashboard page states', () => {
         expect(host.querySelector(content)).toBeNull();
 
         pending.error(new Error('report unavailable'));
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.ERROR');
         expect(host.querySelector(content)).toBeNull();
 
         const refresh = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'ADMIN_OVERVIEW.REFRESH');
         expect(refresh).toBeDefined();
         refresh?.click();
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(getOverview).toHaveBeenLastCalledWith({ allTime: true });
         expect(host.querySelector('[role="alert"]')).toBeNull();
         expect(host.querySelector(content)).not.toBeNull();
@@ -130,7 +152,7 @@ describe('Admin dashboard page states', () => {
     it('clears the overview and ignores a pending request when a reversed custom range replaces it', async () => {
         const pending = new Subject<AdminDashboardOverview>();
         const getOverview = vi.fn().mockReturnValue(of(overview));
-        const fixture = renderDashboard(getOverview);
+        const fixture = await renderDashboardAsync(getOverview);
         const router = TestBed.inject(Router);
         const host = fixture.nativeElement as HTMLElement;
         getOverview.mockReturnValueOnce(pending);
@@ -141,8 +163,9 @@ describe('Admin dashboard page states', () => {
         getOverview.mockClear();
 
         await router.navigateByUrl('/?period=custom&from=2024-03-01&to=2024-02-29');
-        pending.next(overview);
         fixture.detectChanges();
+        expect(pending.observed).toBe(false);
+        pending.next(overview);
         expect(getOverview).not.toHaveBeenCalled();
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.INVALID');
         expect(host.querySelector('[role="status"]')).toBeNull();

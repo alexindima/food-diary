@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
@@ -50,6 +50,8 @@ describe('AdminMailInboxComponent row activation', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminMailInboxComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         const row = element.querySelector<HTMLTableRowElement>('tbody tr');
         if (row === null) {
@@ -94,28 +96,37 @@ type InboxTest = {
     router: Router;
     open: Mock<OpenMessage>;
 };
+type InboxTestOptions = {
+    attach?: (screen: AdminDevelopmentScreen) => () => void;
+    waitForPage?: boolean;
+};
 
 async function setupInboxAsync(
     url: string,
     getMessagePage: Mock<AdminMailInboxFacade['getMessagePage']>,
-    attach?: (screen: AdminDevelopmentScreen) => () => void,
+    { attach, waitForPage = true }: InboxTestOptions = {},
 ): Promise<InboxTest> {
     const open = vi.fn<OpenMessage>();
     await TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting(),
-            provideRouter([
-                { path: 'mail-inbox', component: AdminMailInboxComponent },
-                { path: 'feedback', component: AdminMailInboxComponent, data: { feedbackMailbox: true } },
-                { path: 'exit', children: [] },
-            ]),
+            provideRouter(
+                [
+                    { path: 'mail-inbox', component: AdminMailInboxComponent },
+                    { path: 'feedback', component: AdminMailInboxComponent, data: { feedbackMailbox: true } },
+                    { path: 'exit', children: [] },
+                ],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: attach === undefined ? null : { attach } },
             { provide: AdminMailInboxFacade, useValue: { getMessagePage } },
             { provide: FdUiDialogService, useValue: { open } },
         ],
     }).compileComponents();
     const harness = await RouterTestingHarness.create(url);
-    await renderInboxAsync(harness);
+    if (waitForPage) {
+        await renderInboxAsync(harness);
+    }
     const element = harness.routeNativeElement;
     if (element === null) {
         throw new Error('Expected the inbox route');
@@ -140,17 +151,18 @@ describe('admin inbox requests', () => {
     it('ignores results from outdated filters and reloads the active request after reading a message', async () => {
         const previous = new Subject<AdminMailInboxMessagePage>();
         const filtered = new Subject<AdminMailInboxMessagePage>();
+        const reload = new Subject<AdminMailInboxMessagePage>();
+        const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(vi.fn());
         const getMessagePage = vi
             .fn<AdminMailInboxFacade['getMessagePage']>()
             .mockReturnValueOnce(previous)
             .mockReturnValueOnce(filtered)
-            .mockReturnValue(
-                of({
-                    items: [{ ...currentMail, readAtUtc: currentMail.receivedAtUtc }],
-                    totalItems: 1,
-                }),
-            );
-        const { element, harness, open } = await setupInboxAsync(`${INBOX}?unread=false`, getMessagePage);
+            .mockReturnValueOnce(reload);
+        const { element, harness, open, router } = await setupInboxAsync(`${INBOX}?unread=false`, getMessagePage, {
+            attach,
+            waitForPage: false,
+        });
+        expect(previous.observed).toBe(true);
         expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ unread: false }));
         await harness.navigateByUrl(`${INBOX}?category=dmarc-report&search=Current&fromAddress=sender@example.test`);
         expect(previous.observed).toBe(false);
@@ -164,22 +176,44 @@ describe('admin inbox requests', () => {
         expect(element.querySelector('tbody')?.textContent).not.toContain('Stale result');
         expect(element.querySelector('.mail-badge')?.textContent.trim()).toBe('DMARC');
 
+        const subject = element.querySelector<HTMLInputElement>('input[aria-label="ADMIN_MAIL_INBOX.SUBJECT_FILTER"]');
+        if (subject === null) {
+            throw new Error('Expected the inbox subject filter');
+        }
+        subject.value = 'Draft subject';
+        subject.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(getMessagePage).toHaveBeenCalledTimes(2);
         element.querySelector<HTMLTableRowElement>('tbody tr')?.click();
         expect(open).toHaveBeenCalledOnce();
         const data = open.mock.calls[0][1].data;
         expect(data.id).toBe(currentMail.id);
         data.onRead(currentMail.id, currentMail.receivedAtUtc);
-        await renderInboxAsync(harness);
+        harness.detectChanges();
         expect(filtered.observed).toBe(false);
+        expect(reload.observed).toBe(true);
         expect(getMessagePage).toHaveBeenCalledTimes(REQUEST_COUNT_WITH_RELOAD);
         expect(getMessagePage).toHaveBeenLastCalledWith(
             1,
             PAGE_SIZE,
-            expect.objectContaining({ category: 'dmarc-report', search: 'Current', fromAddress: 'sender@example.test' }),
+            expect.objectContaining({
+                category: 'dmarc-report',
+                search: 'Draft subject',
+                fromAddress: 'sender@example.test',
+                unread: undefined,
+            }),
         );
+        expect(router.parseUrl(router.url).queryParamMap.get('search')).toBe('Current');
+        expect(attach.mock.lastCall?.[0].read()).toMatchObject({
+            loading: true,
+            items: [{ id: currentMail.id, readAtUtc: currentMail.receivedAtUtc }, { id: 'another' }],
+        });
+        reload.next({ items: [{ ...currentMail, readAtUtc: currentMail.receivedAtUtc }], totalItems: 1 });
+        await renderInboxAsync(harness);
         expect(element.querySelector('.mail-read-state')?.textContent.trim()).toBe('Read');
     });
+});
 
+describe('admin inbox request recovery', () => {
     it('rejects invalid periods on refresh and recovers a failed request without dropping filters', async () => {
         const getMessagePage = vi
             .fn<AdminMailInboxFacade['getMessagePage']>()
@@ -190,6 +224,7 @@ describe('admin inbox requests', () => {
         expect(getMessagePage).not.toHaveBeenCalled();
 
         await harness.navigateByUrl(`${INBOX}?recipient=support@example.test&category=general`);
+        await renderInboxAsync(harness);
         expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LIST_LOAD_ERROR');
         requireNamedButton(element, 'Refresh').click();
         await renderInboxAsync(harness);
@@ -276,7 +311,7 @@ describe('admin inbox screen state', () => {
         const detach = vi.fn();
         const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(detach);
         const getMessagePage = vi.fn<AdminMailInboxFacade['getMessagePage']>().mockReturnValue(of({ items: [currentMail], totalItems: 1 }));
-        const { harness } = await setupInboxAsync(path, getMessagePage, attach);
+        const { harness } = await setupInboxAsync(path, getMessagePage, { attach });
         const screen = attach.mock.lastCall?.[0];
         expect(screen?.kind).toBe('admin-mail-inbox');
         await screen?.setFiltersAsync?.({ recipient: 'alternate@example.test', search: 'Current' });

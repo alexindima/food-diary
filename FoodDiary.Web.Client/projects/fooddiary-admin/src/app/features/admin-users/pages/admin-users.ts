@@ -1,27 +1,38 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateInputComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { finalize, type Subscription } from 'rxjs';
+import { finalize, map } from 'rxjs';
 
 import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
-import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
+import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUserCreateDialogComponent } from '../dialogs/admin-user-create-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserStatusFilter, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersTableComponent } from './admin-users-table';
 
 const ADMIN_USERS_PAGE_SIZE = 20;
+
+type UserListFilters = {
+    page: number;
+    search: string;
+    status: AdminUserStatusFilter;
+    role: string;
+    emailConfirmed: string;
+    lastActiveFrom: string;
+    lastActiveTo: string;
+};
+
+type UserListRequest = { page: number; search: string | null; filters: Record<string, string> };
 
 @Component({
     selector: 'fd-admin-users',
@@ -30,7 +41,6 @@ const ADMIN_USERS_PAGE_SIZE = 20;
         AdminLoadErrorComponent,
         AdminPeriodControlComponent,
         TranslatePipe,
-        CommonModule,
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -41,26 +51,85 @@ const ADMIN_USERS_PAGE_SIZE = 20;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUsersComponent {
-    protected readonly loadFailed = signal(false);
     private readonly usersService = inject(AdminUsersFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private request?: Subscription;
-    protected readonly role = signal('');
-    protected readonly confirmed = signal('');
-    protected readonly lastActiveFrom = signal('');
-    protected readonly lastActiveTo = signal('');
+    public readonly page = input(undefined, { transform: firstAdminQueryValue });
+    public readonly search = input(undefined, { transform: firstAdminQueryValue });
+    public readonly status = input(undefined, { transform: firstAdminQueryValue });
+    public readonly role = input(undefined, { transform: firstAdminQueryValue });
+    public readonly emailConfirmed = input(undefined, { transform: firstAdminQueryValue });
+    public readonly lastActiveFrom = input(undefined, { transform: firstAdminQueryValue });
+    public readonly lastActiveTo = input(undefined, { transform: firstAdminQueryValue });
+    public readonly period = input(undefined, { transform: firstAdminQueryValue });
+    public readonly from = input(undefined, { transform: firstAdminQueryValue });
+    public readonly to = input(undefined, { transform: firstAdminQueryValue });
 
-    protected readonly users = signal<AdminUser[]>([]);
-    protected readonly totalPages = signal(1);
-    protected readonly totalItems = signal(0);
-    protected readonly page = signal(1);
+    private readonly queryFilters = computed(() => ({
+        page: this.page() ?? null,
+        search: this.search() ?? null,
+        status: this.status() ?? null,
+        role: this.role() ?? null,
+        emailConfirmed: this.emailConfirmed() ?? null,
+        lastActiveFrom: this.lastActiveFrom() ?? null,
+        lastActiveTo: this.lastActiveTo() ?? null,
+    }));
+    private readonly registrationPeriod = computed(() =>
+        adminPeriod(convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null })),
+    );
+    private readonly appliedFilters = computed((): UserListFilters => {
+        const query = this.queryFilters();
+        return {
+            page: adminPage(query.page),
+            search: query.search ?? '',
+            status: query.status === 'deleted' || query.status === 'inactive' ? query.status : 'active',
+            role: query.role ?? '',
+            emailConfirmed: query.emailConfirmed ?? '',
+            lastActiveFrom: query.lastActiveFrom ?? '',
+            lastActiveTo: query.lastActiveTo ?? '',
+        };
+    });
+    private readonly request = linkedSignal(() => this.buildRequest(this.appliedFilters()));
+    private readonly usersResource = rxResource({
+        params: this.request,
+        stream: ({ params }) =>
+            this.usersService.getUsers(params.page, this.limit, params.search, params.filters).pipe(
+                map(response => {
+                    if (this.request() !== params) {
+                        return null;
+                    }
+                    const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
+                        totalItems: response.totalItems,
+                        pageSize: this.limit,
+                    });
+                    return correctingPage ? null : response;
+                }),
+            ),
+    });
+    private readonly pageResult = computed(() => (this.usersResource.hasValue() ? this.usersResource.value() : null));
+    protected readonly loadFailed = computed(() => this.usersResource.error() !== undefined);
+    protected readonly isLoading = computed(
+        () => this.usersResource.isLoading() || (this.usersResource.hasValue() && this.pageResult() === null),
+    );
+    private readonly retainedPage = linkedSignal({
+        source: () => ({ result: this.pageResult(), loading: this.isLoading() }),
+        computation: ({ result, loading }, previous): PagedResponse<AdminUser> | null =>
+            result ?? (loading ? (previous?.value ?? null) : null),
+    });
+    private readonly draftDefaults = computed(() => ({ ...this.appliedFilters(), period: this.registrationPeriod() }));
+    protected readonly users = computed(() => this.retainedPage()?.items ?? []);
+    protected readonly totalPages = computed(() => this.retainedPage()?.totalPages ?? 1);
+    protected readonly totalItems = computed(() => this.retainedPage()?.totalItems ?? 0);
+    protected readonly draftPage = linkedSignal(() => this.draftDefaults().page);
+    protected readonly draftSearch = linkedSignal(() => this.draftDefaults().search);
+    protected readonly draftStatus = linkedSignal(() => this.draftDefaults().status);
+    protected readonly draftRole = linkedSignal(() => this.draftDefaults().role);
+    protected readonly draftConfirmed = linkedSignal(() => this.draftDefaults().emailConfirmed);
+    protected readonly draftLastActiveFrom = linkedSignal(() => this.draftDefaults().lastActiveFrom);
+    protected readonly draftLastActiveTo = linkedSignal(() => this.draftDefaults().lastActiveTo);
     protected readonly limit = ADMIN_USERS_PAGE_SIZE;
-    protected readonly isLoading = signal(false);
-    protected readonly search = signal('');
-    protected readonly status = signal<AdminUserStatusFilter>('active');
     protected readonly statusOptions: Array<FdUiSelectOption<AdminUserStatusFilter>> = [
         { value: 'active', label: 'Active users' },
         { value: 'inactive', label: 'Inactive users' },
@@ -68,13 +137,12 @@ export class AdminUsersComponent {
     ];
 
     public constructor() {
-        const fields = ['page', 'search', 'status', 'role', 'emailConfirmed', 'lastActiveFrom', 'lastActiveTo'];
         connectAdminDevelopmentScreen({
             kind: 'admin-users',
-            filterFields: fields,
+            filterFields: Object.keys(this.queryFilters()),
             read: () => ({
-                filters: Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
-                page: this.page(),
+                filters: this.queryFilters(),
+                page: this.draftPage(),
                 totalItems: this.totalItems(),
                 totalPages: this.totalPages(),
                 loading: this.isLoading(),
@@ -91,16 +159,6 @@ export class AdminUsersComponent {
                 await this.router.navigate(['/users', id], { queryParamsHandling: 'preserve' });
             },
         });
-        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            this.search.set(params.get('search') ?? '');
-            this.status.set(params.get('status') === 'deleted' ? 'deleted' : params.get('status') === 'inactive' ? 'inactive' : 'active');
-            this.role.set(params.get('role') ?? '');
-            this.confirmed.set(params.get('emailConfirmed') ?? '');
-            this.lastActiveFrom.set(params.get('lastActiveFrom') ?? '');
-            this.lastActiveTo.set(params.get('lastActiveTo') ?? '');
-            this.page.set(adminPage(params.get('page')));
-            this.loadUsers();
-        });
     }
 
     protected applyFilters(): void {
@@ -108,62 +166,29 @@ export class AdminUsersComponent {
             relativeTo: this.route,
             queryParamsHandling: 'merge',
             queryParams: {
-                search: adminQueryValue(this.search()),
-                status: this.status(),
-                role: adminQueryValue(this.role()),
-                emailConfirmed: adminQueryValue(this.confirmed()),
-                lastActiveFrom: adminQueryValue(this.lastActiveFrom()),
-                lastActiveTo: adminQueryValue(this.lastActiveTo()),
-                page: this.page(),
+                search: adminQueryValue(this.draftSearch()),
+                status: this.draftStatus(),
+                role: adminQueryValue(this.draftRole()),
+                emailConfirmed: adminQueryValue(this.draftConfirmed()),
+                lastActiveFrom: adminQueryValue(this.draftLastActiveFrom()),
+                lastActiveTo: adminQueryValue(this.draftLastActiveTo()),
+                page: this.draftPage(),
             },
         });
     }
 
     protected loadUsers(): void {
-        this.request?.unsubscribe();
-        const range = adminPeriod(this.route.snapshot.queryParamMap);
-        if (range === null) {
-            this.users.set([]);
-            this.totalItems.set(0);
-            this.totalPages.set(1);
-            this.loadFailed.set(false);
-            this.isLoading.set(false);
-            return;
-        }
-        this.loadFailed.set(false);
-        this.isLoading.set(true);
-        this.request = this.usersService
-            .getUsers(this.page(), this.limit, this.resolveSearchQuery(this.search()), {
-                status: this.status(),
-                ...range,
-                role: this.role(),
-                emailConfirmed: this.confirmed(),
-                lastActiveFrom: this.lastActiveFrom(),
-                lastActiveTo: this.lastActiveTo(),
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.applyUsersPage(response);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.users.set([]);
-                    this.totalPages.set(1);
-                    this.totalItems.set(0);
-                    this.isLoading.set(false);
-                },
-            });
-    }
-
-    private applyUsersPage(response: PagedResponse<AdminUser>): void {
-        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.limit })) {
-            return;
-        }
-        this.users.set(response.items);
-        this.totalPages.set(response.totalPages);
-        this.totalItems.set(response.totalItems);
-        this.isLoading.set(false);
+        this.request.set(
+            this.buildRequest({
+                page: this.draftPage(),
+                search: this.draftSearch(),
+                status: this.draftStatus(),
+                role: this.draftRole(),
+                emailConfirmed: this.draftConfirmed(),
+                lastActiveFrom: this.draftLastActiveFrom(),
+                lastActiveTo: this.draftLastActiveTo(),
+            }),
+        );
     }
 
     protected openCreate(): void {
@@ -178,30 +203,29 @@ export class AdminUsersComponent {
             .pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterCleanup))
             .subscribe(created => {
                 if (created === true) {
-                    this.page.set(1);
-                    this.loadUsers();
+                    this.refreshAfterCreate();
                 }
             });
     }
 
     protected onSearchChange(value: FdUiInputValue): void {
-        this.search.set(fdUiCoerceInputTextValue(value));
-        this.page.set(1);
+        this.draftSearch.set(fdUiCoerceInputTextValue(value));
+        this.draftPage.set(1);
         this.applyFilters();
     }
 
     protected onStatusChange(value: AdminUserStatusFilter | null): void {
-        this.status.set(value ?? 'active');
-        this.page.set(1);
+        this.draftStatus.set(value ?? 'active');
+        this.draftPage.set(1);
         this.applyFilters();
     }
 
     protected goToPage(page: number): void {
-        if (page < 1 || page > this.totalPages()) {
+        if (this.isLoading() || page < 1 || page > this.totalPages()) {
             return;
         }
 
-        this.page.set(page);
+        this.draftPage.set(page);
         this.applyFilters();
     }
 
@@ -209,8 +233,23 @@ export class AdminUsersComponent {
         void this.router.navigate(['/users', user.id], { queryParamsHandling: 'preserve' });
     }
 
-    private resolveSearchQuery(value: string): string | null {
-        const trimmed = value.trim();
-        return trimmed.length > 0 ? trimmed : null;
+    private refreshAfterCreate(): void {
+        const currentPage = this.page();
+        this.draftPage.set(1);
+        if (currentPage === undefined || currentPage === '1') {
+            this.loadUsers();
+            return;
+        }
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { page: 1 },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
+    }
+
+    private buildRequest({ page, search, ...filters }: UserListFilters): UserListRequest | undefined {
+        const range = this.registrationPeriod();
+        return range === null ? undefined : { page, search: adminQueryValue(search.trim()), filters: { ...filters, ...range } };
     }
 }

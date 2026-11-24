@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -45,10 +45,13 @@ async function setupFeedbackAsync(url: string): Promise<{
     await TestBed.configureTestingModule({
         providers: [
             ...provideTranslateTesting(),
-            provideRouter([
-                { path: 'feedback', component: AdminMailInboxComponent, data: { feedbackMailbox: true } },
-                { path: 'mail-inbox', component: AdminMailInboxComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'feedback', component: AdminMailInboxComponent, data: { feedbackMailbox: true } },
+                    { path: 'mail-inbox', component: AdminMailInboxComponent },
+                ],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             { provide: AdminMailInboxFacade, useValue: { getMessagePage } },
             { provide: FdUiDialogService, useValue: { open } },
         ],
@@ -63,7 +66,7 @@ describe('Admin feedback mailbox', () => {
     it('fixes the server recipient while preserving page, search and read filters', async () => {
         const { getMessagePage, harness } = await setupFeedbackAsync('/feedback?recipient=other@example.test');
         expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ recipient: MAILBOX }));
-        await harness.navigateByUrl('/feedback?page=2&search=missing&unread=true&recipient=other@example.test');
+        await harness.navigateByUrl('/feedback?page=2&search=missing&search=ignored&unread=true&recipient=other@example.test');
         expect(getMessagePage).toHaveBeenLastCalledWith(
             2,
             PAGE_SIZE,

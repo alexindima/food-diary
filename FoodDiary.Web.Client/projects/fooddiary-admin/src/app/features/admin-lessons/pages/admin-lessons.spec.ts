@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -52,12 +52,13 @@ describe('AdminLessonsComponent dialog names', () => {
     it.each([
         { locale: 'en', create: 'Create lesson', edit: 'Edit lesson' },
         { locale: 'ru', create: 'Создать урок', edit: 'Редактировать урок' },
-    ])('names create and edit dialogs in $locale without changing lesson data', ({ locale, create, edit }) => {
+    ])('names create and edit dialogs in $locale without changing lesson data', async ({ locale, create, edit }) => {
         const translate = TestBed.inject(TranslateService);
         translate.setTranslation(locale, { ADMIN_LESSONS: { CREATE_DIALOG_TITLE: create, EDIT_DIALOG_TITLE: edit } });
         translate.use(locale);
         const fixture = TestBed.createComponent(AdminLessonsComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const host = fixture.nativeElement as HTMLElement;
         host.querySelector<HTMLButtonElement>('header fd-ui-button:last-child button')?.click();
         expect(open).toHaveBeenLastCalledWith(AdminLessonEditDialogComponent, expect.objectContaining({ ariaLabel: create }));
@@ -86,6 +87,7 @@ describe('AdminLessonsComponent deletion recovery', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminLessonsComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         fixture.componentInstance['deleteLesson'](LESSON);
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
@@ -104,6 +106,7 @@ describe('AdminLessonsComponent deletion recovery', () => {
         pending.next();
         pending.complete();
         fixture.detectChanges();
+        await fixture.whenStable();
         expect(getAll).toHaveBeenCalledTimes(2);
         expect(host.textContent).toContain('No lessons found.');
         expect(remove).toHaveBeenCalledTimes(2);
@@ -135,6 +138,7 @@ describe('AdminLessonsComponent dialog ownership', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminLessonsComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         if (action === 'create') {
             fixture.componentInstance['openCreate']();
         } else if (action === 'edit') {
@@ -200,10 +204,16 @@ describe('AdminLessonsComponent refresh ordering', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminLessonsComponent);
         fixture.detectChanges();
+        expect(previous.observed).toBe(true);
         fixture.componentInstance['openCreate']();
+        fixture.detectChanges();
+        expect(previous.observed).toBe(false);
+        expect(refresh.observed).toBe(true);
         refresh.next([LESSON]);
+        refresh.complete();
         previous.next([]);
         previous.error(new Error('obsolete request failed'));
+        await fixture.whenStable();
 
         expect(fixture.componentInstance['lessons']()).toEqual([LESSON]);
         expect(fixture.componentInstance['isLoading']()).toBe(false);
@@ -232,6 +242,7 @@ it('refreshes the rendered lesson after its edit dialog reports a completed save
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminLessonsComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
     const host = fixture.nativeElement as HTMLElement;
     const edit = [...host.querySelectorAll<HTMLButtonElement>('tbody button')].find(button => button.textContent.trim() === 'Edit');
     expect(edit).toBeDefined();
@@ -241,6 +252,7 @@ it('refreshes the rendered lesson after its edit dialog reports a completed save
     result.next(true);
     result.complete();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(getAll).toHaveBeenCalledTimes(2);
     expect(host.querySelector('tbody')?.textContent).toContain(revised.title);
@@ -263,6 +275,7 @@ it('shows a lesson list error and loads the available rows after Retry', async (
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminLessonsComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
     const host = fixture.nativeElement as HTMLElement;
     const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
     expect(retry).not.toBeNull();
@@ -270,6 +283,7 @@ it('shows a lesson list error and loads the available rows after Retry', async (
 
     retry?.click();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(host.querySelector('fd-admin-load-error')).toBeNull();
     expect(host.querySelector('tbody')?.textContent).toContain(LESSON.title);
@@ -408,7 +422,7 @@ describe('AdminLessonsComponent filtered JSON export', () => {
         vi.restoreAllMocks();
     });
 
-    it('exports all matching pages in the reusable file format and excludes other locales', async () => {
+    it('keeps filtering and paging local and exports all matching lessons', async () => {
         const matching = Array.from({ length: 21 }, (_, index) => ({
             ...LESSON,
             id: adminId<'lesson'>(`lesson-${index}`),
@@ -420,13 +434,18 @@ describe('AdminLessonsComponent filtered JSON export', () => {
         const getAll = vi.fn<AdminLessonsFacade['getAll']>().mockReturnValue(of([...matching, russian]));
         await TestBed.configureTestingModule({
             providers: [
-                provideRouter([{ path: 'lessons', component: AdminLessonsComponent }]),
+                provideRouter(
+                    [{ path: 'lessons', component: AdminLessonsComponent }],
+                    withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+                ),
                 provideTranslateTesting(),
                 { provide: AdminLessonsFacade, useValue: { getAll } },
                 { provide: FdUiDialogService, useValue: {} },
             ],
         }).compileComponents();
-        const harness = await RouterTestingHarness.create('/lessons?locale=en&page=2');
+        const harness = await RouterTestingHarness.create('/lessons?locale=en&page=99');
+        await harness.fixture.whenStable();
+        harness.detectChanges();
         const root = harness.routeNativeElement;
         if (root === null) {
             throw new Error('Missing lessons route');
@@ -437,6 +456,7 @@ describe('AdminLessonsComponent filtered JSON export', () => {
         }
         expect(root.querySelector('tbody tr')?.textContent).toContain('English lesson 21');
         expect(root.querySelectorAll('tbody tr')).toHaveLength(1);
+        expect(TestBed.inject(Router).url).toBe('/lessons?locale=en&page=2');
         const previous = root.querySelector<HTMLButtonElement>('fd-ui-pagination button:first-child');
         expect(previous).not.toBeNull();
         previous?.click();
@@ -444,6 +464,7 @@ describe('AdminLessonsComponent filtered JSON export', () => {
         harness.detectChanges();
         expect(root.querySelector('tbody tr')?.textContent).toContain('English lesson 1');
         expect(TestBed.inject(Router).url).toBe('/lessons?locale=en&page=1');
+        expect(getAll).toHaveBeenCalledOnce();
 
         const link = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
         const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:lesson-export');
@@ -466,5 +487,12 @@ describe('AdminLessonsComponent filtered JSON export', () => {
                 isPublished: lesson.isPublished ?? true,
             })),
         });
+
+        await harness.navigateByUrl(`/lessons?search=${encodeURIComponent(russian.title)}`);
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(root.querySelector('tbody tr')?.textContent).toContain(russian.title);
+        expect(root.querySelectorAll('tbody tr')).toHaveLength(1);
+        expect(getAll).toHaveBeenCalledOnce();
     });
 });

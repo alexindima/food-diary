@@ -1,9 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminTemplateHistoryFacade } from '../lib/admin-template-history.facade';
@@ -23,41 +22,24 @@ export class AdminTemplateHistoryComponent {
     public readonly refreshToken = input<string | number | null>();
     public readonly restored = output<AdminTemplateRevision>();
     private readonly api = inject(AdminTemplateHistoryFacade);
-    private readonly refresh = new Subject<void>();
-    protected readonly revisions = signal<AdminTemplateRevision[]>([]);
-    protected readonly loading = signal(false);
-    protected readonly failed = signal(false);
+    private readonly retryVersion = signal(0);
+    private readonly historyResource = rxResource({
+        params: () => {
+            const key = this.templateKey();
+            const locale = this.locale();
+            if (key.length === 0 || locale.length === 0) {
+                return;
+            }
+            return { kind: this.kind(), key, locale, token: this.refreshToken(), retryVersion: this.retryVersion() };
+        },
+        stream: ({ params }) => this.api.getRevisions(params.kind, params.key, params.locale),
+    });
 
-    public constructor() {
-        const identity = toObservable(
-            computed(() => ({ kind: this.kind(), key: this.templateKey(), locale: this.locale(), token: this.refreshToken() })),
-        );
-        combineLatest([identity, this.refresh.pipe(startWith(undefined))])
-            .pipe(
-                switchMap(([value]) => {
-                    this.failed.set(false);
-                    this.revisions.set([]);
-                    this.loading.set(false);
-                    if (value.key.length === 0 || value.locale.length === 0) {
-                        return of([]);
-                    }
-                    this.loading.set(true);
-                    return this.api.getRevisions(value.kind, value.key, value.locale).pipe(
-                        catchError(() => {
-                            this.failed.set(true);
-                            return of([]);
-                        }),
-                    );
-                }),
-                takeUntilDestroyed(),
-            )
-            .subscribe(items => {
-                this.revisions.set(items);
-                this.loading.set(false);
-            });
-    }
+    protected readonly revisions = computed(() => (this.historyResource.hasValue() ? this.historyResource.value() : []));
+    protected readonly loading = this.historyResource.isLoading;
+    protected readonly failed = computed(() => this.historyResource.error() !== undefined);
 
     protected retry(): void {
-        this.refresh.next();
+        this.retryVersion.update(version => version + 1);
     }
 }

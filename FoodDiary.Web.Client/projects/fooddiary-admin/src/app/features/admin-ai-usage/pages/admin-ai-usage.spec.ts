@@ -19,23 +19,24 @@ const summary: AdminAiUsageSummary = {
     byUser: [{ id: 'account-1', email: 'member@example.test', totalTokens: 100, inputTokens: 60, outputTokens: 40 }],
 };
 
+let getSummary: ReturnType<typeof vi.fn<AdminAiUsageService['getSummary']>>;
+
+beforeEach(async () => {
+    getSummary = vi.fn<AdminAiUsageService['getSummary']>().mockReturnValue(of(summary));
+
+    await TestBed.configureTestingModule({
+        providers: [
+            ...provideTranslateTesting(),
+            provideRouter([{ path: 'ai-usage', component: AdminAiUsageComponent }]),
+            { provide: AdminAiUsageService, useValue: { getSummary } },
+        ],
+    }).compileComponents();
+});
+
 describe('AdminAiUsageComponent', () => {
-    let getSummary: ReturnType<typeof vi.fn<AdminAiUsageService['getSummary']>>;
-
-    beforeEach(async () => {
-        getSummary = vi.fn<AdminAiUsageService['getSummary']>().mockReturnValue(of(summary));
-
-        await TestBed.configureTestingModule({
-            providers: [
-                ...provideTranslateTesting(),
-                provideRouter([{ path: 'ai-usage', component: AdminAiUsageComponent }]),
-                { provide: AdminAiUsageService, useValue: { getSummary } },
-            ],
-        }).compileComponents();
-    });
-
     it('loads a filtered account and renders the daily chart and usage breakdowns', async () => {
         const harness = await RouterTestingHarness.create('/ai-usage?userId=account-1&period=custom&from=2026-01-15&to=2026-01-16');
+        await harness.fixture.whenStable();
 
         expect(getSummary).toHaveBeenCalledExactlyOnceWith({ from: '2026-01-15', to: '2026-01-17', userId: 'account-1' });
         expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeTruthy();
@@ -47,12 +48,13 @@ describe('AdminAiUsageComponent', () => {
     it('retries the current period after a request fails', async () => {
         getSummary.mockReturnValueOnce(throwError(() => new Error('ai usage failed')));
         const harness = await RouterTestingHarness.create('/ai-usage?period=custom&from=2026-01-15&to=2026-01-16');
+        await harness.fixture.whenStable();
 
         expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeTruthy();
         expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeNull();
 
         harness.routeNativeElement?.querySelector<HTMLButtonElement>(':scope > fd-ui-button button')?.click();
-        harness.detectChanges();
+        await harness.fixture.whenStable();
 
         const period = { from: '2026-01-15', to: '2026-01-17' };
         expect(getSummary.mock.calls).toEqual([[period], [period]]);
@@ -65,6 +67,7 @@ describe('AdminAiUsageComponent', () => {
             of({ totalTokens: 0, inputTokens: 0, outputTokens: 0, byDay: [], byOperation: [], byModel: [], byUser: [] }),
         );
         const harness = await RouterTestingHarness.create('/ai-usage?period=today');
+        await harness.fixture.whenStable();
         const root = harness.routeNativeElement;
         expect(root?.querySelector('[role="alert"]')).toBeNull();
         expect(Array.from(root?.querySelectorAll('.admin-ai-usage strong') ?? [], element => element.textContent.trim())).toEqual([
@@ -83,12 +86,15 @@ describe('AdminAiUsageComponent', () => {
         const obsolete = new Subject<AdminAiUsageSummary>();
         getSummary.mockReturnValueOnce(of(summary)).mockReturnValueOnce(obsolete);
         const harness = await RouterTestingHarness.create('/ai-usage');
+        await harness.fixture.whenStable();
         expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
 
         await harness.navigateByUrl('/ai-usage?userId=account-1', AdminAiUsageComponent);
         expect(harness.routeNativeElement?.querySelector('[role="status"]')).toBeTruthy();
+        expect(obsolete.observed).toBe(true);
 
         await harness.navigateByUrl('/ai-usage?period=custom&from=2026-01-16&to=2026-01-15', AdminAiUsageComponent);
+        expect(obsolete.observed).toBe(false);
         obsolete.next(summary);
         harness.detectChanges();
 
@@ -98,15 +104,17 @@ describe('AdminAiUsageComponent', () => {
         expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeNull();
     });
 
-    it('keeps current usage visible when an older account request fails', async () => {
+    it('cancels an older account request and renders the selected account', async () => {
         const obsolete = new Subject<AdminAiUsageSummary>();
         getSummary.mockReturnValueOnce(obsolete);
         const harness = await RouterTestingHarness.create('/ai-usage?userId=older-account');
+        expect(obsolete.observed).toBe(true);
 
         await harness.navigateByUrl('/ai-usage?userId=account-1', AdminAiUsageComponent);
-        obsolete.error(new Error('older account failed'));
-        harness.detectChanges();
+        expect(obsolete.observed).toBe(false);
+        await harness.fixture.whenStable();
 
+        expect(getSummary).toHaveBeenLastCalledWith(expect.objectContaining({ userId: 'account-1' }));
         expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
         expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
     });

@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
@@ -46,12 +46,7 @@ describe('AdminAchievementsComponent', () => {
         facade.getAll.mockClear();
         facade.create.mockClear();
         facade.update.mockClear();
-        await TestBed.configureTestingModule({
-            imports: [AdminAchievementsComponent],
-            providers: [provideRouter([]), provideTranslateTesting(), { provide: AdminAchievementsFacade, useValue: facade }],
-        }).compileComponents();
-        fixture = TestBed.createComponent(AdminAchievementsComponent);
-        fixture.detectChanges();
+        fixture = await mountAchievementsAsync(facade);
     });
 
     it('renders definitions and switches to versioned edit mode', () => {
@@ -67,15 +62,19 @@ describe('AdminAchievementsComponent', () => {
         expect(host.textContent).toContain('ADMIN_ACHIEVEMENTS.EDIT');
     });
 
-    it('shows a load error instead of an empty catalog and reloads through Retry', () => {
+    it('shows a load error instead of an empty catalog and reloads through Retry', async () => {
         facade.getAll.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         fixture.componentInstance['load']();
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('.definition-list [role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
         expect(host.querySelector('.definition-list')?.textContent).not.toContain('ADMIN_ACHIEVEMENTS.EMPTY');
+        expect(fixture.componentInstance['definitions']()).toEqual([DEFINITION]);
         const retry = [...host.querySelectorAll('button')].find(button => button.textContent.includes('ADMIN_COMMON.RETRY'));
         retry?.click();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host.querySelector('.definition-list [role="alert"]')).toBeNull();
         expect(host.querySelector('.definition-card')?.textContent).toContain('20 meals');
@@ -87,6 +86,7 @@ describe('AdminAchievementsComponent', () => {
         fixture.detectChanges();
 
         host.querySelector<HTMLFormElement>('form')?.dispatchEvent(new Event('submit'));
+        fixture.detectChanges();
 
         expect(facade.update).toHaveBeenCalledWith('definition-id', {
             category: 'meals',
@@ -103,25 +103,53 @@ describe('AdminAchievementsComponent', () => {
         });
         expect(facade.getAll).toHaveBeenCalledTimes(2);
     });
-
-    it('retains a refreshed definition when an older list request completes or fails', () => {
-        const previous = new Subject<AdminAchievementDefinition[]>();
-        const refresh = new Subject<AdminAchievementDefinition[]>();
-        facade.getAll.mockReturnValueOnce(previous).mockReturnValueOnce(refresh);
-        const component = fixture.componentInstance;
-        component['load']();
-        component['edit'](DEFINITION);
-        component['save']();
-        const updated = { ...DEFINITION, version: 4 };
-        refresh.next([updated]);
-        previous.next([]);
-        previous.error(new Error('obsolete request failed'));
-
-        expect(component['definitions']()).toEqual([updated]);
-        expect(component['isLoading']()).toBe(false);
-        expect(component['loadFailed']()).toBe(false);
-    });
 });
+
+it('retains a refreshed definition when an older list request completes or fails', async () => {
+    const previous = new Subject<AdminAchievementDefinition[]>();
+    const refresh = new Subject<AdminAchievementDefinition[]>();
+    const updated = { ...DEFINITION, version: 4 };
+    const facade = {
+        getAll: vi
+            .fn(() => of([DEFINITION]))
+            .mockReturnValueOnce(of([DEFINITION]))
+            .mockReturnValueOnce(previous)
+            .mockReturnValueOnce(refresh),
+        update: vi.fn(() => of(updated)),
+    };
+    const fixture = await mountAchievementsAsync(facade);
+    const component = fixture.componentInstance;
+    component['load']();
+    fixture.detectChanges();
+    expect(previous.observed).toBe(true);
+    component['edit'](DEFINITION);
+    component['save']();
+    fixture.detectChanges();
+    expect(previous.observed).toBe(false);
+    expect(refresh.observed).toBe(true);
+    refresh.next([updated]);
+    previous.next([]);
+    previous.error(new Error('obsolete request failed'));
+    await fixture.whenStable();
+
+    expect(component['definitions']()).toEqual([updated]);
+    expect(component['isLoading']()).toBe(false);
+    expect(component['loadFailed']()).toBe(false);
+});
+
+async function mountAchievementsAsync(
+    facade: Pick<AdminAchievementsFacade, 'getAll' | 'update'>,
+): Promise<ComponentFixture<AdminAchievementsComponent>> {
+    await TestBed.configureTestingModule({
+        imports: [AdminAchievementsComponent],
+        providers: [provideRouter([]), provideTranslateTesting(), { provide: AdminAchievementsFacade, useValue: facade }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminAchievementsComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return fixture;
+}
 
 describe('AdminAchievementsComponent editor validation', () => {
     let fixture: ComponentFixture<AdminAchievementsComponent>;
@@ -207,6 +235,8 @@ describe('AdminAchievementsComponent pending mutation ownership', () => {
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminAchievementsComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
         const component = fixture.componentInstance;
         component['edit'](DEFINITION);
         component['save']();
@@ -272,6 +302,8 @@ it('creates a new bilingual achievement from the rendered draft and displays the
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminAchievementsComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;
     const save = root.querySelector<HTMLButtonElement>('form button[type="submit"]');
     if (save === null) {
@@ -287,6 +319,7 @@ it('creates a new bilingual achievement from the rendered draft and displays the
     fixture.detectChanges();
 
     save.click();
+    await fixture.whenStable();
     fixture.detectChanges();
     const { id: _id, version: _version, ...definition } = created;
     expect(service.create).toHaveBeenCalledExactlyOnceWith(definition);
@@ -305,7 +338,10 @@ it('keeps the catalog filter when paging and updates the selected definition thr
     const inactive = { ...DEFINITION, id: 'inactive-definition', titleEn: 'Inactive achievement', isActive: false };
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'achievements', component: AdminAchievementsComponent }]),
+            provideRouter(
+                [{ path: 'achievements', component: AdminAchievementsComponent }],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -313,14 +349,16 @@ it('keeps the catalog filter when paging and updates the selected definition thr
     });
     const http = TestBed.inject(HttpTestingController);
     const harness = await RouterTestingHarness.create('/achievements?state=active');
-    const refresh = (): void => {
+    const refreshAsync = async (): Promise<void> => {
+        harness.detectChanges();
         http.expectOne(request => request.method === 'GET' && request.url.endsWith('/admin/achievement-definitions')).flush([
             ...definitions,
             inactive,
         ]);
+        await harness.fixture.whenStable();
         harness.detectChanges();
     };
-    refresh();
+    await refreshAsync();
     const root = harness.routeNativeElement;
     const next = root?.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
     expect(next).not.toBeNull();
@@ -329,6 +367,7 @@ it('keeps the catalog filter when paging and updates the selected definition thr
     harness.detectChanges();
 
     expect(TestBed.inject(Router).url).toBe('/achievements?state=active&page=2');
+    http.expectNone(request => request.method === 'GET' && request.url.endsWith('/admin/achievement-definitions'));
     if (root === null) {
         throw new Error('Expected the achievements route');
     }
@@ -351,7 +390,7 @@ it('keeps the catalog filter when paging and updates the selected definition thr
     const updated = { ...previous, titleEn: 'Revised achievement', version: DEFINITION.version + 1 };
     definitions[definitions.length - 1] = updated;
     request.flush(updated);
-    refresh();
+    await refreshAsync();
     expect(root.querySelector('.definition-card')?.textContent).toContain(updated.titleEn);
     http.verify();
 });

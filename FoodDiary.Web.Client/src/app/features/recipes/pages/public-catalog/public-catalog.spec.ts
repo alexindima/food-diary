@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
@@ -24,7 +24,7 @@ beforeEach(() => {
         .mockImplementation(filters => of({ data: [publicRecipeFixture()], page: filters.page, limit: 20, totalPages: 3, totalItems: 41 }));
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'explore', component: PublicRecipeCatalogComponent }]),
+            provideRouter([{ path: 'explore', component: PublicRecipeCatalogComponent }], withComponentInputBinding()),
             provideTranslateTesting(),
             { provide: AuthService, useValue: { isAuthenticated: signal(false) } },
         ],
@@ -42,7 +42,7 @@ beforeEach(() => {
     });
 });
 it('loads bookmarked filters and page without resetting to the first page', async () => {
-    const harness = await RouterTestingHarness.create('/explore?page=2&search=Soup&category=Dinner&maxTotalTime=30');
+    const harness = await openCatalogAsync('/explore?page=2&search=Soup&category=Dinner&maxTotalTime=30');
     expect(facade.query).toHaveBeenLastCalledWith({
         page: 2,
         search: 'Soup',
@@ -62,6 +62,35 @@ it('loads bookmarked filters and page without resetting to the first page', asyn
         language: 'en',
     });
 });
+it('uses the first repeated query value, skips unrelated changes, and resets removed filters', async () => {
+    const bookmark = '/explore?page=2&page=3&search=Soup&search=Salad&category=Dinner&maxTotalTime=30&sortBy=name&language=ru';
+    const harness = await openCatalogAsync(bookmark);
+    expect(facade.query).toHaveBeenCalledExactlyOnceWith({
+        page: 2,
+        search: 'Soup',
+        category: 'Dinner',
+        maxTotalTime: 30,
+        sortBy: 'name',
+        language: 'ru',
+    });
+
+    await harness.navigateByUrl(`${bookmark}&utm_source=newsletter`);
+    await harness.fixture.whenStable();
+    expect(facade.query).toHaveBeenCalledOnce();
+
+    await harness.navigateByUrl('/explore?utm_source=newsletter');
+    await harness.fixture.whenStable();
+    expect(facade.query).toHaveBeenCalledTimes(2);
+    expect(facade.query).toHaveBeenLastCalledWith({
+        page: 1,
+        search: '',
+        category: '',
+        maxTotalTime: undefined,
+        sortBy: 'newest',
+        language: 'en',
+    });
+    expect(harness.routeNativeElement?.querySelector<HTMLInputElement>('.catalog-filters input')?.value).toBe('');
+});
 it('recovers a stale bookmarked page without claiming a nonempty catalog is empty', async () => {
     facade.query.mockImplementation(filters =>
         of({
@@ -80,7 +109,7 @@ it('recovers a stale bookmarked page without claiming a nonempty catalog is empt
 });
 it('always leaves a stale page when resetting already-default filters', async () => {
     facade.query.mockImplementation(filters => of({ data: [], page: filters.page, limit: 20, totalPages: 0, totalItems: 0 }));
-    const harness = await RouterTestingHarness.create('/explore?page=4');
+    const harness = await openCatalogAsync('/explore?page=4');
     harness.routeNativeElement?.querySelector<HTMLButtonElement>('.catalog-state button')?.click();
     await harness.fixture.whenStable();
     expect(TestBed.inject(Router).url).not.toContain('page=4');
@@ -99,6 +128,7 @@ it('does not let a pending stale page or error overwrite a new filter draft', as
     const pending = new Subject<PageOf<PublicRecipe>>();
     facade.query.mockReturnValueOnce(pending);
     const harness = await RouterTestingHarness.create('/explore?page=4');
+    expect(pending.observed).toBe(true);
     const input = harness.routeNativeElement?.querySelector<HTMLInputElement>('input');
     if (input === null || input === undefined) {
         throw new Error('Catalog search input was not rendered');
@@ -107,13 +137,29 @@ it('does not let a pending stale page or error overwrite a new filter draft', as
     input.dispatchEvent(new Event('input', { bubbles: true }));
     pending.next({ data: [], page: 4, limit: 20, totalPages: 3, totalItems: 41 });
     pending.error(new Error('old request'));
+    await harness.fixture.whenStable();
     harness.detectChanges();
     expect(TestBed.inject(Router).url).toContain('page=4');
     expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
     expect(input.value).toBe('new draft');
 });
+it('cancels a pending bookmarked page when another URL is applied', async () => {
+    const pending = new Subject<PageOf<PublicRecipe>>();
+    facade.query.mockReturnValueOnce(pending);
+    const harness = await RouterTestingHarness.create('/explore?page=4');
+    expect(pending.observed).toBe(true);
+
+    await harness.navigateByUrl('/explore?page=2&search=Soup');
+    expect(pending.observed).toBe(false);
+    pending.next({ data: [], page: 4, limit: 20, totalPages: CATALOG_PAGES, totalItems: CATALOG_ITEMS });
+    await harness.fixture.whenStable();
+
+    const router = TestBed.inject(Router);
+    expect(router.parseUrl(router.url).queryParams).toEqual({ page: '2', search: 'Soup' });
+    expect(harness.routeNativeElement?.querySelector('.catalog-grid')?.textContent).toContain('Soup');
+});
 it('shows total results without a reset action in the filter bar', async () => {
-    const harness = await RouterTestingHarness.create('/explore');
+    const harness = await openCatalogAsync('/explore');
     expect(harness.routeNativeElement?.querySelector('.catalog-summary')?.textContent).toContain('PUBLIC_RECIPES.COUNT_OTHER');
     expect(harness.routeNativeElement?.querySelector('.catalog-filters fd-ui-button')).toBeNull();
     await harness.navigateByUrl('/explore?maxTotalTime=37');
@@ -175,9 +221,7 @@ it('resets active filters from the empty catalog while retaining the chosen sort
             totalItems: hasSearch ? 0 : CATALOG_ITEMS,
         });
     });
-    const harness = await RouterTestingHarness.create(
-        '/explore?search=Unavailable&category=desserts&language=all&sortBy=name&maxTotalTime=30',
-    );
+    const harness = await openCatalogAsync('/explore?search=Unavailable&category=desserts&language=all&sortBy=name&maxTotalTime=30');
     catalogButton(harness, '.catalog-state button').click();
     await harness.fixture.whenStable();
     harness.detectChanges();
@@ -207,24 +251,32 @@ it('preserves server sorting on bookmarked pages and normalizes unknown orders',
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, sortBy: 'newest' }));
 });
 it('uses the current language plural rule for the total count', async () => {
-    const harness = await RouterTestingHarness.create('/explore');
+    const harness = await openCatalogAsync('/explore');
     const translate = TestBed.inject(TranslateService);
     translate.use('ru');
     harness.detectChanges();
+    await harness.fixture.whenStable();
     expect(harness.routeNativeElement?.querySelector('.catalog-summary')?.textContent).toContain('PUBLIC_RECIPES.COUNT_ONE');
     translate.use('en');
     harness.detectChanges();
+    await harness.fixture.whenStable();
     expect(harness.routeNativeElement?.querySelector('.catalog-summary')?.textContent).toContain('PUBLIC_RECIPES.COUNT_OTHER');
 });
 it('shows a retryable failure rather than an empty catalog', async () => {
     facade.query.mockReturnValueOnce(throwError(() => new Error('offline')));
-    const harness = await RouterTestingHarness.create('/explore');
+    const harness = await openCatalogAsync('/explore');
     expect(harness.routeNativeElement?.textContent).toContain('PUBLIC_RECIPES.ERROR');
     harness.routeNativeElement?.querySelector<HTMLButtonElement>('[role="alert"] button')?.click();
-    harness.detectChanges();
+    await harness.fixture.whenStable();
     expect(harness.routeNativeElement?.textContent).toContain('Soup');
     expect(facade.query).toHaveBeenCalledTimes(2);
 });
+
+async function openCatalogAsync(url: string): Promise<RouterTestingHarness> {
+    const harness = await RouterTestingHarness.create(url);
+    await harness.fixture.whenStable();
+    return harness;
+}
 
 function selectCatalogOption(harness: RouterTestingHarness, control: string, optionLabel: string): void {
     catalogButton(harness, control).click();

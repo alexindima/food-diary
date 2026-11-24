@@ -28,6 +28,17 @@ let dietologistService: {
 let router: { navigate: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 
+const attentionSignal: AttentionSignal = {
+    id: entityId<'attention-signal'>('signal-1'),
+    clientUserId: entityId<'user'>('client-1'),
+    clientDisplayName: 'QA client',
+    type: 'MaterialWeightChange',
+    severity: 'High',
+    reason: 'MaterialWeightChange',
+    detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
+    snoozedUntilUtc: null,
+};
+
 beforeEach(() => {
     dietologistService = {
         getMyClients: vi.fn(() => of([createClient()])),
@@ -246,21 +257,13 @@ describe('Dietologist bulk recommendation preview', () => {
 });
 
 describe('Dietologist attention action pending state', () => {
-    it.each(['success', 'error'] as const)('blocks conflicting attention actions while pending and recovers after %s', outcome => {
+    it.each(['success', 'error'] as const)('blocks conflicting attention actions while pending and recovers after %s', async outcome => {
         const request = new Subject<void>();
+        dietologistService.getAttentionSignals.mockReturnValueOnce(of([attentionSignal]));
         dietologistService.setAttentionSignalState.mockReturnValueOnce(request);
         createComponent();
-        const attentionSignal: AttentionSignal = {
-            id: entityId<'attention-signal'>('signal-pending'),
-            clientUserId: entityId<'user'>('client-1'),
-            clientDisplayName: 'QA client',
-            type: 'MaterialWeightChange',
-            severity: 'High',
-            reason: 'MaterialWeightChange',
-            detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
-            snoozedUntilUtc: null,
-        };
-        component['attentionSignals'].set([attentionSignal]);
+        await fixture.whenStable();
+        fixture.detectChanges();
 
         component['acknowledgeSignal'](attentionSignal);
         fixture.detectChanges();
@@ -286,23 +289,52 @@ describe('Dietologist attention action pending state', () => {
         }
         expect(component['pendingAttentionIds']().size).toBe(0);
     });
+
+    it('cancels a pre-action read and refreshes the applied settings when acknowledgement finishes', async () => {
+        const acknowledgement = new Subject<void>();
+        const obsoleteRead = new Subject<AttentionSignal[]>();
+        dietologistService.setAttentionSignalState.mockReturnValueOnce(acknowledgement);
+        dietologistService.getAttentionSignals.mockReturnValueOnce(of([attentionSignal])).mockReturnValueOnce(obsoleteRead);
+        createComponent();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        clickAttentionAction(host, 'ATTENTION.ACKNOWLEDGE');
+        const settings = openAttentionSettings();
+        const inactivity = attentionInput(settings, '#attention-inactivity');
+        changeAttentionInput(inactivity, '2');
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledOnce();
+        clickAttentionAction(settings, 'ATTENTION.APPLY');
+        expect(obsoleteRead.observed).toBe(true);
+        changeAttentionInput(inactivity, '4');
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledTimes(2);
+
+        acknowledgement.next();
+        acknowledgement.complete();
+        fixture.detectChanges();
+        expect(obsoleteRead.observed).toBe(false);
+        obsoleteRead.next([attentionSignal]);
+        obsoleteRead.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(dietologistService.getAttentionSignals.mock.calls).toEqual([
+            [expect.objectContaining({ inactivityDays: 3 })],
+            [expect.objectContaining({ inactivityDays: 2 })],
+            [expect.objectContaining({ inactivityDays: 2 })],
+        ]);
+        expect(inactivity.value).toBe('4');
+        expect(host.textContent).toContain('ATTENTION.EMPTY');
+        expect(component['attentionSignals']()).toEqual([]);
+    });
 });
 
 describe('DietologistClientsPageComponent', () => {
     it('updates the rendered attention date when the application language changes', async () => {
+        dietologistService.getAttentionSignals.mockReturnValueOnce(of([attentionSignal]));
         createComponent();
-        component['attentionSignals'].set([
-            {
-                id: entityId<'attention-signal'>('signal-1'),
-                clientUserId: entityId<'user'>('client-1'),
-                clientDisplayName: 'QA client',
-                type: 'MaterialWeightChange',
-                severity: 'High',
-                reason: 'MaterialWeightChange',
-                detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
-                snoozedUntilUtc: null,
-            },
-        ]);
+        await fixture.whenStable();
         const translate = TestBed.inject(TranslateService);
 
         await firstValueFrom(translate.use('ru'));
@@ -369,15 +401,17 @@ describe('DietologistClientsPageComponent', () => {
 });
 
 describe('Dietologist attention settings validation', () => {
-    it.each(['success', 'error'] as const)('keeps the latest settings result after a stale %s', outcome => {
+    it.each(['success', 'error'] as const)('cancels the older request and keeps the latest result after a stale %s', async outcome => {
         const initialRequest = new Subject<AttentionSignal[]>();
         const latestRequest = new Subject<AttentionSignal[]>();
         dietologistService.getAttentionSignals.mockReturnValueOnce(initialRequest).mockReturnValueOnce(latestRequest);
         createComponent();
+        expect(initialRequest.observed).toBe(true);
         const settings = openAttentionSettings();
         changeAttentionInput(attentionInput(settings, '#attention-inactivity'), '2');
         clickAttentionAction(settings, 'ATTENTION.APPLY');
         expect(dietologistService.getAttentionSignals).toHaveBeenLastCalledWith(expect.objectContaining({ inactivityDays: 2 }));
+        expect(initialRequest.observed).toBe(false);
         const latestSignal: AttentionSignal = {
             id: entityId<'attention-signal'>('latest-signal'),
             clientUserId: entityId<'user'>('client-1'),
@@ -397,6 +431,7 @@ describe('Dietologist attention settings validation', () => {
         } else {
             initialRequest.error(new Error('Stale request failed'));
         }
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(component['attentionSignals']()).toEqual([latestSignal]);
@@ -420,9 +455,11 @@ describe('Dietologist attention settings validation', () => {
         expect(dietologistService.getAttentionSignals).not.toHaveBeenCalled();
     });
 
-    it('focuses the first invalid setting and retries a failed read only after corrections', () => {
+    it('focuses the first invalid setting and retries a failed read only after corrections', async () => {
         dietologistService.getAttentionSignals.mockReturnValueOnce(throwError(() => new Error('Attention read failed')));
         createComponent();
+        await fixture.whenStable();
+        fixture.detectChanges();
         const settings = openAttentionSettings();
         const calories = attentionInput(settings, '#attention-calories');
         const weight = attentionInput(settings, '#attention-weight');
@@ -441,6 +478,8 @@ describe('Dietologist attention settings validation', () => {
 
         changeAttentionInput(weight, '0.5');
         clickAttentionAction(host, 'DIETOLOGIST.CLIENTS.RETRY');
+        await fixture.whenStable();
+        fixture.detectChanges();
         expect(dietologistService.getAttentionSignals).toHaveBeenCalledTimes(2);
         expect(dietologistService.getAttentionSignals).toHaveBeenLastCalledWith(
             expect.objectContaining({ calorieDeviationPercent: 100, weightChangePercent: 0.5 }),
