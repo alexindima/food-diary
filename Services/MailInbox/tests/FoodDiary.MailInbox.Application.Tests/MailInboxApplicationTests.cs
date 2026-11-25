@@ -34,7 +34,7 @@ public sealed class MailInboxApplicationTests {
         using var cancellation = new CancellationTokenSource();
         var store = new RecordingPagedStore();
         var query = new GetInboundMailMessagePageQuery(
-            2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid());
+            2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid(), ["hidden@example.com"]);
         var handler = new GetInboundMailMessagePageQueryHandler(store);
         Result<InboundMailMessagePage> result = await handler.Handle(query, cancellation.Token);
         Assert.True(result.IsSuccess);
@@ -48,8 +48,8 @@ public sealed class MailInboxApplicationTests {
         public InboundMailMessagePage Page { get; } = new([], 31, 11, 20);
         public GetInboundMailMessagePageQuery? Query { get; private set; }
         public CancellationToken Token { get; private set; }
-        public Task<InboundMailMessagePage> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
-            Query = new GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id);
+        public Task<InboundMailMessagePage> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null, IReadOnlyCollection<string>? excludeRecipients = null) {
+            Query = new GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id, excludeRecipients);
             Token = cancellationToken;
             return Task.FromResult(Page);
         }

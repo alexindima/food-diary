@@ -17,7 +17,8 @@ public sealed class NpgsqlInboundMailStore(
     NpgsqlDataSource dataSource,
     IMailInboxDmarcReportParser dmarcReportParser,
     IOptions<MailInboxStorageOptions> options,
-    TimeProvider timeProvider) : IInboundMailStore, IMailInboxSchemaInitializer, IDisposable {
+    TimeProvider timeProvider,
+    DmarcReportSourceVerifier? dmarcReportSourceVerifier = null) : IInboundMailStore, IMailInboxSchemaInitializer, IDisposable {
     private const long SchemaMigrationLockKey = 5_564_833_284_657_606_737;
     private readonly MailInboxStorageOptions _options = options.Value;
     private readonly SemaphoreSlim _messageDetailReadSlots = new(
@@ -396,7 +397,7 @@ public sealed class NpgsqlInboundMailStore(
     }
 
     public async Task<InboundMailMessagePage> GetMessagePageAsync(
-        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
+        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null, IReadOnlyCollection<string>? excludeRecipients = null) {
         ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(limit, 200);
@@ -406,6 +407,8 @@ public sealed class NpgsqlInboundMailStore(
                                envelope_from_address, is_trusted_relay
                            from mailinbox_messages
                            where (@recipient::jsonb is null or to_recipients_json @> @recipient)
+                             and (@exclude_recipients::jsonb is null or to_recipients_json = '[]'::jsonb
+                                 or not (to_recipients_json <@ @exclude_recipients))
                              and (@from::timestamptz is null or received_at_utc >= @from)
                              and (@to::timestamptz is null or received_at_utc < @to)
                              and (@id::uuid is null or id = @id)
@@ -444,6 +447,10 @@ public sealed class NpgsqlInboundMailStore(
                 command.Parameters.AddWithValue("limit", limit);
                 command.Parameters.AddWithValue("offset", ((long)page - 1) * limit);
                 command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, recipient is null ? DBNull.Value : JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
+                command.Parameters.AddWithValue("exclude_recipients", NpgsqlDbType.Jsonb,
+                    excludeRecipients is { Count: > 0 }
+                        ? JsonSerializer.Serialize(excludeRecipients.Select(static address => address.Trim().ToLowerInvariant()))
+                        : DBNull.Value);
                 command.Parameters.AddWithValue("category", NpgsqlDbType.Text, (object?)category ?? DBNull.Value);
                 command.Parameters.AddWithValue("unread", NpgsqlDbType.Boolean, (object?)unread ?? DBNull.Value);
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
@@ -496,7 +503,8 @@ public sealed class NpgsqlInboundMailStore(
                            """;
 
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
-        InboundMailMessageDetails? details = null;
+        InboundMailMessageDetails details;
+        byte[]? rawMimeBytes;
         await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command) {
@@ -509,7 +517,7 @@ public sealed class NpgsqlInboundMailStore(
 
                     IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(3));
                     string? subject = reader.GetNullableString(4);
-                    byte[]? rawMimeBytes = await reader.IsDBNullAsync(7, cancellationToken)
+                    rawMimeBytes = await reader.IsDBNullAsync(7, cancellationToken)
                         ? null
                         : await reader.GetFieldValueAsync<byte[]>(7, cancellationToken);
                     string? rawMime = rawMimeBytes is null ? null : Encoding.UTF8.GetString(rawMimeBytes);
@@ -536,6 +544,11 @@ public sealed class NpgsqlInboundMailStore(
                          await reader.GetFieldValueAsync<bool>(13, cancellationToken));
                 }
             }
+        }
+
+        if (rawMimeBytes is not null && details.DmarcReport is { } report && dmarcReportSourceVerifier is not null &&
+            await dmarcReportSourceVerifier.IsVerifiedAsync(rawMimeBytes, report, cancellationToken)) {
+            return details with { DmarcReport = report with { IsSourceVerified = true } };
         }
 
         return details;

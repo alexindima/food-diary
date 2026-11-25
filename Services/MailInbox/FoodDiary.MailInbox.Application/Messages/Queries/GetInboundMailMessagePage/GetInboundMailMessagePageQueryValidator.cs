@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using FluentValidation;
 
 namespace FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage;
@@ -12,5 +13,12 @@ public sealed class GetInboundMailMessagePageQueryValidator : AbstractValidator<
         RuleFor(static query => query.Limit).InclusiveBetween(1, 100);
         RuleFor(static query => query.Recipient).MaximumLength(320);
         RuleFor(static query => query.Category).Must(static category => category is null or "general" or "dmarc-report");
+        RuleFor(static query => query.ExcludeRecipients).Must(static recipients => recipients is null or { Count: <= 10 })
+            .WithMessage("At most 10 recipient addresses can be excluded.")
+            .DependentRules(() => RuleForEach(static query => query.ExcludeRecipients)
+                .Cascade(CascadeMode.Stop).NotEmpty().MaximumLength(320)
+                .Must(static address => MailAddress.TryCreate(address.Trim(), out MailAddress? parsed) &&
+                    parsed.Address.Equals(address.Trim(), StringComparison.Ordinal))
+                .WithMessage("Each excluded recipient must be an email address."));
     }
 }

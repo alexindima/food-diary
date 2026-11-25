@@ -17,8 +17,10 @@ import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
+import { AdminMailboxViewsComponent } from '../components/admin-mailbox-views';
 import { AdminMailMessageDialogComponent } from '../dialogs/admin-mail-message-dialog';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
+import { AdminMailInboxPreferences, DMARC_MAILBOX, FEEDBACK_MAILBOX, type IncomingMailbox } from '../lib/admin-mail-inbox-preferences';
 import type { AdminMailInboxFilters, AdminMailInboxMessagePage, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
 type AdminMailInboxMessageSummaryViewModel = {
@@ -30,14 +32,13 @@ type InboxFilterDraft = {
     search: string;
     fromAddress: string;
     recipient: string;
-    category: 'all' | 'dmarc-report' | 'general';
+    category: 'inbox' | 'all' | 'dmarc-report' | 'general';
     unread: string | null;
 };
 
 type InboxPageRequest = { page: number; filters: AdminMailInboxFilters };
 
 const DEFAULT_MAIL_INBOX_LIMIT = 50;
-const FEEDBACK_MAILBOX = 'feedback@fooddiary.club';
 
 @Component({
     selector: 'fd-admin-mail-inbox',
@@ -48,11 +49,13 @@ const FEEDBACK_MAILBOX = 'feedback@fooddiary.club';
         RouterLink,
         CommonModule,
         FdUiButtonComponent,
+        AdminMailboxViewsComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
         TranslatePipe,
         FdUiPaginationComponent,
     ],
+    providers: [AdminMailInboxPreferences],
     templateUrl: './admin-mail-inbox.html',
     styleUrl: './admin-mail-inbox.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,6 +74,7 @@ export class AdminMailInboxComponent {
 
     private readonly dialogService = inject(FdUiDialogService);
     private readonly mailInboxFacade = inject(AdminMailInboxFacade);
+    private readonly preferences = inject(AdminMailInboxPreferences);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     protected readonly feedbackView = this.route.snapshot.data['feedbackMailbox'] === true;
@@ -87,22 +91,31 @@ export class AdminMailInboxComponent {
         to: this.to(),
         id: this.id(),
     }));
+    protected readonly recordId = computed(() => this.appliedQuery().id ?? null);
+    protected readonly selectedRecipient = computed(() => (this.feedbackView ? FEEDBACK_MAILBOX : (this.recipient()?.trim() ?? '')));
+    private readonly appliedCategory = computed<InboxFilterDraft['category']>(() => {
+        const category = this.category();
+        if (category === 'all' || category === 'general' || category === 'dmarc-report') {
+            return category;
+        }
+        return 'inbox';
+    });
     private readonly appliedFilters = computed<InboxFilterDraft>(() => {
-        const { search, fromAddress, recipient, category, unread } = this.appliedQuery();
+        const { search, fromAddress, unread } = this.appliedQuery();
         return {
             search: search ?? '',
             fromAddress: fromAddress ?? '',
-            recipient: this.feedbackView ? FEEDBACK_MAILBOX : (recipient ?? ''),
-            category: category === 'general' || category === 'dmarc-report' ? category : 'all',
+            recipient: this.selectedRecipient(),
+            category: this.appliedCategory(),
             unread: unread === 'true' ? 'unread' : unread === 'false' ? 'read' : 'all',
         };
     });
+    protected readonly hiddenRecipients = this.preferences.hiddenRecipients;
     protected readonly subjectFilter = linkedSignal(() => this.appliedFilters().search);
     protected readonly senderFilter = linkedSignal(() => this.appliedFilters().fromAddress);
     protected readonly recipientFilter = linkedSignal(() => this.appliedFilters().recipient);
     protected readonly unreadFilter = linkedSignal(() => this.appliedFilters().unread);
     protected readonly categoryFilter = linkedSignal(() => this.appliedFilters().category);
-    protected readonly recordId = computed(() => this.appliedQuery().id ?? null);
     protected readonly pageSize = DEFAULT_MAIL_INBOX_LIMIT;
     protected readonly pageNumber = computed(() => adminPage(this.appliedQuery().page ?? null));
     private readonly requestedPage = linkedSignal(() => this.buildPageRequest(this.appliedFilters()));
@@ -198,6 +211,7 @@ export class AdminMailInboxComponent {
         if (range === null) {
             return undefined;
         }
+        const recipient = this.feedbackView ? FEEDBACK_MAILBOX : filters.recipient;
         return {
             page: this.pageNumber(),
             filters: {
@@ -205,11 +219,35 @@ export class AdminMailInboxComponent {
                 search: filters.search,
                 fromAddress: filters.fromAddress,
                 id: this.recordId() ?? '',
-                recipient: this.feedbackView ? FEEDBACK_MAILBOX : filters.recipient,
-                category: filters.category === 'all' ? '' : filters.category,
+                recipient,
+                excludeRecipients: this.excludedRecipientsFor(recipient, filters.category),
+                category: filters.category === 'general' || filters.category === 'dmarc-report' ? filters.category : '',
                 unread: filters.unread === 'all' ? undefined : filters.unread === 'unread',
             },
         };
+    }
+
+    private excludedRecipientsFor(recipient: string, category: InboxFilterDraft['category']): string[] | undefined {
+        if (category === 'dmarc-report' || this.recordId() !== null || recipient.trim() !== '') {
+            return;
+        }
+        const hidden = this.hiddenRecipients();
+        if (category === 'inbox') {
+            return [DMARC_MAILBOX, ...hidden];
+        }
+        return hidden.length > 0 ? hidden : undefined;
+    }
+
+    protected selectRecipient(recipient: string): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+            queryParams: { page: 1, id: null, recipient: recipient === '' ? null : recipient },
+        });
+    }
+
+    protected setRecipientHidden({ recipient, hidden }: { recipient: IncomingMailbox; hidden: boolean }): void {
+        this.preferences.setHidden(recipient, hidden);
     }
 
     private applyFilters(): void {
@@ -221,7 +259,7 @@ export class AdminMailInboxComponent {
                 page: 1,
                 id: null,
                 recipient: this.recipientFilter(),
-                category: this.categoryFilter(),
+                category: this.categoryFilter() === 'inbox' ? null : this.categoryFilter(),
                 search: this.subjectFilter(),
                 fromAddress: this.senderFilter(),
                 unread: this.unreadFilter() === 'all' ? null : this.unreadFilter() === 'unread',
@@ -252,7 +290,7 @@ export class AdminMailInboxComponent {
     }
 
     protected setCategoryFilter(value: string | null): void {
-        this.categoryFilter.set(value === 'dmarc-report' || value === 'general' ? value : 'all');
+        this.categoryFilter.set(value === 'dmarc-report' || value === 'general' || value === 'all' ? value : 'inbox');
         this.loadMessages(true);
     }
 

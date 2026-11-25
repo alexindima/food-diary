@@ -44,6 +44,7 @@ export function adminMailInboxDmarcReportFromSdk(response: AdminMailInboxDmarcRe
     const value = requireSdkFields(response, ['records']);
     return {
         ...value,
+        isSourceVerified: value.isSourceVerified === true,
         records: value.records.map(item => adminMailInboxDmarcRecordFromSdk(item)),
         dateRangeStartUtc: optionalAdminUtcInstant(value.dateRangeStartUtc),
         dateRangeEndUtc: optionalAdminUtcInstant(value.dateRangeEndUtc),

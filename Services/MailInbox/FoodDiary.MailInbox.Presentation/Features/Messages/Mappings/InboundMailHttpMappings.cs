@@ -50,7 +50,8 @@ public static class InboundMailHttpMappings {
             report.Domain,
             report.DateRangeStartUtc,
             report.DateRangeEndUtc,
-            report.Records.Select(static record => record.ToHttpResponse()).ToArray());
+            report.Records.Select(static record => record.ToHttpResponse()).ToArray(),
+            report.IsSourceVerified);
 
     private static DmarcReportRecordHttpResponse ToHttpResponse(this DmarcReportRecordPreview record) =>
         new(

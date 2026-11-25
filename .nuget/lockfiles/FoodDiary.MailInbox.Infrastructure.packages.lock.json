@@ -2,6 +2,12 @@
   "version": 2,
   "dependencies": {
     "net11.0": {
+      "DnsClient": {
+        "type": "Direct",
+        "requested": "[1.8.0, )",
+        "resolved": "1.8.0",
+        "contentHash": "RRwtaCXkXWsx0mmsReGDqCbRLtItfUbkRJlet1FpdciVhyMGKcPd57T1+8Jki9ojHlq9fntVhXQroOOgRak8DQ=="
+      },
       "MailKit": {
         "type": "Direct",
         "requested": "[4.18.2, )",

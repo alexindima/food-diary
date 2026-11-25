@@ -49,6 +49,7 @@ export interface GetAdminMailInboxMessagesPageRequestParams {
     search?: string;
     fromAddress?: string;
     id?: string;
+    excludeRecipients?: Array<string>;
 }
 
 export interface PostAdminMailInboxMessagesByIdReadRequestParams {
@@ -284,6 +285,7 @@ export class AdminMailInboxSdk extends BaseService {
         const search = requestParameters?.search;
         const fromAddress = requestParameters?.fromAddress;
         const id = requestParameters?.id;
+        const excludeRecipients = requestParameters?.excludeRecipients;
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
@@ -312,6 +314,14 @@ export class AdminMailInboxSdk extends BaseService {
         );
 
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Id', <any>id, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'ExcludeRecipients',
+            <any>excludeRecipients,
+            QueryParamStyle.Form,
+            true,
+        );
 
         let localVarHeaders = this.defaultHeaders;
 

@@ -22,7 +22,7 @@ type AdminMailInboxMessageDetailsViewModel = AdminMailInboxMessageDetails & {
 export type AdminMailMessageDialogData = {
     id: AdminId<'mail-inbox-message'>;
     subject?: string | null;
-    onRead: (id: AdminId<'mail-inbox-message'>, readAtUtc: AdminUtcInstant) => void;
+    onRead?: (id: AdminId<'mail-inbox-message'>, readAtUtc: AdminUtcInstant) => void;
 };
 @Component({
     selector: 'fd-admin-mail-message-dialog',
@@ -108,7 +108,7 @@ export class AdminMailMessageDialogComponent {
                     this.acknowledgedReadAtUtc.set(readAtUtc);
                     this.markingRead.set(false);
                     this.readFailed.set(false);
-                    this.data.onRead(id, readAtUtc);
+                    this.data.onRead?.(id, readAtUtc);
                 },
                 error: () => {
                     this.markingRead.set(false);

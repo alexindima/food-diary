@@ -1,4 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -9,7 +10,8 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { ADMIN_DEVELOPMENT_SCREENS, type AdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
-import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { type AdminId, adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { AdminMailMessageDialogComponent, type AdminMailMessageDialogData } from '../dialogs/admin-mail-message-dialog';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessagePage, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
@@ -23,6 +25,7 @@ describe('AdminMailInboxComponent row activation', () => {
             providers: [
                 ...provideTranslateTesting(),
                 provideRouter([]),
+                { provide: AdminAuthService, useValue: { getUserId: (): null => null } },
                 { provide: FdUiDialogService, useValue: { open } },
                 {
                     provide: AdminMailInboxFacade,
@@ -99,12 +102,13 @@ type InboxTest = {
 type InboxTestOptions = {
     attach?: (screen: AdminDevelopmentScreen) => () => void;
     waitForPage?: boolean;
+    currentUserId?: AdminAuthService['getUserId'];
 };
 
 async function setupInboxAsync(
     url: string,
     getMessagePage: Mock<AdminMailInboxFacade['getMessagePage']>,
-    { attach, waitForPage = true }: InboxTestOptions = {},
+    { attach, waitForPage = true, currentUserId = (): null => null }: InboxTestOptions = {},
 ): Promise<InboxTest> {
     const open = vi.fn<OpenMessage>();
     await TestBed.configureTestingModule({
@@ -118,6 +122,7 @@ async function setupInboxAsync(
                 ],
                 withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
             ),
+            { provide: AdminAuthService, useValue: { getUserId: currentUserId } },
             { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: attach === undefined ? null : { attach } },
             { provide: AdminMailInboxFacade, useValue: { getMessagePage } },
             { provide: FdUiDialogService, useValue: { open } },
@@ -146,6 +151,76 @@ function requireNamedButton(element: HTMLElement, name: string): HTMLButtonEleme
     }
     return button;
 }
+
+describe('admin inbox recipient preferences', () => {
+    it('applies saved exclusions only in the main inbox and scopes them to the administrator', async () => {
+        const userId = signal<AdminId<'user'> | null>(adminId<'user'>('mail-preferences-admin'));
+        const supportMessage = { ...currentMail, subject: 'Question about DMARC', toRecipients: ['support@fooddiary.club'] };
+        const getMessagePage = vi
+            .fn<AdminMailInboxFacade['getMessagePage']>()
+            .mockReturnValue(of({ items: [supportMessage], totalItems: 1 }));
+        const { element, harness, router } = await setupInboxAsync(INBOX, getMessagePage, { currentUserId: userId });
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ recipient: '', category: '', excludeRecipients: ['dmarc@fooddiary.club'] }),
+        );
+        expect(element.querySelector('tbody')?.textContent).toContain(supportMessage.subject);
+
+        requireNamedButton(element, 'ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES').click();
+        await renderInboxAsync(harness);
+        const support = [...element.querySelectorAll('fd-ui-checkbox label')].find(
+            label => label.textContent.trim() === 'support@fooddiary.club',
+        );
+        const checkbox = element.querySelector<HTMLInputElement>(`input[id="${support?.getAttribute('for')}"]`);
+        if (checkbox === null) {
+            throw new Error('Expected a checkbox for the support inbox');
+        }
+        checkbox.click();
+        await renderInboxAsync(harness);
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ recipient: '', category: '', excludeRecipients: ['dmarc@fooddiary.club', 'support@fooddiary.club'] }),
+        );
+
+        const supportFilter = requireNamedButton(element, 'support@fooddiary.club');
+        supportFilter.click();
+        await renderInboxAsync(harness);
+        expect(supportFilter.getAttribute('aria-pressed')).toBe('true');
+        expect(router.parseUrl(router.url).queryParamMap.get('recipient')).toBe('support@fooddiary.club');
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ recipient: 'support@fooddiary.club', excludeRecipients: undefined }),
+        );
+
+        await harness.navigateByUrl(`${INBOX}?id=report-1`);
+        await renderInboxAsync(harness);
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ id: 'report-1', category: '', excludeRecipients: undefined }),
+        );
+
+        await harness.navigateByUrl('/exit');
+        await harness.navigateByUrl(INBOX);
+        await renderInboxAsync(harness);
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ excludeRecipients: ['dmarc@fooddiary.club', 'support@fooddiary.club'] }),
+        );
+
+        userId.set(adminId<'user'>('other-mail-preferences-admin'));
+        await renderInboxAsync(harness);
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ excludeRecipients: ['dmarc@fooddiary.club'] }),
+        );
+    });
+});
 
 describe('admin inbox requests', () => {
     it('ignores results from outdated filters and reloads the active request after reading a message', async () => {
@@ -187,7 +262,8 @@ describe('admin inbox requests', () => {
         expect(open).toHaveBeenCalledOnce();
         const data = open.mock.calls[0][1].data;
         expect(data.id).toBe(currentMail.id);
-        data.onRead(currentMail.id, currentMail.receivedAtUtc);
+        expect(data.onRead).toBeTypeOf('function');
+        data.onRead?.(currentMail.id, currentMail.receivedAtUtc);
         harness.detectChanges();
         expect(filtered.observed).toBe(false);
         expect(reload.observed).toBe(true);

@@ -36,7 +36,7 @@ There is no implicit or indefinite legal hold. If a legal hold becomes necessary
 
 Message lists and details are available only through the API-key-protected MailInbox HTTP boundary. Raw MIME is returned only by the authorized details endpoint and becomes unavailable after content purge.
 
-The HTTP API intentionally exposes envelope sender and trusted-relay provenance, but does not expose sender/report verification booleans until a real authentication result exists. Parsed DMARC data and MIME `From:` values are always presented as unverified previews.
+The HTTP API exposes envelope sender and trusted-relay provenance. The generic MIME `From:` display remains unverified. For a parsed `fooddiary.club` DMARC report, MailInbox can attest the report source by verifying a full-body DKIM signature from an approved reporter identity (Google, Mail.ru, or Comcast). The Admin summary uses attested reports. Missing keys, unapproved identities and failed checks leave the original available with unverified status. Verification uses a bounded DNS lookup at detail read time, after the database reader has been released.
 
 MailInbox messages are not keyed to a FoodDiary user and an email address is not sufficient proof of account ownership. Automated primary-account export or deletion therefore must not guess an association. A privacy request that names MailInbox content is handled as an authorized operational request against the isolated MailInbox store; normal retention remains the default deletion mechanism.
 

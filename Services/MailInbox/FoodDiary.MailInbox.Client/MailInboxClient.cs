@@ -12,7 +12,7 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
     private readonly MailInboxClientOptions _options = options.Value;
 
     public async Task<InboundMailMessagePageResponse> GetMessagePageAsync(
-        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
+        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null, IReadOnlyCollection<string>? excludeRecipients = null) {
         EnsureBaseAddress();
         string path = string.Create(CultureInfo.InvariantCulture, $"/api/mail-inbox/messages/page?page={page}&limit={limit}");
         if (!string.IsNullOrWhiteSpace(recipient)) { path += $"&recipient={Uri.EscapeDataString(recipient.Trim())}"; }
@@ -23,6 +23,9 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         if (!string.IsNullOrWhiteSpace(search)) { path += "&search=" + Uri.EscapeDataString(search.Trim()); }
         if (!string.IsNullOrWhiteSpace(fromAddress)) { path += "&fromAddress=" + Uri.EscapeDataString(fromAddress.Trim()); }
         if (id.HasValue) { path += "&id=" + id.Value.ToString(); }
+        foreach (string address in excludeRecipients ?? []) {
+            path += "&excludeRecipients=" + Uri.EscapeDataString(address.Trim());
+        }
         using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path, _options.MetadataApiKey);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();

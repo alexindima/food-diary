@@ -26,7 +26,7 @@ export class AdminMailInboxService {
     private readonly sdk = createSdkConnection(AdminMailInboxSdk, this.baseUrl, this.http);
 
     public getMessagePage(page: number, limit: number, filters: AdminMailInboxFilters = {}): Observable<AdminMailInboxMessagePage> {
-        const { recipient = '', category = '', unread } = filters;
+        const { recipient = '', category = '', unread, excludeRecipients } = filters;
         let params = new HttpParams().set('page', page).set('limit', limit);
         if (recipient.trim().length > 0) {
             params = params.set('recipient', recipient.trim());
@@ -44,7 +44,12 @@ export class AdminMailInboxService {
             }
         }
         return this.sdk.client
-            .getAdminMailInboxMessagesPage({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .getAdminMailInboxMessagesPage(
+                { version: this.sdk.version, excludeRecipients },
+                'body',
+                false,
+                sdkRequestOptions(undefined, params),
+            )
             .pipe(map(adminMailInboxMessagePageFromSdk));
     }
 

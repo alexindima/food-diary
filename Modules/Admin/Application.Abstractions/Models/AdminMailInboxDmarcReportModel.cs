@@ -6,4 +6,5 @@ public sealed record AdminMailInboxDmarcReportModel(
     string? Domain,
     DateTimeOffset? DateRangeStartUtc,
     DateTimeOffset? DateRangeEndUtc,
-    IReadOnlyList<AdminMailInboxDmarcRecordModel> Records);
+    IReadOnlyList<AdminMailInboxDmarcRecordModel> Records,
+    bool IsSourceVerified = false);

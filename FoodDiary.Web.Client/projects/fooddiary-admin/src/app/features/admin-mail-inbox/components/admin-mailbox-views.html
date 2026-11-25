@@ -1,0 +1,39 @@
+<div class="fd-grid fd-gap-sm">
+    <div class="fd-row fd-wrap fd-align-center fd-gap-sm">
+        <div class="fd-row fd-wrap fd-gap-xs" role="group" [attr.aria-label]="'ADMIN_MAIL_INBOX.RECIPIENT_VIEWS' | translate">
+            <fd-ui-button
+                size="sm"
+                [variant]="selectedRecipient() === '' ? 'primary' : 'secondary'"
+                [ariaPressed]="selectedRecipient() === ''"
+                (click)="recipientSelected.emit('')"
+                >{{ 'ADMIN_MAIL_INBOX.MAIN_INBOX' | translate }}</fd-ui-button
+            >
+            @for (mailbox of incomingMailboxes; track mailbox) {
+                <fd-ui-button
+                    size="sm"
+                    [variant]="selectedRecipient() === mailbox ? 'primary' : 'secondary'"
+                    [ariaPressed]="selectedRecipient() === mailbox"
+                    (click)="recipientSelected.emit(mailbox)"
+                    >{{ mailbox }}</fd-ui-button
+                >
+            }
+        </div>
+        <fd-ui-button variant="secondary" size="sm" [ariaExpanded]="showPreferences()" (click)="showPreferences.set(!showPreferences())">{{
+            'ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES' | translate
+        }}</fd-ui-button>
+    </div>
+    @if (showPreferences()) {
+        <div class="fd-grid fd-gap-xs" role="group" [attr.aria-label]="'ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES' | translate">
+            <p class="fd-ui-body-xs">{{ 'ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES_HINT' | translate }}</p>
+            <div class="fd-row fd-wrap fd-gap-sm">
+                @for (mailbox of incomingMailboxes; track mailbox) {
+                    <fd-ui-checkbox
+                        [label]="mailbox"
+                        [checked]="hiddenRecipients().includes(mailbox)"
+                        (checkedChange)="recipientVisibilityChanged.emit({ recipient: mailbox, hidden: $event })"
+                    />
+                }
+            </div>
+        </div>
+    }
+</div>

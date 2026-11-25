@@ -13,6 +13,7 @@ export interface AdminMailInboxDmarcReportHttpResponse {
     dateRangeEndUtc?: string | null;
     dateRangeStartUtc?: string | null;
     domain?: string | null;
+    isSourceVerified?: boolean;
     organizationName?: string | null;
     records?: Array<AdminMailInboxDmarcRecordHttpResponse>;
     reportId?: string | null;

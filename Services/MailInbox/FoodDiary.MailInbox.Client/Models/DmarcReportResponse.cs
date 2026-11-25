@@ -6,4 +6,5 @@ public sealed record DmarcReportResponse(
     string? Domain,
     DateTimeOffset? DateRangeStartUtc,
     DateTimeOffset? DateRangeEndUtc,
-    IReadOnlyList<DmarcReportRecordResponse> Records);
+    IReadOnlyList<DmarcReportRecordResponse> Records,
+    bool IsSourceVerified = false);

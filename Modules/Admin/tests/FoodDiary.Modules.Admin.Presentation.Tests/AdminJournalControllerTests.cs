@@ -93,7 +93,7 @@ public sealed class AdminJournalControllerTests {
         var page = new AdminMailInboxMessagePageModel([entry], 31, 11, 20);
         CapturedSender sender = SubstituteSender.Capture(Result.Success(page));
         AdminMailInboxController controller = WithContext(new AdminMailInboxController(sender));
-        var request = new GetAdminMailInboxMessagePageHttpQuery(2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", entry.Id);
+        var request = new GetAdminMailInboxMessagePageHttpQuery(2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", entry.Id, ["hidden@example.com"]);
         OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(request));
         AdminMailInboxMessagePageHttpResponse response = Assert.IsType<AdminMailInboxMessagePageHttpResponse>(result.Value);
         GetAdminMailInboxMessagePageQuery query = Assert.IsType<GetAdminMailInboxMessagePageQuery>(sender.Request);

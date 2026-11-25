@@ -1922,6 +1922,9 @@
                         "nullable": true,
                         "type": "string"
                     },
+                    "isSourceVerified": {
+                        "type": "boolean"
+                    },
                     "organizationName": {
                         "nullable": true,
                         "type": "string"
@@ -11251,6 +11254,16 @@
                         "schema": {
                             "format": "uuid",
                             "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ExcludeRecipients",
+                        "schema": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
                         }
                     },
                     {

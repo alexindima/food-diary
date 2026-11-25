@@ -31,7 +31,7 @@ public sealed class MailInboxMessagesController(
     public Task<IActionResult> GetPage([FromQuery] GetInboundMailMessagePageHttpQuery query) =>
         ExecuteMetadataOperationAsync(cancellationToken => HandleOk(
             new GetInboundMailMessagePageQuery(
-                query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id),
+                query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id, query.ExcludeRecipients),
             static value => new InboundMailMessagePageHttpResponse(value.Items.ToHttpResponse(), value.TotalItems, value.UnreadCount, value.ReadCount), cancellationToken));
 
     [HttpGet]

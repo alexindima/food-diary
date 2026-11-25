@@ -77,7 +77,7 @@
 
             @if (message.dmarcReport; as report) {
                 <section class="dmarc-report fd-grid fd-gap-sm" aria-label="DMARC report summary">
-                    <p class="dmarc-report__warning" role="alert">
+                    <p class="dmarc-report__warning" role="alert" [hidden]="report.isSourceVerified === true">
                         {{ 'ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING' | translate }}
                     </p>
                     <div class="dmarc-report__header fd-row fd-align-start fd-justify-between fd-gap-md">

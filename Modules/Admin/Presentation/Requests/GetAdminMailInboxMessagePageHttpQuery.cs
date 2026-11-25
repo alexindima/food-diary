@@ -9,4 +9,5 @@ public sealed record GetAdminMailInboxMessagePageHttpQuery(
     [MaxLength(320)] string? Recipient = null,
     [MaxLength(PresentationQueryLimits.MaximumFilterLength)] string? Category = null,
     bool? Unread = null, DateTimeOffset? FromUtc = null, DateTimeOffset? ToUtc = null,
-    [MaxLength(320)] string? Search = null, [MaxLength(320)] string? FromAddress = null, Guid? Id = null);
+    [MaxLength(320)] string? Search = null, [MaxLength(320)] string? FromAddress = null, Guid? Id = null,
+    string[]? ExcludeRecipients = null);

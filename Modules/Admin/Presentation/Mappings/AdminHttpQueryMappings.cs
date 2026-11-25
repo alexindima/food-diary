@@ -29,7 +29,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 public static class AdminHttpQueryMappings {
     extension(GetAdminMailInboxMessagePageHttpQuery query) {
         public GetAdminMailInboxMessagePageQuery ToQuery() {
-            return new GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id);
+            return new GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id, query.ExcludeRecipients);
         }
     }
 

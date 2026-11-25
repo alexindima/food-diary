@@ -11,13 +11,14 @@ namespace FoodDiary.MailInbox.Presentation.Tests;
 public sealed partial class MailInboxPresentationTests {
     [Fact]
     public async Task GetPage_ForwardsExtendedFiltersAndMapsCounters() {
-        var query = new GetInboundMailMessagePageQuery(2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid());
+        string[] excludedRecipients = ["hidden@example.com"];
+        var query = new GetInboundMailMessagePageQuery(2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid(), excludedRecipients);
         var entry = new InboundMailMessageSummary(Guid.NewGuid(), "from@example.com", ["to@example.com"], "subject", "general", "received", ReadAtUtc: null, DateTimeOffset.UnixEpoch);
         var page = new InboundMailMessagePage([entry], 31, 11, 20);
         StubSender sender = new StubSender().Register(query, Result.Success(page));
         MailInboxMessagesController controller = CreateMessagesController(sender);
         var httpQuery = new GetInboundMailMessagePageHttpQuery(
-            2, 10, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id);
+            2, 10, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id, excludedRecipients);
         OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(httpQuery));
         InboundMailMessagePageHttpResponse response = Assert.IsType<InboundMailMessagePageHttpResponse>(result.Value);
         Assert.Equivalent(page, response, strict: true);

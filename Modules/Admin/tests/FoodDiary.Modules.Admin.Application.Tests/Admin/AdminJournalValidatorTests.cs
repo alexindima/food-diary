@@ -62,6 +62,16 @@ public class AdminJournalValidatorTests {
         Assert.Equal(valid, new GetAdminMailInboxMessagePageQueryValidator().Validate(new GetAdminMailInboxMessagePageQuery(Category: category)).IsValid);
     }
 
+    [Theory]
+    [InlineData(" bugs+filter@example.com ", true)]
+    [InlineData("display name <bugs@example.com>", false)]
+    [InlineData("invalid", false)]
+    [InlineData("", false)]
+    public void Inbox_ValidatesExcludedRecipientAddresses(string address, bool valid) {
+        Assert.Equal(valid, new GetAdminMailInboxMessagePageQueryValidator().Validate(
+            new GetAdminMailInboxMessagePageQuery(ExcludeRecipients: [address])).IsValid);
+    }
+
     [Fact]
     public void Inbox_RejectsInvalidPagingAndOversizedFilters() {
         TestValidationResult<GetAdminMailInboxMessagePageQuery> result = new GetAdminMailInboxMessagePageQueryValidator().TestValidate(new GetAdminMailInboxMessagePageQuery(0, 201, new string('r', 321), Search: new string('s', 321), FromAddress: new string('f', 321)));

@@ -420,14 +420,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ba150dafec9d2fffc2ec9ec0cdb2db00316364c2eb98b48c63c53705c6209d0a",
-          "reviewReason": "Compared the live moderation OpenAPI and normalized fixture. The snapshot now records the page and limit ranges and the status filter length while preserving routes and response contracts. The exact host passed both Swagger guardrails and the read-only full contract fixture, and the scoped clients use the regenerated contracts."
+          "sha256": "fc9938997850f332cfdc45db79cfbcc57e0418e849a39ba1f22b2147792a84e4",
+          "reviewReason": "The full API contract adds the optional ExcludeRecipients query array and the optional isSourceVerified response field. Real host snapshot checks and SDK export passed. API compatibility found no breaking changes or new behavioral restrictions; the workflow guidance remains accurate."
         }
       ],
-      "reason": "Compared the live moderation OpenAPI and normalized fixture. The snapshot now records the page and limit ranges and the status filter length while preserving routes and response contracts. The exact host passed both Swagger guardrails and the read-only full contract fixture, and the scoped clients use the regenerated contracts.",
-      "baseRef": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "gitHead": "fe6c4ea14bbb58eb28123c2afd3938d5faad6766",
-      "reviewedAtUtc": "2026-11-23T08:32:24.9008014Z"
+      "reason": "The full API contract adds the optional ExcludeRecipients query array and the optional isSourceVerified response field. Real host snapshot checks and SDK export passed. API compatibility found no breaking changes or new behavioral restrictions; the workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "ae591f2d9d519f74523ddeb2daff59a6385c32d7",
+      "reviewedAtUtc": "2026-11-25T14:20:05.6105225Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

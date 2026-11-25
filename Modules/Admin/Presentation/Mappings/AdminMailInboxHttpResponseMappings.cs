@@ -50,7 +50,8 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.Domain,
                 model.DateRangeStartUtc,
                 model.DateRangeEndUtc,
-                model.Records.Select(static record => record.ToHttpResponse()).ToArray());
+                model.Records.Select(static record => record.ToHttpResponse()).ToArray(),
+                model.IsSourceVerified);
     }
 
     extension(AdminMailInboxDmarcRecordModel model) {

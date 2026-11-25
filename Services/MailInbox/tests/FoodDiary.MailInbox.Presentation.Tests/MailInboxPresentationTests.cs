@@ -44,8 +44,10 @@ public sealed partial class MailInboxPresentationTests {
         Assert.Equal(50, query.Limit);
     }
 
-    [Fact]
-    public void InboundMailHttpMappings_ToDetailsResponse_MapsDmarcPreview() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void InboundMailHttpMappings_ToDetailsResponse_MapsDmarcPreview(bool isSourceVerified) {
         var id = Guid.NewGuid();
         var details = new InboundMailMessageDetails(
             id,
@@ -76,7 +78,7 @@ public sealed partial class MailInboxPresentationTests {
                         "pass",
                         "fooddiary.club",
                         "pass"),
-                ]),
+                ], IsSourceVerified: isSourceVerified),
             "Received",
             ReadAtUtc: null,
             DateTimeOffset.UtcNow,
@@ -90,6 +92,7 @@ public sealed partial class MailInboxPresentationTests {
         Assert.NotNull(response.DmarcReport);
         Assert.Multiple(
             () => Assert.Equal("google.com", response.DmarcReport.OrganizationName),
+            () => Assert.Equal(isSourceVerified, response.DmarcReport.IsSourceVerified),
             () => Assert.Equal("192.0.2.1", response.DmarcReport.Records.Single().SourceIp),
             () => Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult),
             () => Assert.Equal("bounce@relay.example", response.EnvelopeFromAddress),

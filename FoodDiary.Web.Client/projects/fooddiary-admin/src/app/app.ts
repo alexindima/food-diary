@@ -80,7 +80,7 @@ export class AppComponent {
                 .find(item => this.currentPath() === item.route || (item.route !== '/' && this.currentPath().startsWith(`${item.route}/`)))
                 ?.route ?? this.currentPath(),
     );
-    protected readonly isMailRoute = computed(() => ['/mail-inbox', '/outgoing-emails'].includes(this.currentPath()));
+    protected readonly isMailRoute = computed(() => ['/mail-inbox', '/outgoing-emails', '/mail-dmarc'].includes(this.currentPath()));
     protected readonly pageHeader = computed(() =>
         ['/users', '/email-templates', '/lessons', '/ai-prompts'].includes(this.currentSection())
             ? null
@@ -89,6 +89,7 @@ export class AppComponent {
     protected readonly mobileItems = computed(() => [
         ...this.sidebarSections().flatMap(section => section.items.map(({ route, label }) => ({ route, label }))),
         { route: '/outgoing-emails', label: String(this.translate.instant('ADMIN_OUTGOING.OUTGOING')) },
+        { route: '/mail-dmarc', label: String(this.translate.instant('ADMIN_DMARC.TAB')) },
     ]);
     protected readonly sidebarSections = computed(() => {
         this.language();

@@ -70,6 +70,38 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task GetMessagePageAsync_HidesOnlyMessagesWithoutVisibleRecipientsBeforePaging() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        using NpgsqlInboundMailStore store = CreateStore(dataSource);
+        DateTimeOffset now = FixedTime.GetUtcNow();
+        var hidden = InboundMailMessage.Receive("visibility-hidden", "sender@example.com", ["bugs@example.com", "feedback@example.com"],
+            "Inbox visibility", "Details", htmlBody: null, Encoding.UTF8.GetBytes("hidden"), now.AddMinutes(2));
+        var mixed = InboundMailMessage.Receive("visibility-mixed", "sender@example.com", ["bugs@example.com", "admin@example.com"],
+            "Inbox visibility", "Details", htmlBody: null, Encoding.UTF8.GetBytes("mixed"), now.AddMinutes(1));
+        var visible = InboundMailMessage.Receive("visibility-visible", "sender@example.com", ["admin@example.com"],
+            "Inbox visibility", "Details", htmlBody: null, Encoding.UTF8.GetBytes("visible"), now);
+        InboundMailSaveResult hiddenSave = await store.SaveAsync(hidden, CancellationToken.None);
+        InboundMailSaveResult mixedSave = await store.SaveAsync(mixed, CancellationToken.None);
+        await store.SaveAsync(visible, CancellationToken.None);
+        await store.MarkAsReadAsync(hiddenSave.Id, now.AddMinutes(3), CancellationToken.None);
+
+        InboundMailMessagePage defaultInbox = await store.GetMessagePageAsync(1, 1, recipient: null, category: null, unread: null,
+            CancellationToken.None, search: "Inbox visibility", excludeRecipients: [" BUGS@EXAMPLE.COM ", "feedback@example.com"]);
+        InboundMailMessagePage bugs = await store.GetMessagePageAsync(1, 1, "bugs@example.com", category: null, unread: null,
+            CancellationToken.None, search: "Inbox visibility");
+        InboundMailMessageSummary firstDefaultMessage = Assert.Single(defaultInbox.Items);
+        InboundMailMessageSummary firstBugMessage = Assert.Single(bugs.Items);
+
+        Assert.Multiple(
+            () => Assert.Equal(mixedSave.Id, firstDefaultMessage.Id),
+            () => Assert.Equal(2, defaultInbox.TotalItems),
+            () => Assert.Equal(2, defaultInbox.UnreadCount),
+            () => Assert.Equal(0, defaultInbox.ReadCount),
+            () => Assert.Equal(hiddenSave.Id, firstBugMessage.Id));
+    }
+
+    [RequiresDockerFact]
     public async Task GetFilteredMessagesAsync_FiltersBeforeLimitAndUsesDeliveryRecipients() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();

@@ -1,0 +1,31 @@
+.dmarc-toolbar {
+    flex-wrap: wrap;
+}
+
+.dmarc-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.dmarc-table-wrap {
+    overflow-x: auto;
+}
+
+.dmarc-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+        border-bottom: var(--fd-border-muted);
+        padding: var(--fd-space-sm);
+        text-align: start;
+    }
+
+    thead {
+        color: var(--fd-color-text-muted);
+    }
+}
+
+.dmarc-failed {
+    font-weight: var(--fd-font-weight-semibold);
+}

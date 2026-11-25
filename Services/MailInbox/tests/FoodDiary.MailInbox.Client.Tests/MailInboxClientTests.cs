@@ -26,14 +26,16 @@ public sealed class MailInboxClientTests {
         var client = new MailInboxClient(http, MsOptions.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
         var id = Guid.NewGuid();
         await client.GetMessagePageAsync(1, 20, recipient: null, category: null, unread: null, CancellationToken.None,
-            DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), " subject & details ", " from+tag@example.com ", id);
+            DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), " subject & details ", " from+tag@example.com ", id,
+            [" hidden+tag@example.com ", "another@example.com"]);
         string query = handler.Request!.RequestUri!.Query;
         Assert.Multiple(
             () => Assert.Contains("fromUtc=1970-01-01", query, StringComparison.Ordinal),
             () => Assert.Contains("toUtc=1970-01-02", query, StringComparison.Ordinal),
             () => Assert.Contains("search=subject%20%26%20details", query, StringComparison.Ordinal),
             () => Assert.Contains("fromAddress=from%2Btag%40example.com", query, StringComparison.Ordinal),
-            () => Assert.Contains($"id={id}", query, StringComparison.Ordinal));
+            () => Assert.Contains($"id={id}", query, StringComparison.Ordinal),
+            () => Assert.Contains("excludeRecipients=hidden%2Btag%40example.com&excludeRecipients=another%40example.com", query, StringComparison.Ordinal));
     }
 
     [Fact]

@@ -1,0 +1,86 @@
+<section class="fd-grid fd-gap-md" aria-labelledby="admin-dmarc-heading">
+    <div class="dmarc-toolbar fd-row fd-align-center fd-justify-between fd-gap-sm">
+        <h2 class="fd-ui-title-sm" id="admin-dmarc-heading">{{ 'ADMIN_DMARC.HEADING' | translate }}</h2>
+        <fd-ui-segmented-toggle
+            size="sm"
+            [options]="periods"
+            [selectedValue]="selectedPeriod()"
+            [ariaLabel]="'ADMIN_DMARC.PERIOD' | translate"
+            [stackOnNarrow]="false"
+            (selectedValueChange)="selectPeriod($event)"
+        />
+    </div>
+
+    @let state = view();
+    @if (state.status === 'loading') {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (state.status === 'error') {
+        <fd-admin-load-error (retry)="retry()" />
+    } @else if (state.status === 'ready') {
+        @let data = state.data;
+        @let summary = data.summary;
+        <p class="fd-ui-body-sm">{{ 'ADMIN_DMARC.COMPLETED_DAYS' | translate }}</p>
+
+        @if (data.incomplete) {
+            <p role="status">{{ 'ADMIN_DMARC.PARTIAL' | translate }}</p>
+        }
+
+        <div class="dmarc-metrics fd-grid fd-gap-sm">
+            <fd-ui-card>
+                <p>{{ 'ADMIN_DMARC.COUNTED_REPORTS' | translate }}</p>
+                <strong class="fd-ui-title-md">{{ summary.countedReports | number }}</strong>
+            </fd-ui-card>
+            <fd-ui-card>
+                <p>{{ 'ADMIN_DMARC.MESSAGES' | translate }}</p>
+                <strong class="fd-ui-title-md">{{ summary.countedReports === 0 ? '—' : (summary.totals.messages | number) }}</strong>
+            </fd-ui-card>
+            <fd-ui-card>
+                <p>{{ 'ADMIN_DMARC.FAILURE_RATE' | translate }}</p>
+                <strong class="fd-ui-title-md">{{ (summary.totals.failureRate | percent: '1.0-1') ?? '—' }}</strong>
+            </fd-ui-card>
+        </div>
+
+        @if (summary.countedReports === 0) {
+            <p role="status">{{ 'ADMIN_DMARC.NO_VERIFIED_REPORTS' | translate }}</p>
+        } @else {
+            <h3 class="fd-ui-title-sm" id="admin-dmarc-sources">{{ 'ADMIN_DMARC.SOURCES' | translate }}</h3>
+            <div class="dmarc-table-wrap" tabindex="0" role="region" aria-labelledby="admin-dmarc-sources">
+                <table class="dmarc-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{ 'ADMIN_DMARC.SOURCE_IP' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.FIRST_REPORTED' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.MESSAGES' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.PASSED' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.FAILED' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.UNKNOWN' | translate }}</th>
+                            <th scope="col">{{ 'ADMIN_DMARC.FAILURE_RATE' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (source of summary.sources; track source.sourceIp) {
+                            <tr>
+                                <th scope="row">{{ source.sourceIp || '—' }}</th>
+                                <td>{{ source.firstReportedAtUtc | date: 'mediumDate' : 'UTC' }}</td>
+                                <td>{{ source.messages | number }}</td>
+                                <td>{{ source.passed | number }}</td>
+                                <td [class.dmarc-failed]="source.failed > 0">{{ source.failed | number }}</td>
+                                <td>{{ source.unknown | number }}</td>
+                                <td>{{ (source.failureRate | percent: '1.0-1') ?? '—' }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        @if (data.hasDuplicateOrConflictingReports) {
+            <p class="fd-ui-body-sm">
+                {{
+                    'ADMIN_DMARC.DEDUPLICATION' | translate: { duplicates: summary.duplicateReports, conflicts: summary.conflictingReports }
+                }}
+            </p>
+        }
+
+        <fd-admin-dmarc-reports [data]="data" />
+    }
+</section>

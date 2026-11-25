@@ -165,4 +165,18 @@ describe('AdminMailInboxService pagination', () => {
         expect(results).toEqual([response]);
         httpMock.verify();
     });
+
+    it('encodes hidden inbox destinations as repeated pagination filters', () => {
+        TestBed.configureTestingModule({ providers: [AdminMailInboxService, provideHttpClient(), provideHttpClientTesting()] });
+        const service = TestBed.inject(AdminMailInboxService);
+        const httpMock = TestBed.inject(HttpTestingController);
+        const excludeRecipients = ['support@fooddiary.club', 'bugs@fooddiary.club'];
+
+        service.getMessagePage(1, MESSAGE_LIMIT, { excludeRecipients }).subscribe();
+
+        const request = httpMock.expectOne(req => req.url.endsWith('/admin/mail-inbox/messages/page'));
+        expect(request.request.params.getAll('excludeRecipients')).toEqual(excludeRecipients);
+        request.flush({ items: [], totalItems: 0 });
+        httpMock.verify();
+    });
 });

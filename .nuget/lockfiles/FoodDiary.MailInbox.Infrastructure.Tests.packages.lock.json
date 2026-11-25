@@ -167,6 +167,7 @@
       "fooddiary.mailinbox.infrastructure": {
         "type": "Project",
         "dependencies": {
+          "DnsClient": "[1.8.0, )",
           "FoodDiary.MailInbox.Application": "[1.0.0, )",
           "MailKit": "[4.18.2, )",
           "Npgsql": "[10.0.3, )",
@@ -182,6 +183,12 @@
       },
       "fooddiary.results": {
         "type": "Project"
+      },
+      "DnsClient": {
+        "type": "CentralTransitive",
+        "requested": "[1.8.0, )",
+        "resolved": "1.8.0",
+        "contentHash": "RRwtaCXkXWsx0mmsReGDqCbRLtItfUbkRJlet1FpdciVhyMGKcPd57T1+8Jki9ojHlq9fntVhXQroOOgRak8DQ=="
       },
       "FluentValidation": {
         "type": "CentralTransitive",

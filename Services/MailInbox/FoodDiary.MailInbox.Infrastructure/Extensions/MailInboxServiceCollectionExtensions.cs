@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using DnsClient;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using FoodDiary.MailInbox.Application.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MimeKit.Cryptography;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -43,6 +45,9 @@ public static class MailInboxServiceCollectionExtensions {
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<DmarcReportParser>();
         services.AddSingleton<IMailInboxDmarcReportParser>(static sp => sp.GetRequiredService<DmarcReportParser>());
+        services.AddSingleton<ILookupClient>(static _ => new LookupClient());
+        services.AddSingleton<IDkimPublicKeyLocator, DmarcReportDnsKeyLocator>();
+        services.AddSingleton<DmarcReportSourceVerifier>();
         services.AddSingleton<IInboundMailStore>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxSchemaInitializer>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();

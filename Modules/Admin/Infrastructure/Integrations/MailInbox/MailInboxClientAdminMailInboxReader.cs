@@ -6,8 +6,8 @@ using FoodDiary.MailInbox.Client.Models;
 namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailInboxClient) : IAdminMailInboxReader {
-    public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
-        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken, fromUtc, toUtc, search, fromAddress, id);
+    public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null, IReadOnlyCollection<string>? excludeRecipients = null) {
+        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken, fromUtc, toUtc, search, fromAddress, id, excludeRecipients);
         return new AdminMailInboxMessagePageModel(result.Items.Select(static message => message.ToModel()).ToList(), result.TotalItems, result.UnreadCount, result.ReadCount);
     }
 
@@ -78,7 +78,8 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.Domain,
             response.DateRangeStartUtc,
             response.DateRangeEndUtc,
-            response.Records.Select(static record => record.ToModel()).ToArray());
+            response.Records.Select(static record => record.ToModel()).ToArray(),
+            response.IsSourceVerified);
 
     private static AdminMailInboxDmarcRecordModel ToModel(this DmarcReportRecordResponse response) =>
         new(

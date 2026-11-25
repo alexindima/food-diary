@@ -1,0 +1,40 @@
+<div class="fd-row fd-wrap fd-align-center fd-justify-between fd-gap-sm">
+    <h3 class="fd-ui-title-sm" id="admin-dmarc-reports">{{ 'ADMIN_DMARC.REPORTS' | translate }}</h3>
+    <a routerLink="/mail-inbox" [queryParams]="{ recipient: reportMailbox }">{{ 'ADMIN_DMARC.ALL_REPORT_EMAILS' | translate }}</a>
+</div>
+@let reportList = data();
+@if (reportList.reports.length > 0) {
+    <p class="fd-ui-body-sm">
+        {{ 'ADMIN_DMARC.LOADED' | translate: { loaded: reportList.reports.length, total: reportList.totalReports } }}
+    </p>
+    <div class="dmarc-report-table" tabindex="0" role="region" aria-labelledby="admin-dmarc-reports">
+        <table class="fd-data-table">
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'ADMIN_DMARC.RECEIVED' | translate }}</th>
+                    <th scope="col">{{ 'ADMIN_DMARC.REPORTER' | translate }}</th>
+                    <th scope="col">{{ 'ADMIN_DMARC.DOMAIN' | translate }}</th>
+                    <th scope="col">{{ 'ADMIN_DMARC.SOURCE_STATUS' | translate }}</th>
+                    <th scope="col">{{ 'ADMIN_DMARC.ORIGINAL' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of reportList.reports; track item.message.id) {
+                    <tr>
+                        <td>{{ item.message.receivedAtUtc | date: 'mediumDate' : 'UTC' }}</td>
+                        <th scope="row">{{ item.reporter }}</th>
+                        <td>{{ item.domain }}</td>
+                        <td>{{ statusLabels[item.status] | translate }}</td>
+                        <td>
+                            <fd-ui-button variant="ghost" size="sm" (click)="openReport(item.message)">
+                                {{ 'ADMIN_DMARC.OPEN_REPORT' | translate }}
+                            </fd-ui-button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} @else {
+    <p>{{ 'ADMIN_DMARC.NO_REPORTS' | translate }}</p>
+}

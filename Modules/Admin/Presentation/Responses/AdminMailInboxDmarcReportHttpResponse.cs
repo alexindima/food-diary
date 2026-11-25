@@ -6,4 +6,5 @@ public sealed record AdminMailInboxDmarcReportHttpResponse(
     string? Domain,
     DateTimeOffset? DateRangeStartUtc,
     DateTimeOffset? DateRangeEndUtc,
-    IReadOnlyList<AdminMailInboxDmarcRecordHttpResponse> Records);
+    IReadOnlyList<AdminMailInboxDmarcRecordHttpResponse> Records,
+    bool IsSourceVerified = false);

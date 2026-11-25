@@ -3278,6 +3278,12 @@
               "MaxLength": 64
             },
             {
+              "Name": "ExcludeRecipients",
+              "Location": "query",
+              "Required": false,
+              "Type": "array"
+            },
+            {
               "Name": "FromAddress",
               "Location": "query",
               "Required": false,
@@ -24757,6 +24763,12 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "isSourceVerified",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
         },
         {
           "Name": "organizationName",

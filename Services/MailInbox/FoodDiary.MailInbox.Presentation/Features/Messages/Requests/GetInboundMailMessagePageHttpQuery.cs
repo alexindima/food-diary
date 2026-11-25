@@ -12,4 +12,5 @@ public sealed record GetInboundMailMessagePageHttpQuery(
     DateTimeOffset? ToUtc = null,
     string? Search = null,
     string? FromAddress = null,
-    Guid? Id = null);
+    Guid? Id = null,
+    string[]? ExcludeRecipients = null);

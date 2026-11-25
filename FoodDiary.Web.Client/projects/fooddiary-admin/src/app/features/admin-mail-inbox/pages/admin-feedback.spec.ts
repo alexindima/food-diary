@@ -8,6 +8,7 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import { AdminMailInboxComponent } from './admin-mail-inbox';
 
@@ -52,6 +53,7 @@ async function setupFeedbackAsync(url: string): Promise<{
                 ],
                 withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
             ),
+            { provide: AdminAuthService, useValue: { getUserId: (): null => null } },
             { provide: AdminMailInboxFacade, useValue: { getMessagePage } },
             { provide: FdUiDialogService, useValue: { open } },
         ],

@@ -29,6 +29,7 @@ export type AdminMailInboxMessageDetails = AdminMailInboxMessageSummary & {
 };
 
 export type AdminMailInboxDmarcReport = {
+    isSourceVerified?: boolean;
     organizationName?: string | null;
     reportId?: string | null;
     domain?: string | null;
@@ -53,6 +54,7 @@ export type AdminMailInboxDmarcRecord = {
 
 export type AdminMailInboxFilters = {
     recipient?: string;
+    excludeRecipients?: string[];
     category?: string;
     unread?: boolean;
     fromUtc?: string;

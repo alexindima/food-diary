@@ -1,6 +1,13 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
     @if (feedbackView) {
         <p class="fd-ui-text-muted">{{ 'ADMIN_FEEDBACK.ADDRESS_HINT' | translate }}</p>
+    } @else {
+        <fd-admin-mailbox-views
+            [recipient]="selectedRecipient()"
+            [hiddenRecipients]="hiddenRecipients()"
+            (recipientSelected)="selectRecipient($event)"
+            (recipientVisibilityChanged)="setRecipientHidden($event)"
+        />
     }
     <div class="fd-row fd-wrap fd-gap-sm">
         <fd-ui-button variant="secondary" [hidden]="unreadCount() === null" (click)="unreadFilter.set('unread'); loadMessages(true)"
@@ -39,6 +46,7 @@
             [label]="'ADMIN_MAIL_INBOX.TYPE_FILTER' | translate"
             [value]="categoryFilter()"
             [options]="[
+                { value: 'inbox', label: 'ADMIN_MAIL_INBOX.DEFAULT_CATEGORY' | translate },
                 { value: 'all', label: 'ADMIN_MAIL_INBOX.ALL' | translate },
                 { value: 'general', label: 'ADMIN_MAIL_INBOX.MAIL' | translate },
                 { value: 'dmarc-report', label: 'DMARC' },

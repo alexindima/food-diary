@@ -17,3 +17,11 @@ export const adminFeedbackRoutes: Routes = [
         canActivate: [adminAuthGuard],
     },
 ];
+
+export const adminDmarcRoutes: Routes = [
+    {
+        path: '',
+        loadComponent: async () => import('./pages/admin-dmarc').then(m => m.AdminDmarcComponent),
+        canActivate: [adminAuthGuard],
+    },
+];
