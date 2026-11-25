@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { PLATFORM_ID, signal, type WritableSignal } from '@angular/core';
+import { ApplicationRef, PLATFORM_ID, signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -53,7 +53,7 @@ type RouterMock = {
     navigate: ReturnType<typeof vi.fn<(commands: unknown[], extras: Record<string, unknown>) => Promise<boolean>>>;
 };
 
-type FakeDocument = {
+type FakeDocument = Pick<Document, 'getElementById'> & {
     location: {
         href: string;
     };
@@ -319,6 +319,8 @@ describe('PremiumAccessPageComponent prices', () => {
         );
         const { component } = setupComponent();
         await settleAsync();
+        TestBed.tick();
+        await TestBed.inject(ApplicationRef).whenStable();
 
         expect(paddlePreview).toHaveBeenCalledWith(
             { monthly: 'pri_month', yearly: 'pri_year' },
@@ -660,6 +662,7 @@ function resetMocks(): void {
         }),
     };
     fakeDocument = {
+        getElementById: (): null => null,
         location: {
             href: '',
         },

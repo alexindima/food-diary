@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, resource, signal } from '@angular/core';
 
 import type { BillingOverview } from '../../../shared/models/billing.models';
 import type { PremiumPlanPrices } from '../models/premium-plan-price';
@@ -10,57 +10,36 @@ export class PremiumPlanPricingFacade {
     private readonly paddle = inject(PaddleCheckoutService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-    private requestVersion = 0;
+    private readonly requestedPreview = signal<{ result: Promise<PremiumPlanPrices | null> } | null | undefined>(undefined);
+    private readonly preview = resource({
+        params: () => this.requestedPreview() ?? undefined,
+        loader: async ({ params }) => params.result,
+    });
 
-    public readonly prices = signal<PremiumPlanPrices>({});
-    public readonly loading = signal(false);
-    public readonly unavailable = signal(false);
+    public readonly prices = computed<PremiumPlanPrices>(() => this.preview.value() ?? {});
+    public readonly loading = this.preview.isLoading;
+    public readonly unavailable = computed(() => this.requestedPreview() === null || this.preview.value() === null);
 
-    public async loadPricesAsync(overview: BillingOverview, locale: string): Promise<void> {
-        const requestVersion = ++this.requestVersion;
-        this.prices.set({});
-        this.unavailable.set(false);
-        this.loading.set(false);
+    public loadPrices(overview: BillingOverview, locale: string): void {
         if (
             !this.isBrowser ||
             this.destroyRef.destroyed ||
             !overview.availableProviders.some(provider => provider.toLowerCase() === 'paddle')
         ) {
+            this.requestedPreview.set(undefined);
             return;
         }
 
         const configuration = resolvePriceConfiguration(overview);
         if (configuration === null) {
-            this.unavailable.set(true);
+            this.requestedPreview.set(null);
             return;
         }
 
-        this.loading.set(true);
-        try {
-            const prices = await this.paddle.previewPlanPricesAsync(
-                { monthly: configuration.monthly, yearly: configuration.yearly },
-                {
-                    token: configuration.token,
-                    environment: configuration.environment,
-                    locale,
-                },
-            );
-            if (this.isCurrentRequest(requestVersion)) {
-                this.prices.set(prices);
-            }
-        } catch {
-            if (this.isCurrentRequest(requestVersion)) {
-                this.unavailable.set(true);
-            }
-        } finally {
-            if (this.isCurrentRequest(requestVersion)) {
-                this.loading.set(false);
-            }
-        }
-    }
-
-    private isCurrentRequest(requestVersion: number): boolean {
-        return !this.destroyRef.destroyed && this.requestVersion === requestVersion;
+        const { monthly, yearly, token, environment } = configuration;
+        const result = this.paddle.previewPlanPricesAsync({ monthly, yearly }, { token, environment, locale });
+        // A replacement can arrive before the resource observes this promise.
+        this.requestedPreview.set({ result: result.catch(() => null) });
     }
 }
 

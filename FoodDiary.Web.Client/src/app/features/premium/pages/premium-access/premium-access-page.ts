@@ -222,7 +222,7 @@ export class PremiumAccessPageComponent {
                 return;
             }
             this.applyBillingChange(overview);
-            void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
+            this.pricing.loadPrices({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
             if (!(await this.refreshAccountAccessAsync(this.overviewRevision)) || !this.isPageActive()) {
                 return;
             }
@@ -352,7 +352,7 @@ export class PremiumAccessPageComponent {
 
         const loaded = this.isCurrentOverview(revision) && this.errorMessage() === null;
         if (loaded && this.showPlans()) {
-            void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
+            this.pricing.loadPrices({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
         }
         return loaded;
     }

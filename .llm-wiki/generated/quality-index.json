@@ -14122,11 +14122,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.ts",
-      "nonBlankLines": 72,
-      "decisionPoints": 14,
+      "nonBlankLines": 52,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.44
+      "structuralRiskScore": 20.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/models/cancellation.models.ts",
