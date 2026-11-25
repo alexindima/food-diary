@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { type Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, map, type Observable, of, switchMap, throwError } from 'rxjs';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { createClientId } from '../../../shared/lib/client-id.utils';
@@ -13,11 +13,19 @@ import { optionalUtcInstant } from '../../../shared/models/semantics/date-value'
 import type { ShoppingListItemId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../shared/models/semantics/entity-id';
-import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
+import type {
+    ShoppingList,
+    ShoppingListItem,
+    ShoppingListOverview,
+    ShoppingListPage,
+    ShoppingListSummary,
+} from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { mapShoppingListItemToDto, normalizeShoppingListAmount, rebuildShoppingListSortOrder } from './shopping-list-item.mapper';
 
 const REVISION_CONFLICT_STATUS = 409;
+
+type SelectedListRead = { id: ShoppingListId; conflict: boolean };
 
 export type ShoppingListDraftItem = {
     name: string;
@@ -33,6 +41,45 @@ export class ShoppingListFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly requestedOverview = signal<number | undefined>(undefined);
+    private readonly overviewResource = rxResource({
+        params: this.requestedOverview,
+        stream: ({ params, abortSignal }) =>
+            this.shoppingListService.getOverview().pipe(
+                catchError(() => of(null)),
+                map(overview => {
+                    if (!abortSignal.aborted && this.requestedOverview() === params) {
+                        this.acceptOverview(overview);
+                    }
+                }),
+            ),
+    });
+    private readonly requestedDirectory = signal<number | undefined>(undefined);
+    private readonly directoryResource = rxResource({
+        params: this.requestedDirectory,
+        stream: ({ params, abortSignal }) =>
+            this.shoppingListService.getPage().pipe(
+                catchError(() => of(null)),
+                map(lists => {
+                    if (!abortSignal.aborted && this.requestedDirectory() === params) {
+                        this.acceptDirectory(lists);
+                    }
+                }),
+            ),
+    });
+    private readonly requestedList = signal<SelectedListRead | undefined>(undefined);
+    private readonly listResource = rxResource({
+        params: this.requestedList,
+        stream: ({ params, abortSignal }) =>
+            this.shoppingListService.getById(params.id).pipe(
+                catchError(() => of(null)),
+                map(list => {
+                    if (!abortSignal.aborted && this.requestedList() === params) {
+                        this.acceptSelectedList(params, list);
+                    }
+                }),
+            ),
+    });
     private readonly saveQueue = createAutosaveQueue<void>({
         debounceMs: 500,
         isBusy: () => !this.canPersistList(this.list()),
@@ -45,7 +92,6 @@ export class ShoppingListFacade {
     private pendingSave = false;
     private pendingSelection: ShoppingListId | null = null;
     private activeSave: Promise<boolean> | null = null;
-    private listLoadSequence = 0;
 
     public hasUnsavedChanges(): boolean {
         return this.conflictListId() !== null || this.saveQueue.hasPending() || this.isSaving();
@@ -159,25 +205,23 @@ export class ShoppingListFacade {
         }
         this.overviewLoadError.set(false);
         this.isLoading.set(true);
-        this.shoppingListService
-            .getOverview()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: overview => {
-                    this.initialPage.set(overview.lists);
-                    this.replaceDirectorySummaries(overview.lists.items);
-                    if (overview.selectedList !== null) {
-                        this.applyList(overview.selectedList);
-                    } else {
-                        this.applyEmptyListState();
-                    }
-                    this.isLoading.set(false);
-                },
-                error: () => {
-                    this.overviewLoadError.set(true);
-                    this.isLoading.set(false);
-                },
-            });
+        this.overviewResource.set(undefined);
+        this.requestedOverview.update(version => (version ?? 0) + 1);
+    }
+
+    private acceptOverview(overview: ShoppingListOverview | null): void {
+        if (overview === null) {
+            this.overviewLoadError.set(true);
+        } else {
+            this.initialPage.set(overview.lists);
+            this.replaceDirectorySummaries(overview.lists.items);
+            if (overview.selectedList !== null) {
+                this.applyList(overview.selectedList);
+            } else {
+                this.applyEmptyListState();
+            }
+        }
+        this.isLoading.set(false);
     }
 
     public selectList(id: ShoppingListId): void {
@@ -513,49 +557,40 @@ export class ShoppingListFacade {
 
     private loadLists(): void {
         this.isLoading.set(true);
-        this.shoppingListService
-            .getPage()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: lists => {
-                    this.isLoading.set(false);
-                    this.saveQueue.scheduleIfPending();
-                    if (lists.length === 0) {
-                        // The create response may arrive before the new list appears in the directory.
-                        if (this.list() === null) {
-                            this.applyEmptyListState();
-                        }
-                        return;
-                    }
+        this.directoryResource.set(undefined);
+        this.requestedDirectory.update(version => (version ?? 0) + 1);
+    }
 
-                    const pageSize = 20;
-                    this.initialPage.set({
-                        items: lists,
-                        hasMore: lists.length === pageSize,
-                        nextPage: lists.length === pageSize ? 2 : null,
-                    });
-                    const selected = this.list();
-                    this.replaceDirectorySummaries(lists);
-                    if (selected !== null && !lists.some(entry => entry.id === selected.id)) {
-                        this.upsertListSummary(selected);
-                    }
-                    // Refresh the directory without replacing items that are waiting to be saved.
-                    if (this.saveQueue.hasPending()) {
-                        return;
-                    }
-                    const currentSelection = this.selectedListId();
-                    const selectedId =
-                        currentSelection !== null && this.lists().some(list => list.id === currentSelection)
-                            ? currentSelection
-                            : lists[0].id;
-                    this.loadListById(entityId<'shopping-list'>(selectedId));
-                },
-                error: () => {
-                    this.isLoading.set(false);
-                    this.saveQueue.scheduleIfPending();
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                },
-            });
+    private acceptDirectory(lists: ShoppingListSummary[] | null): void {
+        this.isLoading.set(false);
+        this.saveQueue.scheduleIfPending();
+        if (lists === null) {
+            this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
+            return;
+        }
+        if (lists.length === 0) {
+            // The create response may arrive before the new list appears in the directory.
+            if (this.list() === null) {
+                this.applyEmptyListState();
+            }
+            return;
+        }
+
+        const pageSize = 20;
+        this.initialPage.set({ items: lists, hasMore: lists.length === pageSize, nextPage: lists.length === pageSize ? 2 : null });
+        const selected = this.list();
+        this.replaceDirectorySummaries(lists);
+        if (selected !== null && !lists.some(entry => entry.id === selected.id)) {
+            this.upsertListSummary(selected);
+        }
+        // Refresh the directory without replacing items that are waiting to be saved.
+        if (this.saveQueue.hasPending()) {
+            return;
+        }
+        const currentSelection = this.selectedListId();
+        const selectedId =
+            currentSelection !== null && this.lists().some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
+        this.loadListById(entityId<'shopping-list'>(selectedId));
     }
 
     private replaceDirectorySummaries(summaries: ShoppingListSummary[]): void {
@@ -573,35 +608,28 @@ export class ShoppingListFacade {
     }
 
     private loadListById(id: ShoppingListId): void {
-        const sequence = ++this.listLoadSequence;
         this.loadingListId = id;
         this.isLoading.set(true);
-        this.shoppingListService
-            .getById(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    if (sequence !== this.listLoadSequence) {
-                        return;
-                    }
-                    this.loadingListId = null;
-                    this.isLoading.set(false);
-                    if (list !== null) {
-                        this.applyList(list);
-                        return;
-                    }
+        this.listResource.set(undefined);
+        this.requestedList.set({ id, conflict: false });
+    }
 
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                },
-                error: () => {
-                    if (sequence !== this.listLoadSequence) {
-                        return;
-                    }
-                    this.loadingListId = null;
-                    this.isLoading.set(false);
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                },
-            });
+    private acceptSelectedList(request: SelectedListRead, list: ShoppingList | null): void {
+        this.loadingListId = null;
+        this.isLoading.set(false);
+        if (list === null) {
+            this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
+            return;
+        }
+        if (request.conflict) {
+            this.discardPendingSave();
+            this.pendingSelection = null;
+            this.conflictListId.set(null);
+            this.applyList(list);
+            this.updateListSummary(list);
+            return;
+        }
+        this.applyList(list);
     }
 
     private applyEmptyListState(): void {
@@ -763,26 +791,7 @@ export class ShoppingListFacade {
             return;
         }
         this.isLoading.set(true);
-        this.shoppingListService
-            .getById(listId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isLoading.set(false);
-                    if (list === null) {
-                        this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                        return;
-                    }
-                    this.discardPendingSave();
-                    this.pendingSelection = null;
-                    this.conflictListId.set(null);
-                    this.applyList(list);
-                    this.updateListSummary(list);
-                },
-                error: () => {
-                    this.isLoading.set(false);
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                },
-            });
+        this.listResource.set(undefined);
+        this.requestedList.set({ id: listId, conflict: true });
     }
 }

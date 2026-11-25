@@ -38,6 +38,7 @@ beforeEach(async () => {
         .compileComponents();
     fixture = TestBed.createComponent(AdminMealPlansComponent);
     fixture.detectChanges();
+    await settlePlansAsync();
 });
 
 describe('AdminMealPlansComponent editor selection', () => {
@@ -46,6 +47,8 @@ describe('AdminMealPlansComponent editor selection', () => {
         api.get.mockReturnValue(pending);
         const component = fixture.componentInstance;
         component['edit'](plan);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
         component['create']();
         fixture.detectChanges();
         const input = (fixture.nativeElement as HTMLElement).querySelector('input');
@@ -68,19 +71,23 @@ describe('AdminMealPlansComponent editor selection', () => {
         expect(api.save).toHaveBeenCalledWith(null, expect.objectContaining({ name: 'Typed brand new plan' }));
     });
 
-    it('cancels a superseded Edit and retains the newer plan selection', () => {
+    it('cancels a superseded Edit and retains the newer plan selection', async () => {
         const first = new Subject<CatalogPlan>();
         const second = new Subject<CatalogPlan>();
         const newer = { ...plan, id: adminId<'meal-plan'>('newer-plan'), name: 'Newer selection' };
         api.get.mockReturnValueOnce(first).mockReturnValueOnce(second);
         fixture.componentInstance['edit'](plan);
+        fixture.detectChanges();
+        expect(first.observed).toBe(true);
         fixture.componentInstance['edit'](newer);
+        fixture.detectChanges();
 
         expect(first.observed).toBe(false);
         second.next(newer);
         second.complete();
         first.next(plan);
         first.complete();
+        await settlePlansAsync();
 
         expect(fixture.componentInstance['selected']()).toEqual(newer);
         expect(fixture.componentInstance['loading']()).toBe(false);
@@ -90,7 +97,10 @@ describe('AdminMealPlansComponent editor selection', () => {
         const pending = new Subject<CatalogPlan>();
         api.get.mockReturnValue(pending);
         fixture.componentInstance['edit'](plan);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
         fixture.componentInstance[action]();
+        fixture.detectChanges();
         expect(pending.observed).toBe(false);
         pending.error(new Error('late error'));
         expect(fixture.componentInstance['error']()).toBeNull();
@@ -101,13 +111,15 @@ describe('AdminMealPlansComponent editor selection', () => {
         const pending = new Subject<CatalogPlan>();
         api.get.mockReturnValue(pending);
         fixture.componentInstance['edit'](plan);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(true);
         fixture.destroy();
         expect(pending.observed).toBe(false);
     });
 });
 
 describe('Meal plan list and editor lifecycle', () => {
-    it('offers retry after a failed list request and distinguishes hidden and published plans', () => {
+    it('offers retry after a failed list request and distinguishes hidden and published plans', async () => {
         fixture.destroy();
         const pending = new Subject<CatalogPlan[]>();
         const published = { ...plan, id: adminId<'meal-plan'>('published'), name: 'Published menu', isCurated: true };
@@ -119,11 +131,11 @@ describe('Meal plan list and editor lifecycle', () => {
         expect(host.querySelector('article')).toBeNull();
 
         pending.error(new Error('list unavailable'));
-        fixture.detectChanges();
+        await settlePlansAsync();
         const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
         expect(retry).not.toBeNull();
         retry?.click();
-        fixture.detectChanges();
+        await settlePlansAsync();
 
         const rows = Array.from(host.querySelectorAll('article'), article => article.textContent);
         expect(rows).toHaveLength(2);
@@ -134,7 +146,7 @@ describe('Meal plan list and editor lifecycle', () => {
         expect(host.querySelector('fd-admin-load-error')).toBeNull();
     });
 
-    it('recovers after an edit detail error, closes on cancel, and reloads the list after saving', () => {
+    it('recovers after an edit detail error, closes on cancel, and reloads the list after saving', async () => {
         const pending = new Subject<CatalogPlan>();
         api.get.mockReturnValueOnce(pending).mockReturnValue(of(plan));
         const host = fixture.nativeElement as HTMLElement;
@@ -142,27 +154,32 @@ describe('Meal plan list and editor lifecycle', () => {
         host.querySelector<HTMLButtonElement>(editSelector)?.click();
         fixture.detectChanges();
         pending.error(new Error('detail unavailable'));
-        fixture.detectChanges();
+        await settlePlansAsync();
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MEAL_PLANS.LOAD_ERROR');
         expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
 
         host.querySelector<HTMLButtonElement>(editSelector)?.click();
-        fixture.detectChanges();
+        await settlePlansAsync();
         clickMealPlanAction(host, 'CANCEL');
         fixture.detectChanges();
         expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
 
         host.querySelector<HTMLButtonElement>(editSelector)?.click();
-        fixture.detectChanges();
+        await settlePlansAsync();
         api.getAll.mockReturnValueOnce(of([{ ...plan, name: 'Saved server plan' }]));
         clickMealPlanAction(host, 'SAVE');
-        fixture.detectChanges();
+        await settlePlansAsync();
         expect(api.save).toHaveBeenCalledExactlyOnceWith(plan.id, expect.objectContaining({ name: plan.name }));
         expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
         expect(host.querySelector('article h2')?.textContent).toBe('Saved server plan');
         expect(host.querySelector('[role="status"]:not([hidden])')?.textContent).toContain('ADMIN_MEAL_PLANS.SAVED');
     });
 });
+
+async function settlePlansAsync(): Promise<void> {
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
 
 function clickMealPlanAction(host: HTMLElement, action: string): void {
     const button = Array.from(host.querySelectorAll('button')).find(control => control.textContent.trim() === `ADMIN_MEAL_PLANS.${action}`);

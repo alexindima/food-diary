@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import type { Subscription } from 'rxjs';
 
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminRecipeModerationFacade } from '../lib/admin-recipe-moderation.facade';
@@ -31,40 +30,28 @@ function formatResults(label: string, raw: string | null): Array<{ label: string
 })
 export class AdminRecipeModerationEvidenceComponent {
     private readonly moderation = inject(AdminRecipeModerationFacade);
-    private readonly destroyRef = inject(DestroyRef);
-    private imageRequest?: Subscription;
+    private readonly imageRequest = signal<
+        { revisionId: AdminRecipeModerationItem['revisionId']; assetId: AdminId<'image-asset'> } | undefined
+    >(undefined);
+    private readonly imageResource = rxResource({
+        params: this.imageRequest,
+        stream: ({ params }) => this.moderation.getImage(params.revisionId, params.assetId),
+    });
 
     public readonly item = input.required<AdminRecipeModerationItem>();
-    protected readonly imageLoading = signal(false);
-    protected readonly imageFailed = signal(false);
-    protected readonly imageUrl = signal<string | null>(null);
+    protected readonly imageLoading = this.imageResource.isLoading;
+    protected readonly imageFailed = computed(() => this.imageResource.error() !== undefined);
+    protected readonly imageUrl = computed(() => (this.imageResource.hasValue() ? this.imageResource.value() : null));
     protected readonly results = computed(() => [
         ...formatResults('ADMIN_RECIPE_MODERATION.OPENAI_RESULT', this.item().primaryResult),
         ...formatResults('ADMIN_RECIPE_MODERATION.MISTRAL_RESULT', this.item().shadowResult),
     ]);
 
     protected showImage(assetId: AdminId<'image-asset'>): void {
-        this.closeImage();
-        this.imageLoading.set(true);
-        this.imageRequest = this.moderation
-            .getImage(this.item().revisionId, assetId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: imageUrl => {
-                    this.imageUrl.set(imageUrl);
-                    this.imageLoading.set(false);
-                },
-                error: () => {
-                    this.imageFailed.set(true);
-                    this.imageLoading.set(false);
-                },
-            });
+        this.imageRequest.set({ revisionId: this.item().revisionId, assetId });
     }
 
     protected closeImage(): void {
-        this.imageRequest?.unsubscribe();
-        this.imageUrl.set(null);
-        this.imageLoading.set(false);
-        this.imageFailed.set(false);
+        this.imageRequest.set(undefined);
     }
 }

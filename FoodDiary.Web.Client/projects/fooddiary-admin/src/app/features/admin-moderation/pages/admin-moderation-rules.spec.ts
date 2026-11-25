@@ -73,13 +73,14 @@ afterEach(() => {
 });
 
 describe('Reading and validating Admin recipe moderation rules', () => {
-    it('announces a failed read, then retries and renders the default policy and provider availability', () => {
+    it('announces a failed read, then retries and renders the default policy and provider availability', async () => {
         const fixture = mountRules();
         expect(host(fixture).querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
         http.expectOne({ method: 'GET', url: POLICY_API }).flush(null, {
             status: HttpStatusCode.ServiceUnavailable,
             statusText: 'Service Unavailable',
         });
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
         expect(host(fixture).querySelector('fieldset')).toBeNull();
@@ -88,7 +89,9 @@ describe('Reading and validating Admin recipe moderation rules', () => {
         retry.click();
         expect(retry.isConnected).toBe(true);
         retry.click();
+        fixture.detectChanges();
         http.expectOne({ method: 'GET', url: POLICY_API }).flush({ ...POLICY, active: DEFAULT_RULES, history: [DEFAULT_RULES] });
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host(fixture).querySelector('[role="alert"]')).toBeNull();
         expect(host(fixture).querySelector('section')?.textContent).toContain(DEFAULT_ID);
@@ -97,8 +100,8 @@ describe('Reading and validating Admin recipe moderation rules', () => {
         expect(sample(fixture).value).toBe(String(DEFAULT_SAMPLE));
     });
 
-    it.each(['', '-1', '0.5', '101'])('refuses to publish sample value %j and recovers at the supported limits', value => {
-        const fixture = mountLoadedRules();
+    it.each(['', '-1', '0.5', '101'])('refuses to publish sample value %j and recovers at the supported limits', async value => {
+        const fixture = await mountLoadedRulesAsync();
         const publish = publishButton(fixture);
         enterSample(fixture, value);
         expect(publish.disabled).toBe(false);
@@ -113,8 +116,8 @@ describe('Reading and validating Admin recipe moderation rules', () => {
         expect(publish.disabled).toBe(false);
     });
 
-    it('requires at least one text category and one image category', () => {
-        const fixture = mountLoadedRules();
+    it('requires at least one text category and one image category', async () => {
+        const fixture = await mountLoadedRulesAsync();
         const publish = publishButton(fixture);
         const text = category(fixture, 'TEXT_REVIEW', 'HARASSMENT');
         const image = category(fixture, 'IMAGE_REVIEW', 'VIOLENCE');
@@ -137,8 +140,8 @@ describe('Reading and validating Admin recipe moderation rules', () => {
 });
 
 describe('Publishing and restoring Admin recipe moderation rules', () => {
-    it('keeps the draft after a publish error and renders the acknowledged version after retry', () => {
-        const fixture = mountLoadedRules();
+    it('keeps the draft after a publish error and renders the acknowledged version after retry', async () => {
+        const fixture = await mountLoadedRulesAsync();
         category(fixture, 'TEXT_REVIEW', 'HATE').click();
         changeSample(fixture, '0');
         const publish = publishButton(fixture);
@@ -167,9 +170,9 @@ describe('Publishing and restoring Admin recipe moderation rules', () => {
         expect(host(fixture).querySelector('[role="status"]')).toBeNull();
     });
 
-    it('keeps active rules after a missing restore target and can restore another version', () => {
+    it('keeps active rules after a missing restore target and can restore another version', async () => {
         const missingVersion = { ...HISTORICAL, id: MISSING_ID };
-        const fixture = mountLoadedRules({ ...POLICY, history: [ACTIVE_RULES, missingVersion, HISTORICAL, DEFAULT_RULES] });
+        const fixture = await mountLoadedRulesAsync({ ...POLICY, history: [ACTIVE_RULES, missingVersion, HISTORICAL, DEFAULT_RULES] });
         const unavailableRestore = restoreButton(fixture, MISSING_ID);
         const unavailableEndpoint = `${POLICY_API}/${MISSING_ID}/restore`;
         unavailableRestore.click();
@@ -196,8 +199,8 @@ describe('Publishing and restoring Admin recipe moderation rules', () => {
         http.expectNone({ method: 'PUT', url: POLICY_API });
     });
 
-    it('cancels an in-flight publish when the mounted rules page is destroyed', () => {
-        const fixture = mountLoadedRules();
+    it('cancels an in-flight publish when the mounted rules page is destroyed', async () => {
+        const fixture = await mountLoadedRulesAsync();
         publishButton(fixture).click();
         const request = http.expectOne({ method: 'PUT', url: POLICY_API });
         expect(request.cancelled).toBe(false);
@@ -212,9 +215,10 @@ function mountRules(): RulesFixture {
     return fixture;
 }
 
-function mountLoadedRules(policy: RecipeModerationPolicyView = POLICY): RulesFixture {
+async function mountLoadedRulesAsync(policy: RecipeModerationPolicyView = POLICY): Promise<RulesFixture> {
     const fixture = mountRules();
     http.expectOne({ method: 'GET', url: POLICY_API }).flush(policy);
+    await fixture.whenStable();
     fixture.detectChanges();
     return fixture;
 }

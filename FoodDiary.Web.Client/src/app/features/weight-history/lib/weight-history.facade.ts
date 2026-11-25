@@ -1,8 +1,8 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, tap } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
@@ -48,6 +48,14 @@ type WeightCustomRangeFormModel = {
     range: WeightHistoryCustomRange | null;
 };
 
+type SummaryRead = {
+    filters: WeightEntrySummaryFilters;
+    summaryVersion: number;
+    updateRollingMonth: boolean;
+};
+
+type PageRead = SummaryRead & { pageVersion: number };
+
 @Injectable()
 export class WeightHistoryFacade {
     private readonly weightEntriesService = inject(WeightEntriesService);
@@ -65,6 +73,31 @@ export class WeightHistoryFacade {
     private lastLoadedRangeKey: string | null = null;
     private pageRequestVersion = 0;
     private summaryRequestVersion = 0;
+    private readonly requestedPage = signal<PageRead | undefined>(undefined);
+    private readonly requestedSummary = signal<SummaryRead | undefined>(undefined);
+    private readonly selectedSummary = rxResource({
+        params: this.requestedSummary,
+        stream: ({ params }) => this.readSummary(params),
+    });
+    private readonly requestedRollingMonth = signal<WeightEntrySummaryFilters | undefined>(undefined);
+    private readonly rollingMonthSummary = rxResource({
+        params: this.requestedRollingMonth,
+        stream: ({ params }) =>
+            this.weightEntriesService.getSummary(params).pipe(
+                tap({
+                    next: points => {
+                        if (this.requestedRollingMonth() === params) {
+                            this.rollingMonthSummaryPoints.set(points);
+                        }
+                    },
+                    error: () => {
+                        if (this.requestedRollingMonth() === params) {
+                            this.pageLoadError.set(true);
+                        }
+                    },
+                }),
+            ),
+    });
     private currentMeasurementSystem: MeasurementSystem = this.measurements.system();
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
@@ -144,6 +177,14 @@ export class WeightHistoryFacade {
     public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.isLoading.set(false);
+            this.isSummaryLoading.set(false);
+        });
+        rxResource({
+            params: this.requestedPage,
+            stream: ({ params }) => this.readPageSummary(params),
+        });
         effect(() => {
             const system = this.measurements.system();
             if (system === this.currentMeasurementSystem) {
@@ -411,25 +452,31 @@ export class WeightHistoryFacade {
         const pageRequestVersion = ++this.pageRequestVersion;
         const summaryRequestVersion = ++this.summaryRequestVersion;
         const updateRollingMonth = this.selectedRange() === 'month';
+        this.requestedSummary.set(undefined);
+        this.selectedSummary.set(undefined);
+        if (updateRollingMonth) {
+            this.cancelRollingMonthSummary();
+        }
         this.pageLoadError.set(false);
         this.summaryLoadError.set(false);
         this.isLoading.set(true);
         this.isSummaryLoading.set(true);
-        this.weightEntriesService
-            .getPageSummary({ ...summaryParams, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT })
-            .pipe(
-                finalize(() => {
-                    if (pageRequestVersion !== this.pageRequestVersion) {
-                        return;
-                    }
-                    this.isLoading.set(false);
-                    if (summaryRequestVersion === this.summaryRequestVersion) {
-                        this.isSummaryLoading.set(false);
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
+        this.requestedPage.set({
+            filters: summaryParams,
+            pageVersion: pageRequestVersion,
+            summaryVersion: summaryRequestVersion,
+            updateRollingMonth,
+        });
+    }
+
+    private readPageSummary({
+        filters,
+        pageVersion: pageRequestVersion,
+        summaryVersion: summaryRequestVersion,
+        updateRollingMonth,
+    }: PageRead): ReturnType<WeightEntriesService['getPageSummary']> {
+        return this.weightEntriesService.getPageSummary({ ...filters, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT }).pipe(
+            tap({
                 next: page => {
                     if (pageRequestVersion !== this.pageRequestVersion) {
                         return;
@@ -456,7 +503,17 @@ export class WeightHistoryFacade {
                         this.pageLoadError.set(true);
                     }
                 },
-            });
+            }),
+            finalize(() => {
+                if (pageRequestVersion !== this.pageRequestVersion) {
+                    return;
+                }
+                this.isLoading.set(false);
+                if (summaryRequestVersion === this.summaryRequestVersion) {
+                    this.isSummaryLoading.set(false);
+                }
+            }),
+        );
     }
 
     public getEntryHistoryPage(dateTo?: CalendarDate): ReturnType<WeightEntriesService['getHistoryPage']> {
@@ -469,19 +526,21 @@ export class WeightHistoryFacade {
 
     private loadSummary(filters: WeightEntrySummaryFilters, updateRollingMonth = false): void {
         const summaryRequestVersion = ++this.summaryRequestVersion;
+        if (updateRollingMonth) {
+            this.cancelRollingMonthSummary();
+        }
         this.summaryLoadError.set(false);
         this.isSummaryLoading.set(true);
-        this.weightEntriesService
-            .getSummary(filters)
-            .pipe(
-                finalize(() => {
-                    if (summaryRequestVersion === this.summaryRequestVersion) {
-                        this.isSummaryLoading.set(false);
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
+        this.requestedSummary.set({ filters, summaryVersion: summaryRequestVersion, updateRollingMonth });
+    }
+
+    private readSummary({
+        filters,
+        summaryVersion: summaryRequestVersion,
+        updateRollingMonth,
+    }: SummaryRead): ReturnType<WeightEntriesService['getSummary']> {
+        return this.weightEntriesService.getSummary(filters).pipe(
+            tap({
                 next: points => {
                     if (summaryRequestVersion !== this.summaryRequestVersion) {
                         return;
@@ -498,7 +557,13 @@ export class WeightHistoryFacade {
                     this.summaryPoints.set([]);
                     this.summaryLoadError.set(true);
                 },
-            });
+            }),
+            finalize(() => {
+                if (summaryRequestVersion === this.summaryRequestVersion) {
+                    this.isSummaryLoading.set(false);
+                }
+            }),
+        );
     }
 
     private loadRollingMonthSummaryIfNeeded(): void {
@@ -507,17 +572,12 @@ export class WeightHistoryFacade {
         }
 
         const { summaryParams } = buildWeightHistoryFiltersForRange('month', null);
-        this.weightEntriesService
-            .getSummary(summaryParams)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: points => {
-                    this.rollingMonthSummaryPoints.set(points);
-                },
-                error: () => {
-                    this.pageLoadError.set(true);
-                },
-            });
+        this.requestedRollingMonth.set(summaryParams);
+    }
+
+    private cancelRollingMonthSummary(): void {
+        this.requestedRollingMonth.set(undefined);
+        this.rollingMonthSummary.set(undefined);
     }
 
     private buildPayload(): CreateWeightEntryPayload | null {

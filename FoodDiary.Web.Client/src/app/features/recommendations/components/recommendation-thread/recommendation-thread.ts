@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
@@ -25,19 +25,17 @@ export class RecommendationThreadComponent {
 
     public readonly recommendationId = input.required<string>();
 
-    protected readonly comments = signal<RecommendationComment[]>([]);
+    private readonly commentsResource = rxResource({
+        params: this.recommendationId,
+        stream: ({ params }) => this.recommendationsFacade.getComments(entityId<'recommendation'>(params)),
+    });
+    protected readonly comments = linkedSignal(() => (this.commentsResource.hasValue() ? this.commentsResource.value() : []));
     protected readonly draft = signal('');
-    protected readonly loading = signal(true);
-    protected readonly loadFailed = signal(false);
+    protected readonly loading = this.commentsResource.isLoading;
+    protected readonly loadFailed = computed(() => this.commentsResource.error() !== undefined);
     protected readonly saving = signal(false);
-    protected readonly errorKey = signal<string | null>(null);
-
-    public constructor() {
-        effect(() => {
-            const recommendationId = this.recommendationId();
-            this.loadComments(recommendationId);
-        });
-    }
+    private readonly saveError = linkedSignal<string, string | null>({ source: this.recommendationId, computation: () => null });
+    protected readonly errorKey = computed(() => (this.loadFailed() ? 'RECOMMENDATIONS.DISCUSSION.LOAD_ERROR' : this.saveError()));
 
     protected updateDraft(value: string): void {
         this.draft.set(value.slice(0, COMMENT_MAX_LENGTH));
@@ -49,19 +47,24 @@ export class RecommendationThreadComponent {
             return;
         }
 
+        const recommendationId = this.recommendationId();
         this.saving.set(true);
-        this.errorKey.set(null);
+        this.saveError.set(null);
         this.recommendationsFacade
-            .createComment(entityId<'recommendation'>(this.recommendationId()), { text })
+            .createComment(entityId<'recommendation'>(recommendationId), { text })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: comment => {
-                    this.comments.update(comments => [...comments, comment]);
-                    this.draft.set('');
+                    if (this.recommendationId() === recommendationId) {
+                        this.comments.update(comments => [...comments, comment]);
+                        this.draft.set('');
+                    }
                     this.saving.set(false);
                 },
                 error: () => {
-                    this.errorKey.set('RECOMMENDATIONS.DISCUSSION.SAVE_ERROR');
+                    if (this.recommendationId() === recommendationId) {
+                        this.saveError.set('RECOMMENDATIONS.DISCUSSION.SAVE_ERROR');
+                    }
                     this.saving.set(false);
                 },
             });
@@ -73,27 +76,7 @@ export class RecommendationThreadComponent {
     }
 
     protected retryLoad(): void {
-        this.loadComments(this.recommendationId());
-    }
-
-    private loadComments(recommendationId: string): void {
-        this.loading.set(true);
-        this.errorKey.set(null);
-        this.recommendationsFacade
-            .getComments(entityId<'recommendation'>(recommendationId))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: comments => {
-                    this.loadFailed.set(false);
-                    this.comments.set(comments);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                    this.comments.set([]);
-                    this.errorKey.set('RECOMMENDATIONS.DISCUSSION.LOAD_ERROR');
-                    this.loading.set(false);
-                },
-            });
+        this.saveError.set(null);
+        this.commentsResource.reload();
     }
 }

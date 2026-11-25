@@ -21,7 +21,7 @@ afterEach(() => {
     TestBed.inject(HttpTestingController).verify();
 });
 
-it('keeps current favorites usable when an earlier account catalog lookup fails late', async () => {
+it('keeps current favorites usable after canceling the earlier account catalog lookup', async () => {
     const owner = signal(entityId<'user'>('00000000-0000-4000-8000-000000000510'));
     const recipe = { ...publicRecipeFixture(), id: entityId<'recipe'>('00000000-0000-4000-8000-000000000520') };
     const currentFavoriteId = entityId<'favorite-recipe'>('00000000-0000-4000-8000-000000000530');
@@ -80,9 +80,7 @@ it('keeps current favorites usable when an earlier account catalog lookup fails 
     harness.detectChanges();
     expect(favoriteButton.getAttribute('aria-label')).toBe('PUBLIC_RECIPES.UNSAVE');
 
-    previousLookup.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
-    await waitForAsyncTasksAsync();
-    harness.detectChanges();
+    expect(previousLookup.cancelled).toBe(true);
     expect(status.hidden).toBe(true);
     expect(favoriteButton.getAttribute('aria-label')).toBe('PUBLIC_RECIPES.UNSAVE');
     favoriteButton.click();

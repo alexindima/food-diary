@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import type { FastingMessage, FastingOverview, FastingSession } from '../../../shared/models/fasting.data';
@@ -115,6 +116,7 @@ describe('FastingFacade overview history', () => {
         fastingService.getOverview.mockReturnValueOnce(of(overview));
 
         facade.initialize();
+        TestBed.tick();
 
         expect(fastingService.getOverview).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()).toEqual(activeSession);
@@ -153,7 +155,9 @@ describe('FastingFacade overview history', () => {
         );
 
         facade.initialize();
+        TestBed.tick();
         facade.loadMoreHistory();
+        TestBed.tick();
 
         expect(fastingService.getHistory).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -172,17 +176,19 @@ describe('FastingFacade history recovery', () => {
     beforeEach(setupFacade);
     afterEach(teardownFacade);
 
-    it('preserves loaded rows and paging on failure, then retries the same page without duplicate requests', () => {
+    it('preserves loaded rows and paging on failure, then retries the same page without duplicate requests', async () => {
         facade.history.set([activeSession]);
         facade.historyTotalPages.set(HISTORY_PAGE);
         const pending = new Subject<PageOf<FastingSession>>();
         fastingService.getHistory.mockReturnValueOnce(pending);
         facade.loadMoreHistory();
         facade.loadMoreHistory();
+        TestBed.tick();
         expect(fastingService.getHistory).toHaveBeenCalledOnce();
         expect(facade.isLoadingMoreHistory()).toBe(true);
 
         pending.error(new Error('Unavailable'));
+        await waitForAsyncTasksAsync();
         expect(facade.historyError()).toBe('FASTING.REQUEST_ERROR');
         expect(facade.isLoadingMoreHistory()).toBe(false);
         expect(facade.history()).toEqual([activeSession]);
@@ -200,11 +206,13 @@ describe('FastingFacade history recovery', () => {
             }),
         );
         facade.loadMoreHistory();
+        TestBed.tick();
         expect(fastingService.getHistory).toHaveBeenLastCalledWith(expect.objectContaining({ page: HISTORY_PAGE }));
         expect(facade.history()).toEqual([activeSession, older]);
         expect(facade.historyPage()).toBe(HISTORY_PAGE);
         expect(facade.historyError()).toBeNull();
         facade.loadMoreHistory();
+        TestBed.tick();
         expect(fastingService.getHistory).toHaveBeenCalledTimes(HISTORY_PAGE);
     });
 });
@@ -277,6 +285,7 @@ describe('FastingFacade check-ins', () => {
             symptoms: ['weakness'],
             checkInNotes: 'steady',
         });
+        TestBed.tick();
         expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()?.checkInAtUtc).toBe('2026-04-12T10:00:00Z');
         expect(facade.checkInSavedVersion()).toBe(1);
@@ -346,6 +355,7 @@ describe('FastingFacade session completion', () => {
         facade.endFasting();
 
         expect(fastingService.end).toHaveBeenCalledTimes(1);
+        TestBed.tick();
         expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()).toBeNull();
         expect(facade.selectedMode()).toBe('intermittent');
@@ -384,6 +394,7 @@ describe('FastingFacade session start and cycle actions', () => {
         facade.startFasting();
 
         expect(fastingService.start).toHaveBeenCalledTimes(1);
+        TestBed.tick();
         expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.currentSession()).toEqual(activeSession);
         expect(frontendObservability.recordFastingLifecycleEvent).toHaveBeenCalledWith(
@@ -539,6 +550,7 @@ describe('FastingFacade lifecycle regression (1)', () => {
             of({ ...baseOverview, currentSession: { ...activeSession, startedAtUtc: utcInstant(startedAtUtc) } }),
         );
         facade.initialize();
+        TestBed.tick();
         expect(facade.isActive()).toBe(true);
         expect(facade.elapsedFormatted()).toBe('02:00:00');
         expect(facade.remainingFormatted()).toBe('14:00:00');
@@ -591,6 +603,7 @@ describe('FastingFacade lifecycle regression (3)', () => {
             facade.postponeCyclicDay();
         }
         expect(facade.currentSession()).toEqual(updated);
+        TestBed.tick();
         expect(fastingService.getOverviewStrict).toHaveBeenCalledTimes(1);
         expect(facade.isUpdatingCycle()).toBe(false);
     });

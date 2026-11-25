@@ -1,9 +1,9 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, finalize, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { catchError, map, of, switchMap, take } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -23,6 +23,24 @@ export class RecipeDetailFacade {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly requestedPublication = signal<{ id: Recipe['id'] } | undefined>(undefined);
+    private readonly publication = rxResource({
+        params: this.requestedPublication,
+        stream: ({ params, abortSignal }) =>
+            this.recipeService.getById(params.id, false).pipe(
+                take(1),
+                map(latest => {
+                    if (latest !== null && !abortSignal.aborted && this.requestedPublication() === params) {
+                        this.refreshedRecipe.set(latest);
+                        this.publicationStatus.set(
+                            latest.publicationStatus ?? (latest.visibility === RecipeVisibility.Public ? 'Published' : null),
+                        );
+                        this.publicationReason.set(latest.publicationReason ?? null);
+                    }
+                    return latest !== null;
+                }),
+            ),
+    });
 
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
@@ -31,61 +49,52 @@ export class RecipeDetailFacade {
     public readonly refreshedRecipe = signal<Recipe | null>(null);
     public readonly publicationStatus = signal<RecipePublicationStatus | 'Published' | null>(null);
     public readonly publicationReason = signal<string | null>(null);
-    public readonly publicationLoading = signal(false);
-    public readonly publicationRefreshFailed = signal(false);
+    public readonly publicationLoading = this.publication.isLoading;
+    public readonly publicationRefreshFailed = computed(
+        () => this.publication.error() !== undefined || (this.publication.hasValue() && !this.publication.value()),
+    );
 
-    private readonly cancelFavoriteCheck = new Subject<void>();
     private initialFavoriteState = false;
     private favoriteRecipeId: string | null = null;
+    private readonly requestedFavorite = signal<{ id: Recipe['id']; fallback: boolean } | undefined>(undefined);
+    private readonly favoriteCheck = rxResource({
+        params: this.requestedFavorite,
+        stream: ({ params, abortSignal }) =>
+            this.favoriteRecipeService.isFavorite(params.id).pipe(
+                catchError(() => of(params.fallback)),
+                map(isFavorite => {
+                    if (!abortSignal.aborted && this.requestedFavorite() === params) {
+                        this.initialFavoriteState = isFavorite;
+                        this.isFavorite.set(isFavorite);
+                    }
+                }),
+            ),
+    });
 
     public initialize(recipe: Recipe): void {
+        this.requestedPublication.set(undefined);
+        this.publication.set(undefined);
         this.refreshedRecipe.set(null);
         this.publicationStatus.set(recipe.publicationStatus ?? null);
         this.publicationReason.set(recipe.publicationReason ?? null);
-        this.cancelFavoriteCheck.next();
+        this.stopFavoriteCheck();
         this.initialFavoriteState = recipe.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteRecipeId = recipe.favoriteRecipeId ?? null;
 
-        this.favoriteRecipeService
-            .isFavorite(recipe.id)
-            .pipe(
-                catchError(() => of(this.initialFavoriteState)),
-                takeUntil(this.cancelFavoriteCheck),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isFav => {
-                this.initialFavoriteState = isFav;
-                this.isFavorite.set(isFav);
-            });
+        this.requestedFavorite.set({ id: recipe.id, fallback: this.initialFavoriteState });
+    }
+
+    private stopFavoriteCheck(): void {
+        this.requestedFavorite.set(undefined);
+        this.favoriteCheck.set(undefined);
     }
 
     public refreshPublication(recipe: Recipe): void {
         if (this.publicationLoading()) {
             return;
         }
-        this.publicationLoading.set(true);
-        this.publicationRefreshFailed.set(false);
-        this.recipeService
-            .getById(recipe.id, false)
-            .pipe(
-                take(1),
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.publicationLoading.set(false);
-                }),
-            )
-            .subscribe(latest => {
-                if (latest === null) {
-                    this.publicationRefreshFailed.set(true);
-                    return;
-                }
-                this.refreshedRecipe.set(latest);
-                this.publicationStatus.set(
-                    latest.publicationStatus ?? (latest.visibility === RecipeVisibility.Public ? 'Published' : null),
-                );
-                this.publicationReason.set(latest.publicationReason ?? null);
-            });
+        this.requestedPublication.set({ id: recipe.id });
     }
 
     public close(recipe: Recipe): void {
@@ -145,7 +154,7 @@ export class RecipeDetailFacade {
             return;
         }
 
-        this.cancelFavoriteCheck.next();
+        this.stopFavoriteCheck();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {

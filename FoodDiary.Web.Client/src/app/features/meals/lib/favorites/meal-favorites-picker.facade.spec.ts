@@ -23,6 +23,7 @@ describe('MealFavoritesPickerFacade', () => {
     it('loads nothing until requested and sends bounded pages and normalized search', () => {
         expect(api.getPage).not.toHaveBeenCalled();
         facade.load(2, ' rice ');
+        TestBed.tick();
         expect(api.getPage).toHaveBeenCalledWith(2, PAGE_SIZE, 'rice');
         expect(facade.total()).toBe(TOTAL_ITEMS);
         expect(facade.page()).toBe(2);
@@ -33,7 +34,9 @@ describe('MealFavoritesPickerFacade', () => {
         const latest = new Subject<PageOf<FavoriteMeal>>();
         api.getPage.mockReturnValueOnce(old).mockReturnValueOnce(latest);
         facade.load();
+        TestBed.tick();
         facade.load(1, 'rice');
+        TestBed.tick();
         expect(old.observed).toBe(false);
         expect(facade.loading()).toBe(true);
         old.next(page(STALE_TOTAL));
@@ -45,9 +48,11 @@ describe('MealFavoritesPickerFacade', () => {
     it('keeps an error distinct from an empty result and retries the same page', () => {
         api.getPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.load(2, 'rice');
+        TestBed.tick();
         expect(facade.failed()).toBe(true);
         expect(facade.loading()).toBe(false);
         facade.load(facade.page());
+        TestBed.tick();
         expect(api.getPage).toHaveBeenLastCalledWith(2, PAGE_SIZE, 'rice');
         expect(facade.failed()).toBe(false);
     });
@@ -55,11 +60,13 @@ describe('MealFavoritesPickerFacade', () => {
         const request = new Subject<PageOf<FavoriteMeal>>();
         api.getPage.mockReturnValue(request);
         facade.load();
+        TestBed.tick();
         TestBed.resetTestingModule();
         expect(request.observed).toBe(false);
     });
     it('ignores mutations for unknown rows', () => {
         facade.load();
+        TestBed.tick();
         facade.markRemoved(entityId<'favorite-meal'>('unknown'));
         facade.markRestored(entityId<'favorite-meal'>('unknown'));
         expect(facade.total()).toBe(TOTAL_ITEMS);

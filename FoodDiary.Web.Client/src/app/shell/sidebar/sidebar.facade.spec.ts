@@ -61,6 +61,7 @@ beforeEach(() => {
 
 it('loads the current user only when authentication exists and the user is missing', () => {
     facade.syncCurrentUser(true);
+    TestBed.tick();
     user.set({ id: 'user-1' });
     facade.syncCurrentUser(true);
 

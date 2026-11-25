@@ -1,12 +1,16 @@
-import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, Subject, tap } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import type { PublicRecipe } from '../models/public-recipe.data';
+
+type FavoriteLookup = { session: number; finished: Subject<void> };
 
 @Injectable()
 export class PublicCatalogFavorites {
@@ -15,6 +19,25 @@ export class PublicCatalogFavorites {
     private readonly dialog = inject(PublicAuthDialogService);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly requestedLookup = signal<FavoriteLookup | undefined>(undefined);
+    private readonly lookup = rxResource({
+        params: this.requestedLookup,
+        stream: ({ params }) =>
+            this.api.getLookupPage().pipe(
+                tap({
+                    next: favorites => {
+                        this.applyLookup(favorites, params.session);
+                        params.finished.next();
+                    },
+                    error: (error: unknown) => {
+                        params.finished.error(error);
+                    },
+                }),
+                finalize(() => {
+                    params.finished.complete();
+                }),
+            ),
+    });
     private ids = new Map<string, string>();
     private session = 0;
     private ownerId: string | null = null;
@@ -27,19 +50,40 @@ export class PublicCatalogFavorites {
         effect(() => {
             const authenticated = this.auth.isAuthenticated();
             const ownerId = this.auth.getUserId();
-            const session = ++this.session;
-            this.ownerId = authenticated ? ownerId : null;
-            this.ids = new Map();
-            this.savedIds.set(new Set());
-            this.busyIds.set(new Set());
-            this.message.set(null);
-            this.ready = authenticated && ownerId !== null ? this.loadAsync(session) : undefined;
-            void this.ready?.catch(() => {
-                if (this.isCurrent(session)) {
-                    this.ready = undefined;
-                    this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
-                }
+            untracked(() => {
+                this.bindOwner(authenticated ? ownerId : null);
             });
+        });
+        this.destroyRef.onDestroy(() => {
+            this.requestedLookup()?.finished.complete();
+        });
+    }
+
+    private bindOwner(ownerId: string | null): void {
+        const session = ++this.session;
+        this.ownerId = ownerId;
+        this.ids = new Map();
+        this.savedIds.set(new Set());
+        this.busyIds.set(new Set());
+        this.message.set(null);
+
+        const previous = this.requestedLookup();
+        this.requestedLookup.set(undefined);
+        this.lookup.set(undefined);
+        previous?.finished.complete();
+        if (ownerId === null) {
+            this.ready = undefined;
+            return;
+        }
+
+        const finished = new Subject<void>();
+        this.ready = firstValueFrom(finished, { defaultValue: undefined });
+        this.requestedLookup.set({ session, finished });
+        void this.ready.catch(() => {
+            if (this.isCurrent(session)) {
+                this.ready = undefined;
+                this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
+            }
         });
     }
 
@@ -128,7 +172,10 @@ export class PublicCatalogFavorites {
     }
 
     private async loadAsync(session: number): Promise<void> {
-        const favorites = await firstValueFrom(this.api.getLookupPage());
+        this.applyLookup(await firstValueFrom(this.api.getLookupPage()), session);
+    }
+
+    private applyLookup(favorites: readonly FavoriteRecipe[], session: number): void {
         if (!this.isCurrent(session)) {
             return;
         }

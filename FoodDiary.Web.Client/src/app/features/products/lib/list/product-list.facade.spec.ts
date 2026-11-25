@@ -6,7 +6,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
 import { of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
@@ -16,6 +16,7 @@ import {
     type FavoriteProduct,
     MeasurementUnit,
     type Product,
+    type ProductOverview,
     ProductType,
     ProductVisibility,
 } from '../../../../shared/models/product.data';
@@ -151,6 +152,7 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(ProductListFacade);
+    TestBed.tick();
 });
 
 describe('ProductListFacade overview', () => {
@@ -176,6 +178,7 @@ describe('ProductListFacade overview', () => {
         productService.queryOverview.mockReturnValueOnce(throwError(() => new Error('Load failed')));
 
         facade.retryLoad();
+        TestBed.tick();
 
         expect(facade.productData.items()).toEqual([]);
         expect(facade.recentProducts()).toEqual([]);
@@ -207,12 +210,26 @@ describe('ProductListFacade product details', () => {
         expect(navigationService.navigateToProductEditAsync).toHaveBeenCalledWith('product-1');
     });
 
-    it('deletes owned products and reports the UI scroll signal', async () => {
+    it('reports the UI scroll signal after the catalog refresh finishes for an owned product deletion', async () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Delete')) });
+        const refresh = new Subject<ProductOverview>();
+        productService.queryOverview.mockReturnValueOnce(refresh);
+        const completed = vi.fn();
+        const deletion = facade.handleProductDetailsAsync(createProduct()).then(completed);
 
-        await expect(facade.handleProductDetailsAsync(createProduct())).resolves.toBe(true);
-
+        await vi.waitFor(() => {
+            expect(refresh.observed).toBe(true);
+        });
         expect(productService.deleteById).toHaveBeenCalledWith('product-1');
+        expect(completed).not.toHaveBeenCalled();
+        expect(facade.productData.isLoading()).toBe(true);
+
+        refresh.next({ allProducts: createPage([]), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 });
+        await deletion;
+
+        expect(completed).toHaveBeenCalledExactlyOnceWith(true);
+        expect(facade.productData.items()).toEqual([]);
+        expect(facade.productData.isLoading()).toBe(false);
     });
 
     it('does not delete products that are not owned by the current user', async () => {
@@ -387,8 +404,10 @@ describe('ProductListFacade search', () => {
         secondSearch.next([latest]);
         secondSearch.complete();
 
-        expect(facade.offProducts()).toEqual([latest]);
-        expect(facade.offLoading()).toBe(false);
+        await vi.waitFor(() => {
+            expect(facade.offProducts()).toEqual([latest]);
+            expect(facade.offLoading()).toBe(false);
+        });
     });
 });
 
@@ -530,12 +549,24 @@ function createOpenFoodFactsProduct(overrides: Partial<OpenFoodFactsProduct> = {
 
 describe('ProductListFacade request lifecycle', () => {
     it('cancels an obsolete overview when a search starts', () => {
-        const old = new Subject<unknown>();
+        const old = new Subject<ProductOverview>();
         productService.queryOverview.mockReturnValue(old);
-        facade.loadInitialOverview().subscribe();
-        facade.loadProducts(1, PRODUCT_LIST_PAGE_SIZE, 'rice').subscribe();
+        translateService.onLangChange.next({ lang: 'en' });
+        TestBed.tick();
+        expect(old.observed).toBe(true);
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+
+        facade.searchForm.search().value.set('rice');
+        TestBed.tick();
+        expect(old.observed).toBe(true);
+        vi.advanceTimersByTime(ZERO_DEBOUNCE_MS);
+        TestBed.tick();
+
         expect(old.observed).toBe(false);
-        expect(facade.productData.items()[0].id).toBe('query-product');
+        expect(facade.productData.items()[0]?.id).toBe('query-product');
         expect(facade.productData.isLoading()).toBe(false);
     });
     it('preserves the star and releases the busy state when adding fails', () => {
@@ -636,6 +667,7 @@ describe('recent product visibility', () => {
         expect(facade.showRecentSection()).toBe(false);
         facade.hasImageFilter.set(null);
         facade.onPageChange(0);
+        TestBed.tick();
         expect(productService.queryOverview).toHaveBeenCalledTimes(2);
         expect(facade.showRecentSection()).toBe(true);
         expect(facade.allProductItems()).toHaveLength(2);

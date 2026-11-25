@@ -69,9 +69,11 @@ describe('RecipeDetailFacade initialization and close', () => {
     it('refreshes an owner publication from pending to published', () => {
         const recipe = createRecipe({ publicationStatus: 'Pending' });
         facade.initialize(recipe);
+        TestBed.tick();
         expect(facade.publicationStatus()).toBe('Pending');
 
         facade.refreshPublication(recipe);
+        TestBed.tick();
 
         expect(recipeService.getById).toHaveBeenCalledWith(RECIPE_ID, false);
         expect(facade.publicationStatus()).toBe('Published');
@@ -82,6 +84,7 @@ describe('RecipeDetailFacade initialization and close', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
 
         facade.initialize(createRecipe({ isFavorite: false }));
+        TestBed.tick();
 
         expect(favoriteRecipeService.isFavorite).toHaveBeenCalledWith(RECIPE_ID);
         expect(facade.isFavorite()).toBe(true);
@@ -89,6 +92,7 @@ describe('RecipeDetailFacade initialization and close', () => {
 
     it('closes without action when favorite state is unchanged', () => {
         facade.initialize(createRecipe({ isFavorite: false }));
+        TestBed.tick();
 
         facade.close(createRecipe());
 
@@ -97,6 +101,7 @@ describe('RecipeDetailFacade initialization and close', () => {
 
     it('closes with FavoriteChanged action when favorite state changed', () => {
         facade.initialize(createRecipe({ isFavorite: false }));
+        TestBed.tick();
         facade.toggleFavorite(createRecipe());
 
         facade.close(createRecipe());
@@ -108,6 +113,7 @@ describe('RecipeDetailFacade initialization and close', () => {
 describe('RecipeDetailFacade actions', () => {
     it('closes with edit action', () => {
         facade.initialize(createRecipe());
+        TestBed.tick();
 
         facade.edit(createRecipe());
 
@@ -116,6 +122,7 @@ describe('RecipeDetailFacade actions', () => {
 
     it('confirms before closing with delete action', () => {
         facade.initialize(createRecipe());
+        TestBed.tick();
 
         facade.delete(createRecipe());
 
@@ -126,6 +133,7 @@ describe('RecipeDetailFacade actions', () => {
     it('does not close with delete action when confirmation is cancelled', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
         facade.initialize(createRecipe());
+        TestBed.tick();
 
         facade.delete(createRecipe());
 
@@ -134,6 +142,7 @@ describe('RecipeDetailFacade actions', () => {
 
     it('duplicates recipe and closes with duplicated id', () => {
         facade.initialize(createRecipe());
+        TestBed.tick();
 
         facade.duplicate(createRecipe());
 
@@ -144,6 +153,7 @@ describe('RecipeDetailFacade actions', () => {
     it('keeps duplicate loading false after duplicate failure', () => {
         recipeService.duplicate.mockReturnValueOnce(throwError(() => new Error('duplicate failed')));
         facade.initialize(createRecipe());
+        TestBed.tick();
 
         facade.duplicate(createRecipe());
 
@@ -160,6 +170,7 @@ describe('RecipeDetailFacade actions', () => {
 describe('RecipeDetailFacade favorites', () => {
     it('adds recipe to favorites and stores favorite id', () => {
         facade.initialize(createRecipe({ isFavorite: false }));
+        TestBed.tick();
 
         facade.toggleFavorite(createRecipe());
 
@@ -171,6 +182,7 @@ describe('RecipeDetailFacade favorites', () => {
     it('removes favorite by existing favorite id', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(createRecipe({ isFavorite: true, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
+        TestBed.tick();
 
         facade.toggleFavorite(createRecipe({ isFavorite: true, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
 
@@ -182,6 +194,7 @@ describe('RecipeDetailFacade favorites', () => {
     it('looks up favorite id before removing when recipe has no favorite id', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(createRecipe({ isFavorite: true, favoriteRecipeId: null }));
+        TestBed.tick();
 
         facade.toggleFavorite(createRecipe({ isFavorite: true, favoriteRecipeId: null }));
 
@@ -193,6 +206,7 @@ describe('RecipeDetailFacade favorites', () => {
         const pendingAdd$ = new Subject<FavoriteRecipe>();
         favoriteRecipeService.add.mockReturnValueOnce(pendingAdd$);
         facade.initialize(createRecipe({ isFavorite: false }));
+        TestBed.tick();
 
         facade.toggleFavorite(createRecipe());
         facade.toggleFavorite(createRecipe());
@@ -236,6 +250,7 @@ describe('RecipeDetailFacade request lifecycle', () => {
         const check = new Subject<boolean>();
         favoriteRecipeService.isFavorite.mockReturnValue(check);
         facade.initialize(createRecipe());
+        TestBed.tick();
         facade.toggleFavorite(createRecipe());
         check.next(false);
         expect(facade.isFavorite()).toBe(true);
@@ -260,6 +275,7 @@ describe('RecipeDetailFacade favorite failures', () => {
     it.each([false, true])('preserves state and permits retry after mutation failure: %s', isFavorite => {
         favoriteRecipeService.isFavorite.mockReturnValue(of(isFavorite));
         facade.initialize(createRecipe({ isFavorite, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
+        TestBed.tick();
         const mutation = isFavorite ? favoriteRecipeService.remove : favoriteRecipeService.add;
         mutation.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(createRecipe());
@@ -273,6 +289,7 @@ describe('RecipeDetailFacade favorite failures', () => {
         favoriteRecipeService.isFavorite.mockReturnValue(of(true));
         favoriteRecipeService.getLookupPage.mockReturnValue(of([]));
         facade.initialize(createRecipe());
+        TestBed.tick();
         facade.toggleFavorite(createRecipe());
         expect(favoriteRecipeService.remove).not.toHaveBeenCalled();
         expect(facade.isFavorite()).toBe(false);
@@ -283,6 +300,7 @@ describe('RecipeDetailFacade failed favorite discovery', () => {
     it('preserves the known favorite state when the status check fails', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.initialize(createRecipe({ isFavorite: true }));
+        TestBed.tick();
         expect(facade.isFavorite()).toBe(true);
     });
 
@@ -290,6 +308,7 @@ describe('RecipeDetailFacade failed favorite discovery', () => {
         const item = createRecipe({ isFavorite: true, favoriteRecipeId: null });
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(item);
+        TestBed.tick();
         favoriteRecipeService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(item);
         expect(facade.isFavorite()).toBe(true);

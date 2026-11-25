@@ -63,13 +63,16 @@ describe('ProductFavoritesPickerComponent', () => {
     registerUndoTests();
     registerUndoRenderingTests();
     registerUndoPositionTests();
-    registerPickerAsyncTests();
+    registerSearchTests();
+    registerMutationErrorTests();
 });
 
 function registerUndoPositionTests(): void {
     it('keeps a tombstone on the last page without fetching replacement rows', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['facade'].load(LAST_PAGE, 'rice');
+        TestBed.tick();
         component['facade'].total.set(SINGLE_LAST_PAGE_TOTAL);
         component['remove'](favorite);
         expect(component['facade'].page()).toBe(LAST_PAGE);
@@ -82,9 +85,11 @@ function registerUndoPositionTests(): void {
     });
     it('clears undo rows on navigation and clamps a page that no longer exists', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['facade'].total.set(1);
         component['remove'](favorite);
         component['load'](2);
+        TestBed.tick();
         expect(component['facade'].removedIds().size).toBe(0);
         expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, '');
         component['undoRemoval'](favorite);
@@ -94,8 +99,10 @@ function registerUndoPositionTests(): void {
         const pending = new Subject<boolean>();
         remove.mockReturnValue(pending);
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         component['load'](1, 'chicken');
+        TestBed.tick();
         pending.next(true);
         pending.complete();
         expect(component['facade'].removedIds().size).toBe(0);
@@ -106,6 +113,7 @@ function registerUndoPositionTests(): void {
 function registerPickerTests(): void {
     it('loads only one page on opening', () => {
         const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
+        TestBed.tick();
         expect(fixture.componentInstance).toBeTruthy();
         expect(api.getPage).toHaveBeenCalledExactlyOnceWith(1, PAGE_SIZE, '');
     });
@@ -113,6 +121,7 @@ function registerPickerTests(): void {
         const pending = new Subject<boolean>();
         repeat.mockReturnValue(pending);
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['add'](favorite);
         component['add'](favorite);
         expect(repeat).toHaveBeenCalledTimes(1);
@@ -125,6 +134,7 @@ function registerPickerTests(): void {
     it('retains the dialog and allows retry after an add failure', () => {
         repeat.mockReturnValueOnce(of(false));
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['add'](favorite);
         expect(component['saveFailed']()).toBe(true);
         expect(ref.close).not.toHaveBeenCalled();
@@ -136,6 +146,7 @@ function registerPickerTests(): void {
         const pending = new Subject<boolean>();
         remove.mockReturnValue(pending);
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         component['remove'](favorite);
         component['add'](favorite);
@@ -150,6 +161,7 @@ function registerPickerTests(): void {
     it('preserves the row and offers retry after removal fails', () => {
         remove.mockReturnValueOnce(of(false));
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         expect(component['removeFailed']()).toBe(true);
         expect(api.getPage).toHaveBeenCalledTimes(1);
@@ -162,6 +174,7 @@ function registerPickerTests(): void {
 function registerUndoTests(): void {
     it('restores any removed row independently and preserves every original slot', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         const second = { ...favorite, id: entityId<'favorite-product'>('f2'), productId: entityId<'product'>('m2'), name: 'Saved dinner' };
         component['facade'].items.set([favorite, second]);
         component['facade'].total.set(2);
@@ -179,6 +192,7 @@ function registerUndoTests(): void {
     });
     it('keeps a failed row available for retry and blocks competing mutations', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         const pending = new Subject<boolean>();
         restore.mockReturnValueOnce(pending);
@@ -187,6 +201,7 @@ function registerUndoTests(): void {
         component['remove'](favorite);
         component['add'](favorite);
         component['changePage'](2);
+        TestBed.tick();
         expect(restore).toHaveBeenCalledTimes(1);
         expect(remove).toHaveBeenCalledTimes(1);
         expect(repeat).not.toHaveBeenCalled();
@@ -201,17 +216,20 @@ function registerUndoTests(): void {
     });
     it('isolates network errors to the affected row and clears errors on search', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         restore.mockReturnValueOnce(throwError(() => new Error('offline')));
         component['undoRemoval'](favorite);
         expect([...component['restoreErrors']()]).toEqual([favorite.id]);
         expect(component['busy']()).toBe(false);
         component['load'](1, 'new search');
+        TestBed.tick();
         expect(component['restoreErrors']().size).toBe(0);
         expect(component['facade'].removedIds().size).toBe(0);
     });
     it('cancels a pending restore when the dialog is destroyed', () => {
         const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
+        TestBed.tick();
         const pending = new Subject<boolean>();
         restore.mockReturnValue(pending);
         fixture.componentInstance['remove'](favorite);
@@ -226,6 +244,7 @@ function registerUndoRenderingTests(): void {
         const second = { ...favorite, id: entityId<'favorite-product'>('f2'), productId: entityId<'product'>('m2'), name: 'Dinner' };
         api.getPage.mockReturnValue(of({ data: [favorite, second], totalItems: 2 }));
         const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
+        TestBed.tick();
         fixture.detectChanges();
         fixture.componentInstance['remove'](favorite);
         fixture.componentInstance['remove'](second);
@@ -244,11 +263,12 @@ function registerUndoRenderingTests(): void {
     });
 }
 
-function registerPickerAsyncTests(): void {
+function registerSearchTests(): void {
     it('debounces and trims native searches, skips duplicates, and restores the full list when cleared', async () => {
         vi.useFakeTimers();
         try {
             const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
+            TestBed.tick();
             fixture.detectChanges();
             const host = fixture.nativeElement as HTMLElement;
             const input = host.querySelector<HTMLInputElement>('fd-ui-input input');
@@ -263,15 +283,18 @@ function registerPickerAsyncTests(): void {
             typePickerSearch(input, ' r');
             typePickerSearch(input, ' rice ');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            TestBed.tick();
             fixture.detectChanges();
             expect(host.querySelector('.favorite-row__undo')).toBeNull();
             expect(host.querySelector('[aria-live="polite"]:not([hidden])')?.textContent).toContain('PRODUCT_FAVORITES.NO_RESULTS');
             typePickerSearch(input, 'rice');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            TestBed.tick();
             expect(api.getPage).toHaveBeenCalledTimes(2);
 
             typePickerSearch(input, '');
             await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            TestBed.tick();
             fixture.detectChanges();
             expect(api.getPage.mock.calls).toEqual([
                 [1, PAGE_SIZE, ''],
@@ -283,13 +306,18 @@ function registerPickerAsyncTests(): void {
             vi.useRealTimers();
         }
     });
+}
+
+function registerMutationErrorTests(): void {
     it.each([true, false])('ignores stale restoration responses, success=%s', success => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         const pending = new Subject<boolean>();
         restore.mockReturnValue(pending);
         component['undoRemoval'](favorite);
         component['load'](1, 'changed');
+        TestBed.tick();
         pending.next(success);
         pending.complete();
         expect(component['restoreErrors']().size).toBe(0);
@@ -297,31 +325,37 @@ function registerPickerAsyncTests(): void {
     });
     it('ignores late restoration and removal errors after a search changed', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         component['remove'](favorite);
         const pendingRestore = new Subject<boolean>();
         restore.mockReturnValue(pendingRestore);
         component['undoRemoval'](favorite);
         component['load'](1, 'changed');
+        TestBed.tick();
         pendingRestore.error(new Error('offline'));
         expect(component['restoreErrors']().size).toBe(0);
         const pendingRemove = new Subject<boolean>();
         remove.mockReturnValue(pendingRemove);
         component['remove'](favorite);
         component['load'](1, 'again');
+        TestBed.tick();
         pendingRemove.error(new Error('offline'));
         expect(component['removeFailed']()).toBe(false);
     });
     it('surfaces thrown add and removal errors, allowing retry', () => {
         const component = TestBed.createComponent(ProductFavoritesPickerComponent).componentInstance;
+        TestBed.tick();
         repeat.mockReturnValueOnce(throwError(() => new Error('offline')));
         component['add'](favorite);
         expect(component['operationErrorKey']()).toBe('PRODUCT_FAVORITES.ADD_ERROR');
         component['load'](1);
+        TestBed.tick();
         remove.mockReturnValueOnce(throwError(() => new Error('offline')));
         component['remove'](favorite);
         expect(component['operationErrorKey']()).toBe('PRODUCT_FAVORITES.REMOVE_ERROR');
         expect(component['busy']()).toBe(false);
         component['changePage'](2);
+        TestBed.tick();
         expect(api.getPage).toHaveBeenLastCalledWith(2, PAGE_SIZE, '');
     });
 }

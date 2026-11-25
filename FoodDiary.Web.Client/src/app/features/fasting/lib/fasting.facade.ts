@@ -1,8 +1,8 @@
 import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import type { Observable, Subscription } from 'rxjs';
+import { type Observable, tap } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -25,6 +25,7 @@ import { MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
 import {
     FASTING_PROTOCOL_CATALOG,
     FASTING_PROTOCOLS,
+    type FastingHistoryQuery,
     type FastingInsights,
     type FastingMessage,
     type FastingMode,
@@ -73,9 +74,62 @@ export class FastingFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private timerInterval: ReturnType<typeof setInterval> | null = null;
-    private overviewRefresh: Subscription | undefined;
+    private readonly initialOverviewRequest = signal<number | undefined>(undefined);
+    private readonly initialOverview = rxResource({
+        params: this.initialOverviewRequest,
+        stream: ({ params }) =>
+            this.fastingService.getOverview().pipe(
+                tap({
+                    next: overview => {
+                        if (this.initialOverviewRequest() === params) {
+                            this.applyOverview(overview);
+                        }
+                    },
+                    error: () => {
+                        if (this.initialOverviewRequest() === params) {
+                            this.reportRequestError();
+                        }
+                    },
+                }),
+            ),
+    });
+    private readonly overviewRefreshRequest = signal<symbol | undefined>(undefined);
+    private readonly overviewRefresh = rxResource({
+        params: this.overviewRefreshRequest,
+        stream: ({ params }) =>
+            this.fastingService.getOverviewStrict().pipe(
+                tap(overview => {
+                    if (this.overviewRefreshRequest() === params) {
+                        this.applyOverview(overview);
+                    }
+                }),
+            ),
+    });
+    private readonly requestedHistory = signal<FastingHistoryQuery | undefined>(undefined);
+    private readonly historyResource = rxResource({
+        params: this.requestedHistory,
+        stream: ({ params }) =>
+            this.fastingService.getHistory(params).pipe(
+                tap({
+                    next: history => {
+                        this.history.update(current => {
+                            const sessionsById = new Map(current.map(session => [session.id, session]));
+                            for (const session of history.data) {
+                                sessionsById.set(session.id, session);
+                            }
+                            return [...sessionsById.values()];
+                        });
+                        this.historyPage.set(history.page);
+                        this.historyTotalPages.set(history.totalPages);
+                    },
+                    error: () => {
+                        this.historyError.set('FASTING.REQUEST_ERROR');
+                    },
+                }),
+            ),
+    });
 
-    public readonly isLoading = signal(false);
+    public readonly isLoading = this.initialOverview.isLoading;
     public readonly isStarting = signal(false);
     public readonly requestError = signal<string | null>(null);
     public readonly isEnding = signal(false);
@@ -90,7 +144,7 @@ export class FastingFacade {
     public readonly historyPage = signal(1);
     public readonly historyError = signal<string | null>(null);
     public readonly historyTotalPages = signal(0);
-    public readonly isLoadingMoreHistory = signal(false);
+    public readonly isLoadingMoreHistory = this.historyResource.isLoading;
     public readonly insightsData = signal<FastingInsights>({ alerts: [], insights: [] });
     public readonly checkInSavedVersion = signal(0);
     public readonly selectedMode = signal<FastingMode>('intermittent');
@@ -162,9 +216,8 @@ export class FastingFacade {
     });
 
     public initialize(): void {
-        this.trackRequest(this.isLoading, this.fastingService.getOverview(), overview => {
-            this.applyOverview(overview);
-        });
+        this.requestError.set(null);
+        this.initialOverviewRequest.update(version => (version ?? 0) + 1);
     }
 
     public loadMoreHistory(): void {
@@ -172,31 +225,15 @@ export class FastingFacade {
             return;
         }
 
+        this.requestError.set(null);
         this.historyError.set(null);
         const range = this.getHistoryRange();
-        this.trackRequest(
-            this.isLoadingMoreHistory,
-            this.fastingService.getHistory({
-                from: range.from,
-                to: range.to,
-                page: this.historyPage() + 1,
-                limit: FASTING_HISTORY_PAGE_SIZE,
-            }),
-            history => {
-                this.history.update(current => {
-                    const sessionsById = new Map(current.map(session => [session.id, session]));
-                    for (const session of history.data) {
-                        sessionsById.set(session.id, session);
-                    }
-                    return [...sessionsById.values()];
-                });
-                this.historyPage.set(history.page);
-                this.historyTotalPages.set(history.totalPages);
-            },
-            () => {
-                this.historyError.set('FASTING.REQUEST_ERROR');
-            },
-        );
+        this.requestedHistory.set({
+            from: range.from,
+            to: range.to,
+            page: this.historyPage() + 1,
+            limit: FASTING_HISTORY_PAGE_SIZE,
+        });
     }
 
     public startFasting(): void {
@@ -492,20 +529,12 @@ export class FastingFacade {
     }
 
     private refreshOverview(): void {
-        this.overviewRefresh = this.fastingService
-            .getOverviewStrict()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: overview => {
-                    this.applyOverview(overview);
-                },
-                error: (): void => undefined,
-            });
+        this.overviewRefreshRequest.set(Symbol());
     }
 
     private cancelOverviewRefresh(): void {
-        this.overviewRefresh?.unsubscribe();
-        this.overviewRefresh = undefined;
+        this.overviewRefreshRequest.set(undefined);
+        this.overviewRefresh.set(undefined);
     }
 
     private applyOverview(overview: FastingOverview): void {
@@ -609,10 +638,14 @@ export class FastingFacade {
             error:
                 error ??
                 ((): void => {
-                    this.requestError.set('FASTING.REQUEST_ERROR');
-                    this.toastService.error(this.translateService.instant('FASTING.REQUEST_ERROR'));
+                    this.reportRequestError();
                 }),
         });
+    }
+
+    private reportRequestError(): void {
+        this.requestError.set('FASTING.REQUEST_ERROR');
+        this.toastService.error(this.translateService.instant('FASTING.REQUEST_ERROR'));
     }
 
     private getReminderTelemetryDetails(): Record<string, unknown> {

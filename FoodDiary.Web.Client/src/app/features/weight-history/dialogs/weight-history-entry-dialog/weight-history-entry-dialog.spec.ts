@@ -245,6 +245,7 @@ describe('Weight entry dialog with the real measurement facade', () => {
         expect(request.request.body).toMatchObject({ weightKg: METRIC_ENTRY_MAXIMUM });
         request.flush({ id: 'entry', userId: 'owner', date: '2026-06-21', weightKg: METRIC_ENTRY_MAXIMUM });
         await waitForAsyncTasksAsync();
+        TestBed.tick();
         http.expectOne(item => item.url === `${environment.apiUrls.weights}/page-summary`).flush({
             entries: [],
             summary: [],

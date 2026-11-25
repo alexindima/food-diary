@@ -85,6 +85,7 @@ describe('ProductDetailFacade favorites', () => {
         favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
 
         facade.initialize(createProduct({ isFavorite: false }));
+        TestBed.tick();
 
         expect(favoriteProductService.isFavorite).toHaveBeenCalledWith('product-1');
         expect(facade.isFavorite()).toBe(true);
@@ -94,6 +95,7 @@ describe('ProductDetailFacade favorites', () => {
     it('adds favorite and tracks changed state', () => {
         const product = createProduct({ isFavorite: false, favoriteProductId: null });
         facade.initialize(product);
+        TestBed.tick();
 
         facade.toggleFavorite(product);
 
@@ -107,6 +109,7 @@ describe('ProductDetailFacade favorites', () => {
         const product = createProduct({ isFavorite: true, favoriteProductId: entityId<'favorite-product'>('favorite-1') });
         favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(product);
+        TestBed.tick();
 
         facade.toggleFavorite(product);
 
@@ -120,6 +123,7 @@ describe('ProductDetailFacade favorites', () => {
         const product = createProduct({ isFavorite: true, favoriteProductId: null });
         favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(product);
+        TestBed.tick();
 
         facade.toggleFavorite(product);
 
@@ -135,6 +139,7 @@ describe('ProductDetailFacade favorites', () => {
             of([{ ...createFavoriteProduct(), productId: entityId<'product'>('different-product') }]),
         );
         facade.initialize(product);
+        TestBed.tick();
 
         facade.toggleFavorite(product);
 
@@ -150,6 +155,7 @@ describe('ProductDetailFacade dialog actions', () => {
     it('closes with no result when favorite state did not change', () => {
         const product = createProduct();
         facade.initialize(product);
+        TestBed.tick();
 
         facade.close(product);
 
@@ -159,6 +165,7 @@ describe('ProductDetailFacade dialog actions', () => {
     it('closes with favorite changed result when favorite state changed', () => {
         const product = createProduct();
         facade.initialize(product);
+        TestBed.tick();
         facade.toggleFavorite(product);
 
         facade.close(product);
@@ -262,6 +269,7 @@ describe('Product detail pending requests', () => {
         favoriteProductService.isFavorite.mockReturnValue(lookup);
         const product = createProduct({ isFavorite: false });
         facade.initialize(product);
+        TestBed.tick();
         facade.toggleFavorite(product);
         lookup.next(false);
         expect(facade.isFavorite()).toBe(true);
@@ -282,6 +290,7 @@ describe('Product detail pending requests', () => {
         favoriteProductService.isFavorite.mockReturnValue(of(true));
         const product = createProduct({ isFavorite: true, favoriteProductId: entityId<'favorite-product'>('favorite-1') });
         facade.initialize(product);
+        TestBed.tick();
         favoriteProductService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(product);
         expect(facade.isFavorite()).toBe(true);
@@ -294,6 +303,7 @@ describe('Product detail pending requests', () => {
         favoriteProductService.add.mockReturnValue(pending);
         const product = createProduct();
         facade.initialize(product);
+        TestBed.tick();
         facade.toggleFavorite(product);
         facade.toggleFavorite(product);
         expect(favoriteProductService.add).toHaveBeenCalledTimes(1);
@@ -306,6 +316,7 @@ describe('ProductDetailFacade failed favorite discovery', () => {
     it('preserves the known favorite state when the status check fails', () => {
         favoriteProductService.isFavorite.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.initialize(createProduct({ isFavorite: true }));
+        TestBed.tick();
         expect(facade.isFavorite()).toBe(true);
     });
 
@@ -313,6 +324,7 @@ describe('ProductDetailFacade failed favorite discovery', () => {
         const item = createProduct({ isFavorite: true, favoriteProductId: null });
         favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(item);
+        TestBed.tick();
         favoriteProductService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(item);
         expect(facade.isFavorite()).toBe(true);

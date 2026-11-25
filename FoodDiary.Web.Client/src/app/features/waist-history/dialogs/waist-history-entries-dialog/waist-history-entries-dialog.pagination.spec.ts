@@ -39,6 +39,7 @@ function setup(): {
     });
     const fixture = TestBed.createComponent(WaistHistoryEntriesDialogComponent);
     fixture.detectChanges();
+    TestBed.tick();
     return { fixture, component: fixture.componentInstance, fetch, responses, close };
 }
 function page(): WaistEntry[] {
@@ -50,10 +51,11 @@ function page(): WaistEntry[] {
     }));
 }
 describe('Waist measurement dialog pagination', () => {
-    it('shows 20 rows with the last delta, then appends the final row and passes it to editing', () => {
+    it('shows 20 rows with the last delta, then appends the final row and passes it to editing', async () => {
         const { fixture, component, responses, fetch, close } = setup();
         responses[0].next(page());
         responses[0].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['items']()).toHaveLength(PAGE_SIZE);
         expect(component['items']().at(-1)?.change).toBe(-1);
@@ -62,10 +64,12 @@ describe('Waist measurement dialog pagination', () => {
             button.textContent.includes('MEASUREMENT_HISTORY_PAGING.MORE'),
         );
         more?.click();
+        TestBed.tick();
         expect(fetch).toHaveBeenLastCalledWith('2026-09-01');
         const oldest = page()[PAGE_SIZE];
         responses[1].next([oldest]);
         responses[1].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['items']()).toHaveLength(FETCH_SIZE);
         expect(component['items']().at(-1)?.change).toBeNull();
@@ -73,9 +77,10 @@ describe('Waist measurement dialog pagination', () => {
         root.querySelectorAll<HTMLButtonElement>('button[aria-label="WAIST_HISTORY.EDIT"]').item(PAGE_SIZE).click();
         expect(close).toHaveBeenCalledWith({ action: 'edit', entry: oldest });
     });
-    it('renders retry rather than empty on failure, and cancels pending work when closed', () => {
+    it('renders retry rather than empty on failure, and cancels pending work when closed', async () => {
         const { fixture, responses, fetch } = setup();
         responses[0].error(new Error('offline'));
+        await fixture.whenStable();
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
         expect(root.querySelector('[role="alert"]')?.textContent).toContain('MEASUREMENT_HISTORY_PAGING.ERROR');
@@ -83,7 +88,9 @@ describe('Waist measurement dialog pagination', () => {
         Array.from(root.querySelectorAll('button'))
             .find(button => button.textContent.includes('MEASUREMENT_HISTORY_PAGING.RETRY'))
             ?.click();
+        TestBed.tick();
         expect(fetch).toHaveBeenCalledTimes(2);
+        expect(responses[1].observed).toBe(true);
         fixture.destroy();
         expect(responses[1].observed).toBe(false);
     });

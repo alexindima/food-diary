@@ -13,6 +13,7 @@ import { firstValueFrom, NEVER, of, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
 import { UserService } from '../../shared/api/user.service';
@@ -1641,6 +1642,7 @@ describe('Routed fasting history', () => {
             limit: overview.history.limit,
         });
         pending.error(new Error('History unavailable'));
+        await waitForAsyncTasksAsync();
         redraw(harness);
         expect(history.querySelector('[role="alert"]')?.textContent).toContain('FASTING.REQUEST_ERROR');
         expect(history.querySelectorAll('.fasting-history-dialog__row')).toHaveLength(1);

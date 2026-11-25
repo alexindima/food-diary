@@ -48,12 +48,14 @@ describe('ShoppingListFacade navigation and consolidation', () => {
             ),
         );
         facade.initialize();
+        TestBed.tick();
         expect(facade.navigationLists()[1]).toMatchObject({ remainingCount: 0, completed: true });
         expect(shoppingListService.getById).not.toHaveBeenCalled();
     });
     it('distinguishes empty, pending and complete lists immediately', () => {
         const { facade } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         expect(facade.navigationLists()[0]).toMatchObject({ remainingCount: 0, completed: false });
         addMilk(facade);
         expect(facade.navigationLists()[0]).toMatchObject({ remainingCount: 1, completed: false });
@@ -65,6 +67,7 @@ describe('ShoppingListFacade navigation and consolidation', () => {
     it('rejects a stale merge preview without overwriting newer edits', () => {
         const { facade } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const expected = facade.items();
         addMilk(facade);
         expect(facade.applyConsolidation(entityId<'shopping-list'>('list-1'), expected, [])).toBe(false);
@@ -78,19 +81,24 @@ describe('ShoppingListFacade loading and selection', () => {
     it('does not duplicate an in-flight detail request', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.getById.mockReturnValue(new Subject<ShoppingList>());
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith('list-2');
     });
     it('should load lists and current list on initialize', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
 
         facade.initialize();
+        TestBed.tick();
 
         expect(shoppingListService.getOverview).toHaveBeenCalledTimes(1);
         expect(shoppingListService.getPage).not.toHaveBeenCalled();
         facade.selectList(entityId<'shopping-list'>('list-1'));
+        TestBed.tick();
         expect(shoppingListService.getById).not.toHaveBeenCalled();
         expect(facade.list()?.id).toBe('list-1');
         expect(facade.selectedListId()).toBe('list-1');
@@ -101,6 +109,7 @@ describe('ShoppingListFacade loading and selection', () => {
         shoppingListService.getOverview.mockReturnValueOnce(of(makeOverview([])));
 
         facade.initialize();
+        TestBed.tick();
 
         expect(shoppingListService.create).not.toHaveBeenCalled();
         expect(facade.lists()).toEqual([]);
@@ -112,10 +121,13 @@ describe('ShoppingListFacade loading and selection', () => {
     it('should ignore empty and already selected list selections', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.getById.mockClear();
 
         facade.selectList(entityId<'shopping-list'>(''));
+        TestBed.tick();
         facade.selectList(entityId<'shopping-list'>('list-1'));
+        TestBed.tick();
 
         expect(shoppingListService.getById).not.toHaveBeenCalled();
     });
@@ -128,9 +140,12 @@ describe('ShoppingListFacade competing selections', () => {
         const newer = new Subject<ShoppingList>();
         shoppingListService.getById.mockReturnValueOnce(older).mockReturnValueOnce(newer);
         facade.initialize();
+        TestBed.tick();
 
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         facade.selectList(entityId<'shopping-list'>('list-3'));
+        TestBed.tick();
         newer.next({ ...list, id: entityId<'shopping-list'>('list-3'), name: 'Newest' });
         older.next({ ...list, id: entityId<'shopping-list'>('list-2'), name: 'Older' });
 
@@ -145,11 +160,15 @@ describe('ShoppingListFacade competing selections', () => {
         const newer = new Subject<ShoppingList>();
         shoppingListService.getById.mockReturnValueOnce(older).mockReturnValueOnce(newer);
         facade.initialize();
+        TestBed.tick();
 
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         facade.selectList(entityId<'shopping-list'>('list-3'));
+        TestBed.tick();
         older.error(new Error('old request offline'));
         facade.selectList(entityId<'shopping-list'>('list-3'));
+        TestBed.tick();
 
         expect(facade.isLoading()).toBe(true);
         expect(shoppingListService.getById).toHaveBeenCalledTimes(2);
@@ -165,9 +184,12 @@ describe('ShoppingListFacade competing selections', () => {
         const newer = new Subject<ShoppingList>();
         shoppingListService.getById.mockReturnValueOnce(older).mockReturnValueOnce(newer);
         facade.initialize();
+        TestBed.tick();
 
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         facade.selectList(entityId<'shopping-list'>('list-3'));
+        TestBed.tick();
         newer.next({ ...list, id: entityId<'shopping-list'>('list-3') });
         older.error(new Error('old request offline'));
 
@@ -183,9 +205,11 @@ describe('ShoppingListFacade restoring list availability', () => {
         const pending = new Subject<ShoppingListOverview>();
         shoppingListService.getOverview.mockReturnValueOnce(pending);
         facade.initialize();
+        TestBed.tick();
         expect(facade.isLoading()).toBe(true);
         expect(facade.list()).toBeNull();
         facade.initialize();
+        TestBed.tick();
         expect(shoppingListService.getOverview).toHaveBeenCalledOnce();
 
         pending.error(new Error('offline'));
@@ -194,6 +218,7 @@ describe('ShoppingListFacade restoring list availability', () => {
         expect(facade.overviewLoadError()).toBe(true);
 
         facade.initialize();
+        TestBed.tick();
         expect(shoppingListService.getOverview).toHaveBeenCalledTimes(2);
         expect(facade.isLoading()).toBe(false);
         expect(facade.list()).toEqual(list);
@@ -215,8 +240,10 @@ describe('ShoppingListFacade restoring list availability', () => {
         shoppingListService.getPage.mockReturnValueOnce(directory);
         shoppingListService.update.mockReturnValueOnce(saved);
         facade.initialize();
+        TestBed.tick();
 
         facade.deleteListById(inactiveId);
+        TestBed.tick();
         expect(facade.lists().map(item => item.id)).toEqual([list.id]);
         expect(facade.isSaving()).toBe(true);
         addMilk(facade);
@@ -277,14 +304,17 @@ describe('ShoppingListFacade selection during a directory refresh', () => {
         shoppingListService.update.mockReturnValueOnce(saving);
         shoppingListService.getById.mockReturnValueOnce(of(travel));
         facade.initialize();
+        TestBed.tick();
 
         facade.deleteListById(inactive.id);
+        TestBed.tick();
         addMilk(facade);
         removing.next();
         removing.complete();
         expect(facade.isLoading()).toBe(true);
 
         facade.selectList(travel.id);
+        TestBed.tick();
         expect(facade.hasUnsavedChanges()).toBe(true);
         expect(shoppingListService.update).not.toHaveBeenCalled();
         expect(shoppingListService.getById).not.toHaveBeenCalled();
@@ -300,6 +330,7 @@ describe('ShoppingListFacade selection during a directory refresh', () => {
 
         saving.next({ ...list, items: facade.items() });
         saving.complete();
+        TestBed.tick();
         expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith(travel.id);
         expect(facade.selectedListId()).toBe(travel.id);
         expect(facade.items()).toEqual(travel.items);
@@ -313,6 +344,7 @@ describe('ShoppingListFacade saves before leaving', () => {
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
+        TestBed.tick();
         expect(facade.hasUnsavedChanges()).toBe(false);
         addMilk(facade);
         expect(facade.hasUnsavedChanges()).toBe(true);
@@ -327,6 +359,7 @@ describe('ShoppingListFacade saves before leaving', () => {
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         let finished = false;
         const navigation = facade.saveBeforeLeaveAsync().then(result => {
@@ -343,17 +376,21 @@ describe('ShoppingListFacade saves before leaving', () => {
     it('prevents leaving when the flushed save fails synchronously', async () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         expect(await facade.saveBeforeLeaveAsync()).toBe(false);
     });
+});
 
+describe('ShoppingListFacade saves queued edits before leaving', () => {
     it('saves edits made during an in-flight request before leaving', async () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         const first = new Subject<ShoppingList>();
         const second = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(first).mockReturnValueOnce(second);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         facade.toggleItemChecked(facade.items()[0].id, true);
@@ -370,6 +407,7 @@ describe('ShoppingListFacade saves before leaving', () => {
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         const [draft] = facade.items();
 
@@ -397,6 +435,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         const draft = facade.items()[0];
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
@@ -423,10 +462,13 @@ describe('ShoppingListFacade item persistence and errors', () => {
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         expect(shoppingListService.getById).not.toHaveBeenCalledWith('list-2');
         response.next({ ...list, items: facade.items() });
+        TestBed.tick();
         expect(shoppingListService.getById).toHaveBeenLastCalledWith('list-2');
     });
 
@@ -434,8 +476,10 @@ describe('ShoppingListFacade item persistence and errors', () => {
         const { facade, shoppingListService, toastService } = setupShoppingListFacade();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
         expect(facade.hasUnsavedChanges()).toBe(true);
         expect(facade.saveError()).toBe(true);
@@ -448,6 +492,7 @@ describe('ShoppingListFacade failed save recovery', () => {
     it('retries the retained draft and clears the error only after saving it', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
@@ -471,12 +516,14 @@ describe('ShoppingListFacade failed save recovery', () => {
     it('preserves newer edits after failure and does not automatically repeat failed requests or create a new list', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         facade.toggleItemChecked(facade.items()[0].id, true);
         facade.createNewList('Next list');
+        TestBed.tick();
         response.error(new Error('offline'));
         TestBed.tick();
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
@@ -493,10 +540,12 @@ describe('ShoppingListFacade immediate failed save recovery', () => {
     it('retains a failed navigation draft without retrying when its original debounce expires', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         addMilk(facade);
 
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         expect(shoppingListService.update).toHaveBeenCalledTimes(1);
@@ -509,10 +558,12 @@ describe('ShoppingListFacade immediate failed save recovery', () => {
     it('cancels a pending creation when its immediate prerequisite save fails synchronously', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         addMilk(facade);
 
         facade.createNewList('Next list');
+        TestBed.tick();
         TestBed.tick();
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
@@ -529,6 +580,7 @@ describe('ShoppingListFacade persistence operations', () => {
     it('should add item and persist after debounce', async () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         addMilk(facade);
@@ -544,9 +596,11 @@ describe('ShoppingListFacade persistence operations', () => {
         const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
         shoppingListService.deleteById.mockReturnValueOnce(throwError(() => new Error('delete failed')));
         facade.initialize();
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         facade.deleteListById(list.id);
+        TestBed.tick();
 
         expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-1');
         expect(facade.list()).toEqual(list);
@@ -567,11 +621,14 @@ describe('ShoppingListFacade persistence operations', () => {
             ),
         );
         facade.initialize();
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         facade.deleteListById(deletedId);
+        TestBed.tick();
         expect(facade.lists().map(entry => entry.id)).toEqual([list.id]);
         facade.deleteListById(deletedId);
+        TestBed.tick();
 
         expect(shoppingListService.deleteById).toHaveBeenCalledExactlyOnceWith(deletedId);
         expect(facade.list()).toEqual(list);
@@ -582,9 +639,11 @@ describe('ShoppingListFacade persistence operations', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         shoppingListService.getPage.mockReturnValueOnce(of([]));
         facade.initialize();
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         facade.deleteListById(list.id);
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-1');
@@ -597,6 +656,7 @@ describe('ShoppingListFacade persistence operations', () => {
         const { facade, shoppingListService, toastService } = setupShoppingListFacade();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('clear failed')));
         facade.initialize();
+        TestBed.tick();
 
         addMilk(facade);
         facade.clearListById(entityId<'shopping-list'>('list-1'));
@@ -628,6 +688,7 @@ describe('ShoppingListFacade item editing and deletion', () => {
         const overview = makeOverview([{ id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: 2 }]);
         shoppingListService.getOverview.mockReturnValueOnce(of({ ...overview, selectedList: { ...list, items: [milk, rice] } }));
         facade.initialize();
+        TestBed.tick();
 
         facade.editItem(milk.id, { name: '  Oat milk ', category: 'Dairy', note: ' Unsweetened ', unit: null, amount: 2 });
         expect(facade.items()[0]).toMatchObject({ name: 'Oat milk', aisle: milk.aisle, note: 'Unsweetened' });
@@ -652,8 +713,10 @@ describe('ShoppingListFacade item editing and deletion', () => {
         const deletion = new Subject<void>();
         shoppingListService.deleteById.mockReturnValueOnce(deletion);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         facade.deleteListById(list.id);
+        TestBed.tick();
         expect(facade.list()).toBeNull();
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         expect(shoppingListService.update).not.toHaveBeenCalled();
@@ -676,12 +739,15 @@ describe('ShoppingListFacade item editing and deletion', () => {
         shoppingListService.getPage.mockReturnValueOnce(of([{ id: next.id, name: next.name, createdAt: next.createdAt, itemsCount: 0 }]));
         shoppingListService.getById.mockReturnValueOnce(of(next));
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         facade.deleteListById(list.id);
+        TestBed.tick();
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         deletion.next();
         deletion.complete();
+        TestBed.tick();
         expect(facade.selectedListId()).toBe(next.id);
         expect(facade.items()).toEqual([]);
         expect(facade.hasUnsavedChanges()).toBe(false);
@@ -695,6 +761,7 @@ describe('ShoppingListFacade pending clear', () => {
         const cleared = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(cleared);
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         const items = facade.items();
 
@@ -723,6 +790,7 @@ describe('ShoppingListFacade autosave', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         shoppingListService.update.mockReturnValueOnce(of({ ...list, name: 'Inline rename' }));
         facade.initialize();
+        TestBed.tick();
         await waitForAsyncTasksAsync();
 
         facade.renameListById(entityId<'shopping-list'>('list-1'), ' Inline rename ');
@@ -736,6 +804,7 @@ describe('ShoppingListFacade autosave', () => {
         const renamed = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(renamed);
         facade.initialize();
+        TestBed.tick();
         if (timing === 'before') {
             addMilk(facade);
         }
@@ -761,6 +830,7 @@ describe('ShoppingListFacade autosave', () => {
         const renamed = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(renamed);
         facade.initialize();
+        TestBed.tick();
         facade.renameListById(list.id, 'Renamed');
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
@@ -792,6 +862,7 @@ describe('ShoppingListFacade new list summaries', () => {
         shoppingListService.getPage.mockReturnValueOnce(NEVER);
 
         facade.createNewList();
+        TestBed.tick();
 
         expect(facade.selectedListId()).toBe(createdList.id);
         expect(facade.renameRequestedListId()).toBe(createdList.id);
@@ -820,6 +891,7 @@ describe('ShoppingListFacade localized names', () => {
         vi.setSystemTime(new Date('2026-09-30T12:00:00Z'));
 
         facade.createNewList();
+        TestBed.tick();
 
         expect(shoppingListService.create).toHaveBeenCalledWith({ name: `SHOPPING_LIST.NEW_LIST ${dateLabel}` });
     });
@@ -831,6 +903,7 @@ describe('ShoppingListFacade item and name draft boundaries', () => {
         const overview = new Subject<ShoppingListOverview>();
         shoppingListService.getOverview.mockReturnValueOnce(overview);
         facade.initialize();
+        TestBed.tick();
         expect(facade.list()).toBeNull();
         addMilk(facade);
         expect(facade.items()).toEqual([]);
@@ -859,6 +932,7 @@ describe('ShoppingListFacade item and name draft boundaries', () => {
         const acceptedName = 'Weekend shopping';
         shoppingListService.update.mockReturnValueOnce(renamed);
         facade.initialize();
+        TestBed.tick();
         facade.renameListById(list.id, acceptedName);
         expect(facade.isSaving()).toBe(true);
         facade.renameListById(list.id, 'Repeated rename');
@@ -884,6 +958,7 @@ it('keeps an item that was unchecked before a previously confirmed purchased cle
     const overview = makeOverview([{ id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: 1, remainingCount: 0 }]);
     shoppingListService.getOverview.mockReturnValueOnce(of({ ...overview, selectedList: { ...list, items: [purchased] } }));
     facade.initialize();
+    TestBed.tick();
     const confirmedIds = facade
         .items()
         .filter(item => item.isChecked)
@@ -974,10 +1049,13 @@ describe('Shopping list creation during navigation', () => {
     it('keeps creation available while loading and queues a single request', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         facade.isLoading.set(true);
         expect(facade.isCreating()).toBe(false);
         facade.createNewList();
+        TestBed.tick();
         facade.createNewList();
+        TestBed.tick();
         expect(facade.isCreating()).toBe(true);
         expect(shoppingListService.create).not.toHaveBeenCalled();
         facade.isLoading.set(false);
@@ -988,8 +1066,10 @@ describe('Shopping list creation during navigation', () => {
     it('unblocks creation after a failed request', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.create.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.createNewList();
+        TestBed.tick();
         expect(facade.isCreating()).toBe(false);
         expect(facade.isLoading()).toBe(false);
     });
@@ -999,9 +1079,12 @@ describe('Named creation and purchased cleanup', () => {
     it('preserves a queued custom name and does not request renaming', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         facade.isLoading.set(true);
         facade.createNewList('  Weekend  ');
+        TestBed.tick();
         facade.createNewList('Ignored');
+        TestBed.tick();
         facade.isLoading.set(false);
         TestBed.tick();
         expect(shoppingListService.create).toHaveBeenCalledWith({ name: 'Weekend' });
@@ -1010,6 +1093,7 @@ describe('Named creation and purchased cleanup', () => {
     it('removes only confirmed items still checked in the same list', () => {
         const { facade } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const row = { shoppingListId: 'list-1', name: 'Milk', sortOrder: 0 };
         facade.items.set([
             {
@@ -1056,6 +1140,7 @@ describe('ShoppingListFacade conditional updates', () => {
     it('resumes the selected draft autosave after a nonselected clear finishes past the debounce', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const other = { ...list, id: entityId<'shopping-list'>('list-2'), revision: 'b'.repeat(REVISION_LENGTH) };
         facade.lists.update(lists => [...lists, { id: other.id, name: other.name, createdAt: other.createdAt, itemsCount: 1 }]);
         shoppingListService.getById.mockReturnValueOnce(of(other));
@@ -1076,6 +1161,7 @@ describe('ShoppingListFacade conditional updates', () => {
     it.each(['rename', 'clear'] as const)('loads the target detail revision before a nonselected %s', operation => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const target = {
             ...list,
             id: entityId<'shopping-list'>('list-2'),
@@ -1107,6 +1193,7 @@ describe('ShoppingListFacade conditional updates', () => {
     it('uses the new revision without renaming again when saving an item added during rename', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         facade.renameListById(list.id, 'First rename');
@@ -1128,6 +1215,7 @@ describe('ShoppingListFacade unavailable update baseline', () => {
         operation => {
             const { facade, list, shoppingListService } = setupShoppingListFacade();
             facade.initialize();
+            TestBed.tick();
             const otherId = entityId<'shopping-list'>('list-2');
             facade.lists.update(lists => [...lists, { id: otherId, name: 'Other', createdAt: list.createdAt, itemsCount: 1 }]);
             shoppingListService.getById.mockReturnValueOnce(of(null));
@@ -1148,6 +1236,7 @@ describe('ShoppingListFacade revision conflict recovery', () => {
     it('keeps the nonselected conflict target distinct and reloads that target after confirmation', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const other = { ...list, id: entityId<'shopping-list'>('list-2'), name: 'Other', revision: 'b'.repeat(REVISION_LENGTH) };
         facade.lists.update(lists => [...lists, { id: other.id, name: other.name, createdAt: other.createdAt, itemsCount: 0 }]);
         shoppingListService.getById.mockReturnValueOnce(of(other));
@@ -1157,10 +1246,12 @@ describe('ShoppingListFacade revision conflict recovery', () => {
         expect(facade.list()).toEqual(list);
         expect(facade.lists().find(summary => summary.id === other.id)?.name).toBe('Draft other name');
         facade.reloadConflict(list.id);
+        TestBed.tick();
         expect(shoppingListService.getById).toHaveBeenCalledTimes(1);
         const fresh = { ...other, name: 'Other client name', revision: 'c'.repeat(REVISION_LENGTH) };
         shoppingListService.getById.mockReturnValueOnce(of(fresh));
         facade.reloadConflict(other.id);
+        TestBed.tick();
         expect(facade.list()).toEqual(fresh);
         expect(facade.selectedListId()).toBe(other.id);
         expect(facade.hasUnsavedChanges()).toBe(false);
@@ -1169,17 +1260,21 @@ describe('ShoppingListFacade revision conflict recovery', () => {
     it('retains a conflicted draft and stops autosave, retries, navigation and queued creation', async () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         const response = new Subject<ShoppingList>();
         shoppingListService.update.mockReturnValueOnce(response);
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         facade.toggleItemChecked(facade.items()[0].id, true);
         facade.createNewList('Next');
+        TestBed.tick();
         response.error(new HttpErrorResponse({ status: HttpStatusCode.Conflict }));
         TestBed.tick();
         facade.retrySave();
         facade.selectList(entityId<'shopping-list'>('list-2'));
+        TestBed.tick();
         facade.createNewList('Blocked');
+        TestBed.tick();
         expect(await facade.saveBeforeLeaveAsync()).toBe(false);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS * 2);
 
@@ -1199,6 +1294,7 @@ describe('ShoppingListFacade conflicted mutations', () => {
     it.each(['rename', 'clear'] as const)('retains selected draft after a %s conflict', operation => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         addMilk(facade);
         shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
         if (operation === 'rename') {
@@ -1219,12 +1315,14 @@ describe('ShoppingListFacade conflicted mutations', () => {
     it.each([null, 'error'] as const)('keeps the draft and conflict when confirmed reload returns %s', result => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         const draft = facade.items();
         shoppingListService.getById.mockReturnValueOnce(result === null ? of(null) : throwError(() => new Error('offline')));
         facade.reloadConflict(list.id);
+        TestBed.tick();
         expect(facade.items()).toEqual(draft);
         expect(facade.conflictListId()).toBe(list.id);
         expect(facade.hasUnsavedChanges()).toBe(true);
@@ -1234,12 +1332,14 @@ describe('ShoppingListFacade conflicted mutations', () => {
     it('replaces a draft only after a successful confirmed reload and uses the returned revision', async () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
+        TestBed.tick();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
         addMilk(facade);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         const fresh = { ...list, name: 'Other client saved', revision: 'b'.repeat(REVISION_LENGTH) };
         shoppingListService.getById.mockReturnValueOnce(of(fresh));
         facade.reloadConflict(list.id);
+        TestBed.tick();
         expect(facade.items()).toEqual([]);
         expect(facade.list()?.name).toBe(fresh.name);
         expect(facade.conflictListId()).toBeNull();

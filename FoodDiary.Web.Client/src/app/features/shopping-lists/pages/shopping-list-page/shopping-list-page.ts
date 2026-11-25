@@ -10,7 +10,7 @@ import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
-import { EMPTY, filter, finalize, merge, type Observable, skip } from 'rxjs';
+import { EMPTY, filter, finalize, merge, type Observable } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -95,7 +95,7 @@ export class ShoppingListPageComponent {
         () => this.list() !== null && this.conflictListId() === null && !this.isSaving() && !this.isLoading(),
     );
     private readonly canClearPurchased = computed(() => this.checkedItemsCount() > 0 && !this.isSaving() && !this.isLoading());
-    protected readonly listSelectModel = signal<{ id: string | null }>({ id: null });
+    protected readonly selectedListId = this.facade.selectedListId;
     protected readonly itemFormModel = signal<ShoppingListItemFormModel>({
         name: '',
         amount: null,
@@ -103,7 +103,6 @@ export class ShoppingListPageComponent {
         category: null,
         note: null,
     });
-    protected readonly listSelectForm = form(this.listSelectModel);
     protected readonly itemForm = form(this.itemFormModel, path => {
         required(path.name);
         validate(path.name, ({ value }) => (value().trim().length > 0 ? undefined : { kind: 'required' }));
@@ -132,21 +131,6 @@ export class ShoppingListPageComponent {
     }
 
     public constructor() {
-        toObservable(computed(() => this.listSelectModel().id))
-            .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(id => {
-                if (id !== null && id.length > 0) {
-                    this.facade.selectList(entityId<'shopping-list'>(id));
-                }
-            });
-
-        effect(() => {
-            const selectedId = this.facade.selectedListId();
-            if (this.listSelectModel().id !== selectedId) {
-                this.listSelectModel.set({ id: selectedId });
-            }
-        });
-
         effect(() => {
             if (!this.isMobileView()) {
                 this.isMobileManageOpen.set(false);
@@ -154,6 +138,10 @@ export class ShoppingListPageComponent {
         });
 
         this.facade.initialize();
+    }
+
+    protected selectList(id: ShoppingListId): void {
+        this.facade.selectList(id);
     }
 
     protected addItem(): void {

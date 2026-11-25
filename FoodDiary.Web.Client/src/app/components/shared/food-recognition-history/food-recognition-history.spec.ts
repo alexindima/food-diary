@@ -1,11 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { AuthService } from '../../../services/auth.service';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
@@ -49,6 +50,7 @@ describe('recognition history recovery', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('productLabel', productLabel);
         fixture.componentInstance['load']();
+        TestBed.tick();
         expect(listRecognitions).toHaveBeenCalledWith(1, PAGE_SIZE, productLabel);
         expect(fixture.componentInstance['jobs']().map(job => job.id)).toEqual([productLabel ? 'label' : 'meal']);
     });
@@ -57,9 +59,11 @@ describe('recognition history recovery', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         const component = fixture.componentInstance;
         component['load']();
+        TestBed.tick();
         expect(component['failed']()).toBe(true);
         expect(component['loading']()).toBe(false);
         component['load']();
+        TestBed.tick();
         expect(component['failed']()).toBe(false);
         expect(component['loaded']()).toBe(true);
         expect(component['jobs']()).toEqual([]);
@@ -69,7 +73,9 @@ describe('recognition history recovery', () => {
         listRecognitions.mockReturnValue(pending);
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentInstance['load']();
+        TestBed.tick();
         fixture.componentInstance['load']();
+        TestBed.tick();
         expect(listRecognitions).toHaveBeenCalledTimes(1);
         fixture.destroy();
         expect(pending.observed).toBe(false);
@@ -78,6 +84,7 @@ describe('recognition history recovery', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('disabled', true);
         fixture.componentInstance['load']();
+        TestBed.tick();
         expect(listRecognitions).not.toHaveBeenCalled();
     });
 });
@@ -115,6 +122,7 @@ describe('recognition history deletion', () => {
         listRecognitions.mockReturnValue(of(pageOf([], 1, PAGE_SIZE)));
         pending.next();
         pending.complete();
+        TestBed.tick();
         expect(listRecognitions).toHaveBeenLastCalledWith(1, PAGE_SIZE, false);
         expect(component['pageIndex']()).toBe(0);
         expect(component['totalItems']()).toBe(PAGE_SIZE);
@@ -154,6 +162,7 @@ describe('recognition history pagination', () => {
         const count = vi.fn();
         fixture.componentInstance.countChanged.subscribe(count);
         fixture.componentInstance['load'](1);
+        TestBed.tick();
         expect(listRecognitions).toHaveBeenCalledWith(2, PAGE_SIZE, true);
         expect(fixture.componentInstance['pageIndex']()).toBe(1);
         expect(fixture.componentInstance['totalItems']()).toBe(TOTAL_ITEMS);
@@ -165,6 +174,7 @@ describe('recognition history pagination', () => {
         component['totalItems'].set(TOTAL_ITEMS);
         listRecognitions.mockReturnValue(throwError(() => new Error('offline')));
         component['load'](1);
+        TestBed.tick();
         expect(component['pageIndex']()).toBe(0);
         expect(component['totalItems']()).toBe(TOTAL_ITEMS);
         expect(component['failed']()).toBe(true);
@@ -186,11 +196,11 @@ const historyJob: FoodRecognitionJob = {
 };
 
 describe('recent recognition history states', () => {
-    it('loads inline history on demand and shows an inline message for an empty result', () => {
+    it('loads inline history on demand and shows an inline message for an empty result', async () => {
         const pending = new Subject<PageOf<FoodRecognitionJob>>();
         listRecognitions.mockReturnValueOnce(pending).mockReturnValueOnce(of(pageOf([historyJob])));
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const showRecent = requiredElement(host, 'fd-ui-button:first-child button');
         const visibleStatus = 'p[role="status"]:not([hidden])';
@@ -198,24 +208,24 @@ describe('recent recognition history states', () => {
         expect(listRecognitions).not.toHaveBeenCalled();
 
         showRecent.click();
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(listRecognitions).toHaveBeenCalledWith(1, PAGE_SIZE, false);
         expect(requiredElement(host, visibleStatus).textContent).toContain('AI_RECOGNITION.LOADING');
 
         pending.next(pageOf([]));
         pending.complete();
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(requiredElement(host, visibleStatus).textContent.trim()).toBe('AI_RECOGNITION.EMPTY');
         expect(requiredElement(host, '.history-list__empty').style.display).toBe('none');
 
         showRecent.click();
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(listRecognitions).toHaveBeenCalledTimes(2);
         expect(host.querySelector(visibleStatus)).toBeNull();
         expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
     });
 
-    it('marks a failed job as failed and keeps it available to reopen', () => {
+    it('marks a failed job as failed and keeps it available to reopen', async () => {
         vi.useFakeTimers();
         try {
             const running: FoodRecognitionJob = { ...historyJob, status: 'Running' };
@@ -225,14 +235,15 @@ describe('recent recognition history states', () => {
             fixture.componentRef.setInput('screen', true);
             const selected = vi.fn();
             fixture.componentInstance.recognitionSelected.subscribe(selected);
-            fixture.detectChanges();
+            await renderHistoryAsync(fixture);
             const host = fixture.nativeElement as HTMLElement;
             const deleteButton = '[aria-label="AI_RECOGNITION.DELETE"]';
             expect(requiredElement(host, 'fd-ui-status-badge').textContent).toContain('AI_RECOGNITION.STATUS.Running');
             expect(host.querySelector(deleteButton)).toBeNull();
 
             vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
-            fixture.detectChanges();
+            TestBed.tick();
+            await renderHistoryAsync(fixture);
             const title = requiredElement(host, '.history-list__title');
             expect(title.textContent.trim()).toBe('AI_RECOGNITION.STATUS.Failed');
             expect(title.getAttribute('title')).toBe('AI_RECOGNITION.STATUS.Failed');
@@ -244,6 +255,7 @@ describe('recent recognition history states', () => {
             requiredElement(host, '.history-list__open').click();
             expect(selected).toHaveBeenCalledExactlyOnceWith(failed);
             vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            TestBed.tick();
             expect(listRecognitions).toHaveBeenCalledTimes(2);
             fixture.destroy();
         } finally {
@@ -253,7 +265,7 @@ describe('recent recognition history states', () => {
 });
 
 describe('recognition history HTTP deletion', () => {
-    it('keeps both results after a failed delete and refreshes only after the same result is deleted', () => {
+    it('keeps both results after a failed delete and refreshes only after the same result is deleted', async () => {
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(),
@@ -272,9 +284,10 @@ describe('recognition history HTTP deletion', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('screen', true);
         fixture.componentRef.setInput('productLabel', true);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const flushPage = (jobs: FoodRecognitionJob[]): void => {
+            TestBed.tick();
             const request = http.expectOne(req => req.method === 'GET' && req.url === `${url}/page`);
             expect(request.request.params.get('isProductLabel')).toBe('true');
             request.flush(pageOf(jobs));
@@ -286,11 +299,11 @@ describe('recognition history HTTP deletion', () => {
         const deletion = { method: 'DELETE', url: `${url}/${historyJob.id}` };
 
         flushPage([historyJob, remaining]);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(host.querySelector('.history-list__row img')?.getAttribute('src')).toBe(historyJob.imageUrl);
         remove();
         http.expectOne(deletion).flush(null, { status: 503, statusText: 'Service Unavailable' });
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(requiredElement(host, '[role="alert"]').hidden).toBe(false);
         expect(host.querySelectorAll('.history-list__row')).toHaveLength(2);
         http.expectNone(request => request.method === 'GET' && request.url === `${url}/page`);
@@ -300,7 +313,7 @@ describe('recognition history HTTP deletion', () => {
         expect(host.querySelectorAll('.history-list__row')).toHaveLength(2);
         retry.flush(null, { status: 204, statusText: 'No Content' });
         flushPage([remaining]);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
         expect(host.querySelector('.history-list__row img')?.getAttribute('src')).toBe(remaining.imageUrl);
         expect(requiredElement(host, '[role="alert"]').hidden).toBe(true);
@@ -309,38 +322,38 @@ describe('recognition history HTTP deletion', () => {
 });
 
 describe('recognition history rendered interactions', () => {
-    it('shows empty state only after loading and returns through the actual button', () => {
+    it('shows empty state only after loading and returns through the actual button', async () => {
         const pending = new Subject<PageOf<FoodRecognitionJob>>();
         listRecognitions.mockReturnValue(pending);
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('screen', true);
         const back = vi.fn();
         fixture.componentInstance.backToRecognition.subscribe(back);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const empty = requiredElement(host, '.history-list__empty');
         expect(empty.style.display).toBe('none');
         pending.next(pageOf([]));
         pending.complete();
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(empty.style.display).not.toBe('none');
         requiredElement(empty, 'button').click();
         expect(back).toHaveBeenCalledOnce();
     });
-    it('keeps deletion separate from opening a result and renders empty state after the last deletion', () => {
+    it('keeps deletion separate from opening a result and renders empty state after the last deletion', async () => {
         listRecognitions.mockReturnValueOnce(of(pageOf([historyJob]))).mockReturnValue(of(pageOf([])));
         deleteRecognition.mockReturnValue(of(undefined));
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('screen', true);
         const selected = vi.fn();
         fixture.componentInstance.recognitionSelected.subscribe(selected);
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         requiredElement(host, '.history-list__open').click();
         expect(selected).toHaveBeenCalledWith(historyJob);
         selected.mockClear();
         requiredElement(host, '[aria-label="AI_RECOGNITION.DELETE"]').click();
-        fixture.detectChanges();
+        await renderHistoryAsync(fixture);
         expect(selected).not.toHaveBeenCalled();
         expect(deleteRecognition).toHaveBeenCalledWith(historyJob.id);
         expect(host.querySelector('.history-list__row')).toBeNull();
@@ -354,6 +367,7 @@ describe('recognition history rendered interactions', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('productLabel', true);
         fixture.componentInstance['load'](2);
+        TestBed.tick();
         expect(listRecognitions.mock.calls).toEqual([
             [EXPIRED_PAGE, PAGE_SIZE, true],
             [2, PAGE_SIZE, true],
@@ -369,13 +383,17 @@ describe('recognition history rendered interactions', () => {
                 .mockReturnValue(of(pageOf([historyJob], 2, PAGE_SIZE + 1)));
             const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
             fixture.componentInstance['load'](1);
+            TestBed.tick();
             vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            TestBed.tick();
             expect(listRecognitions).toHaveBeenLastCalledWith(2, PAGE_SIZE, false);
             expect(listRecognitions).toHaveBeenCalledTimes(2);
             vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            TestBed.tick();
             expect(listRecognitions).toHaveBeenCalledTimes(2);
             fixture.destroy();
             vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            TestBed.tick();
             expect(listRecognitions).toHaveBeenCalledTimes(2);
         } finally {
             vi.useRealTimers();
@@ -383,33 +401,34 @@ describe('recognition history rendered interactions', () => {
     });
 });
 
-it('blocks pagination and duplicate mutations while deletion is pending, then permits retry after failure', () => {
+it('blocks pagination and duplicate mutations while deletion is pending, then permits retry after failure', async () => {
     listRecognitions.mockReturnValue(of(pageOf([historyJob], 1, PAGE_SIZE + 1)));
     const pending = new Subject<void>();
     deleteRecognition.mockReturnValue(pending);
     const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
     fixture.componentRef.setInput('screen', true);
-    fixture.detectChanges();
+    await renderHistoryAsync(fixture);
     const host = fixture.nativeElement as HTMLElement;
     requiredElement(host, '[aria-label="AI_RECOGNITION.DELETE"]').click();
-    fixture.detectChanges();
+    await renderHistoryAsync(fixture);
     expect(requiredElement(host, 'fd-ui-pagination').parentElement?.hasAttribute('inert')).toBe(true);
     fixture.componentInstance['load'](1);
+    TestBed.tick();
     fixture.componentInstance['remove'](historyJob);
     expect(listRecognitions).toHaveBeenCalledTimes(1);
     expect(deleteRecognition).toHaveBeenCalledTimes(1);
     pending.error(new Error('offline'));
-    fixture.detectChanges();
+    await renderHistoryAsync(fixture);
     expect(requiredElement(host, '[role="alert"]').hidden).toBe(false);
     expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
     expect(requiredElement(host, 'fd-ui-pagination').parentElement?.hasAttribute('inert')).toBe(false);
 });
 
-it('renders a retry instead of an empty history when loading fails', () => {
+it('renders a retry instead of an empty history when loading fails', async () => {
     listRecognitions.mockReturnValueOnce(throwError(() => new Error('offline'))).mockReturnValueOnce(of(pageOf([])));
     const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
     fixture.componentRef.setInput('screen', true);
-    fixture.detectChanges();
+    await renderHistoryAsync(fixture);
     const host = fixture.nativeElement as HTMLElement;
     expect(requiredElement(host, '.history-list__empty').style.display).toBe('none');
     const retry = Array.from(host.querySelectorAll<HTMLButtonElement>('button')).find(button =>
@@ -419,9 +438,16 @@ it('renders a retry instead of an empty history when loading fails', () => {
         throw new Error('Retry button missing');
     }
     retry.click();
-    fixture.detectChanges();
+    await renderHistoryAsync(fixture);
     expect(requiredElement(host, '.history-list__empty').style.display).not.toBe('none');
 });
+
+async function renderHistoryAsync(fixture: ComponentFixture<FoodRecognitionHistoryComponent>): Promise<void> {
+    fixture.detectChanges();
+    TestBed.tick();
+    await waitForAsyncTasksAsync();
+    fixture.detectChanges();
+}
 
 function requiredElement(host: Element, selector: string): HTMLElement {
     const element = host.querySelector<HTMLElement>(selector);

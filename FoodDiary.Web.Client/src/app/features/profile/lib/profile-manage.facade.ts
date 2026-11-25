@@ -1,12 +1,12 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize, firstValueFrom, merge, type Subscription, take } from 'rxjs';
+import { finalize, firstValueFrom, merge, type Subscription, take, tap } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
-import { UserService } from '../../../shared/api/user.service';
+import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
 import { TelegramUnlinkFlowService } from '../../../shared/auth/telegram-unlink-flow.service';
@@ -33,8 +33,6 @@ const BACKUP_EMAIL_RESEND_MS = 60_000;
 @Injectable()
 export class ProfileManageFacade {
     private readonly destroyRef = inject(DestroyRef);
-    private profileRead: Subscription | undefined;
-    private measurementsRead: Subscription | undefined;
     private readonly userService = inject(UserService);
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
@@ -112,10 +110,59 @@ export class ProfileManageFacade {
     public readonly dietologistRelationship = this.dietologistRelationshipState.asReadonly();
     public readonly currentWeight = signal<number | null>(null);
     public readonly currentWaist = signal<number | null>(null);
-    public readonly isLoadingWebPushSubscriptions = signal(false);
-    public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
-    private webPushSubscriptionsRequestId = 0;
     private dietologistRelationshipVersion = 0;
+    private readonly profileRequest = signal<{ relationshipVersion: number } | undefined>(undefined);
+    private readonly profileResource = rxResource({
+        params: this.profileRequest,
+        stream: ({ params }) =>
+            this.userService.getOverview().pipe(
+                tap({
+                    next: overview => {
+                        if (this.profileRequest() === params) {
+                            this.applyProfileOverview(overview, params.relationshipVersion);
+                        }
+                    },
+                    error: () => {
+                        if (this.profileRequest() === params) {
+                            this.user.set(null);
+                            this.webPushSubscriptions.set([]);
+                            this.applyOverviewDietologistRelationship(null, params.relationshipVersion);
+                            this.setGlobalError('USER_MANAGE.LOAD_ERROR');
+                        }
+                    },
+                }),
+            ),
+    });
+    private readonly webPushRequest = signal<number | undefined>(undefined);
+    private readonly webPushResource = rxResource({
+        params: this.webPushRequest,
+        stream: ({ params }) =>
+            this.notificationService.getWebPushSubscriptions().pipe(
+                tap(subscriptions => {
+                    if (this.webPushRequest() === params) {
+                        this.webPushSubscriptions.set(subscriptions);
+                    }
+                }),
+            ),
+    });
+    public readonly isLoadingWebPushSubscriptions = this.webPushResource.isLoading;
+    public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
+    private readonly measurementsRequest = signal<number | undefined>(undefined);
+
+    public constructor() {
+        rxResource({
+            params: this.measurementsRequest,
+            stream: ({ params }) =>
+                this.profileMeasurementsService.getLatest().pipe(
+                    tap(summary => {
+                        if (this.measurementsRequest() === params) {
+                            this.currentWeight.set(summary.weightKg);
+                            this.currentWaist.set(summary.waistCm);
+                        }
+                    }),
+                ),
+        });
+    }
 
     public initialize(): void {
         this.telegramUnlinkError.set(this.unlinkFlow.consumeError());
@@ -124,22 +171,8 @@ export class ProfileManageFacade {
             this.backupEmailSentTo.set(pendingEmail.email);
             this.backupEmailResendAt.set(pendingEmail.sentAt + BACKUP_EMAIL_RESEND_MS);
         }
-        this.loadUser();
-        this.loadLatestMeasurements();
-    }
-
-    private loadLatestMeasurements(): void {
-        this.measurementsRead?.unsubscribe();
-        this.measurementsRead = this.profileMeasurementsService
-            .getLatest()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => {
-                    this.currentWeight.set(summary.weightKg);
-                    this.currentWaist.set(summary.waistCm);
-                },
-                error: () => {},
-            });
+        this.profileRequest.set({ relationshipVersion: this.dietologistRelationshipVersion });
+        this.measurementsRequest.update(version => (version ?? 0) + 1);
     }
 
     public openChangePasswordDialog(): void {
@@ -274,7 +307,8 @@ export class ProfileManageFacade {
             return false;
         }
 
-        this.profileRead?.unsubscribe();
+        this.profileRequest.set(undefined);
+        this.profileResource.set(undefined);
         this.isSavingProfile.set(true);
         const preferencesAtRequest = this.lastNotificationPreferenceSave;
         // A submitted update and its session check outlive ordinary Profile navigation.
@@ -318,38 +352,23 @@ export class ProfileManageFacade {
             : user;
     }
 
-    private loadUser(): void {
-        this.profileRead?.unsubscribe();
-        const relationshipVersion = this.dietologistRelationshipVersion;
-        this.profileRead = this.userService
-            .getOverview()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: overview => {
-                    if (overview === null) {
-                        this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-                        return;
-                    }
+    private applyProfileOverview(overview: UserProfileOverview | null, relationshipVersion: number): void {
+        if (overview === null) {
+            this.setGlobalError('USER_MANAGE.LOAD_ERROR');
+            return;
+        }
 
-                    this.user.set(overview.user);
-                    this.applyNotificationPreferences(overview.notificationPreferences);
-                    this.webPushSubscriptions.set(overview.webPushSubscriptions);
-                    this.applyOverviewDietologistRelationship(overview.dietologistRelationship, relationshipVersion);
-                    this.clearGlobalError();
-                    if (this.backupEmailFlow.read()?.failed === true) {
-                        this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
-                        this.backupEmailFlow.clear();
-                    }
-                    void this.localizationService.applyLanguagePreferenceAsync(overview.user.language ?? null);
-                    this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle, overview.user.surfaceStyle);
-                },
-                error: () => {
-                    this.user.set(null);
-                    this.webPushSubscriptions.set([]);
-                    this.applyOverviewDietologistRelationship(null, relationshipVersion);
-                    this.setGlobalError('USER_MANAGE.LOAD_ERROR');
-                },
-            });
+        this.user.set(overview.user);
+        this.applyNotificationPreferences(overview.notificationPreferences);
+        this.webPushSubscriptions.set(overview.webPushSubscriptions);
+        this.applyOverviewDietologistRelationship(overview.dietologistRelationship, relationshipVersion);
+        this.clearGlobalError();
+        if (this.backupEmailFlow.read()?.failed === true) {
+            this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
+            this.backupEmailFlow.clear();
+        }
+        void this.localizationService.applyLanguagePreferenceAsync(overview.user.language ?? null);
+        this.themeService.syncWithUserPreferences(overview.user.theme, overview.user.uiStyle, overview.user.surfaceStyle);
     }
 
     private applyOverviewDietologistRelationship(relationship: DietologistRelationship | null, version: number): void {
@@ -381,7 +400,7 @@ export class ProfileManageFacade {
     }
 
     public refreshWebPushSubscriptions(): void {
-        this.loadWebPushSubscriptions();
+        this.webPushRequest.update(version => (version ?? 0) + 1);
     }
 
     public async removeWebPushSubscriptionAsync(endpoint: string): Promise<boolean> {
@@ -400,29 +419,6 @@ export class ProfileManageFacade {
         } finally {
             this.removingWebPushSubscriptionEndpoint.set(null);
         }
-    }
-
-    private loadWebPushSubscriptions(): void {
-        const requestId = ++this.webPushSubscriptionsRequestId;
-        this.isLoadingWebPushSubscriptions.set(true);
-
-        this.notificationService
-            .getWebPushSubscriptions()
-            .pipe(
-                finalize(() => {
-                    if (requestId === this.webPushSubscriptionsRequestId) {
-                        this.isLoadingWebPushSubscriptions.set(false);
-                    }
-                }),
-            )
-            .subscribe({
-                next: subscriptions => {
-                    if (requestId === this.webPushSubscriptionsRequestId) {
-                        this.webPushSubscriptions.set(subscriptions);
-                    }
-                },
-                error: () => {},
-            });
     }
 }
 

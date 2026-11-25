@@ -3,6 +3,7 @@ import { FdTourService } from 'fd-tour';
 import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { ClientTask, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
@@ -51,7 +52,7 @@ describe('RecommendationsPageComponent loading', () => {
         expect(component['errorKey']()).toBe('RECOMMENDATIONS.LOAD_ERROR');
     });
 
-    it('keeps loading state until the recommendations request resolves', () => {
+    it('keeps loading state until the recommendations request resolves', async () => {
         const recommendations$ = new Subject<DietologistRecommendation[]>();
         const { component } = createComponent({ recommendations$ });
 
@@ -59,6 +60,7 @@ describe('RecommendationsPageComponent loading', () => {
 
         recommendations$.next([createRecommendation()]);
         recommendations$.complete();
+        await waitForAsyncTasksAsync();
 
         expect(component['isLoading']()).toBe(false);
         expect(component['recommendationItems']()).toHaveLength(1);
@@ -161,22 +163,28 @@ describe('RecommendationsPageComponent route and tour', () => {
 });
 
 describe('RecommendationsPageComponent retry recovery', () => {
-    it('clears a previous recommendation load error after retry', () => {
+    it('clears a previous recommendation load error after retry', async () => {
         const { component, facade } = createComponent({ loadError: true });
         facade.getMyRecommendations.mockReturnValueOnce(of([createRecommendation()]));
         component['retryRecommendations']();
+        TestBed.tick();
+        await waitForAsyncTasksAsync();
 
         expect(component['errorKey']()).toBeNull();
         expect(component['recommendationItems']()).toHaveLength(1);
     });
 
-    it('clears a previous task load error after retry', () => {
+    it('clears a previous task load error after retry', async () => {
         const { component, facade } = createComponent();
         facade.getMyTasks.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         component['retryTasks']();
+        TestBed.tick();
+        await waitForAsyncTasksAsync();
         expect(component['taskErrorKey']()).toBe('CLIENT_TASKS.LOAD_ERROR');
 
         component['retryTasks']();
+        TestBed.tick();
+        await waitForAsyncTasksAsync();
         expect(component['taskErrorKey']()).toBeNull();
         expect(component['tasksLoading']()).toBe(false);
     });

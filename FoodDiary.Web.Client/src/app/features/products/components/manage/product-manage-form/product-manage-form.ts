@@ -12,7 +12,7 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -22,7 +22,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, finalize, firstValueFrom, type Observable, of } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, type Observable, of } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
@@ -35,7 +35,7 @@ import { scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.uti
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../../shared/models/product.data';
-import { usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
+import { type UsdaFoodId, usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
@@ -128,7 +128,15 @@ export class ProductManageFormComponent implements UnsavedEditor {
     protected readonly globalError = signal<string | null>(null);
     protected readonly photoImportLimitReached = signal(false);
     private appliedPrefillKey: string | null = null;
-    private usdaDetailRequestId = 0;
+    private readonly externalPrefill = signal<
+        | { source: 'barcode'; barcode: string }
+        | { source: 'usda'; fdcId: UsdaFoodId; name: string; product: Product | null; unit: ProductFormValues['baseUnit'] }
+        | undefined
+    >(undefined);
+    private readonly externalPrefillResource = rxResource({
+        params: this.externalPrefill,
+        stream: ({ params, abortSignal }) => this.readExternalPrefill(params, abortSignal),
+    });
     protected readonly isDeleting = signal(false);
     protected readonly photoOwnerId = computed(() => this.product()?.id ?? null);
     protected readonly photosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
@@ -356,20 +364,43 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     private lookupOpenFoodFacts(barcode: string): void {
-        if (this.product() !== null) {
-            return;
+        if (this.product() === null) {
+            this.externalPrefillResource.set(undefined);
+            this.externalPrefill.set({ source: 'barcode', barcode });
+        }
+    }
+
+    private readExternalPrefill(request: NonNullable<ReturnType<typeof this.externalPrefill>>, abortSignal: AbortSignal): Observable<void> {
+        if (request.source === 'barcode') {
+            return this.externalFoodFacade.searchByBarcode(request.barcode).pipe(
+                map(offProduct => {
+                    if (
+                        offProduct !== null &&
+                        !abortSignal.aborted &&
+                        this.externalPrefill() === request &&
+                        this.product() === null &&
+                        this.productFormModel().barcode === request.barcode
+                    ) {
+                        this.patchProductForm(buildOpenFoodFactsLookupPatch(this.productFormModel(), offProduct));
+                    }
+                }),
+            );
         }
 
-        this.externalFoodFacade
-            .searchByBarcode(barcode)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(offProduct => {
-                if (offProduct === null || this.product() !== null || this.productFormModel().barcode !== barcode) {
-                    return;
+        return this.externalFoodFacade.getUsdaFoodDetail(request.fdcId).pipe(
+            catchError(() => of<UsdaFoodDetail | null>(null)),
+            map(detail => {
+                if (
+                    detail !== null &&
+                    !abortSignal.aborted &&
+                    this.externalPrefill() === request &&
+                    this.product() === request.product &&
+                    this.productFormModel().usdaFdcId === request.fdcId
+                ) {
+                    this.prefillFromUsdaFoodDetail(detail, request.name, request.unit);
                 }
-
-                this.patchProductForm(buildOpenFoodFactsLookupPatch(this.productFormModel(), offProduct));
-            });
+            }),
+        );
     }
 
     private prefillFromOffProduct(offProduct: OpenFoodFactsProduct | ProductNameSuggestion): void {
@@ -565,27 +596,19 @@ export class ProductManageFormComponent implements UnsavedEditor {
             });
             this.patchProductForm(buildResetNutritionPatch());
             this.nameSearch.setSelectedSuggestion(suggestion);
-            const selection = { product: this.product(), unit: this.productFormModel().baseUnit };
-            const requestId = ++this.usdaDetailRequestId;
-            this.externalFoodFacade
-                .getUsdaFoodDetail(usdaFoodId(fdcId))
-                .pipe(
-                    catchError(() => of<UsdaFoodDetail | null>(null)),
-                    takeUntilDestroyed(this.destroyRef),
-                )
-                .subscribe(detail => {
-                    if (
-                        detail !== null &&
-                        requestId === this.usdaDetailRequestId &&
-                        this.product() === selection.product &&
-                        this.productFormModel().usdaFdcId === fdcId
-                    ) {
-                        this.prefillFromUsdaFoodDetail(detail, suggestion.name, selection.unit);
-                    }
-                });
+            this.externalPrefillResource.set(undefined);
+            this.externalPrefill.set({
+                source: 'usda',
+                fdcId: usdaFoodId(fdcId),
+                name: suggestion.name,
+                product: this.product(),
+                unit: this.productFormModel().baseUnit,
+            });
             return;
         }
 
+        this.externalPrefill.set(undefined);
+        this.externalPrefillResource.set(undefined);
         this.prefillFromOffProduct(suggestion);
         this.productForm.usdaFdcId().value.set(null);
         this.nameSearch.setSelectedSuggestion(suggestion);
@@ -607,7 +630,8 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
-        this.usdaDetailRequestId++;
+        this.externalPrefill.set(undefined);
+        this.externalPrefillResource.set(undefined);
         const values = this.productFormModel();
         const existing = values.images ?? (values.imageUrl !== null && (values.imageUrl.url?.length ?? 0) > 0 ? [values.imageUrl] : []);
         const ids = new Set([...existing, ...(result.images ?? [])].map(image => image.assetId ?? image.url));

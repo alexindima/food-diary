@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { disabled as disabledRule, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -9,7 +10,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { catchError, of, type Subscription } from 'rxjs';
+import { catchError, map, of, type Subscription } from 'rxjs';
 
 import { FoodRecognitionHistoryComponent } from '../../../../components/shared/food-recognition-history/food-recognition-history';
 import { getAiTrialQuotaErrorKey } from '../../../../shared/lib/ai-quota-error.utils';
@@ -351,21 +352,17 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     public constructor() {
-        effect(onCleanup => {
-            if (this.historyOpen() || this.isBusy()) {
-                return;
-            }
-            const subscription = this.productAiRecognitionFacade.recognitionCount().subscribe({
-                next: count => {
-                    this.recognitionCount.set(count);
-                },
-                error: () => {
-                    this.recognitionCount.set(0);
-                },
-            });
-            onCleanup(() => {
-                subscription.unsubscribe();
-            });
+        rxResource({
+            params: () => (this.historyOpen() || this.isBusy() ? undefined : true),
+            stream: ({ abortSignal }) =>
+                this.productAiRecognitionFacade.recognitionCount().pipe(
+                    catchError(() => of(0)),
+                    map(count => {
+                        if (!abortSignal.aborted && !this.historyOpen() && !this.isBusy()) {
+                            this.recognitionCount.set(count);
+                        }
+                    }),
+                ),
         });
         this.destroyRef.onDestroy(() => {
             this.analysisSubscription?.unsubscribe();

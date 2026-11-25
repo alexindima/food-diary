@@ -61,7 +61,7 @@
         } @else {
             <fd-shopping-list-manage-controls
                 data-tour-id="shopping-list-manage"
-                [listSelectField]="listSelectForm.id"
+                [selectedListId]="selectedListId()"
                 [lists]="lists()"
                 [initialPage]="initialPage()"
                 [isLoading]="isLoading()"
@@ -71,6 +71,7 @@
                 [isMobile]="isMobileView()"
                 [renameRequestedListId]="renameRequestedListId()"
                 [canClearPurchased]="checkedItemsCount() > 0"
+                (listSelected)="selectList($event)"
                 (mergeDuplicates)="mergeDuplicates()"
                 (createList)="createNewList($event)"
                 (clearPurchased)="clearPurchasedAsync()"

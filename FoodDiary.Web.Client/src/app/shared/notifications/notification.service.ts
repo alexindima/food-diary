@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, map, merge, type Observable, shareReplay, Subject, tap } from 'rxjs';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, map, merge, type Observable, Subject, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
@@ -69,11 +69,62 @@ export class NotificationService {
     public readonly notificationsRequested = signal(false);
     public readonly notificationsChangedVersion = signal(0);
     private readonly unreadCountLoaded = signal(false);
-    private unreadCountRequest$: Observable<{ count: number }> | null = null;
-    private unreadCountRequestVersion = 0;
     private notificationsReloadRequested = false;
     private sessionOwner = this.readSessionOwner();
     private sessionVersion = 0;
+    private readonly unreadCountRequest = signal<{ session: number } | undefined>(undefined);
+    private readonly unreadCountResource = rxResource({
+        params: this.unreadCountRequest,
+        stream: ({ params, abortSignal }) =>
+            this.sdk.client
+                .getNotificationsUnreadCount(
+                    { version: this.sdk.version },
+                    'body',
+                    false,
+                    sdkRequestOptions(undefined, this.silentLoadingContext),
+                )
+                .pipe(
+                    map(value => requireSdkFields(value, ['count'])),
+                    tap(response => {
+                        if (!abortSignal.aborted && this.isCurrentSession(params.session) && this.unreadCountRequest() === params) {
+                            this.unreadCount.set(response.count);
+                            this.unreadCountLoaded.set(true);
+                            this.readStateChanged.next();
+                        }
+                    }),
+                ),
+    });
+    private readonly notificationsRequest = signal<{ session: number } | undefined>(undefined);
+    private readonly notificationsResource = rxResource({
+        params: this.notificationsRequest,
+        stream: ({ params, abortSignal }) =>
+            this.sdk.client
+                .getNotifications({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
+                .pipe(
+                    map(values => values.map(notificationFromSdk)),
+                    tap(notifications => {
+                        if (
+                            !abortSignal.aborted &&
+                            this.notificationsRequest() === params &&
+                            this.isCurrentSession(params.session) &&
+                            !this.notificationsReloadRequested
+                        ) {
+                            this.notifications.set(notifications);
+                            this.notificationsLoaded.set(true);
+                        }
+                    }),
+                    finalize(() => {
+                        if (!abortSignal.aborted && this.notificationsRequest() === params && this.isCurrentSession(params.session)) {
+                            this.notificationsLoading.set(false);
+                            // Wait for the current response, then honor a queued refresh before accepting any rows.
+                            if (this.notificationsReloadRequested) {
+                                this.notificationsReloadRequested = false;
+                                this.loadNotifications();
+                            }
+                        }
+                    }),
+                ),
+    });
 
     public constructor() {
         effect(() => {
@@ -96,40 +147,14 @@ export class NotificationService {
         }
 
         if (
-            (this.unreadCountRequest$ !== null && options.supersedePending !== true) ||
+            (untracked(this.unreadCountResource.isLoading) && options.supersedePending !== true) ||
             (this.unreadCountLoaded() && options.force !== true)
         ) {
             return;
         }
 
-        const requestVersion = ++this.unreadCountRequestVersion;
-        this.unreadCountRequest$ = this.sdk.client
-            .getNotificationsUnreadCount(
-                { version: this.sdk.version },
-                'body',
-                false,
-                sdkRequestOptions(undefined, this.silentLoadingContext),
-            )
-            .pipe(
-                map(value => requireSdkFields(value, ['count'])),
-                finalize(() => {
-                    if (this.isCurrentSession(session) && requestVersion === this.unreadCountRequestVersion) {
-                        this.unreadCountRequest$ = null;
-                    }
-                }),
-                shareReplay({ bufferSize: 1, refCount: false }),
-            );
-
-        this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: response => {
-                if (this.isCurrentSession(session) && requestVersion === this.unreadCountRequestVersion) {
-                    this.unreadCount.set(response.count);
-                    this.unreadCountLoaded.set(true);
-                    this.readStateChanged.next();
-                }
-            },
-            error: () => {},
-        });
+        this.unreadCountResource.set(undefined);
+        this.unreadCountRequest.set({ session });
     }
 
     public readState(): NotificationState {
@@ -300,30 +325,7 @@ export class NotificationService {
 
         this.notificationsRequested.set(true);
         this.notificationsLoading.set(true);
-        this.sdk.client
-            .getNotifications({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
-            .pipe(
-                map(values => values.map(notificationFromSdk)),
-                finalize(() => {
-                    if (this.isCurrentSession(session)) {
-                        this.notificationsLoading.set(false);
-                        if (this.notificationsReloadRequested) {
-                            this.notificationsReloadRequested = false;
-                            this.loadNotifications();
-                        }
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: notifications => {
-                    if (this.isCurrentSession(session) && !this.notificationsReloadRequested) {
-                        this.notifications.set(notifications);
-                        this.notificationsLoaded.set(true);
-                    }
-                },
-                error: () => {},
-            });
+        this.notificationsRequest.set({ session });
     }
 
     private readSessionOwner(): string | null {
@@ -346,7 +348,10 @@ export class NotificationService {
 
     private resetSession(): void {
         this.sessionVersion++;
-        this.unreadCountRequest$ = null;
+        this.unreadCountRequest.set(undefined);
+        this.unreadCountResource.set(undefined);
+        this.notificationsRequest.set(undefined);
+        this.notificationsResource.set(undefined);
         this.unreadCount.set(0);
         this.unreadCountLoaded.set(false);
         this.notifications.set([]);

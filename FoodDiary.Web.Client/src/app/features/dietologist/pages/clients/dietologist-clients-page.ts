@@ -70,9 +70,12 @@ export class DietologistClientsPageComponent {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
 
-    protected readonly clients = signal<ClientSummary[]>([]);
-    protected readonly loading = signal(true);
-    protected readonly loadError = signal(false);
+    private readonly clientsResource = rxResource({
+        stream: () => this.dietologistFacade.getMyClients(),
+    });
+    protected readonly clients = computed(() => (this.clientsResource.hasValue() ? this.clientsResource.value() : []));
+    protected readonly loading = this.clientsResource.isLoading;
+    protected readonly loadError = computed(() => this.clientsResource.error() !== undefined);
     protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
     protected readonly attentionSettings = signal<AttentionSignalSettings>({
         inactivityDays: 3,
@@ -140,12 +143,10 @@ export class DietologistClientsPageComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
-
-        this.loadClients();
     }
 
     protected retryLoad(): void {
-        this.loadClients();
+        this.clientsResource.reload();
         this.reloadAttentionSignals();
     }
 
@@ -234,25 +235,6 @@ export class DietologistClientsPageComponent {
                 if (confirmed === true) {
                     this.executeBulkRecommendation(clientIds, text);
                 }
-            });
-    }
-
-    private loadClients(): void {
-        this.loading.set(true);
-        this.loadError.set(false);
-        this.dietologistFacade
-            .getMyClients()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: clients => {
-                    this.clients.set(clients);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.clients.set([]);
-                    this.loading.set(false);
-                    this.loadError.set(true);
-                },
             });
     }
 

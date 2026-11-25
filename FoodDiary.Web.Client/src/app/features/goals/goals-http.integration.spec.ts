@@ -197,6 +197,7 @@ it('keeps the clear draft after a partial save and retries only the remaining bo
     await harness.navigateByUrl(DEPARTURE_URL, GoalsDepartureComponent);
     await harness.navigateByUrl(GOALS_URL);
     http.expectOne({ method: 'GET', url: GOALS_API }).flush({ ...GOALS, ...cleared });
+    await harness.fixture.whenStable();
     harness.detectChanges();
     expect(input(page(harness), '#goals-editor-weight').valueAsNumber).toBe(0);
     expect(input(page(harness), '#goals-editor-waist').valueAsNumber).toBe(0);
@@ -236,6 +237,7 @@ it('blocks an invalid water target until the user selects a valid visible preset
 async function openGoalsAsync(): Promise<RouterTestingHarness> {
     const harness = await RouterTestingHarness.create(GOALS_URL);
     http.expectOne({ method: 'GET', url: GOALS_API }).flush(GOALS);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     return harness;
 }

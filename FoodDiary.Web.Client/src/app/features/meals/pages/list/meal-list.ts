@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, input, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -7,7 +7,20 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { catchError, EMPTY, filter, finalize, firstValueFrom, from, type Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+    catchError,
+    defaultIfEmpty,
+    EMPTY,
+    filter,
+    finalize,
+    firstValueFrom,
+    from,
+    type Observable,
+    Subject,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs';
 
 import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
@@ -127,6 +140,11 @@ export class MealListComponent {
         return this.hasActiveFilters() ? 'no-results' : 'empty';
     });
     protected readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
+    private readonly requestedOverview = signal<Observable<void> | undefined>(undefined);
+    private readonly overview = rxResource({
+        params: this.requestedOverview,
+        stream: ({ params }) => params.pipe(defaultIfEmpty(void 0)),
+    });
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
     private readonly routeQuery = computed(() =>
         readMealListQuery(
@@ -207,12 +225,13 @@ export class MealListComponent {
                     this.activeQueryKey = mealListQueryKey(query);
                     this.searchModel.set(query);
                 }),
-                switchMap(query => this.loadMeals(query.page)),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe();
+            .subscribe(query => {
+                this.requestOverview(this.loadMeals(query.page));
+            });
         // An immediate overview result can normalize the URL before navigation finishes.
-        this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.requestOverview(this.loadInitialOverview());
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -298,9 +317,7 @@ export class MealListComponent {
 
     protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
-        this.loadMeals(pageIndex + 1)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        this.requestOverview(this.loadMeals(pageIndex + 1));
     }
 
     protected retryLoad(): void {
@@ -308,7 +325,7 @@ export class MealListComponent {
             return;
         }
         const request = this.hasActiveFilters() ? this.loadMeals(this.currentPageIndex() + 1) : this.loadInitialOverview();
-        request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.requestOverview(request);
     }
 
     protected async openMealDetailsAsync(meal: Meal): Promise<void> {
@@ -332,12 +349,12 @@ export class MealListComponent {
 
     protected removeFilter(id: string): void {
         this.searchModel.update(model => removeMealFilter(model, id));
-        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.requestOverview(this.loadMeals(1));
     }
 
     protected resetFilters(): void {
         this.searchModel.set(emptyMealFilters());
-        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.requestOverview(this.loadMeals(1));
     }
 
     protected openFilters(): void {
@@ -386,7 +403,7 @@ export class MealListComponent {
             hasImage: result.hasImage,
             hasAiSession: result.hasAiSession,
         }));
-        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.requestOverview(this.loadMeals(1));
     }
 
     private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
@@ -405,9 +422,12 @@ export class MealListComponent {
     }
 
     protected reloadCurrentPage(): void {
-        this.loadMeals(this.currentPageIndex() + 1)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        this.requestOverview(this.loadMeals(this.currentPageIndex() + 1));
+    }
+
+    private requestOverview(read: Observable<void>): void {
+        this.overview.set(undefined);
+        this.requestedOverview.set(read);
     }
 
     private get structuredFilters(): MealListStructuredFilters {

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { type CalendarDate, calendarDate } from '../models/semantics/date-value';
 import { MeasurementHistoryPager, previousMeasurementDay } from './measurement-history-pager';
 
@@ -26,6 +27,7 @@ function setup(): { pager: MeasurementHistoryPager<Entry>; fetch: ReturnType<typ
         return response;
     });
     const pager = TestBed.runInInjectionContext(() => new MeasurementHistoryPager(fetch));
+    TestBed.tick();
     return { pager, fetch, responses };
 }
 function respond(response: Subject<Entry[]>, values: Entry[]): void {
@@ -36,18 +38,21 @@ describe('MeasurementHistoryPager', () => {
     it('loads on dialog creation and guards overlapping clicks', () => {
         const { pager, fetch } = setup();
         pager.loadMore();
+        TestBed.tick();
         expect(fetch).toHaveBeenCalledExactlyOnceWith(undefined);
         expect(pager.loading()).toBe(true);
         expect(pager.visibleCount()).toBe(0);
         expect(pager.message()).toBeNull();
     });
-    it('hides lookahead but preserves its value for delta and refetches it on the next page', () => {
+    it('hides lookahead but preserves its value for delta and refetches it on the next page', async () => {
         const { pager, fetch, responses } = setup();
         const first = entries(FETCH_SIZE);
         respond(responses[0], first);
         expect(pager.visibleCount()).toBe(PAGE_SIZE);
         expect(pager.entries().at(-1)).toEqual(first.at(-1));
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         expect(fetch).toHaveBeenLastCalledWith(previousMeasurementDay(first[PAGE_SIZE - 1].date));
         const final = entries(LAST_PAGE_SIZE, PAGE_SIZE);
         final[0].value = 99;
@@ -56,12 +61,15 @@ describe('MeasurementHistoryPager', () => {
         expect(pager.visibleCount()).toBe(PAGE_SIZE + LAST_PAGE_SIZE);
         expect(pager.hasMore()).toBe(false);
         pager.loadMore();
+        TestBed.tick();
         expect(fetch).toHaveBeenCalledTimes(2);
     });
-    it('handles deletion of the hidden lookahead without retaining a phantom record', () => {
+    it('handles deletion of the hidden lookahead without retaining a phantom record', async () => {
         const { pager, responses } = setup();
         respond(responses[0], entries(FETCH_SIZE));
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         respond(responses[1], entries(2, FETCH_SIZE));
         expect(pager.entries().some(entry => entry.id === String(PAGE_SIZE))).toBe(false);
         expect(pager.visibleCount()).toBe(PAGE_SIZE + 2);
@@ -72,35 +80,42 @@ describe('MeasurementHistoryPager', () => {
         expect(pager.visibleCount()).toBe(count);
         expect(pager.hasMore()).toBe(false);
         pager.loadMore();
+        TestBed.tick();
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(pager.message()).toBe(count === 0 ? 'MEASUREMENT_HISTORY_PAGING.EMPTY' : null);
     });
 });
 
 describe('Measurement history errors and lifecycle', () => {
-    it('keeps loaded rows and retries the same date after errors', () => {
+    it('keeps loaded rows and retries the same date after errors', async () => {
         const { pager, fetch, responses } = setup();
         const first = entries(FETCH_SIZE);
         respond(responses[0], first);
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         responses[1].error(new Error('offline'));
+        await waitForAsyncTasksAsync();
         expect(pager.entries()).toEqual(first);
         expect(pager.visibleCount()).toBe(PAGE_SIZE);
         expect(pager.failed()).toBe(true);
         expect(pager.loading()).toBe(false);
         pager.loadMore();
+        TestBed.tick();
         expect(fetch.mock.calls[2]).toEqual(fetch.mock.calls[1]);
         expect(pager.failed()).toBe(false);
         respond(responses[2], []);
         expect(pager.visibleCount()).toBe(PAGE_SIZE);
         expect(pager.hasMore()).toBe(false);
     });
-    it('distinguishes initial failure from empty history and supports retry', () => {
+    it('distinguishes initial failure from empty history and supports retry', async () => {
         const { pager, responses } = setup();
         responses[0].error(new Error('offline'));
+        await waitForAsyncTasksAsync();
         expect(pager.loaded()).toBe(false);
         expect(pager.message()).toBe('MEASUREMENT_HISTORY_PAGING.ERROR');
         pager.loadMore();
+        TestBed.tick();
         respond(responses[1], []);
         expect(pager.message()).toBe('MEASUREMENT_HISTORY_PAGING.EMPTY');
     });
@@ -124,10 +139,13 @@ describe('Measurement history errors and lifecycle', () => {
             of(database.filter(entry => dateTo === undefined || entry.date.slice(0, CALENDAR_DATE_LENGTH) <= dateTo).slice(0, FETCH_SIZE)),
         );
         const pager = TestBed.runInInjectionContext(() => new MeasurementHistoryPager(fetch));
+        TestBed.tick();
         database = [{ id: 'new', date: calendarDate('2026-09-22'), value: 0 }, ...database.slice(1)];
-        while (pager.hasMore()) {
+        for (let page = 1; page < Math.ceil(LARGE_HISTORY_SIZE / PAGE_SIZE); page++) {
             pager.loadMore();
+            TestBed.tick();
         }
+        expect(pager.hasMore()).toBe(false);
         expect(pager.entries()).toEqual(entries(LARGE_HISTORY_SIZE));
         expect(new Set(pager.entries().map(entry => entry.id)).size).toBe(LARGE_HISTORY_SIZE);
     });

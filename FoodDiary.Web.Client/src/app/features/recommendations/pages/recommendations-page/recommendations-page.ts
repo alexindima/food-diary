@@ -11,7 +11,7 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -67,17 +67,23 @@ export class RecommendationsPageComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
-    protected readonly recommendations = signal<DietologistRecommendation[]>([]);
-    protected readonly tasks = signal<ClientTask[]>([]);
-    protected readonly tasksLoading = signal(true);
-    protected readonly taskErrorKey = signal<string | null>(null);
+    private readonly recommendationsResource = rxResource({ stream: () => this.recommendationsFacade.getMyRecommendations() });
+    private readonly tasksResource = rxResource({ stream: () => this.recommendationsFacade.getMyTasks() });
+    protected readonly recommendations = linkedSignal(() =>
+        this.recommendationsResource.hasValue() ? this.recommendationsResource.value() : [],
+    );
+    protected readonly tasks = linkedSignal(() => (this.tasksResource.hasValue() ? this.tasksResource.value() : []));
+    protected readonly tasksLoading = this.tasksResource.isLoading;
+    protected readonly taskErrorKey = computed(() => (this.tasksResource.error() === undefined ? null : 'CLIENT_TASKS.LOAD_ERROR'));
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly selectedRecommendationId = linkedSignal(this.recommendationId);
     protected readonly taskActionErrorKey = signal<string | null>(null);
     protected readonly readErrorKey = signal<string | null>(null);
     protected readonly markingReadIds = signal<ReadonlySet<string>>(new Set<string>());
-    protected readonly isLoading = signal(true);
-    protected readonly errorKey = signal<string | null>(null);
+    protected readonly isLoading = this.recommendationsResource.isLoading;
+    protected readonly errorKey = computed(() =>
+        this.recommendationsResource.error() === undefined ? null : 'RECOMMENDATIONS.LOAD_ERROR',
+    );
     protected readonly recommendationItems = computed<RecommendationViewModel[]>(() =>
         this.recommendations().map(recommendation => ({
             ...recommendation,
@@ -89,14 +95,14 @@ export class RecommendationsPageComponent {
 
     public constructor() {
         effect(() => {
-            const id = this.recommendationId();
-            untracked(() => {
-                this.markRecommendationIdAsRead(id);
-            });
+            this.recommendationId();
+            if (this.recommendationsResource.hasValue()) {
+                this.recommendationsResource.value();
+                untracked(() => {
+                    this.markRecommendationIdAsRead(this.selectedRecommendationId());
+                });
+            }
         });
-
-        this.loadRecommendations();
-        this.loadTasks();
     }
 
     protected markRecommendationAsRead(recommendation: DietologistRecommendation): void {
@@ -167,50 +173,11 @@ export class RecommendationsPageComponent {
     }
 
     protected retryRecommendations(): void {
-        this.loadRecommendations();
+        this.recommendationsResource.reload();
     }
 
     protected retryTasks(): void {
-        this.loadTasks();
-    }
-
-    private loadRecommendations(): void {
-        this.isLoading.set(true);
-        this.errorKey.set(null);
-        this.recommendationsFacade
-            .getMyRecommendations()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: recommendations => {
-                    this.recommendations.set(recommendations);
-                    this.isLoading.set(false);
-                    this.markRecommendationIdAsRead(this.selectedRecommendationId());
-                },
-                error: () => {
-                    this.recommendations.set([]);
-                    this.isLoading.set(false);
-                    this.errorKey.set('RECOMMENDATIONS.LOAD_ERROR');
-                },
-            });
-    }
-
-    private loadTasks(): void {
-        this.tasksLoading.set(true);
-        this.taskErrorKey.set(null);
-        this.recommendationsFacade
-            .getMyTasks()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: tasks => {
-                    this.tasks.set(tasks);
-                    this.tasksLoading.set(false);
-                },
-                error: () => {
-                    this.tasks.set([]);
-                    this.tasksLoading.set(false);
-                    this.taskErrorKey.set('CLIENT_TASKS.LOAD_ERROR');
-                },
-            });
+        this.tasksResource.reload();
     }
 
     private removeChangingTaskId(taskId: string): void {

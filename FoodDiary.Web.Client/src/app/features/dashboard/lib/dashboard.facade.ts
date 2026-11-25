@@ -1,10 +1,10 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type FdUiToastRef, FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import type { Observable, PartialObserver } from 'rxjs';
-import { finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { catchError, finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { developmentRequestContext } from '../../../shared/development/development-request-context';
@@ -43,6 +43,14 @@ import {
     placeholderLabel,
 } from './dashboard-nutrition.utils';
 import { createWaistTrendSignals, createWeightTrendSignals } from './dashboard-trend.utils';
+
+type DashboardSnapshotLoad = {
+    requestId: number;
+    showLoader: boolean;
+    query: Parameters<DashboardService['getSnapshot']>[0];
+    refreshHydration: boolean;
+    onHydrationRefreshed: (() => void) | undefined;
+};
 import { resolveDashboardNutritionInsight } from './nutrition-insight.policy';
 
 @Injectable()
@@ -160,6 +168,16 @@ export class DashboardFacade {
     });
     private readonly trendDays = DASHBOARD_TREND_DAYS;
     private readonly snapshotRequest = new RequestStateController<DashboardSnapshot, 'DASHBOARD.LOAD_ERROR'>();
+    private readonly requestedSnapshot = signal<DashboardSnapshotLoad | undefined>(undefined);
+    private readonly snapshotResource = rxResource({
+        params: this.requestedSnapshot,
+        stream: ({ params, abortSignal }) => this.readDashboardSnapshot(params, abortSignal),
+    });
+    private readonly requestedHydrationSnapshot = signal<DashboardSnapshotLoad | undefined>(undefined);
+    private readonly hydrationSnapshotResource = rxResource({
+        params: this.requestedHydrationSnapshot,
+        stream: ({ params, abortSignal }) => this.readDashboardSnapshot(params, abortSignal),
+    });
 
     public readonly selectedDate = signal<Date>(normalizeDate(new Date()));
     public readonly isTodaySelected = computed(() => {
@@ -408,6 +426,7 @@ export class DashboardFacade {
     }
 
     private loadDashboardSnapshot(showLoader = true, refreshHydration = false, onHydrationRefreshed?: () => void): void {
+        this.observedDashboardVersion = this.invalidation.dashboardVersion();
         if (refreshHydration) {
             this.isHydrationRefreshing.set(true);
         }
@@ -424,37 +443,42 @@ export class DashboardFacade {
             locale,
             trendDays: this.trendDays,
         };
-        const context = developmentRequestContext(this.snapshotRequest.bindRequest(requestId));
-        const request$ = showLoader
-            ? this.dashboardService.getSnapshot(query, context)
-            : this.dashboardService.getSnapshotSilentlyStrict(query, context);
-        const observer: PartialObserver<DashboardSnapshot | null> = {
-            next: snapshot => {
-                if (snapshot === null) {
-                    this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
-                    return;
-                }
-                if (!this.snapshotRequest.succeed(requestId, snapshot)) {
-                    return;
-                }
-                this.layout.initializeLayout(snapshot.dashboardLayout ?? null);
-            },
-            error: () => {
-                this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
-            },
-        };
+        const request = { requestId, showLoader, query, refreshHydration, onHydrationRefreshed };
+        if (refreshHydration) {
+            this.hydrationSnapshotResource.set(undefined);
+            this.requestedHydrationSnapshot.set(request);
+        } else {
+            this.snapshotResource.set(undefined);
+            this.requestedSnapshot.set(request);
+        }
+    }
 
-        request$
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    if (refreshHydration) {
-                        this.isHydrationRefreshing.set(false);
-                        onHydrationRefreshed?.();
-                    }
-                }),
-            )
-            .subscribe(observer);
+    private readDashboardSnapshot(request: DashboardSnapshotLoad, abortSignal: AbortSignal): Observable<void> {
+        const context = developmentRequestContext(this.snapshotRequest.bindRequest(request.requestId));
+        const response = request.showLoader
+            ? this.dashboardService.getSnapshot(request.query, context)
+            : this.dashboardService.getSnapshotSilentlyStrict(request.query, context);
+        return response.pipe(
+            catchError(() => of(null)),
+            map(snapshot => {
+                if (abortSignal.aborted) {
+                    return;
+                }
+                if (snapshot === null) {
+                    this.snapshotRequest.fail(request.requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !request.showLoader });
+                    return;
+                }
+                if (this.snapshotRequest.succeed(request.requestId, snapshot)) {
+                    this.layout.initializeLayout(snapshot.dashboardLayout ?? null);
+                }
+            }),
+            finalize(() => {
+                if (request.refreshHydration) {
+                    this.isHydrationRefreshing.set(false);
+                    request.onHydrationRefreshed?.();
+                }
+            }),
+        );
     }
 
     private getCurrentLocale(): string {

@@ -1049,8 +1049,10 @@ describe('ClientDashboardComponent meal page transitions', () => {
         const pending = new Subject<DietologistDashboardSnapshot>();
         dietologistService.getClientDashboard.mockReturnValueOnce(pending).mockReturnValueOnce(of(next(['new-period-meal'])));
         const older = component['loadMoreMealsAsync']();
+        expect(pending.observed).toBe(true);
 
         component['showPreviousPeriod']();
+        expect(pending.observed).toBe(false);
         await vi.waitFor(() => {
             expect(component['dashboard']()?.meals.items[0].id).toBe('new-period-meal');
         });
@@ -1326,8 +1328,11 @@ function createPendingInitialDashboardRequests(): {
         of([createClient({ userId: entityId<'user'>('client-1'), permissions: { ...createClient().permissions, shareGoals: true } })]),
     );
     createComponent('client-1');
+    expect(initialRequest.observed).toBe(true);
     component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-22' });
     const reload = component['applyDateFilterAsync']();
+    expect(initialRequest.observed).toBe(false);
+    expect(component['goals']()?.dailyCalorieTarget).toBe(EXPECTED_DAILY_CALORIE_TARGET);
     return { initialRequest, periodRequest, latestSnapshot: { ...createDashboardSnapshot(), date: '2026-05-22T00:00:00Z' }, reload };
 }
 
@@ -1818,7 +1823,9 @@ async function verifyLatestDashboardResponseWinsAsync(): Promise<void> {
 
     component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
     component['applyDateFilter']();
+    expect(olderRequest.observed).toBe(true);
     component['showPreviousPeriod']();
+    expect(olderRequest.observed).toBe(false);
 
     const latestSnapshot = { ...createDashboardSnapshot(), date: '2026-05-16T00:00:00Z' };
     latestRequest.next(latestSnapshot);

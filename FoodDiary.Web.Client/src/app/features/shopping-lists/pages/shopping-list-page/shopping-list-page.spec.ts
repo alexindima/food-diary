@@ -289,16 +289,12 @@ describe('ShoppingListPageComponent form and item actions', () => {
         const { component, facade } = await setupShoppingListPageAsync();
 
         expect(facade.initialize).toHaveBeenCalledOnce();
-        expect(component['listSelectModel']().id).toBe(FIRST_LIST_ID);
+        expect(component['selectedListId']()).toBe(FIRST_LIST_ID);
     });
 
     it('delegates list select changes to facade', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
-        await flushSignalEffectsAsync();
-        facade.selectList.mockClear();
-
-        component['listSelectForm'].id().value.set(SECOND_LIST_ID);
-        await flushSignalEffectsAsync();
+        component['selectList'](entityId<'shopping-list'>(SECOND_LIST_ID));
 
         expect(facade.selectList).toHaveBeenCalledWith(SECOND_LIST_ID);
     });
@@ -601,12 +597,6 @@ describe('ShoppingListPageComponent list management', () => {
         expect(facade.renameListById).toHaveBeenCalledWith(SECOND_LIST_ID, 'Weekend groceries');
     });
 });
-
-async function flushSignalEffectsAsync(): Promise<void> {
-    await new Promise(resolve => {
-        setTimeout(resolve, 0);
-    });
-}
 
 describe('Shopping list merge preview', () => {
     it('applies the preview only after confirmation', async () => {

@@ -701,6 +701,7 @@ describe('Dashboard hydration undo during snapshot retry', () => {
         const restored = new Subject<DashboardSnapshot>();
         refreshSnapshot.mockReturnValueOnce(restored);
         deletion.flush(null, { status: 204, statusText: 'No Content' });
+        redraw(harness);
         expect(restored.observed).toBe(true);
         expect(refreshSnapshot).toHaveBeenCalledTimes(2);
         expect(refreshSnapshot.mock.lastCall?.[0].date).toEqual(readSnapshot.mock.calls[0][0].date);

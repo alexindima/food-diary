@@ -404,10 +404,10 @@ describe('Returning to the meal diary after saving a meal', () => {
         const retry = nativeEditorButton(diary, 'ERRORS.RETRY');
         retry.click();
         retry.click();
+        harness.detectChanges();
 
         expect(api.queryOverview).toHaveBeenCalledTimes(2);
         expect(retryingOverview.observed).toBe(true);
-        harness.detectChanges();
         expect(diary.querySelector('fd-skeleton-card')).not.toBeNull();
         expect(diary.querySelector('fd-error-state')).toBeNull();
 

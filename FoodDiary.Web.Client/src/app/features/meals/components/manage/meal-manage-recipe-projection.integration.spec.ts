@@ -78,6 +78,7 @@ describe('Saved meal recipe quantities in the editor and its registered developm
         expect(host.querySelector('form')?.style.display).toBe('none');
         instructionOnly.next({ id: TEA.id, servings: RECIPE_SERVINGS, steps: [{ ingredients: [] }] });
         instructionOnly.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(host.querySelector('form')?.style.display).toBe('');

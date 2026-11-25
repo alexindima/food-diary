@@ -1,4 +1,4 @@
-import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -59,27 +59,19 @@ describe('Weight history routed refresh ownership', () => {
         TestBed.inject(HttpTestingController).verify();
     });
 
-    it.each(['older response', 'older error'] as const)(
-        'preserves the saved goal after an %s from the measurement refresh',
-        async outcome => {
-            const harness = await openWeightHistoryAsync();
-            const older = await saveMeasurementAsync(harness);
-            const latest = await saveGoalAsync(harness);
-            latest.flush(pageSummary(NEW_ENTRY, NEW_GOAL));
+    it('cancels an older measurement refresh and displays the saved goal', async () => {
+        const harness = await openWeightHistoryAsync();
+        const older = await saveMeasurementAsync(harness);
+        const latest = await saveGoalAsync(harness);
+        expect(older.cancelled).toBe(true);
+        latest.flush(pageSummary(NEW_ENTRY, NEW_GOAL));
+        harness.detectChanges();
 
-            if (outcome === 'older response') {
-                older.flush(pageSummary(NEW_ENTRY, ORIGINAL_GOAL));
-            } else {
-                older.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
-            }
-            harness.detectChanges();
-
-            expect(pageError(harness).hidden).toBe(true);
-            expect(currentMeasurement(harness)).toContain(String(SAVED_MEASUREMENT));
-            await openEditorAsync(harness, CONFIGURE_GOAL, GOAL_DIALOG);
-            expect(numberInput(GOAL_DIALOG).value).toBe(String(SAVED_TARGET));
-        },
-    );
+        expect(pageError(harness).hidden).toBe(true);
+        expect(currentMeasurement(harness)).toContain(String(SAVED_MEASUREMENT));
+        await openEditorAsync(harness, CONFIGURE_GOAL, GOAL_DIALOG);
+        expect(numberInput(GOAL_DIALOG).value).toBe(String(SAVED_TARGET));
+    });
 
     it('keeps the entries loading while the newer full refresh is pending', async () => {
         const harness = await openWeightHistoryAsync();
@@ -91,7 +83,7 @@ describe('Weight history routed refresh ownership', () => {
         const host = requiredHost(harness.routeNativeElement);
         expect(host.querySelector(ENTRIES_LOADER)?.textContent).toContain('WEIGHT_HISTORY.LOADING');
 
-        older.flush(pageSummary(NEW_ENTRY, ORIGINAL_GOAL));
+        expect(older.cancelled).toBe(true);
         harness.detectChanges();
         const loadingWhileWaiting = host.querySelector(ENTRIES_LOADER)?.textContent;
 

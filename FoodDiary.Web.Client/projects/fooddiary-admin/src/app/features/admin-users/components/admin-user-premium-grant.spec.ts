@@ -35,7 +35,7 @@ function api(): GrantApi {
     };
 }
 
-async function renderAsync(users: GrantApi): Promise<GrantFixture> {
+async function renderAsync(users: GrantApi, read: 'settled' | 'pending' = 'settled'): Promise<GrantFixture> {
     await TestBed.configureTestingModule({
         imports: [AdminUserPremiumGrantComponent],
         providers: [provideTranslateTesting(), { provide: AdminUsersService, useValue: users }],
@@ -43,8 +43,9 @@ async function renderAsync(users: GrantApi): Promise<GrantFixture> {
     const fixture = TestBed.createComponent(AdminUserPremiumGrantComponent);
     fixture.componentRef.setInput('userId', ACCOUNT);
     fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
+    if (read === 'settled') {
+        await renderUpdateAsync(fixture);
+    }
     return fixture;
 }
 
@@ -92,14 +93,15 @@ describe('Manual Premium grant loading', () => {
         const users = api();
         const pending = new Subject<AdminUserPremiumGrant | null>();
         users.getPremiumGrant.mockReturnValueOnce(pending);
-        const fixture = await renderAsync(users);
+        const fixture = await renderAsync(users, 'pending');
         expect(host(fixture).querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
 
         pending.error(new Error('offline'));
-        fixture.detectChanges();
+        await renderUpdateAsync(fixture);
         expect(host(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
 
         click(fixture, 'ADMIN_COMMON.RETRY');
+        await renderUpdateAsync(fixture);
         expect(users.getPremiumGrant.mock.calls).toEqual([[ACCOUNT], [ACCOUNT]]);
         expect(host(fixture).querySelector('[role="alert"]')).toBeNull();
         expect(host(fixture).textContent).toContain('ADMIN_USER_PREMIUM.EMPTY');
@@ -110,7 +112,7 @@ describe('Manual Premium grant loading', () => {
         const users = api();
         const pending = new Subject<AdminUserPremiumGrant | null>();
         users.getPremiumGrant.mockReturnValueOnce(pending);
-        const fixture = await renderAsync(users);
+        const fixture = await renderAsync(users, 'pending');
         expect(pending.observed).toBe(true);
 
         fixture.componentRef.setInput('userId', OTHER_ACCOUNT);

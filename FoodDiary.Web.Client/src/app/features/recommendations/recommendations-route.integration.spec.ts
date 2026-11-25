@@ -6,6 +6,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { COLLECTION_PAGE_SIZE } from '../../shared/api/load-paged-collection';
 import type { ClientTaskHttpResponse } from '../../shared/api/sdk/generated/model/client-task-http-response';
@@ -137,6 +138,7 @@ describe('Recommendation discussions on the lazy route', () => {
         const http = TestBed.inject(HttpTestingController);
         expectList(http, TASKS_URL).flush([]);
         loadRecommendations(http);
+        await waitForAsyncTasksAsync();
         const root = view(harness);
 
         const firstCard = button(root, FIRST_RECOMMENDATION_TEXT);
@@ -161,6 +163,7 @@ describe('Recommendation discussions on the lazy route', () => {
 
         http.expectOne({ method: 'PUT', url: `${RECOMMENDATIONS_URL}/${SECOND_RECOMMENDATION_ID}/read` }).flush(null);
         deliverComments(expectComments(http, SECOND_RECOMMENDATION_ID), []);
+        await waitForAsyncTasksAsync();
         view(harness);
         expect(secondCard.textContent).toContain('RECOMMENDATIONS.STATUS_READ');
         expect(root.querySelector('fd-recommendation-thread')?.textContent).toContain('RECOMMENDATIONS.DISCUSSION.EMPTY');
@@ -200,6 +203,7 @@ describe('Recommendation tasks on the lazy route', () => {
         const http = TestBed.inject(HttpTestingController);
         expectList(http, RECOMMENDATIONS_URL).flush([]);
         expectList(http, TASKS_URL).flush([firstTask, secondTask]);
+        await waitForAsyncTasksAsync();
         const root = view(harness);
         const firstRow = taskRow(root, FIRST_TASK_TITLE);
         const secondRow = taskRow(root, SECOND_TASK_TITLE);

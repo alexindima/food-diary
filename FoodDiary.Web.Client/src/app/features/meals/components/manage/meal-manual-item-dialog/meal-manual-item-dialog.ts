@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, max, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,7 +10,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
-import type { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
@@ -51,8 +51,6 @@ export type MealManualItemDialogResult = SelectedMealSource & { amount: number; 
     ],
 })
 export class MealManualItemDialogComponent {
-    private readonly destroyRef = inject(DestroyRef);
-    private servingWeightSubscription?: Subscription;
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, MealManualItemDialogResult | null>);
     private readonly recipeWeight = inject(RecipeServingWeightService);
@@ -63,8 +61,24 @@ export class MealManualItemDialogComponent {
     };
 
     protected readonly showPicker = signal(this.data.item.product === null && this.data.item.recipe === null);
-    protected readonly isLoadingRecipeAmount = signal(false);
     private readonly recipeMass = signal<ServingMassResult>(this.data.item.recipeMass);
+    private readonly requestedRecipe = signal<{ recipe: Recipe } | undefined>(undefined);
+    private readonly servingWeight = rxResource({
+        params: this.requestedRecipe,
+        stream: ({ params, abortSignal }) =>
+            this.recipeWeight.loadServingMass(params.recipe).pipe(
+                map(mass => {
+                    if (abortSignal.aborted || this.requestedRecipe() !== params) {
+                        return;
+                    }
+                    this.recipeMass.set(mass);
+                    if (mass.kind === 'known' && this.amountModel() === 1) {
+                        this.amount().value.set(mass.gramsPerServing);
+                    }
+                }),
+            ),
+    });
+    protected readonly isLoadingRecipeAmount = this.servingWeight.isLoading;
     private readonly usesRecipeGrams = computed(() => this.recipeMass().kind === 'known');
     protected readonly amountLabel = computed(() => {
         if (this.recipe() !== null && !this.usesRecipeGrams()) {
@@ -165,8 +179,8 @@ export class MealManualItemDialogComponent {
 
     private applySelection(selection: Exclude<ItemSelection, { type: 'Text' }>): void {
         this.showPicker.set(false);
-        this.servingWeightSubscription?.unsubscribe();
-        this.isLoadingRecipeAmount.set(false);
+        this.requestedRecipe.set(undefined);
+        this.servingWeight.set(undefined);
         this.recipeMass.set(UNKNOWN_SERVING_MASS);
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);
@@ -180,21 +194,7 @@ export class MealManualItemDialogComponent {
         this.recipe.set(selection.recipe);
         this.product.set(null);
         this.amount().value.set(1);
-        this.loadRecipeAmount(selection.recipe);
-    }
-
-    private loadRecipeAmount(recipe: Recipe): void {
-        this.isLoadingRecipeAmount.set(true);
-        this.servingWeightSubscription = this.recipeWeight
-            .loadServingMass(recipe)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(mass => {
-                this.recipeMass.set(mass);
-                if (mass.kind === 'known' && this.amountModel() === 1) {
-                    this.amount().value.set(mass.gramsPerServing);
-                }
-                this.isLoadingRecipeAmount.set(false);
-            });
+        this.requestedRecipe.set({ recipe: selection.recipe });
     }
 
     protected save(): void {

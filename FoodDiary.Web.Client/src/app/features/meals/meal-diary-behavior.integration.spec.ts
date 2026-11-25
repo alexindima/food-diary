@@ -270,8 +270,10 @@ it('replaces the diary URL when deleting the last meal moves the results to page
     expect(host.textContent).toContain(MEAL.comment);
     requiredButton(host, 'fd-meal-card .entity-card__open-button').click();
     await vi.dynamicImportSettled();
-    await harness.fixture.whenStable();
-    redraw(harness);
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(document.querySelector('fd-meal-detail')).not.toBeNull();
+    });
     clickMealOverlayAction('fd-meal-detail', 'MEAL_DETAIL.DELETE_BUTTON');
     redraw(harness);
     clickMealOverlayAction('fd-confirm-delete-dialog', 'CONFIRM_DELETE.CONFIRM');
@@ -408,14 +410,16 @@ it('keeps retry actionable when a late diary result follows a rejected filter Hi
     requiredButton(host, 'button[aria-label="Remove MEAL_LIST.FILTER_AI_WITHOUT"]').click();
     const rejectedNavigation = await navigationFailure;
     expect(rejectedNavigation.error).toBe(error);
-    await harness.fixture.whenStable();
-    redraw(harness);
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(pending.observed).toBe(true);
+    });
     expect(router.parseUrl(writeHistory.mock.calls[0][2]).queryParams).toEqual(expectedQuery);
-    expect(pending.observed).toBe(true);
     expect(router.url).toBe(originalUrl);
 
     pending.next(filtered);
     pending.complete();
+    await harness.fixture.whenStable();
     redraw(harness);
     expect(pending.observed).toBe(false);
     expect(router.url).toBe(originalUrl);

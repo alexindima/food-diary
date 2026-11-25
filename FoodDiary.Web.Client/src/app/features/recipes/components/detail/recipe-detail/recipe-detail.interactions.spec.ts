@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { expect, it, type Mock, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { FavoriteRecipeHttpResponse } from '../../../../../shared/api/sdk/generated/model/favorite-recipe-http-response';
 import type { OwnedImageContentHttpResponse } from '../../../../../shared/api/sdk/generated/model/owned-image-content-http-response';
@@ -207,6 +208,7 @@ it('retries a failed publication refresh and shows the current owner photo after
     http.expectOne({ method: 'GET', url: `${environment.apiUrls.images}/${oldAsset}/content` }).flush({
         dataUrl: oldPreview,
     } satisfies OwnedImageContentHttpResponse);
+    await waitForAsyncTasksAsync();
     fixture.detectChanges();
     expect(status()).toContain('RECIPE_PUBLICATION.ChangesRequested');
     expect(status()).toContain(note);
@@ -215,10 +217,12 @@ it('retries a failed publication refresh and shows the current owner photo after
     const refresh = button(host, 'RECIPE_PUBLICATION.REFRESH');
     refresh.click();
     refresh.click();
+    TestBed.tick();
     const failedRead = http.expectOne({ method: 'GET', url: recipeUrl });
     fixture.detectChanges();
     expect(refresh.disabled).toBe(true);
     failedRead.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+    await waitForAsyncTasksAsync();
     fixture.detectChanges();
     expect(status()).toContain(failedMessage);
     expect(status()).toContain(note);
@@ -226,6 +230,7 @@ it('retries a failed publication refresh and shows the current owner photo after
 
     expect(refresh.disabled).toBe(false);
     refresh.click();
+    TestBed.tick();
     const retry = http.expectOne({ method: 'GET', url: recipeUrl });
     fixture.detectChanges();
     expect(status()).not.toContain(failedMessage);
@@ -250,6 +255,7 @@ it('retries a failed publication refresh and shows the current owner photo after
     http.expectOne({ method: 'GET', url: `${environment.apiUrls.images}/${newAsset}/content` }).flush({
         dataUrl: newPreview,
     } satisfies OwnedImageContentHttpResponse);
+    await waitForAsyncTasksAsync();
     fixture.detectChanges();
     expect(cover()).toBe(newPreview);
     http.verify();

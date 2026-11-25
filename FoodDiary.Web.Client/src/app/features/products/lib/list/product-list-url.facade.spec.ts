@@ -71,6 +71,7 @@ describe('Product list page recovery', () => {
             { replaceUrl: true },
         );
         changes.next(readProductListQuery(convertToParamMap({ page: '2', onlyMine: 'true', types: 'Fruit', hasImage: 'false' })));
+        TestBed.tick();
         expect(products.query).toHaveBeenLastCalledWith(
             2,
             PRODUCT_LIST_PAGE_SIZE,
@@ -85,6 +86,7 @@ describe('Product list page recovery', () => {
         const { facade, changes, writeAsync } = setup({ page: '3' }, true, { totalPages: 0 });
         expect(writeAsync).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }), { replaceUrl: true });
         changes.next(readProductListQuery(convertToParamMap({})));
+        TestBed.tick();
         expect(writeAsync).toHaveBeenCalledTimes(1);
         expect(facade.currentPageIndex).toBe(0);
         expect(facade.isEmptyState()).toBe(true);
@@ -149,6 +151,7 @@ describe('Product list URL ownership', () => {
         expect(writeAsync).toHaveBeenCalledWith(expect.objectContaining({ search: 'tea', page: 3 }));
         expect(products.query).not.toHaveBeenCalled();
         changes.next(readProductListQuery(convertToParamMap({ search: 'tea', page: '3' })));
+        TestBed.tick();
         expect(products.query).toHaveBeenCalledTimes(1);
     });
 
@@ -183,7 +186,8 @@ describe('Product list URL ownership', () => {
         const { facade, products } = setup({}, false);
         const pending = new Subject<PageOf<Product>>();
         products.query.mockReturnValue(pending);
-        facade.loadProducts(1, facade.pageSize, 'tea').subscribe();
+        facade.onPageChange(1);
+        TestBed.tick();
         expect(pending.observed).toBe(true);
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
@@ -244,5 +248,7 @@ function setup(
             ...(page ? [{ provide: PRODUCT_LIST_QUERY_STATE, useValue: { initial, changes, writeAsync } }] : []),
         ],
     });
-    return { facade: TestBed.inject(ProductListFacade), products, changes, writeAsync };
+    const facade = TestBed.inject(ProductListFacade);
+    TestBed.tick();
+    return { facade, products, changes, writeAsync };
 }

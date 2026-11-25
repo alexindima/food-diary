@@ -136,13 +136,15 @@ describe('StatisticsFacade loading', () => {
 });
 
 describe('StatisticsFacade stale requests', () => {
-    it('ignores a stale combined summary response after range changes', () => {
+    it('cancels the stale combined summary request after the range changes', () => {
         const requests = setupStaleRangeRequests();
 
         facade.initialize();
         TestBed.tick();
+        expect(requests.firstSummary$.observed).toBe(true);
         facade.changeRange('month');
         TestBed.tick();
+        expect(requests.firstSummary$.observed).toBe(false);
 
         completeLatestRangeRequests(requests);
         completeStaleRangeRequests(requests);

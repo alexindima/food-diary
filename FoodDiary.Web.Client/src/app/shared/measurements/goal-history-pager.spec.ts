@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import type { GoalHistoryPage } from '../models/user.data';
 import { GoalHistoryPager } from './goal-history-pager';
 
@@ -29,51 +30,64 @@ describe('GoalHistoryPager', () => {
     it('fetches once on creation and ignores repeated clicks while loading', () => {
         const { pager, fetchPage } = setup();
         pager.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenCalledExactlyOnceWith(undefined);
         expect(pager.loading()).toBe(true);
         expect(pager.loaded()).toBe(false);
     });
 
-    it('appends in server order, deduplicates ids and stops at the last page', () => {
+    it('appends in server order, deduplicates ids and stops at the last page', async () => {
         const { pager, fetchPage, responses } = setup();
         responses[0].next({ items: [{ id: 'a' }, { id: 'b' }], nextCursor: 'next' });
         responses[0].complete();
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenLastCalledWith('next');
         responses[1].next({ items: [{ id: 'b', value: 1 }, { id: 'c' }], nextCursor: null });
         responses[1].complete();
+        await waitForAsyncTasksAsync();
         expect(pager.items()).toEqual([{ id: 'a' }, { id: 'b', value: 1 }, { id: 'c' }]);
         expect(pager.hasMore()).toBe(false);
         pager.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenCalledTimes(2);
     });
 
-    it('retains rows and retries the same cursor after a failed later page', () => {
+    it('retains rows and retries the same cursor after a failed later page', async () => {
         const { pager, fetchPage, responses } = setup();
         responses[0].next({ items: [{ id: 'a' }], nextCursor: 'next' });
         responses[0].complete();
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         responses[1].error(new Error('offline'));
+        await waitForAsyncTasksAsync();
         expect(pager.failed()).toBe(true);
         expect(pager.loading()).toBe(false);
         expect(pager.items()).toEqual([{ id: 'a' }]);
         pager.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenLastCalledWith('next');
         expect(pager.failed()).toBe(false);
         responses[2].next({ items: [{ id: 'b' }], nextCursor: null });
         responses[2].complete();
+        await waitForAsyncTasksAsync();
         expect(pager.items()).toEqual([{ id: 'a' }, { id: 'b' }]);
     });
 
-    it('distinguishes a failed first request from an empty history', () => {
+    it('distinguishes a failed first request from an empty history', async () => {
         const { pager, fetchPage, responses } = setup();
         responses[0].error(new Error('offline'));
+        await waitForAsyncTasksAsync();
         expect(pager.loaded()).toBe(false);
         expect(pager.hasMore()).toBe(true);
         pager.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenLastCalledWith(undefined);
         responses[1].next({ items: [], nextCursor: null });
         responses[1].complete();
+        await waitForAsyncTasksAsync();
         expect(pager.loaded()).toBe(true);
         expect(pager.items()).toEqual([]);
         expect(pager.hasMore()).toBe(false);
@@ -81,11 +95,13 @@ describe('GoalHistoryPager', () => {
 });
 
 describe('GoalHistoryPager lifecycle', () => {
-    it('invalidates pages and cancels stale requests when a goal changes', () => {
+    it('invalidates pages and cancels stale requests when a goal changes', async () => {
         const { pager, revision, fetchPage, responses } = setup();
         responses[0].next({ items: [{ id: 'old' }], nextCursor: 'old-cursor' });
         responses[0].complete();
+        await waitForAsyncTasksAsync();
         pager.loadMore();
+        TestBed.tick();
         revision.update(value => value + 1);
         TestBed.tick();
         expect(responses[1].observed).toBe(false);
@@ -94,6 +110,7 @@ describe('GoalHistoryPager lifecycle', () => {
         responses[1].next({ items: [{ id: 'stale' }], nextCursor: null });
         responses[2].next({ items: [{ id: 'fresh' }], nextCursor: null });
         responses[2].complete();
+        await waitForAsyncTasksAsync();
         expect(pager.items()).toEqual([{ id: 'fresh' }]);
     });
 
@@ -110,6 +127,7 @@ describe('GoalHistoryPager lifecycle', () => {
         const first = TestBed.runInInjectionContext(() => new GoalHistoryPager(fetchPage, revision));
         TestBed.tick();
         first.loadMore();
+        TestBed.tick();
         expect(fetchPage).toHaveBeenLastCalledWith('next');
         TestBed.resetTestingModule();
         TestBed.runInInjectionContext(() => new GoalHistoryPager(fetchPage, revision));

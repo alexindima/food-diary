@@ -959,10 +959,13 @@ describe('Catalog favorite load recovery', () => {
         const harness = await RouterTestingHarness.create('/products');
         const picker = openFavoritesPicker(harness);
         expect(picker.textContent).toContain('PRODUCT_FAVORITES.LOADING');
+        expect(initial.observed).toBe(true);
         initial.error(new Error('Favorites temporarily unavailable'));
-        TestBed.tick();
 
-        expect(picker.querySelector('[role="alert"]')?.textContent.trim()).toBe('PRODUCT_FAVORITES.LOAD_ERROR');
+        await vi.waitFor(() => {
+            TestBed.tick();
+            expect(picker.querySelector('[role="alert"]')?.textContent.trim()).toBe('PRODUCT_FAVORITES.LOAD_ERROR');
+        });
         expect(picker.querySelector('fd-favorite-product-row')).toBeNull();
         dialogButton(picker, 'PRODUCT_FAVORITES.RETRY').click();
         TestBed.tick();

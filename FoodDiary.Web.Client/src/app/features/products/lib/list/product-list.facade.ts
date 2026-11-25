@@ -1,14 +1,14 @@
 import { computed, DestroyRef, effect, inject, Injectable, Injector, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import type { Subscription } from 'rxjs';
 import {
     catchError,
     debounceTime,
+    defaultIfEmpty,
     distinctUntilChanged,
     EMPTY,
     filter,
@@ -32,7 +32,6 @@ import { developmentRequestContext } from '../../../../shared/development/develo
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { RequestPagedData } from '../../../../shared/lib/request-paged-data';
-import { RequestStateController } from '../../../../shared/lib/request-state';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../../../shared/models/product.data';
 import type { FavoriteProductId, ProductId } from '../../../../shared/models/semantics/entity-id';
@@ -64,6 +63,13 @@ import { productFilterChips, removeProductFilter, resetProductFilters } from './
 import { normalizeProductListSearch, type ProductListQuery, productListQueryKey } from './product-list-query';
 import { PRODUCT_LIST_QUERY_STATE } from './product-list-query-state';
 
+type ProductListRead = {
+    id: number;
+    query: ProductListQuery;
+    filters: ProductFilters;
+    overview: boolean;
+};
+
 @Injectable()
 export class ProductListFacade {
     private readonly productService = inject(ProductService);
@@ -83,7 +89,7 @@ export class ProductListFacade {
     private activeRouteQuery: ProductListQuery | null = null;
     private readonly navigationError = signal<string | null>(null);
     private readonly deletingProduct = signal(false);
-    private readonly cancelLoad = new Subject<void>();
+    private readonly cancelCommandRead = new Subject<void>();
 
     public readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
     public readonly searchModel = signal<ProductSearchFormValues>({
@@ -92,6 +98,11 @@ export class ProductListFacade {
     });
     public readonly searchForm = form(this.searchModel);
     public readonly productData = new RequestPagedData<Product>(this.deletingProduct);
+    private readonly viewRead = signal<ProductListRead | undefined>(undefined);
+    private readonly viewResource = rxResource({
+        params: this.viewRead,
+        stream: ({ params }) => this.readProducts(params).pipe(defaultIfEmpty(undefined)),
+    });
     private readonly pageIndex = signal(0);
     public get currentPageIndex(): number {
         return this.pageIndex();
@@ -154,9 +165,13 @@ export class ProductListFacade {
         this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
     );
     public readonly isMobileSearchVisible = computed(() => this.isMobileSearchOpen() || this.hasSearchValue());
-    private readonly offRequest = new RequestStateController<OpenFoodFactsProduct[]>();
-    private offRead: Subscription | undefined;
-    public readonly offProducts = computed(() => this.offRequest.data() ?? []);
+    private readonly offQuery = signal<{ search: string } | undefined>(undefined);
+    private readonly offRequest = rxResource({
+        params: this.offQuery,
+        stream: ({ params }) => this.openFoodFactsService.search(params.search, PRODUCT_LIST_OFF_SEARCH_LIMIT),
+        defaultValue: [],
+    });
+    public readonly offProducts = computed(() => (this.offRequest.hasValue() ? this.offRequest.value() : []));
     public readonly offLoading = this.offRequest.isLoading;
     private readonly isMobileSearchOpen = signal(false);
 
@@ -196,21 +211,17 @@ export class ProductListFacade {
                         query =>
                             this.activeRouteQuery === null || productListQueryKey(query) !== productListQueryKey(this.activeRouteQuery),
                     ),
-                    tap(query => {
-                        this.applyRouteQuery(query);
-                    }),
-                    switchMap(query => this.loadProducts(query.page, this.pageSize, query.search)),
                     takeUntilDestroyed(this.destroyRef),
                 )
-                .subscribe();
+                .subscribe(query => {
+                    this.applyRouteQuery(query);
+                    this.requestProducts(query.page, query.search);
+                });
         }
-        this.loadInitialOverview().subscribe();
-        this.translateService.onLangChange
-            .pipe(
-                switchMap(() => this.loadInitialOverview()),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+        this.requestOverview();
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.requestOverview();
+        });
         this.bindSearch();
     }
 
@@ -219,12 +230,12 @@ export class ProductListFacade {
     }
 
     public retryLoad(): void {
-        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
+        this.requestProducts(this.currentPageIndex + 1, this.searchValue());
     }
 
     public onPageChange(pageIndex: number): void {
         this.currentPageIndex = pageIndex;
-        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
+        this.retryLoad();
     }
 
     public onAddProductClick(): void {
@@ -277,60 +288,56 @@ export class ProductListFacade {
                 hasImage: currentHasImage,
             },
         });
-        dialog
-            .afterClosed()
-            .pipe(
-                switchMap(result => {
-                    if (result === null || result === undefined) {
-                        return EMPTY;
-                    }
+        this.afterOwnedDialogClosed(dialog).subscribe(result => {
+            if (result === null || result === undefined) {
+                return;
+            }
 
-                    const changes = resolveProductListFilterChanges(
-                        {
-                            onlyMine: currentOnlyMine,
-                            productTypes: currentTypes,
-                            caloriesFrom: currentCaloriesFrom,
-                            caloriesTo: currentCaloriesTo,
-                            hasImage: currentHasImage,
-                        },
-                        result,
-                    );
+            const changes = resolveProductListFilterChanges(
+                {
+                    onlyMine: currentOnlyMine,
+                    productTypes: currentTypes,
+                    caloriesFrom: currentCaloriesFrom,
+                    caloriesTo: currentCaloriesTo,
+                    hasImage: currentHasImage,
+                },
+                result,
+            );
 
-                    if (!changes.hasChanges) {
-                        return EMPTY;
-                    }
+            if (!changes.hasChanges) {
+                return;
+            }
 
-                    if (changes.typesChanged) {
-                        this.selectedProductTypes.set(changes.productTypes);
-                    }
+            if (changes.typesChanged) {
+                this.selectedProductTypes.set(changes.productTypes);
+            }
 
-                    if (changes.caloriesChanged) {
-                        this.caloriesFromFilter.set(result.caloriesFrom);
-                        this.caloriesToFilter.set(result.caloriesTo);
-                    }
+            if (changes.caloriesChanged) {
+                this.caloriesFromFilter.set(result.caloriesFrom);
+                this.caloriesToFilter.set(result.caloriesTo);
+            }
 
-                    if (changes.imageChanged) {
-                        this.hasImageFilter.set(result.hasImage);
-                    }
+            if (changes.imageChanged) {
+                this.hasImageFilter.set(result.hasImage);
+            }
 
-                    if (changes.onlyMineChanged) {
-                        this.searchForm.onlyMine().value.set(result.onlyMine);
-                        return EMPTY;
-                    }
+            if (changes.onlyMineChanged) {
+                this.searchForm.onlyMine().value.set(result.onlyMine);
+                return;
+            }
 
-                    return this.loadProducts(1, this.pageSize, this.searchValue());
-                }),
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    if (this.destroyRef.destroyed) {
-                        dialog.close();
-                    }
-                }),
-            )
-            .subscribe();
+            this.requestProducts(1, this.searchValue());
+        });
     }
 
-    public loadProducts(page: number, limit: number, search: string | null): Observable<void> {
+    private requestProducts(page: number, search: string | null): void {
+        const request = this.prepareProductsRead(page, search);
+        if (request !== null) {
+            this.viewRead.set(request);
+        }
+    }
+
+    private prepareProductsRead(page: number, search: string | null): ProductListRead | null {
         const query = this.currentQuery(page, search);
         if (
             this.queryState !== null &&
@@ -339,99 +346,87 @@ export class ProductListFacade {
             void this.queryState.writeAsync(query).catch(() => {
                 this.navigationError.set('ERRORS.LOAD_FAILED_TITLE');
             });
-            return EMPTY;
+            return null;
         }
         if (page === 1 && (search?.trim().length ?? 0) === 0 && !this.hasActiveFilters()) {
-            return this.loadInitialOverview();
+            return this.prepareOverviewRead();
         }
-        this.cancelLoad.next();
-        const requestId = this.productData.begin();
-        this.navigationError.set(null);
-
-        const filters = new ProductFilters({
-            search,
-            productTypes: this.selectedProductTypes(),
-            caloriesFrom: this.caloriesFromFilter(),
-            caloriesTo: this.caloriesToFilter(),
-            hasImage: this.hasImageFilter(),
-        });
-        const includePublic = !this.onlyMineFilter();
-
-        this.searchOpenFoodFacts(search);
-
-        return this.productService
-            .query(page, limit, filters, { includePublic, context: developmentRequestContext(this.productData.bindRequest(requestId)) })
-            .pipe(
-                takeUntil(this.cancelLoad),
-                takeUntilDestroyed(this.destroyRef),
-                tap(data => {
-                    if (!this.acceptPage(requestId, query, data)) {
-                        return;
-                    }
-                    this.currentPageIndex = data.page - 1;
-                }),
-                map(() => void 0),
-                catchError((_error: unknown) => {
-                    if (!this.isCurrentPageRequest(requestId, query)) {
-                        return of(void 0);
-                    }
-                    this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE');
-                    this.currentPageIndex = query.page - 1;
-                    this.recentProducts.set([]);
-
-                    return of(void 0);
-                }),
-            );
+        return this.beginRead(query, search, false);
     }
 
-    public loadInitialOverview(): Observable<void> {
-        this.cancelLoad.next();
-        const requestId = this.productData.begin();
+    private requestOverview(): void {
+        this.viewRead.set(this.prepareOverviewRead());
+    }
+
+    private prepareOverviewRead(): ProductListRead {
+        const search = this.searchValue();
+        const page = this.queryState === null ? 1 : this.currentPageIndex + 1;
+        return this.beginRead(this.currentQuery(page, search), search, true);
+    }
+
+    private beginRead(query: ProductListQuery, search: string | null, overview: boolean): ProductListRead {
+        this.viewResource.set(undefined);
+        this.viewRead.set(undefined);
+        this.cancelCommandRead.next();
+        const id = this.productData.begin();
         this.navigationError.set(null);
-        const query = this.currentQuery(this.queryState === null ? 1 : this.currentPageIndex + 1, this.searchValue());
+        this.searchOpenFoodFacts(search);
+        return { id, query, filters: this.currentFilters(search), overview };
+    }
 
-        this.searchOpenFoodFacts(this.searchValue());
+    private readProducts(request: ProductListRead): Observable<void> {
+        const { id, query, filters, overview } = request;
+        const page = overview
+            ? this.readOverview(request)
+            : this.productService.query(query.page, this.pageSize, filters, {
+                  includePublic: !query.onlyMine,
+                  context: developmentRequestContext(this.productData.bindRequest(id)),
+              });
+        return page.pipe(
+            tap(data => {
+                if (this.acceptPage(id, query, data)) {
+                    this.currentPageIndex = data.page - 1;
+                }
+            }),
+            map(() => void 0),
+            catchError((_error: unknown) => {
+                if (this.isCurrentPageRequest(id, query)) {
+                    this.productData.fail(id, 'ERRORS.LOAD_FAILED_TITLE');
+                    this.currentPageIndex = query.page - 1;
+                    this.recentProducts.set([]);
+                    if (overview) {
+                        this.favorites.set([]);
+                        this.favoriteTotalCount.set(0);
+                    }
+                }
+                return of(void 0);
+            }),
+        );
+    }
 
+    private readOverview({ id, query, filters }: ProductListRead): Observable<PageOf<Product>> {
         return this.productService
             .queryOverview(
                 {
-                    page: this.queryState === null ? 1 : this.currentPageIndex + 1,
+                    page: query.page,
                     limit: this.pageSize,
-                    includePublic: !this.onlyMineFilter(),
-                    ...(this.queryState === null ? {} : { filters: this.currentFilters(this.searchValue()) }),
+                    includePublic: !query.onlyMine,
+                    ...(this.queryState === null ? {} : { filters }),
                     recentLimit: PRODUCT_LIST_RECENT_LIMIT,
                     favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
                 },
-                developmentRequestContext(this.productData.bindRequest(requestId)),
+                developmentRequestContext(this.productData.bindRequest(id)),
             )
             .pipe(
-                takeUntil(this.cancelLoad),
-                takeUntilDestroyed(this.destroyRef),
                 tap(data => {
-                    if (!this.isCurrentPageRequest(requestId, query)) {
+                    if (!this.isCurrentPageRequest(id, query)) {
                         return;
                     }
                     this.recentProducts.set(data.recentItems);
                     this.favorites.set(data.favoriteItems);
                     this.favoriteTotalCount.set(data.favoriteTotalCount);
-                    if (!this.acceptPage(requestId, query, data.allProducts)) {
-                        return;
-                    }
-                    this.currentPageIndex = data.allProducts.page - 1;
                 }),
-                map(() => void 0),
-                catchError((_error: unknown) => {
-                    if (!this.isCurrentPageRequest(requestId, query)) {
-                        return of(void 0);
-                    }
-                    this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE');
-                    this.currentPageIndex = query.page - 1;
-                    this.recentProducts.set([]);
-                    this.favorites.set([]);
-                    this.favoriteTotalCount.set(0);
-
-                    return of(void 0);
-                }),
+                map(data => data.allProducts),
             );
     }
 
@@ -534,13 +529,16 @@ export class ProductListFacade {
     }
 
     public reloadCurrentPage(): void {
-        this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
+        this.retryLoad();
     }
 
     public deleteProductAndReload(productId: ProductId): Observable<void> {
         this.deletingProduct.set(true);
         return this.productService.deleteById(productId).pipe(
-            switchMap(() => this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue())),
+            switchMap(() => {
+                const request = this.prepareProductsRead(this.currentPageIndex + 1, this.searchValue());
+                return request === null ? EMPTY : this.readProducts(request).pipe(takeUntil(this.cancelCommandRead));
+            }),
             takeUntilDestroyed(this.destroyRef),
             finalize(() => {
                 this.deletingProduct.set(false);
@@ -612,46 +610,26 @@ export class ProductListFacade {
 
     private bindSearch(): void {
         toObservable(this.searchValue)
-            .pipe(
-                skip(1),
-                debounceTime(this.searchDebounceMs),
-                distinctUntilChanged(),
-                switchMap(value =>
-                    this.routeModelMatches(value, this.onlyMineFilter()) ? EMPTY : this.loadProducts(1, this.pageSize, value),
-                ),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(skip(1), debounceTime(this.searchDebounceMs), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                if (!this.routeModelMatches(value, this.onlyMineFilter())) {
+                    this.requestProducts(1, value);
+                }
+            });
 
         toObservable(this.onlyMineFilter)
-            .pipe(
-                skip(1),
-                distinctUntilChanged(),
-                switchMap(() =>
-                    this.routeModelMatches(this.searchValue(), this.onlyMineFilter())
-                        ? EMPTY
-                        : this.loadProducts(1, this.pageSize, this.searchValue()),
-                ),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(distinctUntilChanged(), skip(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(onlyMine => {
+                const search = this.searchValue();
+                if (!this.routeModelMatches(search, onlyMine)) {
+                    this.requestProducts(1, search);
+                }
+            });
     }
 
     private searchOpenFoodFacts(search: string | null): void {
-        this.offRead?.unsubscribe();
-        this.offRequest.reset();
         const trimmed = search?.trim();
-        if (trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH) {
-            return;
-        }
-        const requestId = this.offRequest.begin();
-        this.offRead = this.openFoodFactsService
-            .search(trimmed, PRODUCT_LIST_OFF_SEARCH_LIMIT)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: products => this.offRequest.succeed(requestId, products),
-                error: () => this.offRequest.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE', { preserveData: false }),
-            });
+        this.offQuery.set(trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH ? undefined : { search: trimmed });
     }
 
     private currentFilters(search: string | null): ProductFilters {
@@ -685,7 +663,7 @@ export class ProductListFacade {
             if (this.queryState !== null) {
                 this.replaceRouteQuery({ ...query, page });
             } else {
-                this.loadProducts(page, this.pageSize, query.search).subscribe();
+                this.requestProducts(page, query.search);
             }
             return false;
         }

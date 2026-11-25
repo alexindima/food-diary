@@ -1,9 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    output,
+    signal,
+    untracked,
+} from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { applyEach, disabled, form, FormField, FormRoot, max, maxLength, min, pattern, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
-import { finalize, type Subscription } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
@@ -55,10 +67,29 @@ export class AdminMealPlanEditorComponent {
     private readonly api = inject(AdminMealPlansFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
-    private recipeRequest?: Subscription;
+    private readonly recipeRequest = signal<{ search: string } | undefined>(undefined);
+    private readonly recipeResource = rxResource({
+        params: this.recipeRequest,
+        stream: ({ params }) =>
+            this.api.recipes(params.search).pipe(
+                tap(recipes => {
+                    if (this.recipeRequest() === params) {
+                        this.applyRecipeSearch(recipes);
+                    }
+                }),
+            ),
+    });
     protected readonly saving = signal(false);
     private readonly saveError = signal<string | null>(null);
-    private readonly recipeSearchError = signal<string | null>(null);
+    private readonly recipeSearchError = linkedSignal({
+        source: this.recipeResource.snapshot,
+        computation: (snapshot, previous): string | null => {
+            if (snapshot.status === 'error') {
+                return String(this.translate.instant('ADMIN_MEAL_PLANS.RECIPE_ERROR'));
+            }
+            return snapshot.status === 'loading' ? (previous?.value ?? null) : null;
+        },
+    });
     protected readonly error = computed(() => this.saveError() ?? this.recipeSearchError());
     protected readonly recipes = signal<CatalogRecipe[]>([]);
     protected readonly recipeSearch = signal('');
@@ -177,24 +208,14 @@ export class AdminMealPlanEditorComponent {
         if (this.saving()) {
             return;
         }
-        this.recipeRequest?.unsubscribe();
-        this.recipeRequest = this.api
-            .recipes(this.recipeSearch())
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: recipes => {
-                    this.recipeSearchError.set(null);
-                    const selected = new Set(this.model().days.flatMap(day => day.meals.map(meal => meal.recipeId)));
-                    this.recipes.update(current => [
-                        ...new Map(
-                            [...current.filter(recipe => selected.has(recipe.id)), ...recipes].map(recipe => [recipe.id, recipe]),
-                        ).values(),
-                    ]);
-                },
-                error: () => {
-                    this.recipeSearchError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.RECIPE_ERROR')));
-                },
-            });
+        this.recipeRequest.set({ search: this.recipeSearch() });
+    }
+
+    private applyRecipeSearch(recipes: CatalogRecipe[]): void {
+        const selected = new Set(this.model().days.flatMap(day => day.meals.map(meal => meal.recipeId)));
+        this.recipes.update(current => [
+            ...new Map([...current.filter(recipe => selected.has(recipe.id)), ...recipes].map(recipe => [recipe.id, recipe])).values(),
+        ]);
     }
     protected cancel(): void {
         if (!this.saving()) {

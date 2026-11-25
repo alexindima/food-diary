@@ -993,6 +993,7 @@ describe('MealManageForm recipe amount loading', () => {
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
 
         prepared.next([createMealItemValue(null, recipe, PRODUCT_AMOUNT, MealSourceType.Recipe)]);
+        await waitForAsyncTasksAsync();
         fixture.detectChanges();
         expect(component['isLoadingRecipeAmounts']()).toBe(false);
         expect(component['mealFormModel']().items[0].amount).toBe(PRODUCT_AMOUNT);

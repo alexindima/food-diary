@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, getDebugNode } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -155,7 +155,9 @@ describe('Cycle tracking setup', () => {
     it('keeps setup hidden while loading and after failure, then restores it through Retry', async () => {
         const pending = new Subject<CycleResponse | null>();
         getCurrent.mockReturnValueOnce(pending).mockReturnValueOnce(of(null));
-        await renderAsync();
+        fixture = TestBed.createComponent(CycleTrackingPageComponent);
+        page = fixture.nativeElement as HTMLElement;
+        fixture.detectChanges();
 
         expect(page.querySelector<HTMLElement>('.cycle-tracking__loader')?.hidden).toBe(false);
         expect(page.querySelector<HTMLElement>('.cycle-tracking__setup-card')?.hidden).toBe(true);
@@ -163,7 +165,7 @@ describe('Cycle tracking setup', () => {
         pending.error(API_ERROR);
         await stabilizeAsync();
         expect(page.querySelector<HTMLElement>('.cycle-tracking__setup-card')?.hidden).toBe(true);
-        click('CYCLE_TRACKING.RETRY_LOAD', page);
+        clickCycleRetry(page);
         await stabilizeAsync();
 
         expect(getCurrent).toHaveBeenCalledTimes(2);
@@ -2228,7 +2230,7 @@ describe('Cycle history refresh after saving a journal day', () => {
             expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
         });
 
-        click('CYCLE_TRACKING.RETRY_LOAD', host);
+        clickCycleRetry(host);
         harness.detectChanges();
         const readsAfterRetry = 3;
         expect(getCurrent).toHaveBeenCalledTimes(readsAfterRetry);
@@ -2486,13 +2488,18 @@ function settlePreviousJournalSave(
 }
 
 async function retryAfterJournalRemovalAsync(harness: RouterTestingHarness, note: string): Promise<HTMLElement> {
+    const host = await renderJournalRemovalFailureAsync(harness, note);
+    clickCycleRetry(host);
+    return host;
+}
+
+async function renderJournalRemovalFailureAsync(harness: RouterTestingHarness, note: string): Promise<HTMLElement> {
     const host = cycleRouteHost(harness);
     confirmJournalRemoval(harness, cycleHistoryDayWithNote(host, note));
     await vi.waitFor(() => {
         harness.detectChanges();
         expect(host.textContent).toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
     });
-    click('CYCLE_TRACKING.RETRY_LOAD', host);
     return host;
 }
 
@@ -2520,12 +2527,13 @@ it('keeps a journal removal confirmation on the profile that opened it', async (
         .mockReturnValue(of({ ...replacement, dayNotes: [] }));
     clearDay.mockReturnValue(of(void 0));
     const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
-    const host = await retryAfterJournalRemovalAsync(harness, removedNote);
-    expect(retry.observed).toBe(true);
+    const host = await renderJournalRemovalFailureAsync(harness, removedNote);
 
     click('CYCLE_TRACKING.CLEAR_DAY', cycleHistoryDayWithNote(host, originalNote));
     harness.detectChanges();
     const originalConfirmation = requiredElement(document.body, CONFIRM_DIALOG);
+    clickCycleRetry(host);
+    expect(retry.observed).toBe(true);
     loadReplacementCycle(retry, replacement, harness);
     expect(cycleHistoryDayWithNote(host, replacementNote).textContent).toContain(replacementNote);
 
@@ -2565,7 +2573,7 @@ describe('Cycle history refresh after removal', () => {
         expect(page.textContent).not.toContain(note);
         expect(page.textContent).toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
 
-        click('CYCLE_TRACKING.RETRY_LOAD', page);
+        clickCycleRetry(page);
         await stabilizeAsync();
 
         expect(clearDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, date);
@@ -2618,7 +2626,7 @@ describe('Cycle journal removal after loading a replacement profile', () => {
         });
         expect(clearDay).toHaveBeenLastCalledWith(CYCLE_ID, date);
 
-        click('CYCLE_TRACKING.RETRY_LOAD', host);
+        clickCycleRetry(host);
         await vi.waitFor(() => {
             harness.detectChanges();
             expect(requiredElement(host, 'fd-cycle-day-item').textContent).toContain(nextNote);
@@ -2877,7 +2885,7 @@ describe('Cycle period confirmation after loading a replacement profile', () => 
         harness.detectChanges();
         expect(confirmPeriodStart).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, date);
 
-        click('CYCLE_TRACKING.RETRY_LOAD', host);
+        clickCycleRetry(host);
         await vi.waitFor(() => {
             harness.detectChanges();
             expect(requiredElement(host, 'fd-cycle-day-item').textContent).toContain(replacementNote);
@@ -3313,7 +3321,7 @@ it('retains an ended factor when an earlier journal retry returns its old active
     const pendingSave = http.expectOne(factorRequest);
     expect(pendingSave.request.body).toMatchObject({ factorId: factor.id, endDate: TODAY });
 
-    click('CYCLE_TRACKING.RETRY_LOAD', host);
+    clickCycleRetry(host);
     const staleRead = http.expectOne(currentCycleRead);
     pendingSave.flush(ended);
     await vi.waitFor(() => {
@@ -3386,6 +3394,7 @@ describe('Same-profile cycle reads after journal changes', () => {
         const retry = button('CYCLE_TRACKING.RETRY_LOAD', host);
         expect(retry.disabled).toBe(false);
         retry.click();
+        TestBed.tick();
         const latest = http.expectOne(currentCycleRead);
         latest.flush({
             ...cycle.afterSecondClear,
@@ -3419,6 +3428,7 @@ describe('Same-profile cycle reads after journal changes', () => {
         const retry = button('CYCLE_TRACKING.RETRY_LOAD', host);
         expect(retry.disabled).toBe(false);
         retry.click();
+        TestBed.tick();
         const olderRefresh = http.expectOne(currentCycleRead);
         harness.detectChanges();
         expect(host.querySelector('fd-cycle-day-item')).toBeNull();
@@ -3505,6 +3515,7 @@ function retryVisibleCycleRead({ host, http }: CycleOrderingRoute): TestRequest 
     expect(retry.closest<HTMLElement>('fd-ui-inline-alert')?.hidden).toBe(false);
     expect(retry.disabled).toBe(false);
     retry.click();
+    TestBed.tick();
     return http.expectOne(currentCycleRead);
 }
 
@@ -3617,7 +3628,7 @@ async function clearJournalNoteOverHttpAsync(
 describe('Cycle actions from a journal row rendered for the previous profile', () => {
     it('requires a fresh period-confirmation click after a journal retry replaces the profile', async () => {
         const action = 'CYCLE_TRACKING.CONFIRM_PERIOD_START';
-        const { harness, host, http, retry, replacement, replacementEpisode, note, staleAction } =
+        const { harness, host, http, retry, replacement, replacementEpisode, note, staleAction, journalView } =
             await openJournalReplacementAsync(action);
         const request = { method: 'PUT', url: `${environment.apiUrls.cycles}/${replacement.id}/period-start` };
 
@@ -3626,6 +3637,7 @@ describe('Cycle actions from a journal row rendered for the previous profile', (
         staleAction.click();
         http.expectNone(request);
 
+        journalView.reattach();
         harness.detectChanges();
         const row = cycleHistoryDayWithNote(host, note.notes);
         expect(row.textContent).toContain('CYCLE_TRACKING.PERIOD_START_INFERRED');
@@ -3642,12 +3654,13 @@ describe('Cycle actions from a journal row rendered for the previous profile', (
     });
 
     it('does not open a clear confirmation from the previous profile after a journal retry', async () => {
-        const { harness, host, http, retry, replacement, note, staleAction } =
+        const { harness, host, http, retry, replacement, note, staleAction, journalView } =
             await openJournalReplacementAsync('CYCLE_TRACKING.CLEAR_DAY');
 
         retry.flush(replacement);
         expect(staleAction).toMatchObject({ isConnected: true, disabled: false });
         staleAction.click();
+        journalView.reattach();
         harness.detectChanges();
         expect(document.querySelector(CONFIRM_DIALOG)).toBeNull();
         http.expectNone({ method: 'DELETE', url: `${environment.apiUrls.cycles}/${replacement.id}/days` });
@@ -3667,6 +3680,7 @@ async function openJournalReplacementAsync(action: string): Promise<
         replacementEpisode: MenstrualEpisode;
         note: { date: CalendarDate; notes: string };
         staleAction: HTMLButtonElement;
+        journalView: ChangeDetectorRef;
     }
 > {
     const cycle = sameProfileOrderingFixture();
@@ -3692,8 +3706,14 @@ async function openJournalReplacementAsync(action: string): Promise<
     };
     const staleAction = button(action, cycleHistoryDayWithNote(route.host, sameProfilePeriodNote));
     expect(document.querySelector(CONFIRM_DIALOG)).toBeNull();
-    click('CYCLE_TRACKING.RETRY_LOAD', route.host);
-    return { ...route, retry: route.http.expectOne(currentCycleRead), replacement, replacementEpisode, note, staleAction };
+    const journal = getDebugNode(requiredElement(route.host, 'fd-cycle-days-card'));
+    const journalView = journal?.injector.get(ChangeDetectorRef);
+    if (journalView === undefined) {
+        throw new Error('Expected a rendered cycle journal.');
+    }
+    journalView.detach();
+    clickCycleRetry(route.host);
+    return { ...route, retry: route.http.expectOne(currentCycleRead), replacement, replacementEpisode, note, staleAction, journalView };
 }
 
 describe('Cycle settings duration validation', () => {
@@ -4100,7 +4120,7 @@ describe('Cycle settings after a stale same-profile read', () => {
         click('COMMON.CANCEL', reopened);
         harness.detectChanges();
         const readsBeforeRetry = getCurrent.mock.calls.length;
-        click('CYCLE_TRACKING.RETRY_LOAD', host);
+        clickCycleRetry(host);
         await harness.fixture.whenStable();
         harness.detectChanges();
         expect(host.textContent).not.toContain('CYCLE_TRACKING.LOAD_FAILED');
@@ -4186,7 +4206,7 @@ async function prepareCycleSettingsRereadAsync(
     olderRead.next(olderSnapshot);
     olderRead.complete();
     permission.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
-    await harness.fixture.whenStable();
+    await waitForAsyncTasksAsync();
     harness.detectChanges();
     expect(requiredElement(document.body, '#cycle-settings-title').closest('.cycle-drawer')).toBe(drawer);
     expect(drawer.querySelector('fd-ui-form-error [role="alert"]')?.textContent.trim()).toBe('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
@@ -4777,4 +4797,9 @@ function cycleProfile(overrides: Partial<CycleResponse> = {}): CycleResponse {
         predictions: null,
         ...overrides,
     };
+}
+
+function clickCycleRetry(root: HTMLElement): void {
+    click('CYCLE_TRACKING.RETRY_LOAD', root);
+    TestBed.tick();
 }

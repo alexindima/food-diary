@@ -100,6 +100,7 @@ it('retries the same local report after a failed measurement request and renders
     harness.detectChanges();
     expect(host.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
     requireElement(host, 'fd-error-state button').click();
+    TestBed.tick();
 
     const recovered = expectReportRequests(http);
     recovered.report.flush(SUMMARY);

@@ -1,6 +1,6 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
+    defaultIfEmpty,
     distinctUntilChanged,
     filter,
     finalize,
@@ -181,6 +182,7 @@ export class ClientDashboardComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly measurements = inject(MeasurementSystemService);
     private readonly clientChanged = new Subject<void>();
+    private readonly dashboardPeriodChanged = new Subject<void>();
     private clientRevision = 0;
     private dashboardReloadSequence = 0;
     private loadedMealPage = 1;
@@ -203,7 +205,9 @@ export class ClientDashboardComponent {
     protected readonly savingTask = signal(false);
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly openDiscussionId = linkedSignal(this.recommendationId);
-    protected readonly error = signal<string | null>(null);
+    protected readonly error = computed(() =>
+        this.clientResource.error() === undefined ? null : 'DIETOLOGIST.CLIENT_DASHBOARD.LOAD_ERROR',
+    );
     protected readonly sectionLoadError = signal<string | null>(null);
     private readonly selectedPeriod = signal(toCalendarPeriod(this.recentPeriod(DEFAULT_PERIOD_DAYS)));
     protected readonly selectedDateFrom = computed(() => formatDateInputValue(toLocalDate(this.selectedPeriod().dateFrom)));
@@ -391,19 +395,23 @@ export class ClientDashboardComponent {
     );
     protected readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
 
+    private readonly routeClientId = toSignal(
+        this.route.paramMap.pipe(
+            map(params => params.get('clientId')),
+            distinctUntilChanged(),
+            tap(() => {
+                this.resetClientState();
+            }),
+        ),
+        { requireSync: true },
+    );
+    private readonly clientResource = rxResource({
+        params: () => ({ id: this.routeClientId() }),
+        stream: ({ params }) => this.loadRouteClient(params.id).pipe(takeUntil(this.clientChanged), defaultIfEmpty(null)),
+    });
+
     public constructor() {
         this.connectDevelopmentTools();
-        this.route.paramMap
-            .pipe(
-                map(params => params.get('clientId')),
-                distinctUntilChanged(),
-                switchMap(clientId => {
-                    this.resetClientState();
-                    return this.loadRouteClient(clientId);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
     }
 
     private loadRouteClient(clientId: string | null): Observable<ClientDashboardDetails | null> {
@@ -418,11 +426,11 @@ export class ClientDashboardComponent {
                 this.detailsLoading.set(true);
                 return this.loadClientDetails(found);
             }),
-            catchError(() => {
-                this.loading.set(false);
-                this.detailsLoading.set(false);
-                this.error.set('DIETOLOGIST.CLIENT_DASHBOARD.LOAD_ERROR');
-                return of(null);
+            tap({
+                error: () => {
+                    this.loading.set(false);
+                    this.detailsLoading.set(false);
+                },
             }),
         );
     }
@@ -446,7 +454,6 @@ export class ClientDashboardComponent {
         this.savingTemplate.set(false);
         this.changingTaskIds.set(new Set());
         this.loadedMealPage = 1;
-        this.error.set(null);
         this.sectionLoadError.set(null);
         this.openDiscussionId.set(this.recommendationId());
         this.recommendationForm().reset({ text: '', templateName: '' });
@@ -527,6 +534,7 @@ export class ClientDashboardComponent {
             const result = await firstValueFrom(
                 this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService), nextPage).pipe(
                     catchError(() => of(null)),
+                    takeUntil(this.dashboardPeriodChanged),
                     takeUntil(this.clientChanged),
                     takeUntilDestroyed(this.destroyRef),
                 ),
@@ -818,6 +826,9 @@ export class ClientDashboardComponent {
             dashboard: this.shouldLoadDietologistDashboardSnapshot(client)
                 ? this.loadDietologistDashboardSnapshot(client, language).pipe(
                       this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence),
+                      takeUntil(this.dashboardPeriodChanged),
+                      // A replacement period still lets the other initial sections complete.
+                      defaultIfEmpty(null),
                   )
                 : of(null),
             goals: client.permissions.shareGoals
@@ -851,6 +862,7 @@ export class ClientDashboardComponent {
 
     private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
         const reloadSequence = ++this.dashboardReloadSequence;
+        this.dashboardPeriodChanged.next();
         this.loadingMoreMeals.set(false);
         this.moreMealsError.set(false);
         if (!this.shouldLoadDietologistDashboardSnapshot(client)) {
@@ -861,10 +873,12 @@ export class ClientDashboardComponent {
         this.detailsLoading.set(true);
         this.sectionLoadError.set(null);
         const result = await firstValueFrom(
-            this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
-                .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence))
-                .pipe(takeUntil(this.clientChanged))
-                .pipe(takeUntilDestroyed(this.destroyRef)),
+            this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService)).pipe(
+                this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence),
+                takeUntil(this.dashboardPeriodChanged),
+                takeUntil(this.clientChanged),
+                takeUntilDestroyed(this.destroyRef),
+            ),
             { defaultValue: null },
         );
 

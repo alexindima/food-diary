@@ -26,7 +26,7 @@ const message: AdminMailInboxMessageDetails = {
 };
 
 describe('mail message read state', () => {
-    it('keeps content and unread state after failure, shows recovery and retries without duplicate writes', () => {
+    it('keeps content and unread state after failure, shows recovery and retries without duplicate writes', async () => {
         const pending = new Subject<void>();
         const markMessageRead = vi
             .fn()
@@ -47,6 +47,7 @@ describe('mail message read state', () => {
         });
         const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
         fixture.detectChanges();
+        await settleDetailsAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.READ_ERROR');
         expect(host.querySelector('.mail-body')?.textContent).toContain('QA message');
@@ -101,7 +102,7 @@ function renderMailOverHttp(): {
 describe('mail message HTTP details', () => {
     const url = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages/${message.id}`;
 
-    it('renders a read DMARC report with no listed recipients and preserves its raw source', () => {
+    it('renders a read DMARC report with no listed recipients and preserves its raw source', async () => {
         const { fixture, requests, onRead } = renderMailOverHttp();
         const rawMime = 'Content-Type: text/plain\r\n\r\nAggregated report';
         const report = {
@@ -113,7 +114,7 @@ describe('mail message HTTP details', () => {
             dmarcReport: { domain: 'example.test', records: [{ sourceIp: '192.0.2.1', count: 1, disposition: 'none' }] },
         } satisfies AdminMailInboxMessageDetailsHttpResponse;
         requests.expectOne({ method: 'GET', url }).flush(report);
-        fixture.detectChanges();
+        await settleDetailsAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('.mail-badge--dmarc')?.textContent.trim()).toBe('DMARC');
         expect(host.querySelector('.mail-details__meta')?.textContent.trim()).toBe('ADMIN_MAIL_INBOX.TO: -');
@@ -127,9 +128,10 @@ describe('mail message HTTP details', () => {
         requests.verify();
     });
 
-    it('disposes a pending read-mark request when the message dialog is closed', () => {
+    it('disposes a pending read-mark request when the message dialog is closed', async () => {
         const { fixture, requests, onRead } = renderMailOverHttp();
         requests.expectOne({ method: 'GET', url }).flush(message);
+        await settleDetailsAsync(fixture);
         const pending = requests.expectOne({ method: 'POST', url: `${url}/read` });
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
@@ -140,10 +142,10 @@ describe('mail message HTTP details', () => {
         requests.verify();
     });
 
-    it('shows the read acknowledgement before a parent closes the dialog and reloads the message on reopening', () => {
+    it('shows the read acknowledgement before a parent closes the dialog and reloads the message on reopening', async () => {
         const { fixture, requests, onRead } = renderMailOverHttp();
         requests.expectOne({ method: 'GET', url }).flush(message);
-        fixture.detectChanges();
+        await settleDetailsAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const pending = requests.expectOne({ method: 'POST', url: `${url}/read` });
         let badgeAtClose: string | undefined;
@@ -159,8 +161,9 @@ describe('mail message HTTP details', () => {
         expect(onRead).toHaveBeenCalledExactlyOnceWith(message.id, expect.any(String));
 
         const reopened = TestBed.createComponent(AdminMailMessageDialogComponent);
-        requests.expectOne({ method: 'GET', url }).flush({ ...message, readAtUtc: message.receivedAtUtc });
         reopened.detectChanges();
+        requests.expectOne({ method: 'GET', url }).flush({ ...message, readAtUtc: message.receivedAtUtc });
+        await settleDetailsAsync(reopened);
         const reopenedHost = reopened.nativeElement as HTMLElement;
         expect(reopenedHost.querySelector('.mail-read-state')?.textContent.trim()).toBe('ADMIN_MAIL_INBOX.MESSAGE_READ');
         requests.expectNone({ method: 'POST', url: `${url}/read` });
@@ -168,7 +171,14 @@ describe('mail message HTTP details', () => {
     });
 });
 
-function renderMessage(content: Partial<AdminMailInboxMessageDetails>): ComponentFixture<AdminMailMessageDialogComponent> {
+async function settleDetailsAsync(fixture: ComponentFixture<AdminMailMessageDialogComponent>): Promise<void> {
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
+async function renderMessageAsync(
+    content: Partial<AdminMailInboxMessageDetails>,
+): Promise<ComponentFixture<AdminMailMessageDialogComponent>> {
     TestBed.configureTestingModule({
         imports: [AdminMailMessageDialogComponent],
         providers: [
@@ -187,27 +197,28 @@ function renderMessage(content: Partial<AdminMailInboxMessageDetails>): Componen
     });
     const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
     fixture.detectChanges();
+    await settleDetailsAsync(fixture);
     return fixture;
 }
 
 describe('mail message reader', () => {
-    it('opens formatted HTML with paragraphs while keeping technical details collapsed', () => {
-        const fixture = renderMessage({ htmlBody: '<p>Hello,&nbsp;Alex!</p><p>A <strong>new message</strong>.</p>' });
+    it('opens formatted HTML with paragraphs while keeping technical details collapsed', async () => {
+        const fixture = await renderMessageAsync({ htmlBody: '<p>Hello,&nbsp;Alex!</p><p>A <strong>new message</strong>.</p>' });
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('.mail-body p')?.textContent).toBe('Hello,\u00A0Alex!');
         expect(host.querySelector('.mail-body strong')?.textContent).toBe('new message');
         expect(host.querySelector('details')?.open).toBe(false);
     });
 
-    it('decodes entities in plain text without interpreting decoded markup', () => {
-        const fixture = renderMessage({ textBody: 'Hello,&nbsp;I&rsquo;m here.\n&lt;img src=x onerror=alert(1)&gt;' });
+    it('decodes entities in plain text without interpreting decoded markup', async () => {
+        const fixture = await renderMessageAsync({ textBody: 'Hello,&nbsp;I&rsquo;m here.\n&lt;img src=x onerror=alert(1)&gt;' });
         const body = (fixture.nativeElement as HTMLElement).querySelector('.mail-body');
         expect(body?.textContent).toContain('Hello,\u00A0I’m here.\n<img src=x onerror=alert(1)>');
         expect(body?.querySelector('img')).toBeNull();
     });
 
-    it('removes active content, remote resources and unsafe links from the reading view', () => {
-        const fixture = renderMessage({
+    it('removes active content, remote resources and unsafe links from the reading view', async () => {
+        const fixture = await renderMessageAsync({
             htmlBody:
                 '<style>body{display:none}</style><script>alert(1)</script><img src="https://tracker.example/pixel">' +
                 '<iframe src="https://tracker.example"></iframe><svg onload="alert(1)"></svg>' +
@@ -221,10 +232,10 @@ describe('mail message reader', () => {
         expect(body?.querySelector('a[href="https://example.com"]')?.getAttribute('rel')).toBe('noopener noreferrer');
     });
 
-    it('keeps HTML and MIME source unchanged when switching out of the reading view', () => {
+    it('keeps HTML and MIME source unchanged when switching out of the reading view', async () => {
         const htmlBody = '<p>Hello&nbsp;<strong>reader</strong></p>';
         const rawMime = `Content-Type: text/html\r\n\r\n${htmlBody}`;
-        const fixture = renderMessage({ htmlBody, rawMime });
+        const fixture = await renderMessageAsync({ htmlBody, rawMime });
         selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_HTML');
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe(htmlBody);
@@ -233,22 +244,22 @@ describe('mail message reader', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe(rawMime);
     });
 
-    it('derives readable text with line breaks when an email only contains HTML', () => {
-        const fixture = renderMessage({ textBody: null, htmlBody: '<p>First paragraph</p><p>Second<br>Third</p>' });
+    it('derives readable text with line breaks when an email only contains HTML', async () => {
+        const fixture = await renderMessageAsync({ textBody: null, htmlBody: '<p>First paragraph</p><p>Second<br>Third</p>' });
         fixture.componentInstance['setBodyMode']('text');
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('.mail-body')?.textContent).toBe('First paragraph\nSecond\nThird');
     });
 
-    it('falls back to text when HTML contains only blocked resources', () => {
-        const fixture = renderMessage({ htmlBody: '<img src="https://tracker.example/pixel">', textBody: 'Actual message' });
+    it('falls back to text when HTML contains only blocked resources', async () => {
+        const fixture = await renderMessageAsync({ htmlBody: '<img src="https://tracker.example/pixel">', textBody: 'Actual message' });
         const body = (fixture.nativeElement as HTMLElement).querySelector('.mail-body');
         expect(body?.textContent).toBe('Actual message');
         expect(body?.querySelector('img')).toBeNull();
     });
 
-    it('shows an empty state when both body formats are absent', () => {
-        const fixture = renderMessage({ textBody: null, htmlBody: null });
+    it('shows an empty state when both body formats are absent', async () => {
+        const fixture = await renderMessageAsync({ textBody: null, htmlBody: null });
         expect((fixture.nativeElement as HTMLElement).querySelector('.mail-body')?.textContent).toBe('ADMIN_MAIL_INBOX.NO_BODY');
 
         selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_HTML');
@@ -271,8 +282,8 @@ function selectBodyMode(fixture: ComponentFixture<AdminMailMessageDialogComponen
     option.click();
 }
 
-it('preserves text inside legacy wrappers, named anchors and relative links', () => {
-    const fixture = renderMessage({
+it('preserves text inside legacy wrappers, named anchors and relative links', async () => {
+    const fixture = await renderMessageAsync({
         htmlBody: '<center><a name="overview"><strong>Overview</strong></a><p><a href="/help">Support</a></p></center>',
         textBody: null,
     });
@@ -285,7 +296,7 @@ it('preserves text inside legacy wrappers, named anchors and relative links', ()
 });
 
 describe('mail message loading', () => {
-    it('shows a loading status and reports a failed load without marking the message read', () => {
+    it('shows a loading status and reports a failed load without marking the message read', async () => {
         const details = new Subject<AdminMailInboxMessageDetails>();
         const markMessageRead = vi.fn();
         const onRead = vi.fn();
@@ -304,7 +315,7 @@ describe('mail message loading', () => {
         expect(element.querySelector('[role="status"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LOADING_MESSAGE');
 
         details.error(new Error('Details unavailable'));
-        fixture.detectChanges();
+        await settleDetailsAsync(fixture);
         expect(element.querySelector('[role="status"]')).toBeNull();
         expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LOAD_ERROR');
         expect(markMessageRead).not.toHaveBeenCalled();

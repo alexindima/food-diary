@@ -159,13 +159,13 @@ describe('CycleTrackingFacade read lifetime', () => {
             .mockReturnValueOnce(previousRead)
             .mockReturnValueOnce(replacementRead);
 
-        facade.initialize();
+        initializeFacade();
         expect(facade.nutritionSummary()).toBe(originalSummary);
-        facade.initialize();
+        initializeFacade();
         expect(previousRead.observed).toBe(true);
         expect(facade.nutritionSummary()).toBe(originalSummary);
 
-        facade.initialize();
+        initializeFacade();
         expect(facade.cycle()?.id).toBe(replacement.id);
         expect(previousRead.observed).toBe(false);
         expect(replacementRead.observed).toBe(true);
@@ -190,7 +190,7 @@ describe('CycleTrackingFacade read lifetime', () => {
     it('cancels a nutrition read on deletion and ignores its late response', async () => {
         const pending = new Subject<CycleNutritionSummary | null>();
         cyclesService.getNutritionSummary.mockReturnValue(pending);
-        facade.initialize();
+        initializeFacade();
         expect(pending.observed).toBe(true);
         await facade.deleteCycleAsync();
         expect(pending.observed).toBe(false);
@@ -204,8 +204,8 @@ describe('CycleTrackingFacade read lifetime', () => {
         const first = new Subject<CycleNutritionSummary | null>();
         const second = new Subject<CycleNutritionSummary | null>();
         cyclesService.getNutritionSummary.mockReturnValueOnce(first).mockReturnValueOnce(second);
-        facade.initialize();
-        facade.initialize();
+        initializeFacade();
+        initializeFacade();
         expect(first.observed).toBe(false);
         const latest = createNutritionSummary();
         second.next(latest);
@@ -216,11 +216,11 @@ describe('CycleTrackingFacade read lifetime', () => {
 
     it('recovers a failed nutrition read without an unhandled error', () => {
         cyclesService.getNutritionSummary.mockReturnValueOnce(throwError(() => new Error('unavailable')));
-        facade.initialize();
+        initializeFacade();
         const state = TestBed.inject(CycleTrackingStateFacade);
         expect(state.nutritionError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
         expect(facade.isLoadingNutritionSummary()).toBe(false);
-        facade.initialize();
+        initializeFacade();
         expect(state.nutritionError()).toBeNull();
         expect(facade.nutritionSummary()).toEqual(createNutritionSummary());
     });
@@ -243,7 +243,7 @@ describe('CycleTrackingFacade fertility validation', () => {
     it.each([TEMPERATURE_MIN - 1, TEMPERATURE_MAX + 1, Number.NaN, Number.POSITIVE_INFINITY])(
         'rejects invalid temperature %s before sending a day',
         async temperature => {
-            facade.initialize();
+            initializeFacade();
             setValidDayForm();
             facade.dayModel.update(value => ({ ...value, basalBodyTemperatureCelsius: temperature }));
             expect(facade.dayForm.basalBodyTemperatureCelsius().invalid()).toBe(true);
@@ -253,7 +253,7 @@ describe('CycleTrackingFacade fertility validation', () => {
     );
 
     it.each([null, TEMPERATURE_MIN, TEMPERATURE_MAX])('accepts optional and boundary temperatures %s', async temperature => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         facade.dayModel.update(value => ({ ...value, basalBodyTemperatureCelsius: temperature }));
         expect(facade.dayForm.basalBodyTemperatureCelsius().invalid()).toBe(false);
@@ -262,7 +262,7 @@ describe('CycleTrackingFacade fertility validation', () => {
     });
 
     it('rejects overlong fluid and sends a corrected trimmed boundary', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         facade.dayModel.update(value => ({ ...value, cervicalFluid: 'x'.repeat(CERVICAL_LIMIT + 1) }));
         await submit(facade.dayForm);
@@ -277,21 +277,21 @@ describe('CycleTrackingFacade fertility validation', () => {
 describe('CycleTrackingFacade loading recovery', () => {
     it('exposes failed initial loading and recovers on a new request', () => {
         cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
-        facade.initialize();
+        initializeFacade();
         expect(facade.loadError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
         expect(facade.isLoading()).toBe(false);
         expect(facade.cycle()).toBeNull();
-        facade.initialize();
+        initializeFacade();
         expect(facade.loadError()).toBeNull();
         expect(facade.cycle()?.id).toBe('cycle-1');
     });
 
     it('retains the loaded profile and nutrition summary on reload failure', () => {
-        facade.initialize();
+        initializeFacade();
         const cycle = facade.cycle();
         const nutrition = facade.nutritionSummary();
         cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
-        facade.initialize();
+        initializeFacade();
         expect(facade.loadError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
         expect(facade.cycle()).toEqual(cycle);
         expect(facade.nutritionSummary()).toEqual(nutrition);
@@ -300,8 +300,8 @@ describe('CycleTrackingFacade loading recovery', () => {
     it('ignores duplicate loading while the initial request is pending', () => {
         const pending = new Subject<CycleResponse | null>();
         cyclesService.getCurrent.mockReturnValue(pending);
-        facade.initialize();
-        facade.initialize();
+        initializeFacade();
+        initializeFacade();
         expect(cyclesService.getCurrent).toHaveBeenCalledOnce();
         pending.next(null);
         pending.complete();
@@ -317,7 +317,7 @@ describe('CycleTrackingFacade nutrition range', () => {
         try {
             vi.setSystemTime(new Date('2026-10-02T12:00:00'));
             cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), trackingStartDate: calendarDate('2025-09-30') }));
-            facade.initialize();
+            initializeFacade();
             expect(cyclesService.getNutritionSummary).toHaveBeenCalledWith('2025-10-02', '2026-10-02');
             expect(facade.nutritionSummary()).not.toBeNull();
         } finally {
@@ -340,7 +340,7 @@ describe('CycleTrackingFacade nutrition range', () => {
 
         try {
             vi.setSystemTime(new Date('2026-10-02T23:50:00'));
-            facade.initialize();
+            initializeFacade();
             http.expectOne(currentRequest).flush(profile);
 
             expect(facade.cycle()?.trackingStartDate).toBe(trackingStartDate);
@@ -349,8 +349,9 @@ describe('CycleTrackingFacade nutrition range', () => {
             expect(facade.isLoadingNutritionSummary()).toBe(false);
 
             vi.setSystemTime(new Date('2026-10-03T00:15:00'));
-            facade.initialize();
+            initializeFacade();
             http.expectOne(currentRequest).flush(profile);
+            TestBed.tick();
             const summary = http.expectOne(summaryRequest);
             expect(summary.request.params.get('dateFrom')).toBe(firstTrackingDay);
             expect(summary.request.params.get('dateTo')).toBe(firstTrackingDay);
@@ -379,7 +380,7 @@ describe('CycleTrackingFacade nutrition range', () => {
 
 describe('CycleTrackingFacade current cycle', () => {
     it('loads current cycle on initialize', () => {
-        facade.initialize();
+        initializeFacade();
 
         expect(cyclesService.getCurrent).toHaveBeenCalledTimes(1);
         expect(facade.cycle()?.id).toBe('cycle-1');
@@ -388,7 +389,7 @@ describe('CycleTrackingFacade current cycle', () => {
     });
 
     it('deletes the current cycle and returns to the empty state', async () => {
-        facade.initialize();
+        initializeFacade();
 
         await facade.deleteCycleAsync();
 
@@ -400,7 +401,7 @@ describe('CycleTrackingFacade current cycle', () => {
 
     it('keeps the current cycle when deletion fails', async () => {
         cyclesService.deleteCycle.mockReturnValueOnce(throwError(() => new Error('delete failed')));
-        facade.initialize();
+        initializeFacade();
 
         await expect(facade.deleteCycleAsync()).resolves.toBeUndefined();
         expect(facade.settingsError()).toBe('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
@@ -525,7 +526,7 @@ describe('CycleTrackingFacade creation recovery', () => {
 
 describe('CycleTrackingFacade day saving', () => {
     it('upserts a day and merges it into the current profile', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
 
         facade.saveDay();
@@ -561,7 +562,7 @@ describe('CycleTrackingFacade day saving', () => {
     });
 
     it('submits the day form through Signal Forms submission', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
 
         const success = await submit(facade.dayForm);
@@ -579,7 +580,7 @@ describe('CycleTrackingFacade day saving', () => {
 
 describe('CycleTrackingFacade day save recovery', () => {
     it('retains a rejected draft and allows an unchanged retry', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const draft = facade.dayModel();
         cyclesService.upsertDay.mockReturnValueOnce(throwError(() => new Error('unavailable')));
@@ -595,7 +596,7 @@ describe('CycleTrackingFacade day save recovery', () => {
     });
 
     it('locks the draft against duplicate saves, cancellation and editing while pending', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const pending = new Subject<CycleLogDay>();
         cyclesService.upsertDay.mockReturnValue(pending);
@@ -614,7 +615,7 @@ describe('CycleTrackingFacade day save recovery', () => {
     });
 
     it('retains a saved day when refreshing predictions fails and retries the read without another write', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('refresh unavailable')));
         await submit(facade.dayForm);
@@ -627,7 +628,7 @@ describe('CycleTrackingFacade day save recovery', () => {
         cyclesService.getCurrent.mockReturnValueOnce(
             of({ ...createCycleResponse(), bleedingEntries: createCycleLogDay().bleedingEntries }),
         );
-        facade.initialize();
+        initializeFacade();
         expect(facade.bleedingEntries()).toHaveLength(1);
         expect(facade.loadError()).toBeNull();
         expect(facade.daySaveRevision()).toBe(1);
@@ -635,7 +636,7 @@ describe('CycleTrackingFacade day save recovery', () => {
     });
 
     it('recognizes the HTTP client empty fallback as a failed refresh after saving', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         cyclesService.getCurrent.mockReturnValueOnce(of(null));
         await submit(facade.dayForm);
@@ -649,7 +650,7 @@ describe('CycleTrackingFacade day save recovery', () => {
 
 describe('CycleTrackingFacade day note validation', () => {
     it('retains an oversized day draft without saving through either entrypoint', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const notes = 'я'.repeat(NOTE_LIMIT + 1);
         facade.dayModel.update(value => ({ ...value, notes }));
@@ -668,7 +669,7 @@ describe('CycleTrackingFacade day note validation', () => {
         ['emoji limit', '🙂'.repeat(EMOJI_NOTE_LIMIT)],
         ['whitespace only', ' '.repeat(NOTE_LIMIT + 1)],
     ])('saves a server-valid %s day note', async (_label, notes) => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         facade.dayModel.update(value => ({ ...value, notes }));
         await submit(facade.dayForm);
@@ -676,7 +677,7 @@ describe('CycleTrackingFacade day note validation', () => {
     });
 
     it('allows correcting a rejected day note and saving once', async () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         facade.dayModel.update(value => ({ ...value, notes: `${'🙂'.repeat(EMOJI_NOTE_LIMIT)}x` }));
         await submit(facade.dayForm);
@@ -705,7 +706,7 @@ describe('CycleTrackingFacade duration validation', () => {
 
 describe('CycleTrackingFacade settings cancellation', () => {
     it('discards every cancelled preference and clears validation and request feedback', () => {
-        facade.initialize();
+        initializeFacade();
         const saved = facade.settingsModel();
         facade.settingsModel.update(model => ({
             ...model,
@@ -727,7 +728,7 @@ describe('CycleTrackingFacade settings cancellation', () => {
     });
 
     it.each(['isSavingSettings', 'isDeletingCycle'] as const)('does not discard a draft while %s', operation => {
-        facade.initialize();
+        initializeFacade();
         facade.settingsModel.update(model => ({ ...model, averageCycleLength: 30 }));
         const draft = facade.settingsModel();
         facade[operation].set(true);
@@ -736,7 +737,7 @@ describe('CycleTrackingFacade settings cancellation', () => {
     });
 
     it('resets to the newest persisted settings after a later draft is cancelled', async () => {
-        facade.initialize();
+        initializeFacade();
         const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
         cyclesService.updateSettings.mockReturnValue(of(persisted));
         facade.settingsModel.update(model => ({ ...model, averageCycleLength: persisted.averageCycleLength }));
@@ -749,7 +750,7 @@ describe('CycleTrackingFacade settings cancellation', () => {
 
 describe('CycleTrackingFacade settings operations', () => {
     it('does not delete the cycle during an unresolved settings save', async () => {
-        facade.initialize();
+        initializeFacade();
         const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
         facade.settingsForm.averageCycleLength().value.set(persisted.averageCycleLength);
         const pending = new Subject<CycleResponse>();
@@ -765,7 +766,7 @@ describe('CycleTrackingFacade settings operations', () => {
     });
 
     it('does not save settings during unresolved deletion', async () => {
-        facade.initialize();
+        initializeFacade();
         const pending = new Subject<void>();
         cyclesService.deleteCycle.mockReturnValue(pending);
         const deleting = facade.deleteCycleAsync();
@@ -778,7 +779,7 @@ describe('CycleTrackingFacade settings operations', () => {
     });
 
     it('shows deletion failure and allows retry without losing the cycle', async () => {
-        facade.initialize();
+        initializeFacade();
         cyclesService.deleteCycle.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         await expect(facade.deleteCycleAsync()).resolves.toBeUndefined();
         expect(facade.settingsError()).toBe('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
@@ -791,7 +792,7 @@ describe('CycleTrackingFacade settings operations', () => {
     });
 
     it('retains confirmed settings when a later consent request fails', async () => {
-        facade.initialize();
+        initializeFacade();
         const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
         cyclesService.updateSettings.mockReturnValue(of(persisted));
         cyclesService.updateConsent.mockReturnValue(throwError(() => new Error('unavailable')));
@@ -810,7 +811,7 @@ describe('CycleTrackingFacade settings saving', () => {
     it.each(['averageCycleLength', 'averagePeriodLength', 'lutealLength'] as const)(
         'rejects fractional and empty %s before sending settings',
         async field => {
-            facade.initialize();
+            initializeFacade();
             const original = facade.settingsModel()[field] ?? 0;
             for (const value of [original + FRACTIONAL_DAY, null]) {
                 facade.settingsModel.update(model => ({ ...model, [field]: value }));
@@ -823,7 +824,7 @@ describe('CycleTrackingFacade settings saving', () => {
     );
 
     it('retains the draft and permits an unchanged retry after a failed save', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.settingsModel.update(model => ({ ...model, averageCycleLength: 30 }));
         const draft = facade.settingsModel();
         cyclesService.updateSettings.mockReturnValueOnce(throwError(() => new Error('unavailable')));
@@ -840,7 +841,7 @@ describe('CycleTrackingFacade settings saving', () => {
     });
 
     it('publishes successful completion for an unchanged settings form without writing', async () => {
-        facade.initialize();
+        initializeFacade();
 
         const success = await submit(facade.settingsForm);
 
@@ -853,7 +854,7 @@ describe('CycleTrackingFacade settings saving', () => {
 
 describe('CycleTrackingFacade period start recovery', () => {
     it('retains records on failure and updates them on retry', () => {
-        facade.initialize();
+        initializeFacade();
         const original = facade.cycle();
         cyclesService.confirmPeriodStart.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         facade.confirmPeriodStart('2026-04-02');
@@ -869,7 +870,7 @@ describe('CycleTrackingFacade period start recovery', () => {
     });
 
     it('prevents duplicate confirmation and conflicting day actions until completion', () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const pending = new Subject<CycleResponse>();
         cyclesService.confirmPeriodStart.mockReturnValue(pending);
@@ -891,7 +892,7 @@ describe('CycleTrackingFacade period start recovery', () => {
 it('rejects unparseable journal action dates and accepts normalized calendar dates', () => {
     const profile = createCycleResponse();
     cyclesService.getCurrent.mockReturnValue(of(profile));
-    facade.initialize();
+    initializeFacade();
 
     facade.clearDay('not-a-calendar-date');
     facade.confirmPeriodStart('not-a-calendar-date');
@@ -910,7 +911,7 @@ it('rejects unparseable journal action dates and accepts normalized calendar dat
 
 describe('CycleTrackingFacade day clear recovery', () => {
     it('refreshes episode history and predictions after clearing a day', () => {
-        facade.initialize();
+        initializeFacade();
         cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [], predictions: null }));
 
         facade.clearDay('2026-04-02');
@@ -921,7 +922,7 @@ describe('CycleTrackingFacade day clear recovery', () => {
     });
 
     it('keeps mutation guards active until the cleared profile has refreshed', () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const refreshed = new Subject<CycleResponse | null>();
         cyclesService.getCurrent.mockReturnValue(refreshed);
@@ -939,7 +940,7 @@ describe('CycleTrackingFacade day clear recovery', () => {
     });
 
     it('offers a read retry when the day was cleared but refreshing failed', () => {
-        facade.initialize();
+        initializeFacade();
         cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('unavailable')));
 
         facade.clearDay('2026-04-02');
@@ -951,7 +952,7 @@ describe('CycleTrackingFacade day clear recovery', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({ ...createCycleResponse(), bleedingEntries: [], menstrualEpisodes: [], predictions: null }),
         );
-        facade.initialize();
+        initializeFacade();
         expect(facade.loadError()).toBeNull();
         expect(facade.cycle()?.menstrualEpisodes).toEqual([]);
         expect(cyclesService.clearDay).toHaveBeenCalledOnce();
@@ -961,7 +962,7 @@ describe('CycleTrackingFacade day clear recovery', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({ ...createCycleResponse(), dayNotes: [{ date: calendarDate('2026-04-02'), notes: 'saved note' }] }),
         );
-        facade.initialize();
+        initializeFacade();
         const original = facade.cycle();
         cyclesService.clearDay.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         facade.clearDay('2026-04-02');
@@ -975,7 +976,7 @@ describe('CycleTrackingFacade day clear recovery', () => {
     });
 
     it('prevents duplicate clear, save and edit operations while clearing', () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         const draft = facade.dayModel();
         const pending = new Subject<void>();
@@ -1034,9 +1035,10 @@ describe('CycleTrackingFacade day editing', () => {
                 ],
             }),
         );
-        facade.initialize();
+        initializeFacade();
 
         facade.clearDay('2026-04-02T00:00:00.000Z');
+        TestBed.tick();
 
         expect(cyclesService.clearDay).toHaveBeenCalledWith('cycle-1', '2026-04-02');
         expect(facade.bleedingEntries()).toEqual([]);
@@ -1077,7 +1079,7 @@ describe('CycleTrackingFacade day form editing', () => {
                 ],
             }),
         );
-        facade.initialize();
+        initializeFacade();
 
         facade.editDay('2026-04-02T00:00:00.000Z');
 
@@ -1114,7 +1116,7 @@ describe('CycleTrackingFacade bleeding editing', () => {
                 fertilitySignal: null,
             }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.editDay(date);
         facade.dayModel.update(value => ({ ...value, isBleeding: false }));
 
@@ -1171,7 +1173,7 @@ describe('CycleTrackingFacade fertility editing', () => {
                 fertilitySignal: null,
             }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.editDay(date);
         facade.dayModel.update(value => ({
             ...value,
@@ -1221,7 +1223,7 @@ describe('CycleTrackingFacade symptom values', () => {
                 ],
             }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.editDay(date);
         facade.dayModel.update(value => ({ ...value, mood: 0 }));
 
@@ -1233,7 +1235,7 @@ describe('CycleTrackingFacade symptom values', () => {
     });
 
     it('clamps symptom values before saving a day', () => {
-        facade.initialize();
+        initializeFacade();
         facade.dayModel.set({
             date: calendarDate('2026-04-02'),
             isBleeding: true,
@@ -1268,7 +1270,7 @@ describe('CycleTrackingFacade symptom values', () => {
     });
 
     it('saves the additional symptom categories supported by the API', () => {
-        facade.initialize();
+        initializeFacade();
         setValidDayForm();
         facade.dayModel.update(value => ({ ...value, skin: 6, nausea: 9 }));
 
@@ -1282,7 +1284,7 @@ describe('CycleTrackingFacade symptom values', () => {
 
 describe('CycleTrackingFacade factors', () => {
     it('upserts a factor and replaces current cycle state', () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.set({
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
             startDate: calendarDate('2026-04-01'),
@@ -1304,7 +1306,7 @@ describe('CycleTrackingFacade factors', () => {
     });
 
     it('submits the factor form through Signal Forms submission', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({
             ...value,
             startDate: calendarDate('2026-04-01'),
@@ -1323,7 +1325,7 @@ describe('CycleTrackingFacade factors', () => {
     });
 
     it('loads a factor into the factor form for editing', () => {
-        facade.initialize();
+        initializeFacade();
 
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
 
@@ -1337,7 +1339,7 @@ describe('CycleTrackingFacade factors', () => {
     });
 
     it('ends an active factor today', () => {
-        facade.initialize();
+        initializeFacade();
 
         facade.endFactorToday(entityId<'cycle-factor'>('factor-1'));
 
@@ -1356,7 +1358,7 @@ describe('CycleTrackingFacade factors', () => {
 
 describe('CycleTrackingFacade factor drafts', () => {
     it('rejects an oversized edited note without losing the draft or sending a request', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const notes = 'я'.repeat(NOTE_LIMIT + 1);
         facade.factorModel.update(value => ({ ...value, notes }));
@@ -1375,7 +1377,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         ['empty whitespace', ' '.repeat(NOTE_LIMIT + 1)],
         ['emoji limit', '🙂'.repeat(EMOJI_NOTE_LIMIT)],
     ])('accepts %s notes that the server accepts', async (_label, notes) => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({ ...value, notes }));
         expect(facade.factorForm.notes().invalid()).toBe(false);
         await facade.submitFactorAsync();
@@ -1383,7 +1385,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('allows correcting a rejected draft and then saves once', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({ ...value, notes: `${'🙂'.repeat(EMOJI_NOTE_LIMIT)}x` }));
         await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
@@ -1396,7 +1398,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
 describe('CycleTrackingFacade factor drafts', () => {
     it('sends the selected id when changing the start date', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02') }));
         await facade.submitFactorAsync();
@@ -1407,7 +1409,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('retains the draft and explains an identity conflict', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), notes: 'draft' }));
         cyclesService.upsertFactor.mockReturnValue(throwError(() => ({ error: { error: 'Cycle.FactorIdentityConflict' } })));
@@ -1423,7 +1425,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: 'cancelled', startDate: calendarDate('2026-04-02') }));
         facade.factorForm().markAsTouched();
@@ -1438,7 +1440,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('clears an existing note when the editor is emptied', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: '   ' }));
 
@@ -1448,7 +1450,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('resets the new-factor form after a successful save', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({ ...value, notes: 'saved note' }));
 
         await facade.submitFactorAsync();
@@ -1458,7 +1460,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     });
 
     it('rejects an end date before the start date without sending a request', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(true);
@@ -1469,7 +1471,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
 describe('CycleTrackingFacade factor save lifecycle', () => {
     it('retains a failed draft and resolves submission so the user can retry', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: 'retry note' }));
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
@@ -1486,7 +1488,7 @@ describe('CycleTrackingFacade factor save lifecycle', () => {
     });
 
     it('keeps the pending editor stable and prevents overlapping saves', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const pending = new Subject<CycleResponse>();
         cyclesService.upsertFactor.mockReturnValue(pending);
@@ -1511,7 +1513,7 @@ describe('CycleTrackingFacade ending factors', () => {
         const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
         const cycle = createCycleResponse();
         cyclesService.getCurrent.mockReturnValue(of({ ...cycle, factors: [{ ...cycle.factors[0], startDate: calendarDate(tomorrow) }] }));
-        facade.initialize();
+        initializeFacade();
         await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
         expect(facade.factorError()).toBeNull();
@@ -1522,13 +1524,13 @@ describe('CycleTrackingFacade ending factors', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({ ...cycle, factors: [{ ...cycle.factors[0], endDate: calendarDate(formatDateInputValue(new Date())) }] }),
         );
-        facade.initialize();
+        initializeFacade();
         await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
 
     it('shows a recoverable error and leaves the factor unchanged when ending fails', async () => {
-        facade.initialize();
+        initializeFacade();
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
 
         await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
@@ -1542,7 +1544,7 @@ describe('CycleTrackingFacade ending factors', () => {
     });
 
     it('protects the editor and prevents saving while a factor is being ended', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const pending = new Subject<CycleResponse>();
         cyclesService.upsertFactor.mockReturnValue(pending);
@@ -1562,7 +1564,7 @@ describe('CycleTrackingFacade ending factors', () => {
     });
 
     it('accepts the same start and end day', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-01'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(false);
@@ -1571,7 +1573,7 @@ describe('CycleTrackingFacade ending factors', () => {
     });
 
     it('does not clear an existing note through a blank new-factor form', async () => {
-        facade.initialize();
+        initializeFacade();
 
         await facade.submitFactorAsync();
 
@@ -1581,7 +1583,7 @@ describe('CycleTrackingFacade ending factors', () => {
 
 describe('CycleTrackingFacade menstrual episodes', () => {
     it('handles a failed date save without discarding the draft or persisted episode', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, startDate: calendarDate('2026-03-31') }));
         const draft = facade.episodeModel();
@@ -1601,7 +1603,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
     });
 
     it('handles a failed prediction toggle without changing the episode', async () => {
-        facade.initialize();
+        initializeFacade();
         const original = facade.cycle();
         cyclesService.updateMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
 
@@ -1616,7 +1618,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
     });
 
     it('handles a failed deletion without removing the episode', async () => {
-        facade.initialize();
+        initializeFacade();
         const original = facade.cycle();
         cyclesService.deleteMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
 
@@ -1631,7 +1633,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
     });
 
     it('preserves a pending date save and prevents overlapping episode actions', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         const draft = facade.episodeModel();
         const pending = new Subject<CycleResponse>();
@@ -1657,7 +1659,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
 
 describe('CycleTrackingFacade menstrual episode success', () => {
     it('rejects an episode end before its start without sending a request', async () => {
-        facade.initialize();
+        initializeFacade();
         facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, endDate: calendarDate('2026-03-31') }));
 
@@ -1669,14 +1671,14 @@ describe('CycleTrackingFacade menstrual episode success', () => {
     });
 
     it.each([null, '2026-04-01', '2026-04-02'])('accepts valid episode end %s', endDate => {
-        facade.initialize();
+        initializeFacade();
         facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, endDate }));
         expect(facade.episodeForm().invalid()).toBe(false);
     });
 
     it('toggles prediction exclusion and applies the returned cycle', async () => {
-        facade.initialize();
+        initializeFacade();
 
         await facade.toggleMenstrualEpisodePredictionAsync(entityId<'menstrual-episode'>('episode-1'));
 
@@ -1689,7 +1691,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
     });
 
     it('deletes a confirmed episode and applies the returned cycle', async () => {
-        facade.initialize();
+        initializeFacade();
 
         await facade.deleteMenstrualEpisodeAsync(entityId<'menstrual-episode'>('episode-1'));
 
@@ -1700,7 +1702,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
 
 describe('CycleTrackingFacade export', () => {
     it('passes a selected historical range to the standard export', () => {
-        facade.initialize();
+        initializeFacade();
         const range = { dateFrom: '2025-10-01', dateTo: '2026-01-01' };
         facade.exportCycle(range);
         expect(exportService.exportCycle).toHaveBeenCalledWith(expect.objectContaining(range));
@@ -1708,7 +1710,7 @@ describe('CycleTrackingFacade export', () => {
     });
 
     it('passes the same selected range and password to the sensitive export', () => {
-        facade.initialize();
+        initializeFacade();
         const range = { dateFrom: '2025-10-01', dateTo: '2026-01-01' };
         facade.exportSensitiveCycle('test-password', range);
         expect(exportService.exportSensitiveCycle).toHaveBeenCalledWith(
@@ -1718,7 +1720,7 @@ describe('CycleTrackingFacade export', () => {
     });
 
     it('shows export failures and clears feedback when retrying', () => {
-        facade.initialize();
+        initializeFacade();
         exportService.exportCycle.mockReturnValueOnce(throwError(() => new Error('offline')));
 
         facade.exportCycle();
@@ -1730,7 +1732,7 @@ describe('CycleTrackingFacade export', () => {
     });
 
     it('shows private export feedback when password verification fails', () => {
-        facade.initialize();
+        initializeFacade();
         exportService.exportSensitiveCycle.mockReturnValueOnce(throwError(() => new Error('invalid password')));
 
         facade.exportSensitiveCycle('invalid-password');
@@ -1742,7 +1744,7 @@ describe('CycleTrackingFacade export', () => {
     });
 
     it('exports the current cycle from tracking start to today', () => {
-        facade.initialize();
+        initializeFacade();
 
         facade.exportCycle();
 
@@ -1772,7 +1774,7 @@ describe('CycleTrackingFacade day ordering', () => {
                 predictions: null,
             }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.dayModel.update(value => ({ ...value, date: calendarDate('2026-04-02'), isBleeding: true }));
 
         facade.saveDay();
@@ -1805,7 +1807,7 @@ describe('CycleTrackingFacade persisted optional state', () => {
             ],
         };
         cyclesService.getCurrent.mockReturnValueOnce(of(recorded)).mockReturnValueOnce(of(null));
-        facade.initialize();
+        initializeFacade();
 
         expect(facade.bleedingEntries()).toEqual(recorded.bleedingEntries);
         expect(facade.symptoms()).toEqual(recorded.symptoms);
@@ -1815,7 +1817,7 @@ describe('CycleTrackingFacade persisted optional state', () => {
         expect(facade.predictions()).toEqual(recorded.predictions);
 
         await facade.deleteCycleAsync();
-        facade.initialize();
+        initializeFacade();
 
         expect(cyclesService.deleteCycle).toHaveBeenCalledExactlyOnceWith(profile.id);
         expect(cyclesService.getCurrent).toHaveBeenCalledTimes(2);
@@ -1839,7 +1841,7 @@ describe('CycleTrackingFacade optional fields and save lifecycle', () => {
             throw new Error('Expected a saved menstrual episode');
         }
         cyclesService.updateMenstrualEpisode.mockReturnValueOnce(of({ ...profile, menstrualEpisodes: [{ ...episode, endDate: null }] }));
-        facade.initialize();
+        initializeFacade();
         facade.editMenstrualEpisode(episode.id);
         facade.episodeForm.endDate().value.set(null);
 
@@ -1860,7 +1862,7 @@ describe('CycleTrackingFacade optional fields and save lifecycle', () => {
         const today = calendarDate(formatDateInputValue(new Date()));
         cyclesService.getCurrent.mockReturnValueOnce(of({ ...profile, factors: [factor] }));
         cyclesService.upsertFactor.mockReturnValueOnce(of({ ...profile, factors: [{ ...factor, endDate: today }] }));
-        facade.initialize();
+        initializeFacade();
 
         await facade.endFactorTodayAsync(factor.id);
 
@@ -1880,7 +1882,7 @@ describe('CycleTrackingFacade optional fields and save lifecycle', () => {
         const pending = new Subject<CycleResponse>();
         const nextDuration = 29;
         cyclesService.updateSettings.mockReturnValueOnce(pending);
-        facade.initialize();
+        initializeFacade();
         facade.settingsForm.averageCycleLength().value.set(nextDuration);
         const draft = facade.settingsModel();
         const saving = submit(facade.settingsForm);
@@ -2031,7 +2033,7 @@ it('cancels initial loading when the facade scope is destroyed and ignores a lat
     const pending = new Subject<CycleResponse | null>();
     const cancelled = vi.fn();
     cyclesService.getCurrent.mockReturnValue(pending.pipe(finalize(cancelled)));
-    facade.initialize();
+    initializeFacade();
     expect(facade.isLoading()).toBe(true);
 
     TestBed.resetTestingModule();
@@ -2054,7 +2056,7 @@ describe('Cycle day notes without clinical entries', () => {
                 notes: 'Quiet day',
             }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.dayModel.update(value => ({ ...value, date: calendarDate('2026-04-02'), notes: '  Quiet day  ' }));
         facade.saveDay();
         await vi.waitFor(() => {
@@ -2097,10 +2099,15 @@ describe('Cycle day notes without clinical entries', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({ ...createCycleResponse(), dayNotes: [{ date: calendarDate('2026-04-02'), notes: 'Persisted' }] }),
         );
-        facade.initialize();
+        initializeFacade();
         facade.editDay('2026-04-02');
         expect(facade.dayModel().notes).toBe('Persisted');
         facade.clearDay('2026-04-02');
         expect(facade.cycle()?.dayNotes).toEqual([]);
     });
 });
+
+function initializeFacade(): void {
+    facade.initialize();
+    TestBed.tick();
+}

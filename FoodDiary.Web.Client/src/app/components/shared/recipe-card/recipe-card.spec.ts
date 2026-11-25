@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type Observable, of, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 // eslint-disable-next-line scope-imports/shared-ui -- shared card spec needs the concrete feature favorite service token
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
@@ -91,12 +92,13 @@ describe('RecipeCardComponent photo access', () => {
 
         fixture.componentRef.setInput('recipe', { ...recipe, visibility: RecipeVisibility.Private, publicationStatus: 'Pending' });
         fixture.detectChanges();
-        await fixture.whenStable();
+        TestBed.tick();
         expect(el.querySelector('.entity-card__thumb img')).toBeNull();
         expect(ownerPreview).toHaveBeenCalledExactlyOnceWith('photo');
 
         const dataUrl = 'data:image/webp;base64,UklGRg==';
         photo.next(dataUrl);
+        await waitForAsyncTasksAsync();
         fixture.detectChanges();
         expect(el.querySelector('.entity-card__thumb img')?.getAttribute('src')).toBe(dataUrl);
 
@@ -173,8 +175,9 @@ describe('RecipeCardComponent private gallery', () => {
 });
 
 async function renderGalleryAsync(fixture: ComponentFixture<RecipeCardComponent>): Promise<void> {
+    TestBed.tick();
+    await waitForAsyncTasksAsync();
     fixture.detectChanges();
-    await fixture.whenStable();
 }
 
 function galleryControl(root: ParentNode, selector: string): HTMLElement {

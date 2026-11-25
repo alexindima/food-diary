@@ -11,7 +11,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -19,7 +19,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, debounceTime, map, of, skip } from 'rxjs';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
@@ -54,7 +54,6 @@ export class RecipeSelectDialogComponent {
     private readonly recipeSelectFacade = inject(RecipeSelectFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
-    private readonly queryChanges = new Subject<void>();
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
@@ -101,9 +100,29 @@ export class RecipeSelectDialogComponent {
             })),
     );
 
-    protected recipeData: PagedData<Recipe> = new PagedData<Recipe>();
+    protected readonly recipeData = new PagedData<Recipe>();
     protected currentPageIndex = 0;
     protected readonly pageSize = RECIPE_SELECT_DIALOG_PAGE_SIZE;
+    private readonly requestedPage = signal<{ page: number; filters: RecipeFilters; includePublic: boolean } | undefined>(undefined);
+    private readonly pageResource = rxResource({
+        params: this.requestedPage,
+        stream: ({ params, abortSignal }) =>
+            this.recipeSelectFacade.query(params.page, this.pageSize, params.filters, params.includePublic).pipe(
+                catchError(() => of(null)),
+                map(page => {
+                    if (abortSignal.aborted || this.requestedPage() !== params) {
+                        return;
+                    }
+                    if (page === null) {
+                        this.recipeData.clearData();
+                        return;
+                    }
+                    this.recipeData.setData(page);
+                    this.currentPageIndex = page.page - 1;
+                }),
+            ),
+    });
+    protected readonly isLoading = this.pageResource.isLoading;
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -111,46 +130,24 @@ export class RecipeSelectDialogComponent {
         effect(() => {
             this.searchChanged.emit(this.searchValue() ?? '');
         });
-        this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE).subscribe();
+        this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE);
 
         toObservable(this.searchValue)
-            .pipe(
-                skip(1),
-                debounceTime(this.searchDebounceMs),
-                switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE);
+            });
     }
 
-    protected loadRecipes(page: number): Observable<void> {
-        this.queryChanges.next();
-        this.recipeData.setLoading(true);
-        const includePublic = !this.onlyMineFilter();
-        const filters = this.buildRecipeFilters();
-
-        return this.recipeSelectFacade.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
-            tap(pageData => {
-                this.recipeData.setData(pageData);
-                this.currentPageIndex = pageData.page - 1;
-            }),
-            map(() => void 0),
-            catchError(() => {
-                this.recipeData.clearData();
-                return of(void 0);
-            }),
-            takeUntil(this.queryChanges),
-            takeUntilDestroyed(this.destroyRef),
-            finalize(() => {
-                this.recipeData.setLoading(false);
-            }),
-        );
+    protected loadRecipes(page: number): void {
+        this.pageResource.set(undefined);
+        this.requestedPage.set({ page, filters: this.buildRecipeFilters(), includePublic: !this.onlyMineFilter() });
     }
 
     protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex = pageIndex;
-        this.loadRecipes(pageIndex + RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET).subscribe();
+        this.loadRecipes(pageIndex + RECIPE_SELECT_DIALOG_NEXT_PAGE_OFFSET);
     }
 
     protected onRecipeClick(recipe: Recipe): void {
@@ -165,27 +162,24 @@ export class RecipeSelectDialogComponent {
         const currentFilters = this.searchModel();
         this.recipeSelectFacade
             .openFilters(this.toFilterValues(currentFilters))
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                switchMap(result => {
-                    if (result === null || result === undefined || this.hasSameFilters(currentFilters, result)) {
-                        return EMPTY;
-                    }
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
+                if (result === null || result === undefined || this.hasSameFilters(currentFilters, result)) {
+                    return;
+                }
 
-                    this.searchModel.update(value => ({
-                        ...value,
-                        onlyMine: result.onlyMine,
-                        category: result.category,
-                        maxTotalTime: result.maxTotalTime,
-                        caloriesFrom: result.caloriesFrom,
-                        caloriesTo: result.caloriesTo,
-                        hasImage: result.hasImage,
-                    }));
-                    this.currentPageIndex = 0;
-                    return this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE);
-                }),
-            )
-            .subscribe();
+                this.searchModel.update(value => ({
+                    ...value,
+                    onlyMine: result.onlyMine,
+                    category: result.category,
+                    maxTotalTime: result.maxTotalTime,
+                    caloriesFrom: result.caloriesFrom,
+                    caloriesTo: result.caloriesTo,
+                    hasImage: result.hasImage,
+                }));
+                this.currentPageIndex = 0;
+                this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE);
+            });
     }
 
     private toFilterValues(filters: RecipeSearchFilterValues): RecipeSelectFilterValues {

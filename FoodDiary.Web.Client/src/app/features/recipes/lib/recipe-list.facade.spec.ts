@@ -529,6 +529,7 @@ describe('RecipeListFacade recovery and navigation', () => {
             );
 
         facade.loadRecipes(stalePage, PAGE_LIMIT, { search: 'Rice' }, false).subscribe();
+        TestBed.tick();
 
         expect(recipeService.queryOverview).toHaveBeenNthCalledWith(
             1,

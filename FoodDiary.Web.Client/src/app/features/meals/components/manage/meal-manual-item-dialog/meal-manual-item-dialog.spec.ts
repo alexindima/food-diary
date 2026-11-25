@@ -112,6 +112,7 @@ describe('MealManualItemDialogComponent selection', () => {
         const recipe = createRecipe();
         const { component, fdDialogService } = await setupComponentAsync();
         component['onRecipeSelected'](recipe);
+        TestBed.tick();
         expect(fdDialogService.open).not.toHaveBeenCalled();
 
         expect(component['recipe']()).toBe(recipe);
@@ -272,6 +273,7 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
         expect(dialogRef.close).not.toHaveBeenCalled();
 
         weight.next(servingMassFromObservation(servingWeight));
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['canSave']()).toBe(true);
         expect(amountInput?.disabled).toBe(false);

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -35,9 +35,13 @@ export class AdminMailMessageDialogComponent {
     protected readonly data = inject<AdminMailMessageDialogData>(FD_UI_DIALOG_DATA);
     private readonly mailInboxFacade = inject(AdminMailInboxFacade);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly message = signal<AdminMailInboxMessageDetails | null>(null);
+    private readonly messageResource = rxResource({
+        params: () => this.data.id,
+        stream: ({ params }) => this.mailInboxFacade.getMessage(params).pipe(take(1)),
+    });
+    private readonly message = computed(() => (this.messageResource.hasValue() ? this.messageResource.value() : null));
     private readonly acknowledgedReadAtUtc = signal<AdminUtcInstant | null>(null);
-    protected readonly isDetailsLoading = signal(true);
+    protected readonly isDetailsLoading = this.messageResource.isLoading;
     protected readonly readFailed = signal(false);
     protected readonly markingRead = signal(false);
     protected readonly selectedBodyMode = signal('preview');
@@ -68,21 +72,14 @@ export class AdminMailMessageDialogComponent {
         };
     });
     public constructor() {
-        this.mailInboxFacade
-            .getMessage(this.data.id)
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.message.set(response);
-                    this.isDetailsLoading.set(false);
-                    if (response.readAtUtc === null || response.readAtUtc === undefined) {
-                        this.markMessageRead(response.id);
-                    }
-                },
-                error: () => {
-                    this.isDetailsLoading.set(false);
-                },
-            });
+        effect(() => {
+            const message = this.message();
+            if (message !== null && (message.readAtUtc === null || message.readAtUtc === undefined)) {
+                untracked(() => {
+                    this.markMessageRead(message.id);
+                });
+            }
+        });
     }
 
     protected setBodyMode(mode: string): void {

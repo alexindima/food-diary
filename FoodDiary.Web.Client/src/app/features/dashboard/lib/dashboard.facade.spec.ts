@@ -67,7 +67,9 @@ describe('Dashboard midnight rollover', () => {
         vi.setSystemTime(new Date('2026-10-02T23:59:59'));
         const { facade, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         vi.advanceTimersByTime(MIDNIGHT_DELAY_MS);
+        TestBed.tick();
         expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
         expect(facade.isTodaySelected()).toBe(true);
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(2);
@@ -82,12 +84,14 @@ describe('Dashboard midnight rollover', () => {
         vi.setSystemTime(new Date('2026-10-02T23:59:59'));
         const { facade, dashboardService } = setupFacade();
         facade.initialize(new Date('2026-10-02T00:00:00'));
+        TestBed.tick();
         expect(facade.isTodaySelected()).toBe(true);
         vi.advanceTimersByTime(MIDNIGHT_DELAY_MS);
         expect(facade.selectedDate()).toEqual(new Date('2026-10-02T00:00:00'));
         expect(facade.isTodaySelected()).toBe(false);
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
         facade.setSelectedDate();
+        TestBed.tick();
         expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
         expect(facade.isTodaySelected()).toBe(true);
     });
@@ -97,9 +101,11 @@ describe('Dashboard midnight rollover', () => {
         vi.setSystemTime(new Date('2026-10-02T23:59:59'));
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const afterMidnight = new Date('2026-10-03T00:01:00');
         vi.setSystemTime(afterMidnight);
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
         expect(hydrationService.addEntry).toHaveBeenCalledExactlyOnceWith(HYDRATION_AMOUNT_ML, afterMidnight);
     });
@@ -116,6 +122,7 @@ describe('Dashboard live updates', () => {
 
         facade.initialize(new Date(TEST_YEAR, 2, SELECTED_DAY));
         TestBed.tick();
+        TestBed.tick();
         expect(dashboardService.getSnapshot).toHaveBeenCalledExactlyOnceWith(
             expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }),
             expect.any(HttpContext),
@@ -126,6 +133,7 @@ describe('Dashboard live updates', () => {
     it('refreshes the selected day after a meal is saved elsewhere without resetting the page', () => {
         const { facade, dashboardService } = setupFacade();
         facade.initialize(new Date(TEST_YEAR, 2, SELECTED_DAY));
+        TestBed.tick();
         TestBed.tick();
         expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
 
@@ -146,6 +154,7 @@ describe('Dashboard meal details', () => {
         const { facade } = setupFacade();
         const meal = createMeal();
         facade.initialize();
+        TestBed.tick();
         expect(facade.meals()).toEqual([]);
         mockMealDialog({ action: 'Edit', id: meal.id });
 
@@ -173,6 +182,7 @@ describe('Dashboard meal details', () => {
         };
         snapshot.meals.items.push(meal);
         facade.initialize();
+        TestBed.tick();
         const dialog = TestBed.inject(FdUiDialogService);
         const open = vi.spyOn(dialog, 'open');
         const closedDialog = { afterClosed: (): Observable<undefined> => of(undefined) };
@@ -197,6 +207,7 @@ describe('Dashboard measurement dates', () => {
         expect(facade.latestWaistDate()).toBeNull();
 
         facade.initialize();
+        TestBed.tick();
 
         expect(facade.latestWeightDate()).toBe(present ? date : null);
         expect(facade.latestWaistDate()).toBe(present ? date : null);
@@ -219,6 +230,7 @@ describe('DashboardFacade favorites', () => {
             items: [],
         });
         facade.initialize();
+        TestBed.tick();
         const service = TestBed.inject(FavoriteMealService);
         const pending = new Subject<FavoriteMeal>();
         const add = vi.spyOn(service, 'add').mockReturnValue(pending);
@@ -254,6 +266,7 @@ describe('DashboardFacade loading (1)', () => {
         const { facade, dashboardService, layout, snapshot } = setupFacade();
 
         facade.initialize();
+        TestBed.tick();
 
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
         expect(facade.snapshot()).toEqual(snapshot);
@@ -262,9 +275,11 @@ describe('DashboardFacade loading (1)', () => {
     it('should reload snapshot when selected date changes', () => {
         const { facade, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const initialCallCount = dashboardService.getSnapshot.mock.calls.length;
 
         facade.setSelectedDate(new Date('2026-03-20T12:00:00Z'));
+        TestBed.tick();
 
         expect(dashboardService.getSnapshot.mock.calls.length).toBe(initialCallCount + 1);
     });
@@ -275,9 +290,11 @@ describe('DashboardFacade loading (2)', () => {
         const { facade, dashboardService, snapshot } = setupFacade();
         const reload$ = new Subject<DashboardSnapshot>();
         facade.initialize();
+        TestBed.tick();
         dashboardService.getSnapshot.mockReturnValueOnce(reload$);
 
         facade.setSelectedDate(new Date('2026-03-20T12:00:00Z'));
+        TestBed.tick();
 
         expect(facade.isLoading()).toBe(true);
         expect(facade.hasSnapshot()).toBe(true);
@@ -293,6 +310,7 @@ describe('DashboardFacade loading (2)', () => {
         translateService.getFallbackLang.mockReturnValue('ru-RU');
 
         facade.initialize();
+        TestBed.tick();
 
         expect(dashboardService.getSnapshot).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }), expect.any(HttpContext));
     });
@@ -303,9 +321,11 @@ describe('DashboardFacade loading (3)', () => {
         const { facade, dashboardService, snapshot } = setupFacade();
         const reload$ = new Subject<DashboardSnapshot>();
         facade.initialize();
+        TestBed.tick();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(reload$);
 
         facade.reload(false);
+        TestBed.tick();
 
         expect(facade.isLoading()).toBe(false);
 
@@ -316,9 +336,11 @@ describe('DashboardFacade loading (3)', () => {
     it('should keep current snapshot when silent reload fails', () => {
         const { facade, dashboardService, snapshot, layout } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(throwError(() => new Error('snapshot failed')));
 
         facade.reload(false);
+        TestBed.tick();
 
         expect(facade.snapshot()).toEqual(snapshot);
         expect(layout.initializeLayout).toHaveBeenCalledTimes(1);
@@ -329,9 +351,11 @@ describe('DashboardFacade loading (4)', () => {
     it('should record an error and preserve current data when silent reload returns null', () => {
         const { facade, dashboardService, snapshot, layout } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(of(null));
 
         facade.reload(false);
+        TestBed.tick();
 
         expect(facade.loadError()).toBe('DASHBOARD.LOAD_ERROR');
         expect(facade.snapshot()).toEqual(snapshot);
@@ -346,7 +370,9 @@ describe('DashboardFacade loading (4)', () => {
         dashboardService.getSnapshot.mockReturnValueOnce(firstRequest$).mockReturnValueOnce(secondRequest$);
 
         facade.initialize();
+        TestBed.tick();
         facade.setSelectedDate(new Date('2026-03-20T12:00:00Z'));
+        TestBed.tick();
         secondRequest$.next(secondSnapshot);
         secondRequest$.complete();
         firstRequest$.next(firstSnapshot);
@@ -365,14 +391,18 @@ describe('DashboardFacade actions', () => {
         hydrationService.addEntry.mockReturnValueOnce(write);
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(facade.isHydrationLoading()).toBe(true);
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(1);
         write.next(CREATED_WATER_ENTRY);
         write.complete();
         expect(facade.isHydrationLoading()).toBe(true);
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(1);
         refresh.next({ ...snapshot, hydration: { dateUtc: calendarDate('2026-03-15T00:00:00.000Z'), goalMl: 2000, totalMl: 750 } });
         refresh.complete();
@@ -383,8 +413,10 @@ describe('DashboardFacade actions', () => {
     it('should reload snapshot after hydration update succeeds', () => {
         const { facade, dashboardService, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
 
         expect(hydrationService.addEntry).toHaveBeenCalled();
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
@@ -393,9 +425,12 @@ describe('DashboardFacade actions', () => {
     it('should send every sequential hydration action', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+        TestBed.tick();
 
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(2);
         expect(hydrationService.addEntry).toHaveBeenNthCalledWith(1, HYDRATION_AMOUNT_ML, expect.any(Date));
@@ -405,6 +440,7 @@ describe('DashboardFacade actions', () => {
     it('should update calorie goal and reload snapshot after applying TDEE suggestion', async () => {
         const { facade, dashboardService, goalsService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
 
         facade.applyTdeeGoal(TDEE_TARGET);
 
@@ -413,13 +449,17 @@ describe('DashboardFacade actions', () => {
             expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
         });
     });
+});
 
+describe('Dashboard hydration refresh recovery', () => {
     it('should keep snapshot when hydration refresh fails after update succeeds', () => {
         const { facade, dashboardService, hydrationService, snapshot } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(throwError(() => new Error('snapshot failed')));
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
 
         expect(hydrationService.addEntry).toHaveBeenCalled();
         expect(facade.snapshot()).toEqual(snapshot);
@@ -429,12 +469,14 @@ describe('DashboardFacade actions', () => {
     it('reports a failed hydration update without changing the total and allows retry', () => {
         const { facade, hydrationService, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const originalTotal = facade.hydration()?.totalMl;
         const errorToast = vi.spyOn(TestBed.inject(FdUiToastService), 'error');
         const initialLoads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
         hydrationService.addEntry.mockReturnValueOnce(throwError(() => new Error('hydration failed')));
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
 
         expect(facade.isHydrationLoading()).toBe(false);
         expect(facade.hydration()?.totalMl).toBe(originalTotal);
@@ -442,6 +484,7 @@ describe('DashboardFacade actions', () => {
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(initialLoads);
 
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
 
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(2);
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(initialLoads + 1);
@@ -453,8 +496,11 @@ describe('DashboardFacade request lifecycle', () => {
         const { facade, dashboardService } = setupFacade();
         const date = new Date(TEST_YEAR, 2, SELECTED_DAY, EVENING_HOUR);
         facade.initialize(date);
+        TestBed.tick();
         facade.initialize(new Date(TEST_YEAR, 2, NEXT_DAY));
+        TestBed.tick();
         facade.setSelectedDate(new Date(TEST_YEAR, 2, SELECTED_DAY, CUSTOM_REDUCE_HOURS));
+        TestBed.tick();
         expect(facade.selectedDate()).toEqual(new Date(TEST_YEAR, 2, SELECTED_DAY));
         expect(facade.isTodaySelected()).toBe(false);
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(1);
@@ -463,8 +509,10 @@ describe('DashboardFacade request lifecycle', () => {
     it('refreshes in the new language without clearing the current snapshot', () => {
         const { facade, dashboardService, translateService, snapshot } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         translateService.getCurrentLang.mockReturnValue('ru-RU');
         translateService.onLangChange.next({ lang: 'ru-RU' });
+        TestBed.tick();
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledWith(
             expect.objectContaining({ locale: 'ru' }),
             expect.any(HttpContext),
@@ -477,11 +525,13 @@ describe('DashboardFacade request lifecycle', () => {
         const { facade, dashboardService, layout, snapshot } = setupFacade();
         dashboardService.getSnapshot.mockReturnValueOnce(failure === 'null' ? of(null) : throwError(() => new Error('offline')));
         facade.initialize();
+        TestBed.tick();
         expect(facade.loadError()).toBe('DASHBOARD.LOAD_ERROR');
         expect(facade.isLoading()).toBe(false);
         expect(facade.hasSnapshot()).toBe(false);
         expect(layout.initializeLayout).not.toHaveBeenCalled();
         facade.reload();
+        TestBed.tick();
         expect(facade.loadError()).toBeNull();
         expect(facade.snapshot()).toEqual(snapshot);
         expect(layout.initializeLayout).toHaveBeenCalledExactlyOnceWith(snapshot.dashboardLayout);
@@ -492,7 +542,9 @@ describe('DashboardFacade request lifecycle', () => {
         const pending = new Subject<DashboardSnapshot | null>();
         dashboardService.getSnapshot.mockReturnValueOnce(pending);
         facade.initialize();
+        TestBed.tick();
         facade.setSelectedDate(new Date(TEST_YEAR, 2, OTHER_DAY));
+        TestBed.tick();
         if (failure === 'null') {
             pending.next(null);
         } else {
@@ -508,6 +560,7 @@ describe('DashboardFacade request lifecycle', () => {
         const pending = new Subject<DashboardSnapshot>();
         dashboardService.getSnapshot.mockReturnValueOnce(pending);
         facade.initialize();
+        TestBed.tick();
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
         translateService.onLangChange.next({ lang: 'ru' });
@@ -530,11 +583,13 @@ describe('DashboardFacade meal mutations (1)', () => {
         const { facade, snapshot, dashboardService } = setupFacade();
         snapshot.meals.items.push(createMeal());
         facade.initialize();
+        TestBed.tick();
         mockMealDialog({ action, id: 'meal-1' });
         const meals = TestBed.inject(MealService);
         vi.mocked(vi.spyOn(meals, 'repeat')).mockReturnValue(of(createMeal()));
         vi.mocked(vi.spyOn(meals, 'deleteById')).mockReturnValue(of(undefined));
         await facade.openMealDetailsAsync('meal-1');
+        TestBed.tick();
         if (action === 'Repeat') {
             expect(vi.spyOn(meals, 'repeat')).toHaveBeenCalledWith('meal-1', expect.any(String), expect.any(String));
             expect(vi.spyOn(meals, 'deleteById')).not.toHaveBeenCalled();
@@ -552,6 +607,7 @@ describe('DashboardFacade meal mutations (2)', () => {
         const { facade, snapshot, dashboardService } = setupFacade();
         snapshot.meals.items.push(createMeal());
         facade.initialize();
+        TestBed.tick();
         mockMealDialog({ action, id: 'meal-1' });
         const meals = TestBed.inject(MealService);
         vi.mocked(vi.spyOn(meals, 'repeat')).mockReturnValue(throwError(() => new Error('offline')));
@@ -565,11 +621,13 @@ describe('DashboardFacade meal mutations (2)', () => {
         const { facade, snapshot, dashboardService } = setupFacade();
         snapshot.meals.items.push(createMeal());
         facade.initialize();
+        TestBed.tick();
         vi.spyOn(TestBed.inject(FavoriteMealService), 'add').mockReturnValue(of(createFavorite()));
         facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(facade.meals()[0].isFavorite).toBe(true);
         mockMealDialog({ action: 'FavoriteChanged', id: 'meal-1' });
         await facade.openMealDetailsAsync('meal-1');
+        TestBed.tick();
         expect(facade.meals()[0].isFavorite).not.toBe(true);
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
         expect(vi.spyOn(TestBed.inject(MealService), 'deleteById')).not.toHaveBeenCalled();
@@ -581,6 +639,7 @@ describe('DashboardFacade meal mutations (3)', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.meals.items.push({ ...createMeal(), isFavorite: true });
         facade.initialize();
+        TestBed.tick();
         const favorites = TestBed.inject(FavoriteMealService);
         vi.mocked(vi.spyOn(favorites, 'getLookupPage')).mockReturnValue(of(found ? [createFavorite()] : []));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(of(undefined));
@@ -598,6 +657,7 @@ describe('DashboardFacade meal mutations (3)', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.meals.items.push({ ...createMeal(), isFavorite: wasFavorite, favoriteMealId: entityId<'favorite-meal'>('favorite-1') });
         facade.initialize();
+        TestBed.tick();
         const favorites = TestBed.inject(FavoriteMealService);
         vi.mocked(vi.spyOn(favorites, 'add')).mockReturnValue(throwError(() => new Error('offline')));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(throwError(() => new Error('offline')));
@@ -617,6 +677,7 @@ describe('DashboardFacade meal mutations (4)', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.meals.items.push(createMeal());
         facade.initialize();
+        TestBed.tick();
         const pending = new Subject<FavoriteMeal>();
         vi.spyOn(TestBed.inject(FavoriteMealService), 'add').mockReturnValue(pending);
         facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
@@ -659,6 +720,7 @@ describe('DashboardFacade view data (1)', () => {
         const pending = new Subject<DashboardSnapshot>();
         dashboardService.getSnapshot.mockReturnValueOnce(pending);
         facade.initialize();
+        TestBed.tick();
         for (const loading of [
             facade.isCycleLoading(),
             facade.isAdviceLoading(),
@@ -682,11 +744,13 @@ describe('DashboardFacade snapshot mapping', () => {
         const { facade, snapshot, dashboardService } = setupFacade();
         snapshot.cycleHidden = true;
         facade.initialize();
+        TestBed.tick();
         expect(facade.cycleHidden()).toBe(true);
         expect(facade.cycle()).toBeNull();
 
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(of({ ...snapshot, cycleHidden: false }));
         facade.reload(false);
+        TestBed.tick();
         expect(facade.cycleHidden()).toBe(false);
         expect(facade.cycle()).toBeNull();
     });
@@ -709,6 +773,7 @@ describe('DashboardFacade snapshot mapping', () => {
             { date: '2026-03-15', calories: 1200 },
         ];
         facade.initialize();
+        TestBed.tick();
         expect([facade.latestWeight(), facade.previousWeight(), facade.desiredWeightKg()]).toEqual([
             LATEST_WEIGHT,
             PREVIOUS_WEIGHT,
@@ -734,6 +799,7 @@ describe('DashboardFacade view data (2)', () => {
     it('opens TDEE details with the current snapshot insight', async () => {
         const { facade } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const open = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
         const dialog = { afterClosed: (): Observable<undefined> => of(undefined) };
         open.mockReturnValue(dialog as ReturnType<FdUiDialogService['open']>);
@@ -747,7 +813,9 @@ describe('DashboardFacade view data (2)', () => {
         const pending = new Subject<HydrationEntry>();
         hydrationService.addEntry.mockReturnValueOnce(pending);
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(facade.isHydrationLoading()).toBe(true);
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
@@ -796,6 +864,7 @@ describe('Dashboard TDEE goal application failure', () => {
     it('reports a rejected update without refreshing the unchanged dashboard', async () => {
         const { facade, goalsService, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const loads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
         goalsService.updateGoals.mockReturnValueOnce(of(null));
         facade.applyTdeeGoal(TDEE_TARGET);
@@ -821,6 +890,7 @@ describe('Dashboard asynchronous TDEE persistence', () => {
     it.each([0, Number.NaN])('leaves the saved goal unchanged for invalid target %s', async target => {
         const { facade, goalsService, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
 
         expect(await facade.applyTdeeGoalAsync(target)).toBe(false);
         expect(facade.isApplyingTdeeGoal()).toBe(false);
@@ -833,12 +903,14 @@ describe('Dashboard asynchronous TDEE persistence', () => {
         async failed => {
             const { facade, goalsService, dashboardService } = setupFacade();
             facade.initialize();
+            TestBed.tick();
             const loads = dashboardService.getSnapshotSilentlyStrict.mock.calls.length;
             goalsService.updateGoals.mockReturnValueOnce(failed);
             expect(await facade.applyTdeeGoalAsync(TDEE_TARGET)).toBe(false);
             expect(facade.isApplyingTdeeGoal()).toBe(false);
             expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(loads);
             expect(await facade.applyTdeeGoalAsync(TDEE_TARGET)).toBe(true);
+            TestBed.tick();
             expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(loads + 1);
         },
     );
@@ -867,10 +939,12 @@ describe('Dashboard water snackbar', () => {
         vi.useFakeTimers();
         const { facade, dashboardService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const refresh = new Subject<DashboardSnapshot>();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
         const toast = TestBed.inject(FdUiToastService);
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(toast.toasts()).toHaveLength(0);
         refresh.complete();
         expect(toast.toasts()[0]).toMatchObject({
@@ -886,12 +960,15 @@ describe('Dashboard water snackbar', () => {
     it('replaces equal-portion actions and deletes only the most recent entry once', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const toast = TestBed.inject(FdUiToastService);
         const first = toast.toasts()[0];
         const second = { ...CREATED_WATER_ENTRY, id: entityId<'hydration-entry'>('second-equal-portion') };
         hydrationService.addEntry.mockReturnValueOnce(of(second));
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const active = toast.toasts().filter(item => !item.leaving);
         expect(active).toHaveLength(1);
         toast.triggerAction(first.id);
@@ -904,7 +981,9 @@ describe('Dashboard water snackbar', () => {
     it('keeps a failed undo retryable through the error action', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const toast = TestBed.inject(FdUiToastService);
         hydrationService.deleteEntry.mockReturnValueOnce(throwError(() => new Error('offline')));
         toast.triggerAction(toast.toasts()[0].id);
@@ -925,7 +1004,9 @@ describe('Dashboard water snackbar update failure', () => {
     it('restores the last saved undo action when adding another serving fails', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const toast = TestBed.inject(FdUiToastService);
         const savedAction = toast.toasts().find(item => !item.leaving && item.action === 'HYDRATION_CARD.UNDO');
         if (savedAction === undefined) {
@@ -934,6 +1015,7 @@ describe('Dashboard water snackbar update failure', () => {
 
         hydrationService.addEntry.mockReturnValueOnce(throwError(() => new Error('Second serving rejected')));
         facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const restored = toast.toasts().find(item => !item.leaving && item.action === 'HYDRATION_CARD.UNDO');
         if (restored === undefined) {
             throw new Error('Expected the failed addition to restore the previous undo action');
@@ -952,12 +1034,15 @@ describe('Dashboard water snackbar lifetime', () => {
     it('dismisses on date change and rejects its stale action', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const toast = TestBed.inject(FdUiToastService);
         const id = toast.toasts()[0].id;
         const previousDay = new Date(facade.selectedDate());
         previousDay.setDate(previousDay.getDate() - 1);
         facade.setSelectedDate(previousDay);
+        TestBed.tick();
         expect(toast.toasts()[0].leaving).toBe(true);
         toast.triggerAction(id);
         expect(hydrationService.deleteEntry).not.toHaveBeenCalled();
@@ -966,12 +1051,15 @@ describe('Dashboard water snackbar lifetime', () => {
     it('does not show a late saved response after navigating to another day', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const pending = new Subject<HydrationEntry>();
         hydrationService.addEntry.mockReturnValueOnce(pending);
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const previousDay = new Date(facade.selectedDate());
         previousDay.setDate(previousDay.getDate() - 1);
         facade.setSelectedDate(previousDay);
+        TestBed.tick();
         pending.next(CREATED_WATER_ENTRY);
         pending.complete();
         expect(TestBed.inject(FdUiToastService).toasts()).toHaveLength(0);
@@ -980,7 +1068,9 @@ describe('Dashboard water snackbar lifetime', () => {
     it('dismisses the owned toast and unsubscribes its action when the dashboard is destroyed', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const toast = TestBed.inject(FdUiToastService);
         const id = toast.toasts()[0].id;
         TestBed.resetTestingModule();
@@ -996,13 +1086,18 @@ describe('Dashboard water undo', () => {
         const second = { ...CREATED_WATER_ENTRY, id: entityId<'hydration-entry'>('water-second'), amountMl: SECOND_HYDRATION_AMOUNT_ML };
         hydrationService.addEntry.mockReturnValueOnce(of(CREATED_WATER_ENTRY)).mockReturnValueOnce(of(second));
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(facade.lastHydrationUndo()).toEqual(second);
         facade.undoHydration();
+        TestBed.tick();
         expect(hydrationService.deleteEntry).toHaveBeenLastCalledWith(second.id);
         expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
         facade.undoHydration();
+        TestBed.tick();
         expect(hydrationService.deleteEntry).toHaveBeenLastCalledWith(CREATED_WATER_ENTRY.id);
         expect(facade.lastHydrationUndo()).toBeNull();
     });
@@ -1010,16 +1105,21 @@ describe('Dashboard water undo', () => {
     it('prevents double undo and retains the entry for retry after a failed request', () => {
         const { facade, hydrationService } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const pending = new Subject<void>();
         hydrationService.deleteEntry.mockReturnValueOnce(pending);
         facade.undoHydration();
+        TestBed.tick();
         facade.undoHydration();
+        TestBed.tick();
         expect(hydrationService.deleteEntry).toHaveBeenCalledOnce();
         pending.error(new Error('Connection lost'));
         expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
         expect(facade.isHydrationLoading()).toBe(false);
         facade.undoHydration();
+        TestBed.tick();
         expect(hydrationService.deleteEntry).toHaveBeenCalledTimes(2);
         expect(facade.lastHydrationUndo()).toBeNull();
     });
@@ -1027,13 +1127,17 @@ describe('Dashboard water undo', () => {
     it('keeps undo scoped to the selected day when navigating the dashboard', () => {
         const { facade } = setupFacade();
         facade.initialize();
+        TestBed.tick();
         const addedDay = new Date(facade.selectedDate());
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         const anotherDay = new Date(addedDay);
         anotherDay.setDate(anotherDay.getDate() - 1);
         facade.setSelectedDate(anotherDay);
+        TestBed.tick();
         expect(facade.lastHydrationUndo()).toBeNull();
         facade.setSelectedDate(addedDay);
+        TestBed.tick();
         expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
     });
 });
@@ -1136,8 +1240,11 @@ describe('Dashboard water refresh cancellation', () => {
         const refresh = new Subject<DashboardSnapshot>();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         facade.setSelectedDate(new Date(TEST_YEAR, 2, OTHER_DAY));
+        TestBed.tick();
         expect(facade.isHydrationLoading()).toBe(true);
         if (outcome === 'success') {
             refresh.next(createSnapshot(UPDATED_SNAPSHOT_CALORIES));
@@ -1155,7 +1262,9 @@ describe('Dashboard water refresh cancellation', () => {
         const refresh = new Subject<DashboardSnapshot>();
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
         facade.initialize();
+        TestBed.tick();
         facade.addHydration(HYDRATION_AMOUNT_ML);
+        TestBed.tick();
         expect(facade.isHydrationLoading()).toBe(true);
         TestBed.resetTestingModule();
         expect(refresh.observed).toBe(false);

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiEmptyStateComponent, FdUiHintDirective, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiStatusBadgeComponent, type FdUiStatusBadgeTone } from 'fd-ui-kit/status-badge/fd-ui-status-badge';
-import { catchError, finalize, of, switchMap, timer } from 'rxjs';
+import { catchError, finalize, of, switchMap, tap, throwError, timer } from 'rxjs';
 
 import { injectCurrentLanguage } from '../../../shared/i18n/inject-current-language';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
@@ -31,8 +31,6 @@ export class FoodRecognitionHistoryComponent {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly jobs = signal<FoodRecognitionJob[]>([]);
     protected readonly loaded = signal(false);
-    protected readonly loading = signal(false);
-    protected readonly failed = signal(false);
     protected readonly language = injectCurrentLanguage();
     protected readonly deleting = signal<string[]>([]);
     protected readonly deleteFailed = signal(false);
@@ -40,6 +38,34 @@ export class FoodRecognitionHistoryComponent {
     protected readonly pageSize = RECOGNITION_PAGE_SIZE;
     protected readonly pageIndex = signal(0);
     protected readonly totalItems = signal(0);
+    private readonly requestedPage = signal<{ pageIndex: number; previousPage: number; productLabel: boolean } | undefined>(undefined);
+    private readonly historyResource = rxResource({
+        params: this.requestedPage,
+        stream: ({ params, abortSignal }) =>
+            this.facade.listRecognitions(params.pageIndex + 1, this.pageSize, params.productLabel).pipe(
+                switchMap(page => {
+                    const lastPage = Math.max(1, page.totalPages);
+                    return page.page > lastPage ? this.facade.listRecognitions(lastPage, this.pageSize, params.productLabel) : of(page);
+                }),
+                tap(page => {
+                    if (!abortSignal.aborted && this.requestedPage() === params) {
+                        this.jobs.set(page.data);
+                        this.pageIndex.set(page.page - 1);
+                        this.totalItems.set(page.totalItems);
+                        this.countChanged.emit(page.totalItems);
+                        this.loaded.set(true);
+                    }
+                }),
+                catchError((error: unknown) => {
+                    if (!abortSignal.aborted && this.requestedPage() === params) {
+                        this.pageIndex.set(params.previousPage);
+                    }
+                    return throwError(() => error);
+                }),
+            ),
+    });
+    protected readonly loading = this.historyResource.isLoading;
+    protected readonly failed = computed(() => this.historyResource.error() !== undefined);
     protected readonly paginationDisabled = computed(() => this.loading() || this.disabled() || this.deleting().length > 0);
     public readonly countChanged = output<number>();
     public readonly backToRecognition = output();
@@ -163,34 +189,6 @@ export class FoodRecognitionHistoryComponent {
         }
         const previousPage = this.pageIndex();
         this.pageIndex.set(pageIndex);
-        this.loading.set(true);
-        this.failed.set(false);
-        this.facade
-            .listRecognitions(pageIndex + 1, this.pageSize, this.productLabel())
-            .pipe(
-                switchMap(page => {
-                    const lastPage = Math.max(1, page.totalPages);
-                    return page.page > lastPage ? this.facade.listRecognitions(lastPage, this.pageSize, this.productLabel()) : of(page);
-                }),
-                catchError(() => {
-                    this.pageIndex.set(previousPage);
-                    this.failed.set(true);
-                    return of(null);
-                }),
-                finalize(() => {
-                    this.loading.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(page => {
-                if (page === null) {
-                    return;
-                }
-                this.jobs.set(page.data);
-                this.pageIndex.set(page.page - 1);
-                this.totalItems.set(page.totalItems);
-                this.countChanged.emit(page.totalItems);
-                this.loaded.set(true);
-            });
+        this.requestedPage.set({ pageIndex, previousPage, productLabel: this.productLabel() });
     }
 }

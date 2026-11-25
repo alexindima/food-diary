@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import type { GoalsResponse } from '../../../shared/models/goals.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../api/goals.service';
@@ -76,6 +77,11 @@ describe('GoalsFacade', () => {
     registerManualSaveTests();
 });
 
+async function settleReadAsync(): Promise<void> {
+    TestBed.tick();
+    await waitForAsyncTasksAsync();
+}
+
 function registerMacroProjectionTests(): void {
     it.each([
         { target: 15, value: 15, percent: 19, accent: 'var(--fd-color-primary-600)' },
@@ -85,6 +91,7 @@ function registerMacroProjectionTests(): void {
     ])('retains inclusive fiber zones and the displayed gradient at $target g', ({ target, value, percent, accent }) => {
         goalsService.getGoalsStrict.mockReturnValueOnce(of({ fiberTarget: target, calorieCyclingEnabled: false } satisfies GoalsResponse));
         facade.initialize();
+        TestBed.tick();
 
         const fiber = facade.macroStates().find(macro => macro.key === 'fiber');
         expect(fiber).toMatchObject({
@@ -105,6 +112,7 @@ function registerLoadTests(): void {
     describe('loading', () => {
         it('loads saved goals on initialize', () => {
             facade.initialize();
+            TestBed.tick();
 
             expect(goalsService.getGoalsStrict).toHaveBeenCalledTimes(1);
             expect(facade.calorieTarget()).toBe(SAVED_CALORIES);
@@ -121,8 +129,9 @@ function registerLoadTests(): void {
             });
         });
 
-        it('clears loaded numeric goals when backend returns null values', () => {
+        it('clears loaded numeric goals when backend returns null values', async () => {
             facade.initialize();
+            await settleReadAsync();
             goalsService.getGoalsStrict.mockReturnValueOnce(
                 of({
                     dailyCalorieTarget: null,
@@ -138,6 +147,7 @@ function registerLoadTests(): void {
             );
 
             facade.reload();
+            await settleReadAsync();
 
             expect(facade.calorieTarget()).toBe(0);
             expect(facade.macroValues()).toEqual({
@@ -153,11 +163,13 @@ function registerLoadTests(): void {
             });
         });
 
-        it('keeps existing goals and marks load error when reload fails', () => {
+        it('keeps existing goals and marks load error when reload fails', async () => {
             facade.initialize();
+            await settleReadAsync();
             goalsService.getGoalsStrict.mockReturnValueOnce(throwError(() => new Error('load failed')));
 
             facade.reload();
+            await settleReadAsync();
 
             expect(facade.hasLoadError()).toBe(true);
             expect(facade.calorieTarget()).toBe(SAVED_CALORIES);
@@ -180,6 +192,7 @@ function registerManualSaveTests(): void {
     describe('manual save', () => {
         it.each(['error', 'null'] as const)('keeps the latest manual save after a previous %s response', async failure => {
             facade.initialize();
+            await settleReadAsync();
             const failedResponse = failure === 'error' ? throwError(() => new Error('save failed')) : of(null);
             goalsService.updateGoals
                 .mockReturnValueOnce(failedResponse)
@@ -203,6 +216,7 @@ function registerManualSaveTests(): void {
 
         it('applies the normalized server response when a manual save succeeds', async () => {
             facade.initialize();
+            await settleReadAsync();
             const pending = new Subject<GoalsResponse>();
             goalsService.updateGoals.mockReturnValueOnce(pending);
             const saved = facade.saveManuallyAsync({ dailyCalorieTarget: SAVED_CALORIES, waterGoal: SAVED_MANUAL_WATER });

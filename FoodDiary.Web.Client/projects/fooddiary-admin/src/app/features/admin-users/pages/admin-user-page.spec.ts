@@ -281,22 +281,28 @@ describe('AdminUserPageComponent actions and navigation', () => {
     });
 
     it('disables notifications for inactive and deleted users', async () => {
-        const { component, dialogs } = await createContextAsync();
+        const { component, dialogs, fixture, usersService } = await createContextAsync();
         for (const user of [
             { ...baseUser, isActive: false },
             { ...baseUser, deletedAt: adminUtcInstant('2026-10-31T12:00:00Z') },
         ]) {
-            component['user'].set(user);
+            usersService.getUser.mockReturnValueOnce(of(user));
+            component['reload']();
+            await fixture.whenStable();
             expect(component['canNotify']()).toBe(false);
             component['sendNotification'](user);
         }
         expect(dialogs.open).not.toHaveBeenCalled();
     });
     it('exposes edit, password and impersonation actions directly on the page', async () => {
-        const { component, dialogs, usersService } = await createContextAsync();
+        const { component, dialogs, fixture, usersService } = await createContextAsync();
         dialogs.open.mockReturnValue({ afterClosed: () => of(true) });
         component['edit'](baseUser);
+        fixture.detectChanges();
+        await fixture.whenStable();
         component['setPassword'](baseUser);
+        fixture.detectChanges();
+        await fixture.whenStable();
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserEditDialogComponent, { size: 'sm', data: baseUser });
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserSetPasswordDialogComponent, { size: 'sm', data: baseUser });
         expect(usersService.getUser).toHaveBeenCalledTimes(EXPECTED_ACTION_COUNT);
@@ -322,11 +328,16 @@ describe('AdminUserPageComponent actions and navigation', () => {
         expect(new URLSearchParams(destination.hash.slice(1)).get('impersonationCode')).toBe('one-time-code');
         open.mockRestore();
     });
+});
 
+describe('AdminUserPageComponent account ownership', () => {
     it('drops stale activity when navigating to a different account', async () => {
         const pendingLogins = new Subject<PagedResponse<AdminUserLoginEvent>>();
-        const { component, usersService, routeSegments } = await createContextAsync(facade => {
+        const { component, fixture, usersService, routeSegments } = await createContextAsync(facade => {
             facade.getLoginEvents.mockReturnValueOnce(pendingLogins);
+        });
+        await vi.waitFor(() => {
+            expect(pendingLogins.observed).toBe(true);
         });
         expect(component['activityLoading']()).toBe(true);
         const nextUser = { ...baseUser, id: 'user-2', email: 'second@example.com' };
@@ -334,6 +345,9 @@ describe('AdminUserPageComponent actions and navigation', () => {
         usersService.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
         usersService.getUserRoleAudit.mockReturnValueOnce(of([]));
         routeSegments.next([new UrlSegment(nextUser.id, {})]);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(pendingLogins.observed).toBe(false);
         pendingLogins.next(pagedLogins([loginEvent]));
         pendingLogins.complete();
         expect(component['user']()?.id).toBe(nextUser.id);
@@ -343,13 +357,15 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
     it('disables impersonation for admin and deleted users', async () => {
         const adminUser: AdminUser = { ...baseUser, roles: ['Admin'] };
-        const { component } = await createContextAsync(usersService => {
-            usersService.getUser.mockReturnValueOnce(of(adminUser));
+        const { component, fixture, usersService } = await createContextAsync(service => {
+            service.getUser.mockReturnValueOnce(of(adminUser));
         }, adminUser);
 
         expect(component['canImpersonate']()).toBe(false);
 
-        component['user'].set({ ...baseUser, deletedAt: adminUtcInstant('2026-03-01T00:00:00Z') });
+        usersService.getUser.mockReturnValueOnce(of({ ...baseUser, deletedAt: adminUtcInstant('2026-03-01T00:00:00Z') }));
+        component['reload']();
+        await fixture.whenStable();
 
         expect(component['canImpersonate']()).toBe(false);
     });
@@ -421,6 +437,7 @@ describe('Admin account detail action results', () => {
 
         pending.next({ ...baseUser, email: 'updated@example.test' });
         pending.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host(fixture).querySelector('h1')?.textContent).toBe('updated@example.test');
         expect(usersService.getUser).toHaveBeenLastCalledWith(baseUser.id);

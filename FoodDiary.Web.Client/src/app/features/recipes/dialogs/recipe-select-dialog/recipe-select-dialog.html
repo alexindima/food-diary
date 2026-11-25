@@ -36,11 +36,7 @@
         </fd-ui-button>
     </div>
 
-    <fd-recipe-select-dialog-content
-        [isLoading]="recipeData.isLoading()"
-        [items]="recipeItems()"
-        (recipeSelected)="onRecipeClick($event)"
-    />
+    <fd-recipe-select-dialog-content [isLoading]="isLoading()" [items]="recipeItems()" (recipeSelected)="onRecipeClick($event)" />
 
     @if (recipeData.totalPages > 1) {
         <fd-ui-pagination

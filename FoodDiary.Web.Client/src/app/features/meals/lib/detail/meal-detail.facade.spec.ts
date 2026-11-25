@@ -93,6 +93,7 @@ describe('MealDetailFacade favorite state', () => {
         favoriteMealService.isFavorite.mockReturnValue(of(true));
 
         facade.initialize({ ...meal, isFavorite: false });
+        TestBed.tick();
 
         expect(favoriteMealService.isFavorite).toHaveBeenCalledWith('meal-1');
         expect(facade.isFavorite()).toBe(true);
@@ -102,6 +103,7 @@ describe('MealDetailFacade favorite state', () => {
 
     it('should add favorite and store loading state', () => {
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.toggleFavorite(meal);
 
@@ -113,6 +115,7 @@ describe('MealDetailFacade favorite state', () => {
     it('should reset loading state when add favorite fails', () => {
         favoriteMealService.add.mockReturnValue(throwError(() => new Error('fail')));
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.toggleFavorite(meal);
 
@@ -124,6 +127,7 @@ describe('MealDetailFacade favorite state', () => {
         const favoriteMealData = { ...meal, isFavorite: true, favoriteMealId: entityId<'favorite-meal'>('favorite-1') };
         favoriteMealService.isFavorite.mockReturnValue(of(true));
         facade.initialize(favoriteMealData);
+        TestBed.tick();
 
         facade.toggleFavorite(favoriteMealData);
 
@@ -136,6 +140,7 @@ describe('MealDetailFacade favorite state', () => {
         const favoriteMealData = { ...meal, isFavorite: true, favoriteMealId: null };
         favoriteMealService.isFavorite.mockReturnValue(of(true));
         facade.initialize(favoriteMealData);
+        TestBed.tick();
 
         facade.toggleFavorite(favoriteMealData);
 
@@ -157,6 +162,7 @@ describe('MealDetailFacade favorite state', () => {
 describe('MealDetailFacade actions', () => {
     it('should close with favorite changed result when favorite state changed', () => {
         facade.initialize(meal);
+        TestBed.tick();
         facade.isFavorite.set(true);
 
         facade.close(meal);
@@ -168,6 +174,7 @@ describe('MealDetailFacade actions', () => {
 
     it('should close without payload when favorite state did not change', () => {
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.close(meal);
 
@@ -176,6 +183,7 @@ describe('MealDetailFacade actions', () => {
 
     it('should close with edit and repeat action results', () => {
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.edit(meal);
         facade.repeat(meal);
@@ -206,6 +214,7 @@ describe('MealDetailFacade actions', () => {
         translate.setTranslation('en', { CONFIRM_DELETE: { MESSAGE: 'Delete the meal for {{name}}?' } });
         await firstValueFrom(translate.use('en'));
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.delete({ ...meal, date: utcInstant(date) });
 
@@ -217,6 +226,7 @@ describe('MealDetailFacade actions', () => {
     it('should keep dialog open when delete is cancelled', () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
         facade.initialize(meal);
+        TestBed.tick();
 
         facade.delete(meal);
 
@@ -228,6 +238,7 @@ describe('MealDetailFacade removal failures', () => {
     it.each(['known', 'lookup', 'lookup-remove'])('preserves the favorite and allows retry after %s failure', mode => {
         favoriteMealService.isFavorite.mockReturnValue(of(true));
         facade.initialize({ ...meal, isFavorite: true, favoriteMealId: mode === 'known' ? favoriteMeal.id : null });
+        TestBed.tick();
         if (mode === 'lookup') {
             favoriteMealService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
         } else {
@@ -250,6 +261,7 @@ describe('MealDetailFacade delayed favorite initialization', () => {
         const status = new Subject<boolean>();
         favoriteMealService.isFavorite.mockReturnValue(status);
         facade.initialize(meal);
+        TestBed.tick();
         facade.toggleFavorite(meal);
         status.next(false);
         expect(facade.isFavorite()).toBe(true);
@@ -258,12 +270,14 @@ describe('MealDetailFacade delayed favorite initialization', () => {
     it('keeps the meal snapshot when status lookup fails', () => {
         favoriteMealService.isFavorite.mockReturnValue(throwError(() => new Error('offline')));
         facade.initialize({ ...meal, isFavorite: true });
+        TestBed.tick();
         expect(facade.isFavorite()).toBe(true);
     });
     it('cancels pending mutations when the dialog scope is destroyed', () => {
         const response = new Subject<FavoriteMeal>();
         favoriteMealService.add.mockReturnValue(response);
         facade.initialize(meal);
+        TestBed.tick();
         facade.toggleFavorite(meal);
         TestBed.resetTestingModule();
         expect(response.observed).toBe(false);
@@ -277,6 +291,7 @@ describe('MealDetailFacade stale favorite lookup ownership', () => {
         favoriteMealService.remove.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.NotFound })));
         favoriteMealService.getLookupPage.mockReturnValue(lookup);
         facade.initialize({ ...meal, isFavorite: true, favoriteMealId: favoriteMeal.id });
+        TestBed.tick();
 
         facade.toggleFavorite(meal);
         expect(lookup.observed).toBe(true);

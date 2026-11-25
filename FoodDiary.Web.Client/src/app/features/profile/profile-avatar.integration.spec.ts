@@ -778,6 +778,7 @@ it('keeps a newer dietologist acceptance when the initial profile overview finis
 
     // The current notification connection emits this service event when a dietologist accepts.
     TestBed.inject(NotificationService).notifyNotificationsChanged();
+    TestBed.tick();
     http.expectOne({ method: 'GET', url: environment.apiUrls.auth.replace('/auth', '/notifications') }).flush([]);
     router.detectChanges();
     const latest = await vi.waitFor(() => http.expectOne(relationshipRequest));

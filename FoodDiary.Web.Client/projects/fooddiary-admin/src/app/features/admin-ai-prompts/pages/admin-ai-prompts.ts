@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, readonly, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -11,7 +11,7 @@ import {
     FdUiSelectComponent,
     FdUiTextareaComponent,
 } from 'fd-ui-kit';
-import { firstValueFrom, map, type Observable, of } from 'rxjs';
+import { firstValueFrom, map, type Observable, of, tap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import type { AdminTemplateRevision } from '../../admin-template-history/contracts/history';
@@ -50,13 +50,26 @@ export class AdminAiPromptsPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogs = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
+    private readonly loadVersion = signal(0);
+    private readonly scenariosResource = rxResource({
+        params: this.loadVersion,
+        stream: ({ params }) =>
+            this.api.getScenarios().pipe(
+                tap(items => {
+                    if (params === this.loadVersion()) {
+                        this.items.set(items);
+                        this.resetEditor();
+                    }
+                }),
+            ),
+    });
     protected readonly keys: AdminAiPromptKey[] = ['vision', 'text-parse', 'nutrition', 'product-label'];
     protected readonly items = signal<AdminAiPromptScenario[]>([]);
     protected readonly key = signal<AdminAiPromptKey>('vision');
     protected readonly locale = signal('en');
     private readonly selected = computed(() => this.items().find(item => item.key === this.key() && item.locale === this.locale()));
-    protected readonly loading = signal(false);
-    protected readonly failed = signal(false);
+    protected readonly loading = this.scenariosResource.isLoading;
+    protected readonly failed = computed(() => this.scenariosResource.error() !== undefined);
     protected readonly saving = signal(false);
     protected readonly saveFailed = signal(false);
     protected readonly saved = signal(false);
@@ -92,26 +105,8 @@ export class AdminAiPromptsPageComponent {
         },
     );
 
-    public constructor() {
-        this.load();
-    }
     protected load(): void {
-        this.loading.set(true);
-        this.failed.set(false);
-        this.api
-            .getScenarios()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: items => {
-                    this.items.set(items);
-                    this.resetEditor();
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.failed.set(true);
-                    this.loading.set(false);
-                },
-            });
+        this.loadVersion.update(version => version + 1);
     }
     protected selectScenario(key: AdminAiPromptKey, locale: string, localeSelect?: FdUiSelectComponent<string>): void {
         if (key === this.key() && locale === this.locale()) {

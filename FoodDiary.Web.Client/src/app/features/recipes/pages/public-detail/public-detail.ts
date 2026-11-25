@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogService, FdUiIconComponent } from 'fd-ui-kit';
@@ -100,6 +100,14 @@ export class PublicRecipeDetailComponent {
     protected readonly servingsKey = computed(
         () => `PUBLIC_RECIPES.SERVINGS_${new Intl.PluralRules(this.language()).select(this.servings()).toUpperCase()}`,
     );
+    private readonly favoriteStatus = rxResource({
+        params: () => {
+            const recipe = this.recipe();
+            return recipe !== null && this.auth.isAuthenticated() ? { id: entityId<'recipe'>(recipe.id) } : undefined;
+        },
+        stream: ({ params }) => this.facade.isFavorite(params.id),
+    });
+
     public constructor() {
         effect(onCleanup => {
             this.servings.set(this.recipe()?.servings ?? 1);
@@ -109,25 +117,18 @@ export class PublicRecipeDetailComponent {
                 this.closeQrDialog?.();
             });
         });
-        effect(onCleanup => {
-            const recipe = this.recipe();
+        effect(() => {
+            this.recipe();
+            this.auth.isAuthenticated();
             this.saved.set(false);
             this.actionMessage.set(null);
-            if (recipe !== null && this.auth.isAuthenticated()) {
-                const subscription = this.facade
-                    .isFavorite(entityId<'recipe'>(recipe.id))
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe({
-                        next: saved => {
-                            this.saved.update(current => current || saved);
-                        },
-                        error: () => {
-                            this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
-                        },
-                    });
-                onCleanup(() => {
-                    subscription.unsubscribe();
-                });
+        });
+        effect(() => {
+            if (this.favoriteStatus.hasValue()) {
+                const saved = this.favoriteStatus.value();
+                this.saved.update(current => current || saved);
+            } else if (this.favoriteStatus.error() !== undefined) {
+                this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
             }
         });
     }

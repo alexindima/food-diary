@@ -4,7 +4,7 @@
     "components": 518,
     "componentsWithoutDirectSpecs": 125,
     "inputs": 1877,
-    "outputs": 566,
+    "outputs": 567,
     "apiCalls": 344,
     "templatesWithTranslations": 377,
     "translationKeys": 2316,
@@ -17855,8 +17855,8 @@
       ],
       "inputs": [
         {
-          "name": "listSelectField",
-          "type": "FieldTree<string | null>",
+          "name": "selectedListId",
+          "type": "ShoppingListId | null",
           "required": true
         },
         {
@@ -17909,6 +17909,10 @@
         {
           "name": "mergeDuplicates",
           "type": ""
+        },
+        {
+          "name": "listSelected",
+          "type": "ShoppingListId"
         },
         {
           "name": "createList",
@@ -22392,11 +22396,23 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/unread-count",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 106,
-      "publicMethod": "fetchUnreadCount",
+      "line": 79,
+      "publicMethod": null,
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
       "resolvedUrlExpression": "/api/v{version}/notifications/unread-count"
+    },
+    {
+      "feature": "shell",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/notifications",
+      "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
+      "line": 101,
+      "publicMethod": null,
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
+      "resolvedUrlExpression": "/api/v{version}/notifications"
     },
     {
       "feature": "shell",
@@ -22404,7 +22420,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/{notificationId}/read",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 169,
+      "line": 194,
       "publicMethod": "markAsRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22416,7 +22432,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-all",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 187,
+      "line": 212,
       "publicMethod": "markAllRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22428,7 +22444,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/test/schedule",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 200,
+      "line": 225,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22440,7 +22456,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-status",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 206,
+      "line": 231,
       "publicMethod": "getReadNotificationIds",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22452,7 +22468,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 227,
+      "line": 252,
       "publicMethod": "getNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22464,7 +22480,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 231,
+      "line": 256,
       "publicMethod": "updateNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22476,7 +22492,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscriptions",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 237,
+      "line": 262,
       "publicMethod": "getWebPushSubscriptions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22488,7 +22504,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/config",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 243,
+      "line": 268,
       "publicMethod": "getWebPushConfiguration",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22500,7 +22516,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 249,
+      "line": 274,
       "publicMethod": "upsertWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22512,23 +22528,11 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 256,
+      "line": 281,
       "publicMethod": "removeWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
       "resolvedUrlExpression": "/api/v{version}/notifications/push/subscription"
-    },
-    {
-      "feature": "shell",
-      "method": "GET",
-      "responseType": null,
-      "urlExpression": "/api/v{version}/notifications",
-      "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 303,
-      "publicMethod": "loadNotifications",
-      "transport": "GeneratedApiClient",
-      "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
-      "resolvedUrlExpression": "/api/v{version}/notifications"
     },
     {
       "feature": "shopping-lists",
@@ -47551,9 +47555,9 @@
         "isLoading",
         "isMobile",
         "isSaving",
-        "listSelectField",
         "lists",
-        "renameRequestedListId"
+        "renameRequestedListId",
+        "selectedListId"
       ],
       "outputsHandled": []
     },

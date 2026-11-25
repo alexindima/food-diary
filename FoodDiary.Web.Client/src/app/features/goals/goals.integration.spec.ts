@@ -9,6 +9,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../shared/measurements/measurement-system.service';
@@ -149,6 +150,7 @@ describe('Routed goal refresh deduplication', () => {
         expect(pending.observed).toBe(true);
         expect(host.querySelector('.goals__skeleton')).not.toBeNull();
         pending.error(new Error('Retry unavailable'));
+        await waitForAsyncTasksAsync();
         redraw(harness);
         expect(host.querySelector('fd-error-state')).not.toBeNull();
         requiredButton(host, 'fd-error-state button').click();
@@ -335,6 +337,7 @@ describe('Routed goals load', () => {
         expect(host.querySelector('fd-goals-editor')).toBeNull();
 
         pending.error(new Error('Goal history unavailable'));
+        await waitForAsyncTasksAsync();
         redraw(harness);
         expect(host.querySelector('fd-error-state [role="alert"]')?.textContent).toContain('ERRORS.LOAD_FAILED_TITLE');
         expect(host.querySelector('fd-goals-editor')).toBeNull();

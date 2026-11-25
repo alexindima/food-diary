@@ -83,6 +83,7 @@ describe('ClientDashboardComponent reused route identity', () => {
         api.getRecommendationsForClient.mockReturnValueOnce(pendingA);
         const harness = await RouterTestingHarness.create();
         const component = await harness.navigateByUrl('/dietologist/clients/A?recommendationId=A', ClientDashboardComponent);
+        expect(pendingA.observed).toBe(true);
         component['recommendationModel'].set({ text: 'A draft', templateName: 'A template' });
         component['taskModel'].set({ title: 'A task', details: 'A details', dueDate: '2026-10-22' });
 

@@ -266,6 +266,7 @@ function registerNavigationTests(context: TestContext): void {
             context.mockMealService.queryOverview.mockReturnValue(of(createOverview(meals, NEXT_PAGE_NUMBER)));
 
             context.component()['onPageChange'](NEXT_PAGE_INDEX);
+            TestBed.tick();
 
             expect(context.component()['currentPageIndex']()).toBe(NEXT_PAGE_INDEX);
             expect(context.mockMealService.queryOverview).toHaveBeenCalledWith(NEXT_PAGE_NUMBER, PAGE_LIMIT, expect.any(Object), {
@@ -864,6 +865,7 @@ function registerFilterInteractionTests(context: TestContext): void {
         };
         context.mockFdDialogService.open.mockReturnValue({ afterClosed: () => of(filters) });
         component['openFilters']();
+        TestBed.tick();
         expect(component['searchModel']()).toMatchObject(filters);
         expect(component['activeFilterChips']().length).toBeGreaterThan(0);
         expect(component['hasActiveFilters']()).toBe(true);
@@ -894,6 +896,7 @@ function registerFilterInteractionTests(context: TestContext): void {
     });
     it('retries both the unfiltered overview and filtered results', () => {
         context.component()['retryLoad']();
+        TestBed.tick();
         expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
             1,
             expect.any(Number),
@@ -902,6 +905,7 @@ function registerFilterInteractionTests(context: TestContext): void {
         );
         context.component()['searchModel'].update(value => ({ ...value, hasImage: true }));
         context.component()['retryLoad']();
+        TestBed.tick();
         expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
             1,
             expect.any(Number),
@@ -976,6 +980,7 @@ function registerFavoritesPickerWiringTests(context: TestContext): void {
         expect(component['isPlannedOpen']()).toBe(false);
         component['container']().nativeElement.scrollIntoView = vi.fn();
         component['onMealCreated']();
+        TestBed.tick();
         expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
             1,
             expect.any(Number),

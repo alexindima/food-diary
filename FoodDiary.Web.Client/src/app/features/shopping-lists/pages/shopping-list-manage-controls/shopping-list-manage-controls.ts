@@ -12,7 +12,6 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiFocusWhenDirective, FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -24,7 +23,7 @@ import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 import { finalize } from 'rxjs';
 
-import { optionalEntityId, type ShoppingListId } from '../../../../shared/models/semantics/entity-id';
+import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
 import {
@@ -59,7 +58,7 @@ export class ShoppingListManageControlsComponent {
     private readonly slots = signal<ShoppingListId[]>([]);
     private readonly recency = signal<ShoppingListId[]>([]);
 
-    public readonly listSelectField = input.required<FieldTree<string | null>>();
+    public readonly selectedListId = input.required<ShoppingListId | null>();
     public readonly initialPage = input<ShoppingListPage | null>(null);
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
     public readonly isLoading = input.required<boolean>();
@@ -70,7 +69,6 @@ export class ShoppingListManageControlsComponent {
     public readonly renameRequestedListId = input<ShoppingListId | null>(null);
     private readonly isSelectionBlocked = computed(() => this.isLoading() || this.hasConflict());
     protected readonly isBusy = computed(() => this.isSelectionBlocked() || this.isSaving());
-    protected readonly selectedListId = computed(() => optionalEntityId<'shopping-list'>(this.listSelectField()().value()));
     protected readonly selectedList = computed(() => this.lists().find(list => list.id === this.selectedListId()));
     protected readonly quickLists = computed(() => {
         const available = this.lists();
@@ -88,6 +86,7 @@ export class ShoppingListManageControlsComponent {
     protected readonly renameDraft = signal('');
 
     public readonly mergeDuplicates = output();
+    public readonly listSelected = output<ShoppingListId>();
     public readonly createList = output<string | void>();
     public readonly canClearPurchased = input(false);
     public readonly clearPurchased = output();
@@ -129,7 +128,7 @@ export class ShoppingListManageControlsComponent {
         }
 
         this.recordUse(listId);
-        this.listSelectField()().value.set(listId);
+        this.listSelected.emit(listId);
     }
 
     private recordUse(id: ShoppingListId): void {

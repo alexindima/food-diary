@@ -21,7 +21,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { debounceTime, distinctUntilChanged, EMPTY, skip, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
 
 import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
@@ -201,27 +201,26 @@ export class RecipeListComponent {
             }
         });
 
-        this.recipeListFacade
-            .loadInitialOverview(this.routeState.initial.page, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
-            .subscribe();
+        this.recipeListFacade.requestView(
+            this.recipeListFacade.loadInitialOverview(
+                this.routeState.initial.page,
+                this.pageSize,
+                this.buildRecipeFilters(),
+                this.searchModel().onlyMine,
+            ),
+        );
 
         toObservable(computed(() => this.searchModel().search))
-            .pipe(
-                skip(1),
-                debounceTime(this.searchDebounceMs),
-                switchMap(() => this.loadChangedQuery()),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.requestChangedQuery();
+            });
 
         toObservable(computed(() => this.searchModel().onlyMine))
-            .pipe(
-                skip(1),
-                distinctUntilChanged(),
-                switchMap(() => this.loadChangedQuery()),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(skip(1), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.requestChangedQuery();
+            });
     }
 
     protected resolveImage(recipe: Recipe): string | undefined {
@@ -276,9 +275,7 @@ export class RecipeListComponent {
     protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
         this.currentPageIndex.set(pageIndex);
-        this.recipeListFacade
-            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
-            .subscribe();
+        this.reloadCurrentPage();
     }
 
     protected toggleMobileSearch(): void {
@@ -297,36 +294,33 @@ export class RecipeListComponent {
                 caloriesTo: currentFilters.caloriesTo ?? null,
                 hasImage: currentFilters.hasImage ?? null,
             })
-            .pipe(
-                switchMap(result => {
-                    if (result === null || result === undefined || this.hasSameFilters(currentOnlyMine, currentFilters, result)) {
-                        return EMPTY;
-                    }
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
+                if (result === null || result === undefined || this.hasSameFilters(currentOnlyMine, currentFilters, result)) {
+                    return;
+                }
 
-                    this.searchModel.update(value => ({
-                        ...value,
-                        onlyMine: result.onlyMine,
-                        category: result.category,
-                        maxTotalTime: result.maxTotalTime,
-                        caloriesFrom: result.caloriesFrom,
-                        caloriesTo: result.caloriesTo,
-                        hasImage: result.hasImage,
-                    }));
-                    return this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), result.onlyMine);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+                this.searchModel.update(value => ({
+                    ...value,
+                    onlyMine: result.onlyMine,
+                    category: result.category,
+                    maxTotalTime: result.maxTotalTime,
+                    caloriesFrom: result.caloriesFrom,
+                    caloriesTo: result.caloriesTo,
+                    hasImage: result.hasImage,
+                }));
+                this.requestPage(1);
+            });
     }
 
     protected removeFilter(id: string): void {
         this.searchModel.update(model => removeRecipeFilter(model, id));
-        this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
+        this.requestPage(1);
     }
 
     protected resetFilters(): void {
         this.searchModel.update(resetRecipeFilters);
-        this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), false).subscribe();
+        this.requestPage(1);
     }
 
     protected startRecipeListTour(force = true): void {
@@ -391,17 +385,19 @@ export class RecipeListComponent {
     }
 
     private reloadCurrentPage(): void {
-        this.recipeListFacade
-            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
-            .subscribe();
+        this.requestPage(this.currentPageIndex() + 1);
     }
 
-    private loadChangedQuery(): ReturnType<RecipeListFacade['loadRecipes']> {
-        const filters = this.buildRecipeFilters();
-        const onlyMine = this.searchModel().onlyMine;
-        return this.recipeListFacade.isQueryActive(filters, onlyMine)
-            ? EMPTY
-            : this.recipeListFacade.loadRecipes(1, this.pageSize, filters, onlyMine);
+    private requestChangedQuery(): void {
+        if (!this.recipeListFacade.isQueryActive(this.buildRecipeFilters(), this.searchModel().onlyMine)) {
+            this.requestPage(1);
+        }
+    }
+
+    private requestPage(page: number): void {
+        this.recipeListFacade.requestView(
+            this.recipeListFacade.loadRecipes(page, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
+        );
     }
 
     private buildRecipeFilters(): RecipeFilters {

@@ -1,8 +1,8 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize, firstValueFrom } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
@@ -161,9 +161,21 @@ export class GoalsFacade {
         weight: 0,
         waist: 0,
     });
-    public readonly isLoadingGoals = signal(true);
+    private readonly goalsRequest = signal<number | undefined>(undefined);
+    private readonly goalsResource = rxResource({
+        params: this.goalsRequest,
+        stream: ({ params }) =>
+            this.goalsService.getGoalsStrict().pipe(
+                tap(goals => {
+                    if (this.goalsRequest() === params) {
+                        this.applyLoadedGoals(goals);
+                    }
+                }),
+            ),
+    });
+    public readonly isLoadingGoals = computed(() => this.goalsRequest() === undefined || this.goalsResource.isLoading());
     public readonly isSavingGoals = signal(false);
-    public readonly hasLoadError = signal(false);
+    public readonly hasLoadError = computed(() => this.goalsResource.error() !== undefined);
     public readonly macroPresets = MACRO_PRESETS;
 
     public readonly macroStates = computed(() =>
@@ -226,24 +238,7 @@ export class GoalsFacade {
     }
 
     private loadGoals(): void {
-        this.isLoadingGoals.set(true);
-        this.hasLoadError.set(false);
-        this.goalsService
-            .getGoalsStrict()
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.isLoadingGoals.set(false);
-                }),
-            )
-            .subscribe({
-                next: goals => {
-                    this.applyLoadedGoals(goals);
-                },
-                error: () => {
-                    this.hasLoadError.set(true);
-                },
-            });
+        this.goalsRequest.update(version => (version ?? 0) + 1);
     }
 
     private applyLoadedGoals(goals: GoalsResponse | null): void {

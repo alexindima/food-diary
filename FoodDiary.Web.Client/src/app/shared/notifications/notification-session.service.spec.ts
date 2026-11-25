@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { AuthService } from '../../services/auth.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { NotificationService } from './notification.service';
@@ -45,14 +46,15 @@ describe('NotificationService session isolation', () => {
     it('ignores pending feed and unread responses after logout', () => {
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const count = http.expectOne(`${baseUrl}/unread-count`);
         const feed = http.expectOne(baseUrl);
 
         sessions.notifySessionEnded();
         authenticated.set(false);
         TestBed.tick();
-        count.flush({ count: FIRST_COUNT });
-        feed.flush([notification('old')]);
+        expect(count.cancelled).toBe(true);
+        expect(feed.cancelled).toBe(true);
 
         expect(service.unreadCount()).toBe(0);
         expect(service.notifications()).toEqual([]);
@@ -61,29 +63,27 @@ describe('NotificationService session isolation', () => {
         expect(service.notificationsRequested()).toBe(false);
     });
 
-    it.each(['success', 'failure'])('keeps new-owner requests independent of late old-owner %s', outcome => {
+    it('keeps new-owner requests independent after canceling older requests', () => {
         service.fetchUnreadCount();
         service.refreshNotifications();
+        TestBed.tick();
         const oldCount = http.expectOne(`${baseUrl}/unread-count`);
         const oldFeed = http.expectOne(baseUrl);
 
         userId.set('user-b');
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const currentCount = http.expectOne(`${baseUrl}/unread-count`);
         const currentFeed = http.expectOne(baseUrl);
-        if (outcome === 'success') {
-            oldCount.flush({ count: FIRST_COUNT });
-            oldFeed.flush([notification('old')]);
-        } else {
-            oldCount.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'unavailable' });
-            oldFeed.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'unavailable' });
-        }
+        expect(oldCount.cancelled).toBe(true);
+        expect(oldFeed.cancelled).toBe(true);
         expect(service.notificationsLoading()).toBe(true);
         expect(service.notifications()).toEqual([]);
         expect(service.notificationsRequested()).toBe(true);
         service.fetchUnreadCount();
         service.refreshNotifications();
+        TestBed.tick();
         http.expectNone(`${baseUrl}/unread-count`);
         http.expectNone(baseUrl);
 
@@ -98,14 +98,17 @@ describe('NotificationService session isolation', () => {
 describe('NotificationService session generations', () => {
     it('invalidates pending results even when the same user signs in again before the effect runs', () => {
         service.fetchUnreadCount();
+        TestBed.tick();
         const previous = http.expectOne(`${baseUrl}/unread-count`);
         sessions.notifySessionEnded();
         sessions.notifyAuthenticated();
         service.fetchUnreadCount();
+        TestBed.tick();
         const current = http.expectOne(`${baseUrl}/unread-count`);
 
-        previous.flush({ count: FIRST_COUNT });
+        expect(previous.cancelled).toBe(true);
         service.fetchUnreadCount();
+        TestBed.tick();
         http.expectNone(`${baseUrl}/unread-count`);
         expect(service.unreadCount()).toBe(0);
         current.flush({ count: SECOND_COUNT });
@@ -114,19 +117,22 @@ describe('NotificationService session generations', () => {
 
     it('resets the feed when impersonation starts and prevents its late response after impersonation ends', () => {
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         http.expectOne(baseUrl).flush([notification('normal')]);
         impersonating.set(true);
         TestBed.tick();
         expect(service.notificationsRequested()).toBe(false);
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const impersonated = http.expectOne(baseUrl);
         expect(service.notifications()).toEqual([]);
 
         impersonating.set(false);
         TestBed.tick();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const current = http.expectOne(baseUrl);
-        impersonated.flush([notification('impersonated')]);
+        expect(impersonated.cancelled).toBe(true);
         expect(service.notificationsLoading()).toBe(true);
         current.flush([notification('normal again')]);
         expect(service.notifications().map(item => item.title)).toEqual(['normal again']);
@@ -137,6 +143,7 @@ describe('NotificationService session generations', () => {
         const previous = http.expectOne(`${baseUrl}/read-all`);
         userId.set('user-b');
         service.fetchUnreadCount();
+        TestBed.tick();
         http.expectOne(`${baseUrl}/unread-count`).flush({ count: SECOND_COUNT });
         previous.flush(null);
         expect(service.unreadCount()).toBe(SECOND_COUNT);
@@ -144,16 +151,20 @@ describe('NotificationService session generations', () => {
 });
 
 describe('NotificationService background refresh', () => {
-    it('keeps the last good count and feed on failure and coalesces refresh requests', () => {
+    it('keeps the last good count and feed on failure and coalesces refresh requests', async () => {
         service.fetchUnreadCount();
+        TestBed.tick();
         http.expectOne(`${baseUrl}/unread-count`).flush({ count: FIRST_COUNT });
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         http.expectOne(baseUrl).flush([notification('retained')]);
+        await waitForAsyncTasksAsync();
 
         service.fetchUnreadCount({ force: true });
         service.refreshNotifications();
         service.fetchUnreadCount({ force: true });
         service.refreshNotifications();
+        TestBed.tick();
         http.expectOne(`${baseUrl}/unread-count`).flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'unavailable' });
         http.expectOne(baseUrl).flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'unavailable' });
 
@@ -161,8 +172,10 @@ describe('NotificationService background refresh', () => {
         expect(service.notifications().map(item => item.title)).toEqual(['retained']);
         expect(service.notificationsLoaded()).toBe(true);
         expect(service.notificationsLoading()).toBe(false);
+        await waitForAsyncTasksAsync();
         service.fetchUnreadCount({ force: true });
         service.refreshNotifications();
+        TestBed.tick();
         http.expectOne(`${baseUrl}/unread-count`).flush({ count: SECOND_COUNT });
         http.expectOne(baseUrl).flush([notification('recovered')]);
         expect(service.unreadCount()).toBe(SECOND_COUNT);

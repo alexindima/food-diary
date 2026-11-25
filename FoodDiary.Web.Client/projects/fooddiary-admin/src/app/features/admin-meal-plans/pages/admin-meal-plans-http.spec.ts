@@ -19,12 +19,15 @@ it('loads and saves a selected catalog draft through the page facade, then refre
     const id = 'owned-plan';
     const summary = { id, name: 'Starter plan', dietType: 'Balanced', durationDays: 1, isCurated: false };
     const days = [{ dayNumber: 1, meals: [] }];
+    fixture.detectChanges();
     http.expectOne(request => request.url === url && request.params.get('page') === '1').flush([summary]);
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const edit = host.querySelector<HTMLButtonElement>('article button');
     expect(edit).not.toBeNull();
     edit?.click();
+    fixture.detectChanges();
     http.expectOne({ method: 'GET', url: `${url}/${id}` }).flush({ ...summary, days });
     fixture.detectChanges();
     http.expectOne(request => request.url === `${url}/recipes` && request.params.get('search') === '').flush([]);
@@ -59,6 +62,7 @@ it('loads and saves a selected catalog draft through the page facade, then refre
     });
     const revised = { ...summary, name: 'Revised plan' };
     update.flush({ ...revised, days });
+    fixture.detectChanges();
     http.expectOne(request => request.url === url && request.params.get('page') === '1').flush([revised]);
     fixture.detectChanges();
     await fixture.whenStable();

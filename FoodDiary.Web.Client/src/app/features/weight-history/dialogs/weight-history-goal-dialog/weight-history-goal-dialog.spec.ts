@@ -196,6 +196,7 @@ describe('Weight goal dialog with the real measurement facade', () => {
         const request = http.expectOne({ method: 'PUT', url: endpoint });
         expect(request.request.body).toEqual(goal);
         request.flush(goal);
+        TestBed.tick();
         http.expectOne(item => item.url === `${environment.apiUrls.weights}/page-summary`).flush({
             entries: [],
             summary: [],
@@ -231,6 +232,7 @@ describe('Weight goal dialog with the real measurement facade', () => {
         const request = http.expectOne({ method: 'PUT', url: endpoint });
         expect(request.request.body).toEqual(goal);
         request.flush(goal);
+        TestBed.tick();
         http.expectOne(item => item.url === `${environment.apiUrls.weights}/page-summary`).flush({
             entries: [],
             summary: [],

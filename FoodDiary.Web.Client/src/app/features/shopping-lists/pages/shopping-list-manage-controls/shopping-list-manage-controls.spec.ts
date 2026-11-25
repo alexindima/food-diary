@@ -1,6 +1,4 @@
-import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
@@ -37,10 +35,8 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
         ],
     }).compileComponents();
 
-    const listSelectModel = signal({ id: 'list-1' });
-    const listSelectForm = TestBed.runInInjectionContext(() => form(listSelectModel));
     const fixture = TestBed.createComponent(ShoppingListManageControlsComponent);
-    fixture.componentRef.setInput('listSelectField', listSelectForm.id);
+    fixture.componentRef.setInput('selectedListId', LISTS[0].id);
     fixture.componentRef.setInput('lists', lists);
     fixture.componentRef.setInput('isLoading', false);
     fixture.componentRef.setInput('canDeleteList', true);
@@ -109,6 +105,9 @@ describe('ShoppingListManageControlsComponent rendered actions', () => {
         const { component, fixture, openDialog } = await setupManageControlsAsync([...LISTS, ...extra]);
         const create = vi.fn();
         component.createList.subscribe(create);
+        component.listSelected.subscribe(id => {
+            fixture.componentRef.setInput('selectedListId', id);
+        });
         fixture.componentRef.setInput('isMobile', true);
         fixture.detectChanges();
         openDialog
@@ -169,12 +168,17 @@ describe('ShoppingListManageControlsComponent', () => {
         expect(component['selectedListId']()).toBe('list-1');
     });
 
-    it('updates selected list when a card is selected', async () => {
-        const { component } = await setupManageControlsAsync();
+    it('requests a selection and keeps the current card until the input changes', async () => {
+        const { component, fixture } = await setupManageControlsAsync();
+        const selected = vi.fn();
+        component.listSelected.subscribe(selected);
 
-        component['selectList'](entityId<'shopping-list'>('list-2'));
+        component['selectList'](LISTS[1].id);
 
-        expect(component['selectedListId']()).toBe('list-2');
+        expect(selected).toHaveBeenCalledExactlyOnceWith(LISTS[1].id);
+        expect(component.selectedListId()).toBe(LISTS[0].id);
+        fixture.componentRef.setInput('selectedListId', LISTS[1].id);
+        expect(component.selectedListId()).toBe(LISTS[1].id);
     });
 
     it('starts renaming the requested list after it appears in summaries', async () => {
@@ -246,6 +250,7 @@ describe('ShoppingListManageControlsComponent desktop list creation', () => {
 
         results.next([]);
         results.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(browser?.textContent).toContain('SHOPPING_LIST.NO_MATCHES');
         expect(action.textContent).toContain('SHOPPING_LIST.CREATE_NAMED_LIST');

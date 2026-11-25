@@ -81,6 +81,7 @@ describe('Admin recipe moderation evidence image ownership', () => {
         expect(host.querySelector('img')).toBeNull();
 
         second.next(checkedImage);
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host.querySelector('[role="status"]')).toBeNull();
         expect(host.querySelector('img')?.getAttribute('src')).toBe(checkedImage);
@@ -97,7 +98,9 @@ describe('Admin recipe moderation evidence image ownership', () => {
         const retry = new Subject<string>();
         getImage.mockReturnValueOnce(failed).mockReturnValueOnce(retry);
         imageButton(host, cover.field).click();
+        fixture.detectChanges();
         failed.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(host.querySelector('fd-ui-form-error')?.textContent).toContain('ADMIN_RECIPE_MODERATION.IMAGE_UNAVAILABLE');
         expect(host.querySelector('img')).toBeNull();

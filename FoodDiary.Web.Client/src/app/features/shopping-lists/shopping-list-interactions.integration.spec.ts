@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/c
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { GuardsCheckStart, provideRouter, type ResolveFn, ResolveStart, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -204,6 +205,7 @@ describe('Shopping overview error recovery', () => {
             expected === 'existing lists' ? firstOverview() : { selectedList: null, lists: { items: [], hasMore: false, nextPage: null } };
         retry.next(overview);
         retry.complete();
+        await harness.fixture.whenStable();
         harness.detectChanges();
         expect(host.querySelector('.shopping-list__loader')).toBeNull();
         expect(host.querySelector('fd-ui-inline-alert[role="alert"]')).toBeNull();
@@ -1270,17 +1272,23 @@ describe('Shopping mobile list browser', () => {
             clientHeight: { value: PAGE_VIEWPORT_HEIGHT },
         });
         results.dispatchEvent(new Event('scroll'));
+        harness.detectChanges();
         expect(api.getPage).not.toHaveBeenCalled();
         results.scrollTop = PAGE_SCROLL_OFFSET;
         results.dispatchEvent(new Event('scroll'));
         results.dispatchEvent(new Event('scroll'));
+        harness.detectChanges();
         expect(api.getPage).toHaveBeenCalledExactlyOnceWith(2, '');
         pending.error(new Error('The next page was unavailable'));
+        await harness.fixture.whenStable();
         harness.detectChanges();
         results.dispatchEvent(new Event('scroll'));
+        harness.detectChanges();
         expect(api.getPage).toHaveBeenCalledOnce();
 
         nativeButton(dialog, 'SHOPPING_LIST.RETRY_LOAD').click();
+        harness.detectChanges();
+        await harness.fixture.whenStable();
         harness.detectChanges();
         const travel = Array.from(results.querySelectorAll('button')).find(button => button.textContent.includes(TRAVEL.name));
         if (travel === undefined) {
@@ -1315,6 +1323,7 @@ describe('Shopping mobile list browser', () => {
 
         result.next([]);
         result.complete();
+        await harness.fixture.whenStable();
         harness.detectChanges();
         expect(dialog.textContent).toContain('SHOPPING_LIST.NO_MATCHES');
         nativeButton(dialog, 'SHOPPING_LIST.CREATE_NAMED_LIST').click();
@@ -1382,6 +1391,7 @@ describe('Shopping mobile picker request ownership', () => {
                 clientHeight: { value: PAGE_VIEWPORT_HEIGHT },
             });
             results.dispatchEvent(new Event('scroll'));
+            harness.detectChanges();
             expect(api.getPage).toHaveBeenCalledExactlyOnceWith(2, '');
         }
         expect(pending.observed).toBe(true);
@@ -2870,10 +2880,10 @@ it('does not open the outgoing item editor from a previously open row menu while
 });
 
 it.each([
-    { action: 'Edit', menuLabel: 'SHOPPING_LIST.EDIT_ITEM' },
-    { action: 'Remove', menuLabel: 'SHOPPING_LIST.REMOVE_ITEM' },
-    { action: 'Check', menuLabel: null },
-])('ignores a queued row $action after the selected list changes before redraw', async ({ menuLabel }) => {
+    { action: 'Edit', output: 'itemEdit', payload: GROCERIES.items[0].id },
+    { action: 'Remove', output: 'itemRemove', payload: GROCERIES.items[0].id },
+    { action: 'Check', output: 'itemCheckedChange', payload: { itemId: GROCERIES.items[0].id, checked: true } },
+])('ignores a queued row $action after the selected list changes before redraw', async ({ output, payload }) => {
     const { harness, api } = await renderShoppingAsync();
     const saving = new Subject<ShoppingList>();
     const loading = new Subject<ShoppingList | null>();
@@ -2883,22 +2893,19 @@ it.each([
     const host = page(harness);
     nativeButton(host, TRAVEL.name).click();
     await waitForShoppingAutosaveAsync(harness, api.update, 1);
-    const outgoingAction =
-        menuLabel === null
-            ? requiredInput(host, '.shopping-list__item input[type="checkbox"]')
-            : shoppingRowMenuAction(harness, GROCERIES.items[0].name, menuLabel);
+    const outgoingPanel = harness.routeDebugElement?.queryAll(By.css('fd-shopping-list-items-panel')).at(0);
+    if (outgoingPanel === undefined) {
+        throw new Error('Expected the outgoing shopping list items panel');
+    }
 
     saving.next(shoppingListWithAddedItem(GROCERIES, 'saved-beans', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION));
     saving.complete();
+    harness.detectChanges();
     expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
     loading.next(TRAVEL);
     loading.complete();
-    expect(outgoingAction.isConnected).toBe(true);
-    expect(outgoingAction.matches(':disabled')).toBe(false);
-    outgoingAction.click();
-    if (outgoingAction instanceof HTMLInputElement) {
-        expect(outgoingAction.checked).toBe(true);
-    }
+    expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
+    outgoingPanel.triggerEventHandler(output, payload);
     harness.detectChanges();
 
     expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);

@@ -1,11 +1,11 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, type Observable, of, Subject, switchMap, takeUntil, throwError } from 'rxjs';
+import { catchError, map, type Observable, of, switchMap, throwError } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -19,7 +19,6 @@ import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/
 @Injectable()
 export class MealDetailFacade {
     private readonly destroyRef = inject(DestroyRef);
-    private readonly favoriteStatusRequests = new Subject<void>();
     private readonly dialogRef = inject(FdUiDialogRef<unknown, MealDetailActionResult>);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly locale = inject(LOCALE_ID);
@@ -33,24 +32,33 @@ export class MealDetailFacade {
 
     private initialFavoriteState = false;
     private favoriteMealId: string | null = null;
+    private readonly requestedFavorite = signal<{ id: Meal['id']; fallback: boolean } | undefined>(undefined);
+    private readonly favoriteCheck = rxResource({
+        params: this.requestedFavorite,
+        stream: ({ params, abortSignal }) =>
+            this.favoriteMealService.isFavorite(params.id).pipe(
+                catchError(() => of(params.fallback)),
+                map(isFavorite => {
+                    if (!abortSignal.aborted && this.requestedFavorite() === params) {
+                        this.initialFavoriteState = isFavorite;
+                        this.isFavorite.set(isFavorite);
+                    }
+                }),
+            ),
+    });
 
     public initialize(meal: Meal): void {
-        this.favoriteStatusRequests.next();
+        this.stopFavoriteCheck();
         this.initialFavoriteState = meal.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteMealId = meal.favoriteMealId ?? null;
 
-        this.favoriteMealService
-            .isFavorite(meal.id)
-            .pipe(
-                catchError(() => of(this.initialFavoriteState)),
-                takeUntil(this.favoriteStatusRequests),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isFavorite => {
-                this.initialFavoriteState = isFavorite;
-                this.isFavorite.set(isFavorite);
-            });
+        this.requestedFavorite.set({ id: meal.id, fallback: this.initialFavoriteState });
+    }
+
+    private stopFavoriteCheck(): void {
+        this.requestedFavorite.set(undefined);
+        this.favoriteCheck.set(undefined);
     }
 
     public close(meal: Meal): void {
@@ -106,7 +114,7 @@ export class MealDetailFacade {
             return;
         }
 
-        this.favoriteStatusRequests.next();
+        this.stopFavoriteCheck();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {

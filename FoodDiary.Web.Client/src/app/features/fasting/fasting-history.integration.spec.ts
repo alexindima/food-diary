@@ -177,6 +177,7 @@ async function renderFastingHistoryAsync(session: FastingSessionHttpResponse): P
     await firstValueFrom(translate.use('en'));
     const harness = await RouterTestingHarness.create('/fasting');
     TestBed.inject(HttpTestingController).expectOne(`${environment.apiUrls.fasting}/overview`).flush(historyOverview(session));
+    await harness.fixture.whenStable();
     harness.detectChanges();
     const page = harness.routeNativeElement;
     if (page === null) {

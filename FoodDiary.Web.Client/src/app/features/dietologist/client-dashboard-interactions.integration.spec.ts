@@ -1,4 +1,6 @@
+import { getDebugNode } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { FormRoot } from '@angular/forms/signals';
 import { GuardsCheckEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -280,11 +282,10 @@ describe('Dietologist dashboard recommendation delivery', () => {
 
         const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
         const host = dashboardHost(harness);
-        const form = host.querySelector('.client-dashboard__recommendation-form');
-        const draft = form?.querySelector('textarea');
-        const send = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
-        if (draft === null || draft === undefined || send === null || send === undefined) {
-            throw new Error('Expected the client recommendation form');
+        const { draft, send } = recommendationEditor(harness);
+        const formRoot = getDebugNode(draft.form)?.injector.get(FormRoot);
+        if (formRoot === undefined) {
+            throw new Error('Expected the recommendation form binding');
         }
         expect(initialRead.observed).toBe(true);
 
@@ -293,9 +294,9 @@ describe('Dietologist dashboard recommendation delivery', () => {
         await vi.waitFor(() => {
             harness.detectChanges();
             expect(draft.value).toBe('');
+            expect(formRoot.fieldTree()().submitting()).toBe(false);
         });
         expect(createRecommendation).not.toHaveBeenCalled();
-        await harness.fixture.whenStable();
 
         enterRecommendation(harness, draft, `  ${note}  `);
         send.click();
@@ -313,10 +314,10 @@ describe('Dietologist dashboard recommendation delivery', () => {
         await vi.waitFor(() => {
             harness.detectChanges();
             expect(send.disabled).toBe(false);
+            expect(formRoot.fieldTree()().submitting()).toBe(false);
         });
         expect(draft.value).toBe(`  ${note}  `);
         expect(toastError).toHaveBeenCalledExactlyOnceWith('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR');
-        await harness.fixture.whenStable();
 
         send.click();
         await vi.waitFor(() => {
@@ -329,6 +330,7 @@ describe('Dietologist dashboard recommendation delivery', () => {
             [FIRST_CLIENT.userId, { text: note }],
         ]);
 
+        expect(initialRead.observed).toBe(true);
         initialRead.next([saved, earlier]);
         initialRead.complete();
         harness.detectChanges();

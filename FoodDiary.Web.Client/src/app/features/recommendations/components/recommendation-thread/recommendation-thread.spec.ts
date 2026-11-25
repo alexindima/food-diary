@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { RecommendationComment } from '../../../../shared/models/dietologist.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
@@ -81,7 +82,7 @@ describe('RecommendationThreadComponent', () => {
 });
 
 describe('RecommendationThreadComponent composer lifecycle', () => {
-    it('locks the composer until the initial discussion loads so its response cannot overwrite a new post', () => {
+    it('locks the composer until the initial discussion loads so its response cannot overwrite a new post', async () => {
         const pending = new Subject<RecommendationComment[]>();
         facade.getComments.mockReturnValueOnce(pending);
         const fixture = createComponent();
@@ -95,6 +96,7 @@ describe('RecommendationThreadComponent composer lifecycle', () => {
 
         pending.next([createComment()]);
         pending.complete();
+        await waitForAsyncTasksAsync();
         fixture.detectChanges();
 
         expect(host.querySelector<HTMLTextAreaElement>('textarea')?.disabled).toBe(false);

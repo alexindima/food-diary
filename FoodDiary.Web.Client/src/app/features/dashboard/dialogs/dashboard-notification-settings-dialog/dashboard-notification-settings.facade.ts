@@ -1,9 +1,9 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -27,8 +27,29 @@ export class DashboardNotificationSettingsFacade {
     private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
+    private readonly preferenceLoad = signal<number | undefined>(undefined);
+    private readonly preferences = rxResource({
+        params: this.preferenceLoad,
+        stream: () =>
+            this.notificationService.getNotificationPreferences().pipe(
+                tap({
+                    next: preferences => {
+                        this.applyPreferences(preferences);
+                        this.frontendObservability.recordNotificationSettingsViewed({
+                            pushEnabled: preferences.pushNotificationsEnabled,
+                            fastingEnabled: preferences.fastingPushNotificationsEnabled,
+                            socialEnabled: preferences.socialPushNotificationsEnabled,
+                            source: 'dashboard-dialog',
+                        });
+                    },
+                    error: () => {
+                        this.setError('DASHBOARD.NOTIFICATIONS.LOAD_ERROR');
+                    },
+                }),
+            ),
+    });
 
-    public readonly isLoading = signal(true);
+    public readonly isLoading = computed(() => this.preferenceLoad() === undefined || this.preferences.isLoading());
     public readonly isUpdating = signal(false);
     public readonly isOpeningProfile = signal(false);
     public readonly submitError = signal<string | null>(null);
@@ -74,28 +95,7 @@ export class DashboardNotificationSettingsFacade {
     });
 
     public load(): void {
-        this.notificationService
-            .getNotificationPreferences()
-            .pipe(
-                finalize(() => {
-                    this.isLoading.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: preferences => {
-                    this.applyPreferences(preferences);
-                    this.frontendObservability.recordNotificationSettingsViewed({
-                        pushEnabled: preferences.pushNotificationsEnabled,
-                        fastingEnabled: preferences.fastingPushNotificationsEnabled,
-                        socialEnabled: preferences.socialPushNotificationsEnabled,
-                        source: 'dashboard-dialog',
-                    });
-                },
-                error: () => {
-                    this.setError('DASHBOARD.NOTIFICATIONS.LOAD_ERROR');
-                },
-            });
+        this.preferenceLoad.update(current => (current ?? 0) + 1);
     }
 
     public togglePushNotifications(): void {

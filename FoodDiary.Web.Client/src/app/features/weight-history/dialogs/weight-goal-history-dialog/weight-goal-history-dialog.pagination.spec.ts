@@ -57,46 +57,51 @@ function setup(): {
     });
     const fixture = TestBed.createComponent(WeightGoalHistoryDialogComponent);
     fixture.detectChanges();
+    TestBed.tick();
     return { fixture, request, pages };
 }
 
 describe('Weight history pagination wiring', () => {
-    it('pins the active goal and appends requested pages through the rendered button', () => {
+    it('pins the active goal and appends requested pages through the rendered button', async () => {
         const { fixture, request, pages } = setup();
         const root = fixture.nativeElement as HTMLElement;
         expect(request).toHaveBeenCalledExactlyOnceWith(undefined);
         expect(root.querySelectorAll('article')).toHaveLength(1);
         pages[0].next({ items: [closed], nextCursor: 'second' });
         pages[0].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(root.querySelectorAll('article')).toHaveLength(2);
         const more = root.querySelector<HTMLButtonElement>('fd-ui-button button');
         expect(more?.textContent).toContain('GOAL_HISTORY_PAGING.MORE');
         more?.click();
-        fixture.detectChanges();
+        TestBed.tick();
         expect(request).toHaveBeenLastCalledWith('second');
         pages[1].next({ items: [{ ...closed, id: entityId<'weight-goal'>('older') }], nextCursor: null });
         pages[1].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(root.querySelectorAll('article')).toHaveLength(TOTAL_LOADED_ROWS);
         expect(root.querySelector('article')?.textContent).toContain('WEIGHT_HISTORY.GOAL_STATUS_ACTIVE');
         expect(root.querySelector('fd-ui-button')).toBeNull();
     });
 
-    it('announces a fetch error and lets the user retry without losing the active goal', () => {
+    it('announces a fetch error and lets the user retry without losing the active goal', async () => {
         const { fixture, request, pages } = setup();
         const root = fixture.nativeElement as HTMLElement;
         pages[0].error(new Error('offline'));
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(root.querySelector('[role="alert"]')?.textContent).toContain('GOAL_HISTORY_PAGING.ERROR');
         const retry = root.querySelector<HTMLButtonElement>('fd-ui-button button');
         expect(retry?.textContent).toContain('GOAL_HISTORY_PAGING.RETRY');
         retry?.click();
-        fixture.detectChanges();
+        TestBed.tick();
         expect(request).toHaveBeenCalledTimes(2);
         expect(request).toHaveBeenLastCalledWith(undefined);
         pages[1].next({ items: [], nextCursor: null });
         pages[1].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(root.querySelector('[role="alert"]')).toBeNull();
         expect(root.querySelectorAll('article')).toHaveLength(1);

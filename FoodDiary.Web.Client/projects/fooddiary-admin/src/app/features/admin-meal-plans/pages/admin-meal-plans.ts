@@ -1,9 +1,9 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
@@ -20,83 +20,56 @@ import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 })
 export class AdminMealPlansComponent {
     private readonly api = inject(AdminMealPlansFacade);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
-    private readonly editorSelectionChanged = new Subject<void>();
-    protected readonly plans = signal<CatalogPlanSummary[]>([]);
-    protected readonly loading = signal(false);
-    protected readonly loadFailed = signal(false);
+    private readonly listVersion = signal(0);
+    private readonly plansResource = rxResource({ params: this.listVersion, stream: () => this.api.getAll() });
+    private readonly detailRequest = signal<{ id: CatalogPlanSummary['id'] } | undefined>(undefined);
+    private readonly detailResource = rxResource({
+        params: this.detailRequest,
+        stream: ({ params }) =>
+            this.api.get(params.id).pipe(
+                tap(detail => {
+                    if (this.detailRequest() === params) {
+                        this.selected.set(detail);
+                        this.editing.set(true);
+                        this.saved.set(false);
+                    }
+                }),
+            ),
+    });
+    protected readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value() : []));
+    protected readonly loading = computed(() => this.plansResource.isLoading() || this.detailResource.isLoading());
+    protected readonly loadFailed = computed(() => this.plansResource.error() !== undefined);
     protected readonly editing = signal(false);
-    protected readonly error = signal<string | null>(null);
+    protected readonly error = computed(() =>
+        this.detailResource.error() === undefined ? null : String(this.translate.instant('ADMIN_MEAL_PLANS.LOAD_ERROR')),
+    );
     protected readonly saved = signal(false);
     protected readonly selected = signal<CatalogPlan | null>(null);
 
-    public constructor() {
-        this.load();
-    }
-
     protected load(): void {
-        this.loading.set(true);
-        this.loadFailed.set(false);
-        this.api
-            .getAll()
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.loading.set(false);
-                }),
-            )
-            .subscribe({
-                next: plans => {
-                    this.plans.set(plans);
-                },
-                error: () => {
-                    this.loadFailed.set(true);
-                },
-            });
+        this.listVersion.update(version => version + 1);
     }
 
     protected create(): void {
-        this.editorSelectionChanged.next();
+        this.detailRequest.set(undefined);
         this.selected.set(null);
         this.saved.set(false);
-        this.error.set(null);
         this.editing.set(true);
     }
 
     protected edit(plan: CatalogPlanSummary): void {
-        this.editorSelectionChanged.next();
-        this.loading.set(true);
-        this.error.set(null);
-        this.api
-            .get(plan.id)
-            .pipe(
-                takeUntil(this.editorSelectionChanged),
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.loading.set(false);
-                }),
-            )
-            .subscribe({
-                next: detail => {
-                    this.selected.set(detail);
-                    this.editing.set(true);
-                    this.saved.set(false);
-                },
-                error: () => {
-                    this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.LOAD_ERROR')));
-                },
-            });
+        this.detailRequest.set({ id: plan.id });
     }
 
     protected cancel(): void {
-        this.editorSelectionChanged.next();
+        this.detailRequest.set(undefined);
         this.selected.set(null);
         this.editing.set(false);
     }
 
     protected onSaved(): void {
-        this.editorSelectionChanged.next();
+        this.detailRequest.set(undefined);
         this.selected.set(null);
         this.editing.set(false);
         this.saved.set(true);

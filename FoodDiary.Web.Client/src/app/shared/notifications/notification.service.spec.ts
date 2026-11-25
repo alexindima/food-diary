@@ -5,6 +5,7 @@ import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { AuthInterceptor } from '../../interceptor/auth.interceptor';
@@ -101,6 +102,7 @@ describe('NotificationService push read synchronization', () => {
         service.updateCount(1);
         service.updateCount(1);
         service.fetchUnreadCount({ force: true });
+        TestBed.tick();
         httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
         expect(changed).toHaveBeenCalledTimes(expectedRefreshes);
     });
@@ -110,6 +112,7 @@ describe('NotificationService loading', () => {
     it('should load notifications only once via ensureNotificationsLoaded', () => {
         service.ensureNotificationsLoaded();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
 
         const req = httpMock.expectOne(baseUrl);
         expect(req.request.method).toBe('GET');
@@ -133,6 +136,7 @@ describe('NotificationService loading', () => {
 
     it('should update unread count when fetchUnreadCount succeeds', () => {
         service.fetchUnreadCount();
+        TestBed.tick();
 
         const req = httpMock.expectOne(`${baseUrl}/unread-count`);
         expect(req.request.method).toBe('GET');
@@ -146,6 +150,7 @@ describe('NotificationService loading', () => {
         service.fetchUnreadCount();
         service.fetchUnreadCount();
         service.fetchUnreadCount();
+        TestBed.tick();
 
         const requests = httpMock.match(`${baseUrl}/unread-count`);
         expect(requests).toHaveLength(1);
@@ -157,34 +162,42 @@ describe('NotificationService loading', () => {
 
     it('should not refetch unread count after it has been loaded', () => {
         service.fetchUnreadCount();
+        TestBed.tick();
 
         const req = httpMock.expectOne(`${baseUrl}/unread-count`);
         req.flush({ count: UNREAD_COUNT_LOADED });
 
         service.fetchUnreadCount();
+        TestBed.tick();
 
         httpMock.expectNone(`${baseUrl}/unread-count`);
         expect(service.unreadCount()).toBe(UNREAD_COUNT_LOADED);
     });
 
-    it('should refetch unread count when forced', () => {
+    it('should refetch unread count when forced', async () => {
         service.fetchUnreadCount();
+        TestBed.tick();
 
         const firstReq = httpMock.expectOne(`${baseUrl}/unread-count`);
         firstReq.flush({ count: UNREAD_COUNT_LOADED });
+        await waitForAsyncTasksAsync();
 
         service.fetchUnreadCount({ force: true });
+        TestBed.tick();
 
         const secondReq = httpMock.expectOne(`${baseUrl}/unread-count`);
         secondReq.flush({ count: UNREAD_COUNT_FORCED });
 
         expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
     });
+});
 
+describe('NotificationService loading errors', () => {
     it('should reset unread count when unauthenticated', () => {
         authService.isAuthenticated.mockReturnValue(false);
 
         service.fetchUnreadCount();
+        TestBed.tick();
 
         httpMock.expectNone(`${baseUrl}/unread-count`);
         expect(service.unreadCount()).toBe(0);
@@ -192,6 +205,7 @@ describe('NotificationService loading', () => {
 
     it('should allow retry after notifications loading fails', () => {
         service.ensureNotificationsLoaded();
+        TestBed.tick();
 
         const failedReq = httpMock.expectOne(baseUrl);
         failedReq.flush(null, { status: 500, statusText: 'Server Error' });
@@ -200,6 +214,7 @@ describe('NotificationService loading', () => {
         expect(service.notificationsLoading()).toBe(false);
 
         service.ensureNotificationsLoaded();
+        TestBed.tick();
 
         const retryReq = httpMock.expectOne(baseUrl);
         expect(retryReq.request.method).toBe('GET');
@@ -210,25 +225,30 @@ describe('NotificationService loading', () => {
 });
 
 describe('NotificationService acknowledgement refresh', () => {
-    it('replaces pre-click count reads and ignores their late responses', () => {
+    it('cancels pre-click count reads and accepts only the acknowledgement refresh', () => {
         service.fetchUnreadCount();
+        TestBed.tick();
         const stale = httpMock.expectOne(`${baseUrl}/unread-count`);
         service.fetchUnreadCount({ force: true, supersedePending: true });
+        TestBed.tick();
         const fresh = httpMock.match(`${baseUrl}/unread-count`);
         expect(fresh, 'acknowledgement must replace pending count reads').toHaveLength(1);
         fresh[0].flush({ count: 0 });
-        stale.flush({ count: UNREAD_COUNT_INITIAL });
+        expect(stale.cancelled).toBe(true);
         expect(service.unreadCount()).toBe(0);
     });
 
-    it('retains the latest pending count request when a superseded read finishes', () => {
+    it('coalesces further count reads while the acknowledgement refresh is pending', () => {
         service.fetchUnreadCount();
+        TestBed.tick();
         const stale = httpMock.expectOne(`${baseUrl}/unread-count`);
         service.fetchUnreadCount({ force: true, supersedePending: true });
+        TestBed.tick();
         const fresh = httpMock.match(`${baseUrl}/unread-count`);
         expect(fresh, 'acknowledgement must replace pending count reads').toHaveLength(1);
-        stale.flush({ count: UNREAD_COUNT_INITIAL });
+        expect(stale.cancelled).toBe(true);
         service.fetchUnreadCount();
+        TestBed.tick();
         httpMock.expectNone(`${baseUrl}/unread-count`);
         fresh[0].flush({ count: 0 });
         expect(service.unreadCount()).toBe(0);
@@ -236,10 +256,13 @@ describe('NotificationService acknowledgement refresh', () => {
 
     it('discards a pre-click feed and reloads it after the pending read finishes', () => {
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const stale = httpMock.expectOne(baseUrl);
         service.notifyNotificationsChanged({ supersedePending: true });
+        TestBed.tick();
         stale.flush([notificationForSession('Clicked notification')]);
         expect(service.notifications(), 'a pre-click feed must not restore an unread notification').toEqual([]);
+        TestBed.tick();
         const fresh = httpMock.expectOne(baseUrl);
         fresh.flush([{ ...notificationForSession('Clicked notification'), isRead: true }]);
         expect(service.notifications()[0].isRead).toBe(true);
@@ -258,16 +281,10 @@ describe('NotificationService session ownership', () => {
         httpMock.expectNone(`${baseUrl}/unread-count`);
     });
 
-    it.each([
-        { boundary: 'authentication', result: 'success' },
-        { boundary: 'authentication', result: 'error' },
-        { boundary: 'session end', result: 'success' },
-        { boundary: 'session end', result: 'error' },
-        { boundary: 'account change', result: 'success' },
-        { boundary: 'account change', result: 'error' },
-    ] as const)('ignores old read $result and finalization after $boundary', ({ boundary, result }) => {
+    it.each(['authentication', 'session end', 'account change'] as const)('cancels pending reads after %s', boundary => {
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const oldCount = httpMock.expectOne(`${baseUrl}/unread-count`);
         const oldList = httpMock.expectOne(baseUrl);
 
@@ -280,16 +297,12 @@ describe('NotificationService session ownership', () => {
         }
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const currentCount = httpMock.expectOne(`${baseUrl}/unread-count`);
         const currentList = httpMock.expectOne(baseUrl);
 
-        if (result === 'success') {
-            oldCount.flush({ count: UNREAD_COUNT_INITIAL });
-            oldList.flush([notificationForSession('Old session')]);
-        } else {
-            oldCount.flush(null, { status: 500, statusText: 'Server Error' });
-            oldList.flush(null, { status: 500, statusText: 'Server Error' });
-        }
+        expect(oldCount.cancelled).toBe(true);
+        expect(oldList.cancelled).toBe(true);
 
         expect(service.unreadCount()).toBe(0);
         expect(service.notifications()).toEqual([]);
@@ -297,6 +310,7 @@ describe('NotificationService session ownership', () => {
         expect(service.notificationsLoading()).toBe(true);
         service.fetchUnreadCount({ force: true });
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         httpMock.expectNone(`${baseUrl}/unread-count`);
         httpMock.expectNone(baseUrl);
 
@@ -309,9 +323,10 @@ describe('NotificationService session ownership', () => {
         expect(service.notificationsLoading()).toBe(false);
     });
 
-    it('keeps current data when the previous account succeeds after current reads finish', () => {
+    it('keeps current data after account relogin cancels older requests', () => {
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const oldCount = httpMock.expectOne(`${baseUrl}/unread-count`);
         const oldList = httpMock.expectOne(baseUrl);
 
@@ -319,15 +334,17 @@ describe('NotificationService session ownership', () => {
         sessionEvents.notifyAuthenticated();
         service.fetchUnreadCount();
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: UNREAD_COUNT_FORCED });
         httpMock.expectOne(baseUrl).flush([notificationForSession('Relogged-in session')]);
 
-        oldCount.flush({ count: UNREAD_COUNT_INITIAL });
-        oldList.flush([notificationForSession('Old session')]);
+        expect(oldCount.cancelled).toBe(true);
+        expect(oldList.cancelled).toBe(true);
 
         expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
         expect(service.notifications()[0].title).toBe('Relogged-in session');
         service.fetchUnreadCount();
+        TestBed.tick();
         httpMock.expectNone(`${baseUrl}/unread-count`);
     });
 });
@@ -354,13 +371,14 @@ describe('NotificationService mutation session ownership', () => {
         service.updateCount(UNREAD_COUNT_INITIAL);
         service.notifyNotificationsChanged();
         service.fetchUnreadCount({ force: true });
+        TestBed.tick();
         const pendingList = httpMock.expectOne(baseUrl);
         const pendingCount = httpMock.expectOne(`${baseUrl}/unread-count`);
 
         sessionEvents.notifySessionEnded();
         authService.isAuthenticated.mockReturnValue(false);
-        pendingList.flush([notificationForSession('Late old session')]);
-        pendingCount.flush({ count: UNREAD_COUNT_CONCURRENT });
+        expect(pendingList.cancelled).toBe(true);
+        expect(pendingCount.cancelled).toBe(true);
 
         expect(service.notifications()).toEqual([]);
         expect(service.unreadCount()).toBe(0);
@@ -369,6 +387,7 @@ describe('NotificationService mutation session ownership', () => {
         expect(service.notificationsChangedVersion()).toBe(0);
         service.ensureNotificationsLoaded();
         service.fetchUnreadCount();
+        TestBed.tick();
         httpMock.expectNone(baseUrl);
         httpMock.expectNone(`${baseUrl}/unread-count`);
     });
@@ -653,6 +672,7 @@ describe('NotificationService settings endpoints', () => {
         expect(service.notificationsChangedVersion()).toBe(0);
 
         service.notifyNotificationsChanged();
+        TestBed.tick();
 
         expect(service.notificationsChangedVersion()).toBe(1);
         const req = httpMock.expectOne(baseUrl);
@@ -733,6 +753,7 @@ describe('NotificationService scheduling and acknowledgement contracts', () => {
         const marked = notificationForSession('Opened notification');
         const unrelated = { ...notificationForSession('Unopened notification'), id: entityId<'notification'>('n2') };
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         httpMock.expectOne(baseUrl).flush([
             { ...marked, type: 'info' },
             { ...unrelated, type: 'info' },
@@ -759,6 +780,7 @@ describe('NotificationService events before an owner is established', () => {
         try {
             service.updateCount(UNREAD_COUNT_INITIAL);
             service.notifyNotificationsChanged();
+            TestBed.tick();
             expect(service.unreadCount()).toBe(0);
             expect(service.notifications()).toEqual([]);
             expect(readStateChanged).not.toHaveBeenCalled();
@@ -772,12 +794,14 @@ describe('NotificationService events before an owner is established', () => {
     it('discards a feed started before the authenticated account ID was known', () => {
         authService.getUserId.mockReturnValue(null);
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const unowned = httpMock.expectOne(baseUrl);
         authService.getUserId.mockReturnValue('user-a');
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const account = httpMock.expectOne(baseUrl);
 
-        unowned.flush([{ ...notificationForSession('Pending session notification'), type: 'info' }]);
+        expect(unowned.cancelled).toBe(true);
         expect(service.notifications()).toEqual([]);
         account.flush([{ ...notificationForSession('Account notification'), type: 'info' }]);
 
@@ -786,13 +810,15 @@ describe('NotificationService events before an owner is established', () => {
 
     it('isolates an impersonated feed from the same account’s earlier ordinary request', () => {
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const ordinary = httpMock.expectOne(baseUrl);
         authService.isImpersonating.mockReturnValue(true);
         service.ensureNotificationsLoaded();
+        TestBed.tick();
         const impersonated = httpMock.expectOne(baseUrl);
 
         impersonated.flush([{ ...notificationForSession('Current session notification'), type: 'info' }]);
-        ordinary.flush([{ ...notificationForSession('Previous session notification'), type: 'info' }]);
+        expect(ordinary.cancelled).toBe(true);
 
         expect(service.notifications().map(item => item.title)).toEqual(['Current session notification']);
     });

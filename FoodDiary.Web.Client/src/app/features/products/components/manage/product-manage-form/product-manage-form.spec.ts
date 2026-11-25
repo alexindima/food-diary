@@ -335,6 +335,7 @@ describe('ProductManageFormComponent prefill behavior', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(OFF_PRODUCT.barcode) });
 
         component['openBarcodeScanner']();
+        TestBed.tick();
 
         expect(productValues(component).barcode).toBe(OFF_PRODUCT.barcode);
         expect(component['productForm'].barcode().dirty()).toBe(true);
@@ -356,6 +357,7 @@ describe('ProductManageFormComponent USDA behavior', () => {
         });
 
         component['onNameSuggestionSelected'](USDA_SUGGESTION);
+        TestBed.tick();
 
         expect(productValues(component).name).toBe('USDA detail');
         expect(productValues(component).caloriesPerBase).toBeNull();
@@ -373,7 +375,9 @@ describe('ProductManageFormComponent USDA behavior', () => {
         externalFoodFacade.getUsdaFoodDetail.mockImplementation((fdcId: number) => (fdcId === USDA_FDC_ID ? firstDetail$ : secondDetail$));
 
         component['onNameSuggestionSelected'](USDA_SUGGESTION);
+        TestBed.tick();
         component['onNameSuggestionSelected'](SECOND_USDA_SUGGESTION);
+        TestBed.tick();
         firstDetail$.next(createUsdaFoodDetail(USDA_FDC_ID, 'Old USDA detail'));
         secondDetail$.next(createUsdaFoodDetail(SECOND_USDA_FDC_ID, 'Fresh USDA detail'));
 

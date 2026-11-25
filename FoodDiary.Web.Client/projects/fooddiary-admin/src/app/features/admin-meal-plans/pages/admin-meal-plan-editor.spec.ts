@@ -102,7 +102,7 @@ describe('AdminMealPlanEditorComponent', () => {
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_MEAL_PLANS.INCOMPLETE');
     });
 
-    it('keeps the latest recipe search and selected recipes when earlier requests finish late', () => {
+    it('keeps the latest recipe search and selected recipes when earlier requests finish late', async () => {
         const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
         fixture.componentRef.setInput('plan', plan);
         fixture.detectChanges();
@@ -112,11 +112,16 @@ describe('AdminMealPlanEditorComponent', () => {
         const component = fixture.componentInstance;
         component['recipeSearch'].set('old search');
         component['searchRecipes']();
+        fixture.detectChanges();
+        expect(earlier.observed).toBe(true);
         component['recipeSearch'].set('new search');
         component['searchRecipes']();
+        fixture.detectChanges();
+        expect(earlier.observed).toBe(false);
         latest.next([{ id: adminId<'recipe'>('latest-id'), name: 'Latest recipe', servings: 1 }]);
         earlier.next([{ id: adminId<'recipe'>('stale-id'), name: 'Stale recipe', servings: 1 }]);
         earlier.error(new Error('stale failure'));
+        await fixture.whenStable();
 
         expect(component['recipeOptions']()).toEqual([
             { value: 'recipe-id', label: 'Rice' },

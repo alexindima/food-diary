@@ -114,9 +114,9 @@ describe('NotificationRealtimeService first feed failure recovery', () => {
                 provideHttpClientTesting(),
                 {
                     provide: DOCUMENT,
-                    useValue: Object.assign(new EventTarget(), {
-                        visibilityState: 'visible',
-                        defaultView: { setInterval, clearInterval },
+                    useValue: Object.defineProperties(document.implementation.createHTMLDocument(), {
+                        visibilityState: { value: 'visible' },
+                        defaultView: { value: { setInterval, clearInterval } },
                     }),
                 },
                 { provide: PLATFORM_ID, useValue: 'browser' },
@@ -140,10 +140,12 @@ describe('NotificationRealtimeService first feed failure recovery', () => {
         TestBed.tick();
         await vi.advanceTimersByTimeAsync(0);
         notifications.ensureNotificationsLoaded();
+        TestBed.tick();
         http.expectOne(baseUrl).flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'unavailable' });
         expect(notifications.notificationsLoaded()).toBe(false);
 
         await vi.advanceTimersByTimeAsync(RECONCILIATION_INTERVAL_MS);
+        TestBed.tick();
         http.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
         http.expectOne(baseUrl).flush([
             { id: 'recovered', type: 'info', title: 'Recovered', isRead: false, createdAtUtc: '2026-10-22T10:00:00Z' },

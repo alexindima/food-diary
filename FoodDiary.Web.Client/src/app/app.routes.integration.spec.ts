@@ -105,6 +105,7 @@ describe('Application router access', () => {
             createdAtUtc: '2026-05-01T10:00:00.000Z',
             expiresAtUtc: '2026-05-08T10:00:00.000Z',
         } satisfies DietologistInvitationForCurrentUserHttpResponse);
+        await harness.fixture.whenStable();
         harness.detectChanges();
 
         const root = renderedRoute(harness);

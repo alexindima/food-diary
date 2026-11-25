@@ -26,7 +26,7 @@ beforeEach(async () => {
         providers: [
             provideHttpClient(),
             provideHttpClientTesting(),
-            { provide: DOCUMENT, useValue: Object.assign(new EventTarget(), { defaultView: null }) },
+            { provide: DOCUMENT, useValue: document.implementation.createHTMLDocument() },
             {
                 provide: AuthService,
                 useValue: { isAuthenticated: signal(true), isImpersonating: signal(false), getUserId: signal('user-a') },

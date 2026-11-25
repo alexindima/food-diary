@@ -123,7 +123,8 @@ describe('Quick meal combined quantity limit', () => {
         await changeQuickMealAmountAsync(fixture, host, MAXIMUM_CONSUMED_QUANTITY);
 
         TestBed.inject(FdUiDialogService).open(ProductDetailComponent, { data: PRODUCT });
-        http.expectOne(matches('GET', `/api/v1/favorite-products/check/${PRODUCT.id}`)).flush(false);
+        const favorite = await expectRequestAsync(http, 'GET', `/api/v1/favorite-products/check/${PRODUCT.id}`);
+        favorite.flush(false);
         TestBed.tick();
         const details = requiredElement(document.querySelector<HTMLElement>('fd-product-detail'), 'the product details');
         expect(details.querySelector('.product-detail__title')?.textContent).toContain(PRODUCT.name);

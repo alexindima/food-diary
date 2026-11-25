@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type Observable, of, type Subscription, switchMap } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { type Observable, of, switchMap, tap } from 'rxjs';
 
 import { RequestStateController } from '../../../shared/lib/request-state';
 import {
@@ -16,7 +16,7 @@ import {
     type FertilitySignal,
     type MenstrualEpisode,
 } from '../../../shared/models/cycle.data';
-import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
 import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { cycleNutritionRange } from './cycle-nutrition-range';
@@ -31,11 +31,41 @@ export class CycleTrackingStateFacade {
     private readonly nutritionLoad = new RequestStateController<CycleNutritionSummary | null>();
     private readonly cycleValue = signal<CycleResponse | null>(null);
     private readonly refreshError = signal<string | null>(null);
-    private cycleRead: Subscription | undefined;
     private profileWriteRevision = 0;
     private profileReadRevision = 0;
     private latestFullReadRevision = 0;
-    private nutritionRead: Subscription | undefined;
+    private readonly requestedCycle = signal<{ id: number; onLoaded: (cycle: CycleResponse | null) => void } | undefined>(undefined);
+    private readonly cycleResource = rxResource({
+        params: this.requestedCycle,
+        stream: ({ params }) =>
+            this.readCurrentCycle().pipe(
+                tap({
+                    next: ({ cycle, revision }) => {
+                        if (this.cycleLoad.succeed(params.id, true)) {
+                            this.latestFullReadRevision = revision;
+                            this.refreshError.set(null);
+                            this.publishProfileSnapshot(cycle);
+                            params.onLoaded(cycle);
+                            this.refreshNutritionSummary();
+                        }
+                    },
+                    error: () => {
+                        this.cycleLoad.fail(params.id, 'CYCLE_TRACKING.LOAD_FAILED');
+                    },
+                }),
+            ),
+    });
+    private readonly requestedNutrition = signal<{ id: number; from: CalendarDate; to: CalendarDate } | undefined>(undefined);
+    private readonly nutritionResource = rxResource({
+        params: this.requestedNutrition,
+        stream: ({ params: { id, from, to } }) =>
+            this.cyclesService.getNutritionSummary(from, to).pipe(
+                tap({
+                    next: summary => this.nutritionLoad.succeed(id, summary),
+                    error: () => this.nutritionLoad.fail(id, 'CYCLE_TRACKING.LOAD_FAILED', { preserveData: false }),
+                }),
+            ),
+    });
     public readonly isLoading = this.cycleLoad.isLoading;
 
     public readonly loadError = computed(() => this.cycleLoad.error() ?? this.refreshError());
@@ -172,45 +202,26 @@ export class CycleTrackingStateFacade {
             return;
         }
 
-        const requestId = this.nutritionLoad.begin();
-        this.nutritionRead?.unsubscribe();
-        this.nutritionRead = this.cyclesService
-            .getNutritionSummary(calendarDate(range.dateFrom), calendarDate(range.dateTo))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: summary => this.nutritionLoad.succeed(requestId, summary),
-                error: () => this.nutritionLoad.fail(requestId, 'CYCLE_TRACKING.LOAD_FAILED', { preserveData: false }),
-            });
+        this.nutritionResource.set(undefined);
+        this.requestedNutrition.set({
+            id: this.nutritionLoad.begin(),
+            from: calendarDate(range.dateFrom),
+            to: calendarDate(range.dateTo),
+        });
     }
 
     private resetNutritionSummary(): void {
         this.nutritionLoad.reset();
-        this.nutritionRead?.unsubscribe();
-        this.nutritionRead = undefined;
+        this.requestedNutrition.set(undefined);
+        this.nutritionResource.set(undefined);
     }
 
     public loadCycle(onLoaded: (cycle: CycleResponse | null) => void): void {
         if (this.isLoading()) {
             return;
         }
-        this.cycleRead?.unsubscribe();
         this.refreshError.set(null);
-        const requestId = this.cycleLoad.begin();
-        this.cycleRead = this.readCurrentCycle()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: ({ cycle, revision }) => {
-                    this.cycleLoad.succeed(requestId, true);
-                    this.latestFullReadRevision = revision;
-                    this.refreshError.set(null);
-                    this.publishProfileSnapshot(cycle);
-                    onLoaded(cycle);
-                    this.refreshNutritionSummary();
-                },
-                error: () => {
-                    this.cycleLoad.fail(requestId, 'CYCLE_TRACKING.LOAD_FAILED');
-                },
-            });
+        this.requestedCycle.set({ id: this.cycleLoad.begin(), onLoaded });
     }
 
     private readCurrentCycle(): Observable<{ cycle: CycleResponse | null; revision: number }> {
@@ -229,8 +240,9 @@ export class CycleTrackingStateFacade {
     }
 
     public clearCycle(): void {
-        this.cycleRead?.unsubscribe();
         this.cycleLoad.reset();
+        this.requestedCycle.set(undefined);
+        this.cycleResource.set(undefined);
         this.publishProfileSnapshot(null);
     }
 

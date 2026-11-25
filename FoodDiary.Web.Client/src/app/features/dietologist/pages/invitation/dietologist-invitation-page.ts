@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, distinctUntilChanged, EMPTY, filter, finalize, map, type Observable, of, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, filter, finalize, map, type Observable, of, switchMap, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -32,32 +32,45 @@ export class DietologistInvitationPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly currentLanguage = signal(this.resolveCurrentLanguage());
 
-    protected readonly state = signal<InvitationPageState>('loading');
-    protected readonly invitation = signal<DietologistInvitationForCurrentUser | null>(null);
-    protected readonly errorMessage = signal<string | null>(null);
+    private readonly invitationId = toSignal(this.route.paramMap.pipe(map(params => params.get('invitationId'))), { initialValue: null });
+    private readonly invitationResource = rxResource({
+        params: () => {
+            const id = this.invitationId();
+            return id !== null && id.length > 0 ? id : undefined;
+        },
+        stream: ({ params }) => this.dietologistFacade.getInvitationForCurrentUser(entityId<'dietologist-invitation'>(params)),
+    });
+    protected readonly invitation = computed(() => (this.invitationResource.hasValue() ? this.invitationResource.value() : null));
+    private readonly actionState = linkedSignal<string | null, 'accepted' | 'declined' | null>({
+        source: this.invitationId,
+        computation: () => null,
+    });
+    private readonly actionError = linkedSignal<string | null, string | null>({
+        source: this.invitationId,
+        computation: () => null,
+    });
+    protected readonly state = computed<InvitationPageState>(() => {
+        const invitation = this.invitation();
+        if (invitation === null) {
+            return this.errorMessage() === null ? 'loading' : 'error';
+        }
+        return this.actionState() ?? this.resolveState(invitation.status);
+    });
+    protected readonly errorMessage = computed(() => {
+        if (this.invitationResource.status() === 'idle') {
+            return this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_INVALID');
+        }
+        if (this.invitationResource.error() !== undefined) {
+            return this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_LOAD');
+        }
+        return this.actionError();
+    });
     protected readonly isSubmitting = signal(false);
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.currentLanguage.set(this.resolveCurrentLanguage());
         });
-        this.route.paramMap
-            .pipe(
-                map(params => params.get('invitationId')),
-                distinctUntilChanged(),
-                tap(() => {
-                    this.invitation.set(null);
-                    this.errorMessage.set(null);
-                    this.isSubmitting.set(false);
-                    this.state.set('loading');
-                }),
-                switchMap(invitationId => this.loadInvitation(invitationId)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(invitation => {
-                this.invitation.set(invitation);
-                this.state.set(this.resolveState(invitation.status));
-            });
     }
 
     protected describeInvitation(invitation: DietologistInvitationForCurrentUser): DietologistInvitationView {
@@ -82,7 +95,7 @@ export class DietologistInvitationPageComponent {
             return;
         }
 
-        this.errorMessage.set(null);
+        this.actionError.set(null);
         this.isSubmitting.set(true);
         this.dietologistFacade
             .acceptInvitationForCurrentUser(invitationId)
@@ -96,10 +109,10 @@ export class DietologistInvitationPageComponent {
             )
             .subscribe({
                 next: () => {
-                    this.state.set('accepted');
+                    this.actionState.set('accepted');
                 },
                 error: () => {
-                    this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_ACCEPT'));
+                    this.actionError.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_ACCEPT'));
                 },
             });
     }
@@ -110,7 +123,7 @@ export class DietologistInvitationPageComponent {
             return;
         }
 
-        this.errorMessage.set(null);
+        this.actionError.set(null);
         this.isSubmitting.set(true);
         this.dietologistFacade
             .declineInvitationForCurrentUser(invitationId)
@@ -123,10 +136,10 @@ export class DietologistInvitationPageComponent {
             )
             .subscribe({
                 next: () => {
-                    this.state.set('declined');
+                    this.actionState.set('declined');
                 },
                 error: () => {
-                    this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_DECLINE'));
+                    this.actionError.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_DECLINE'));
                 },
             });
     }
@@ -141,22 +154,6 @@ export class DietologistInvitationPageComponent {
 
     private invitationChanged(invitationId: string): Observable<unknown> {
         return this.route.paramMap.pipe(filter(params => params.get('invitationId') !== invitationId));
-    }
-
-    private loadInvitation(invitationId: string | null): Observable<DietologistInvitationForCurrentUser> {
-        if (invitationId === null || invitationId.length === 0) {
-            this.state.set('error');
-            this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_INVALID'));
-            return EMPTY;
-        }
-
-        return this.dietologistFacade.getInvitationForCurrentUser(entityId<'dietologist-invitation'>(invitationId)).pipe(
-            catchError(() => {
-                this.state.set('error');
-                this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_LOAD'));
-                return EMPTY;
-            }),
-        );
     }
 
     private resolveState(status: string): InvitationPageState {

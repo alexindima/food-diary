@@ -1,4 +1,4 @@
-import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { DeferBlockBehavior, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -77,27 +77,19 @@ describe('Waist history routed refresh ownership', () => {
         TestBed.inject(HttpTestingController).verify();
     });
 
-    it.each(['older response', 'older error'] as const)(
-        'preserves the saved goal after an %s from the measurement refresh',
-        async outcome => {
-            const harness = await openWaistHistoryAsync();
-            const older = await saveMeasurementAsync(harness);
-            const latest = await saveGoalAsync(harness);
-            latest.flush(pageSummary(NEW_ENTRY, NEW_GOAL));
+    it('cancels an older measurement refresh and displays the saved goal', async () => {
+        const harness = await openWaistHistoryAsync();
+        const older = await saveMeasurementAsync(harness);
+        const latest = await saveGoalAsync(harness);
+        expect(older.cancelled).toBe(true);
+        latest.flush(pageSummary(NEW_ENTRY, NEW_GOAL));
+        harness.detectChanges();
 
-            if (outcome === 'older response') {
-                older.flush(pageSummary(NEW_ENTRY, ORIGINAL_GOAL));
-            } else {
-                older.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
-            }
-            harness.detectChanges();
-
-            expect(pageError(harness).hidden).toBe(true);
-            expect(currentMeasurement(harness)).toContain(String(SAVED_MEASUREMENT));
-            await openEditorAsync(harness, CONFIGURE_GOAL, GOAL_DIALOG);
-            expect(numberInput(GOAL_DIALOG).value).toBe(String(SAVED_TARGET));
-        },
-    );
+        expect(pageError(harness).hidden).toBe(true);
+        expect(currentMeasurement(harness)).toContain(String(SAVED_MEASUREMENT));
+        await openEditorAsync(harness, CONFIGURE_GOAL, GOAL_DIALOG);
+        expect(numberInput(GOAL_DIALOG).value).toBe(String(SAVED_TARGET));
+    });
 
     it('applies current body measurements even when a newer chart range read completes first', async () => {
         const harness = await openWaistHistoryAsync();

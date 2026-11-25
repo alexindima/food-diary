@@ -1,14 +1,13 @@
 import { computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, email, form, required } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import type { Subscription } from 'rxjs';
-import { finalize } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../../dietologist/contracts/relationship-actions';
@@ -42,7 +41,28 @@ export class ProfileDietologistFacade {
     public readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
 
     private readonly relationshipLoading = signal(false);
-    private relationshipRead: Subscription | undefined;
+    private readonly relationshipRequest = signal<symbol | undefined>(undefined);
+    private readonly relationshipResource = rxResource({
+        params: this.relationshipRequest,
+        stream: ({ params }) =>
+            this.dietologistFacade.getRelationship().pipe(
+                tap({
+                    next: relationship => {
+                        if (this.relationshipRequest() === params) {
+                            this.relationshipLoading.set(false);
+                            this.facade.setDietologistRelationship(relationship);
+                            this.dietologistError.set(null);
+                        }
+                    },
+                    error: () => {
+                        if (this.relationshipRequest() === params) {
+                            this.relationshipLoading.set(false);
+                            this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
+                        }
+                    },
+                }),
+            ),
+    });
     public readonly isLoadingDietologist = this.relationshipLoading.asReadonly();
 
     public readonly isSavingDietologistPermissions = signal(false);
@@ -230,25 +250,12 @@ export class ProfileDietologistFacade {
     }
 
     public loadDietologistRelationship(): void {
-        this.relationshipRead?.unsubscribe();
         this.relationshipLoading.set(true);
-        this.relationshipRead = this.dietologistFacade
-            .getRelationship()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: relationship => {
-                    this.relationshipLoading.set(false);
-                    this.facade.setDietologistRelationship(relationship);
-                    this.dietologistError.set(null);
-                },
-                error: () => {
-                    this.relationshipLoading.set(false);
-                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
-                },
-            });
+        this.relationshipRequest.set(Symbol());
     }
     private cancelRelationshipRead(): void {
-        this.relationshipRead?.unsubscribe();
+        this.relationshipRequest.set(undefined);
+        this.relationshipResource.set(undefined);
         this.relationshipLoading.set(false);
     }
 

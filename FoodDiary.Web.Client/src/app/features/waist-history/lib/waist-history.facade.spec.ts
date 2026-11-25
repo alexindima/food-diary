@@ -316,6 +316,7 @@ describe('WaistHistoryFacade entry editing', () => {
 
         expect(waistEntriesService.remove).toHaveBeenCalledWith('entry-1');
         expect(facade.isEditing()).toBe(false);
+        TestBed.tick();
         expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(1);
     });
 });
@@ -642,6 +643,7 @@ describe('Goal lifecycle', () => {
         expect(facade.desiredWaistSaveVersion()).toBe(0);
         pending.next({ desiredWaistCm: null, startWaistCm: null, startedAtUtc: null });
         pending.complete();
+        TestBed.tick();
         expect(facade.isDesiredWaistSaving()).toBe(false);
         expect(facade.desiredWaistCm()).toBeNull();
         expect(facade.desiredWaistModel().circumference).toBe('');
@@ -744,11 +746,13 @@ describe('WaistHistoryFacade loading recovery', () => {
         ];
         waistEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Month refresh unavailable')));
         facade.deleteEntry(entry);
+        TestBed.tick();
         expect(waistEntriesService.remove).toHaveBeenCalledExactlyOnceWith(entry.id);
         expect(facade.pageLoadError()).toBe(true);
         expect(facade.deleteError()).toBeNull();
         waistEntriesService.getSummary.mockReturnValueOnce(of(recoveredPoints));
         facade.retryPageLoad();
+        TestBed.tick();
         expect(facade.pageLoadError()).toBe(false);
         expect(facade.rollingMonthSummaryPoints()).toEqual(recoveredPoints);
         expect(waistEntriesService.remove).toHaveBeenCalledTimes(1);
@@ -764,11 +768,13 @@ describe('WaistHistoryFacade loading recovery', () => {
         waistEntriesService.getPageSummary.mockReturnValueOnce(pending);
         facade.retryPageLoad();
         facade.retryPageLoad();
+        TestBed.tick();
         expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
         expect(facade.pageLoadError()).toBe(false);
         pending.error(new Error('Still unavailable'));
         expect(facade.pageLoadError()).toBe(true);
         facade.retryPageLoad();
+        TestBed.tick();
         expect(facade.pageLoadError()).toBe(false);
         expect(facade.isLoading()).toBe(false);
     });

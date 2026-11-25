@@ -217,6 +217,7 @@ describe('Waist entry dialog with the real measurement facade', () => {
         expect(request.request.body).toMatchObject({ circumferenceCm: METRIC_ENTRY_MAXIMUM });
         request.flush({ id: 'entry', userId: 'owner', date: '2026-06-21', circumferenceCm: METRIC_ENTRY_MAXIMUM });
         await waitForAsyncTasksAsync();
+        TestBed.tick();
         http.expectOne(item => item.url === `${environment.apiUrls.waists}/page-summary`).flush({
             entries: [],
             summary: [],

@@ -96,6 +96,7 @@ describe('Dashboard notification status', () => {
         ({ permission, supported, subscribed, enabled, status, hint }) => {
             const { facade, push } = setup(permission);
             facade.load();
+            TestBed.tick();
             push.isSupported.set(supported);
             push.isSubscribed.set(subscribed);
             facade.pushNotificationsEnabled.set(enabled);
@@ -112,6 +113,7 @@ describe('Dashboard notification writes (1)', () => {
     it('disables account push without registering a device', () => {
         const { facade, notifications, push, toast } = setup();
         facade.load();
+        TestBed.tick();
         notifications.updateNotificationPreferences.mockReturnValueOnce(of({ ...PREFERENCES, pushNotificationsEnabled: false }));
         facade.togglePushNotifications();
         expect(notifications.updateNotificationPreferences).toHaveBeenCalledWith({ pushNotificationsEnabled: false });
@@ -122,6 +124,7 @@ describe('Dashboard notification writes (1)', () => {
     it.each(['fasting', 'social'] as const)('toggles %s both ways and ignores duplicate requests', category => {
         const { facade, notifications } = setup();
         facade.load();
+        TestBed.tick();
         const property = category === 'fasting' ? 'fastingPushNotificationsEnabled' : 'socialPushNotificationsEnabled';
         const toggle = (): void => {
             category === 'fasting' ? facade.toggleFastingPushNotifications() : facade.toggleSocialPushNotifications();
@@ -153,6 +156,7 @@ describe('Dashboard notification writes (2)', () => {
     it('preserves preferences on failure and clears the error on retry', () => {
         const { facade, notifications, toast } = setup();
         facade.load();
+        TestBed.tick();
         notifications.updateNotificationPreferences.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFastingPushNotifications();
         expect(facade.fastingPushNotificationsEnabled()).toBe(true);

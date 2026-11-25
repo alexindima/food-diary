@@ -203,6 +203,7 @@ describe('Waist history page retry actions', () => {
         retry.click();
         expect(retry.isConnected).toBe(true);
         retry.click();
+        TestBed.tick();
         expect(load).toHaveBeenCalledTimes(chartLoadCount + 2);
         expect(load).toHaveBeenLastCalledWith(filters);
         expect(pending.observed).toBe(true);

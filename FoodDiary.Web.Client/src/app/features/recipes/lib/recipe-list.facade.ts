@@ -1,10 +1,11 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
+    defaultIfEmpty,
     EMPTY,
     filter,
     finalize,
@@ -55,6 +56,11 @@ export class RecipeListFacade {
     private activeRouteQuery: RecipeListQuery | null = null;
     private requestId = 0;
     private readonly appliedRequest = new RequestStateController<void>();
+    private readonly requestedView = signal<Observable<void> | undefined>(undefined);
+    private readonly viewResource = rxResource({
+        params: this.requestedView,
+        stream: ({ params }) => params.pipe(defaultIfEmpty(void 0)),
+    });
     public readonly requestProvenance = this.appliedRequest.provenance;
 
     public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
@@ -92,14 +98,18 @@ export class RecipeListFacade {
                     filter(
                         query => this.activeRouteQuery === null || recipeListQueryKey(query) !== recipeListQueryKey(this.activeRouteQuery),
                     ),
-                    tap(query => {
-                        this.applyRouteQuery(query);
-                    }),
-                    switchMap(query => this.loadRecipes(query.page, this.pageSize, recipeQueryFilters(query), query.onlyMine)),
                     takeUntilDestroyed(this.destroyRef),
                 )
-                .subscribe();
+                .subscribe(query => {
+                    this.applyRouteQuery(query);
+                    this.requestView(this.loadRecipes(query.page, this.pageSize, recipeQueryFilters(query), query.onlyMine));
+                });
         }
+    }
+
+    public requestView(read: Observable<void>): void {
+        this.viewResource.set(undefined);
+        this.requestedView.set(read);
     }
 
     public isQueryActive(filters: RecipeFilters, onlyMine: boolean): boolean {
@@ -216,7 +226,7 @@ export class RecipeListFacade {
         if (this.queryState !== null) {
             this.writeRouteQuery(query, true);
         } else {
-            this.loadRecipes(query.page, this.pageSize, filters, query.onlyMine).subscribe();
+            this.requestView(this.loadRecipes(query.page, this.pageSize, filters, query.onlyMine));
         }
     }
 

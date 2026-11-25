@@ -548,6 +548,7 @@ describe('Profile connected notification devices', () => {
         );
         refresh.next([localDevice]);
         refresh.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
         expect(element(fixture, 'fd-user-manage-connected-devices').textContent).not.toContain('Firefox / Linux');
@@ -961,6 +962,7 @@ describe('Profile connected-device refresh recovery', () => {
             );
         });
         refresh.error(new Error('Fixture device list temporarily unavailable'));
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(element(fixture, 'fd-user-manage-connected-devices').textContent).not.toContain('Firefox / Linux');

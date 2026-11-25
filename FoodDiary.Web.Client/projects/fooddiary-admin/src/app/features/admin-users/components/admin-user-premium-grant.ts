@@ -1,10 +1,10 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, FdUiTextareaComponent } from 'fd-ui-kit';
-import { catchError, combineLatest, EMPTY, firstValueFrom, type Observable, startWith, Subject, switchMap } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { type AdminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
@@ -35,10 +35,18 @@ export class AdminUserPremiumGrantComponent {
 
     private readonly users = inject(AdminUsersFacade);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly refresh = new Subject<void>();
+    private readonly loadVersion = signal(0);
+    private readonly grantRequest = computed(() => ({ userId: this.userId(), version: this.loadVersion() }));
+    private readonly grantResource = rxResource({
+        params: this.grantRequest,
+        stream: ({ params }) => {
+            this.closeEditor();
+            return this.users.getPremiumGrant(params.userId);
+        },
+    });
     private readonly formModel = signal({ endsAtLocal: '', reason: '' });
-    protected readonly grant = signal<AdminUserPremiumGrant | null | undefined>(undefined);
-    protected readonly loadFailed = signal(false);
+    protected readonly grant = computed(() => (this.grantResource.hasValue() ? this.grantResource.value() : undefined));
+    protected readonly loadFailed = computed(() => this.grantResource.error() !== undefined);
     protected readonly errorKey = signal<string | null>(null);
     protected readonly editing = signal(false);
     protected readonly confirmingRevoke = signal(false);
@@ -57,29 +65,8 @@ export class AdminUserPremiumGrantComponent {
         { submission: { action: this.submitFormAsync } },
     );
 
-    public constructor() {
-        combineLatest([toObservable(this.userId), this.refresh.pipe(startWith(undefined))])
-            .pipe(
-                switchMap(([userId]) => {
-                    this.closeEditor();
-                    this.grant.set(undefined);
-                    this.loadFailed.set(false);
-                    return this.users.getPremiumGrant(userId).pipe(
-                        catchError(() => {
-                            this.loadFailed.set(true);
-                            return EMPTY;
-                        }),
-                    );
-                }),
-                takeUntilDestroyed(),
-            )
-            .subscribe(grant => {
-                this.grant.set(grant);
-            });
-    }
-
     protected reload(): void {
-        this.refresh.next();
+        this.loadVersion.update(version => version + 1);
     }
 
     protected edit(): void {
@@ -134,17 +121,17 @@ export class AdminUserPremiumGrantComponent {
         if (this.saving()) {
             return;
         }
-        const userId = this.userId();
+        const owner = this.grantRequest();
         this.saving.set(true);
         this.errorKey.set(null);
         try {
             const grant = await firstValueFrom(request.pipe(takeUntilDestroyed(this.destroyRef)));
-            if (!this.destroyRef.destroyed && this.userId() === userId) {
-                this.grant.set(grant);
+            if (!this.destroyRef.destroyed && this.grantRequest() === owner) {
+                this.grantResource.set(grant);
                 this.closeEditor();
             }
         } catch {
-            if (!this.destroyRef.destroyed && this.userId() === userId) {
+            if (!this.destroyRef.destroyed && this.grantRequest() === owner) {
                 this.errorKey.set('ADMIN_USER_PREMIUM.SAVE_ERROR');
             }
         } finally {

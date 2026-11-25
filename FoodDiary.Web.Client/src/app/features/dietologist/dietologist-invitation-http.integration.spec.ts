@@ -64,6 +64,7 @@ it('retries accepting a pending invitation and opens the directory even if sessi
     const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
     expect(harness.routeNativeElement?.textContent).toContain('DIETOLOGIST_INVITATION.LOADING');
     respondToInvitation(INVITATION);
+    await harness.fixture.whenStable();
     harness.detectChanges();
 
     button(harness, ACCEPT).click();
@@ -92,6 +93,7 @@ it('retries accepting a pending invitation and opens the directory even if sessi
 it('cancels the old decline request on navigation and submits only the newly displayed invitation', async () => {
     const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
     respondToInvitation(INVITATION);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     button(harness, DECLINE).click();
     const old = actionRequest(INVITATION, 'decline-current-user');
@@ -99,6 +101,7 @@ it('cancels the old decline request on navigation and submits only the newly dis
     await harness.navigateByUrl(`${URL_ROOT}/${NEXT_INVITATION}`);
     expect(old.cancelled).toBe(true);
     respondToInvitation(NEXT_INVITATION);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     expect(button(harness, DECLINE).disabled).toBe(false);
 
@@ -133,6 +136,7 @@ it.each([
 ] as const)('executes only $first when both rendered actions are activated before repaint', async input => {
     const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
     respondToInvitation(INVITATION);
+    await harness.fixture.whenStable();
     harness.detectChanges();
     const first = button(harness, input.first);
     const later = button(harness, input.later);
@@ -162,6 +166,7 @@ it('shows an unnamed sender and a localized expiry using the configured fallback
     await firstValueFrom(translate.setFallbackLang('ru'));
     const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
     respondToInvitation(INVITATION, { clientEmail: null, clientFirstName: null, clientLastName: null });
+    await harness.fixture.whenStable();
     harness.detectChanges();
 
     const host = harness.routeNativeElement;

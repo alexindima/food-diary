@@ -7,6 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { AuthService } from '../../../services/auth.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
@@ -174,7 +175,7 @@ beforeEach(() => {
 
 describe('ProfileManageFacade Google linking', () => {
     it('updates the current user and confirms successful linking', () => {
-        facade.initialize();
+        initializeFacade();
 
         facade.linkGoogle('google-credential');
 
@@ -185,7 +186,7 @@ describe('ProfileManageFacade Google linking', () => {
     });
 
     it('keeps the account unlinked and reports a failed linking attempt', () => {
-        facade.initialize();
+        initializeFacade();
         authService.linkGoogle.mockReturnValue(throwError(() => new Error('failed')));
 
         facade.linkGoogle('google-credential');
@@ -202,10 +203,10 @@ afterEach(() => {
 
 describe('ProfileManageFacade overview loading', () => {
     it('keeps a saved profile when an older overview completes afterward', async () => {
-        facade.initialize();
+        initializeFacade();
         const pending = new Subject<UserProfileOverview>();
         userService.getOverview.mockReturnValueOnce(pending);
-        facade.initialize();
+        initializeFacade();
         expect(pending.observed).toBe(true);
         userService.update.mockReturnValueOnce(of({ ...user, username: 'saved' }));
 
@@ -219,7 +220,7 @@ describe('ProfileManageFacade overview loading', () => {
     it('cancels an overview read when the profile owner is destroyed', () => {
         const pending = new Subject<UserProfileOverview>();
         userService.getOverview.mockReturnValueOnce(pending);
-        facade.initialize();
+        initializeFacade();
         expect(pending.observed).toBe(true);
 
         TestBed.resetTestingModule();
@@ -230,7 +231,7 @@ describe('ProfileManageFacade overview loading', () => {
     });
 
     it('loads user and applies language on initialize', () => {
-        facade.initialize();
+        initializeFacade();
 
         expect(userService.getOverview).toHaveBeenCalledTimes(1);
         expect(facade.user()).toEqual(expect.objectContaining(user));
@@ -293,7 +294,7 @@ describe('Profile bootstrap after a backup-email return', () => {
         };
         backupEmailFlow.read.mockReturnValueOnce(pending);
 
-        facade.initialize();
+        initializeFacade();
 
         expect(facade.backupEmailSentTo()).toBe(address);
         expect(facade.backupEmailResendAt()).toBeGreaterThan(sentAt);
@@ -313,12 +314,12 @@ describe('Profile bootstrap after a backup-email return', () => {
         backupEmailFlow.clear.mockClear();
         backupEmailFlow.read.mockReturnValueOnce(failed).mockReturnValueOnce(failed);
 
-        facade.initialize();
+        initializeFacade();
         expect(facade.globalError()).toBe('USER_MANAGE.BACKUP_EMAIL_ERROR');
         expect(facade.backupEmailSentTo()).toBeNull();
         expect(facade.user()).toEqual(user);
         expect(backupEmailFlow.clear).toHaveBeenCalledOnce();
-        facade.initialize();
+        initializeFacade();
         expect(facade.globalError()).toBeNull();
         expect(facade.user()).toEqual(user);
     });
@@ -330,11 +331,11 @@ describe('Profile overview read recovery', () => {
             failure === 'empty' ? of(null) : throwError(() => new Error('Profile temporarily unavailable')),
         );
 
-        facade.initialize();
+        initializeFacade();
         expect(facade.user()).toBeNull();
         expect(facade.globalError()).toBe('USER_MANAGE.LOAD_ERROR');
         expect(localizationService.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
-        facade.initialize();
+        initializeFacade();
         expect(facade.user()).toEqual(user);
         expect(facade.globalError()).toBeNull();
         expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenCalledOnce();
@@ -385,7 +386,7 @@ describe('ProfileManageFacade account actions', () => {
                 throw new Error('Unable to create the dialog overlay');
             })
             .mockReturnValueOnce({ afterClosed: () => of(undefined) });
-        facade.initialize();
+        initializeFacade();
 
         await facade.unlinkTelegramAsync();
 
@@ -426,7 +427,7 @@ describe('ProfileManageFacade existing password lifecycle', () => {
     ])('keeps the existing account state when $action its password', ({ changed, dialogCount, logoutCount }) => {
         const existing = { ...user, hasPassword: true };
         userService.getOverview.mockReturnValueOnce(of({ ...overview, user: existing }));
-        facade.initialize();
+        initializeFacade();
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(changed) });
 
         facade.openChangePasswordDialog();
@@ -443,7 +444,7 @@ describe('ProfileManageFacade existing password lifecycle', () => {
 
 describe('ProfileManageFacade notification preferences', () => {
     it('updates notification preferences through notification endpoint', async () => {
-        facade.initialize();
+        initializeFacade();
 
         const updatedUser = await facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: false });
 
@@ -454,7 +455,7 @@ describe('ProfileManageFacade notification preferences', () => {
     });
 
     it('removes web push subscription and updates local device list', async () => {
-        facade.initialize();
+        initializeFacade();
 
         const removed = await facade.removeWebPushSubscriptionAsync('https://push.example.com/subscriptions/current');
 
@@ -463,8 +464,8 @@ describe('ProfileManageFacade notification preferences', () => {
         expect(facade.webPushSubscriptions()).toHaveLength(0);
     });
 
-    it('keeps latest web push device list when refresh responses complete out of order', () => {
-        facade.initialize();
+    it('cancels an older web push refresh and keeps the latest device list', async () => {
+        initializeFacade();
         const firstRefresh = new Subject<typeof overview.webPushSubscriptions>();
         const secondRefresh = new Subject<typeof overview.webPushSubscriptions>();
         notificationService.getWebPushSubscriptions
@@ -472,7 +473,11 @@ describe('ProfileManageFacade notification preferences', () => {
             .mockReturnValueOnce(secondRefresh.asObservable());
 
         facade.refreshWebPushSubscriptions();
+        TestBed.tick();
+        expect(firstRefresh.observed).toBe(true);
         facade.refreshWebPushSubscriptions();
+        TestBed.tick();
+        expect(firstRefresh.observed).toBe(false);
 
         firstRefresh.next([
             {
@@ -490,13 +495,14 @@ describe('ProfileManageFacade notification preferences', () => {
             },
         ]);
         secondRefresh.complete();
+        await waitForAsyncTasksAsync();
 
         expect(facade.webPushSubscriptions()[0].endpoint).toBe('https://push.example.com/subscriptions/latest');
         expect(facade.isLoadingWebPushSubscriptions()).toBe(false);
     });
 
     it('sets update error when notification preferences request fails', async () => {
-        facade.initialize();
+        initializeFacade();
         notificationService.updateNotificationPreferences.mockReturnValueOnce(throwError(() => new Error('preferences failed')));
 
         const updatedUser = await facade.updateNotificationPreferencesAsync({ socialPushNotificationsEnabled: false });
@@ -509,7 +515,7 @@ describe('ProfileManageFacade notification preferences', () => {
 describe('ProfileManageFacade saved language defaults', () => {
     it('applies the default language preference when the saved profile omits a language', async () => {
         const savedProfile: User = { ...user, firstName: 'Mira', language: undefined };
-        facade.initialize();
+        initializeFacade();
         userService.update.mockReturnValueOnce(of(savedProfile));
 
         const saved = await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Mira' }));
@@ -537,6 +543,7 @@ describe('ProfileManageFacade save session ownership', () => {
             const sessions = TestBed.inject(SessionEventsService);
             const firstProfile = firstPage.get(ProfileManageFacade);
             firstProfile.initialize();
+            TestBed.tick();
 
             const pending = new Subject<User | null>();
             userService.update.mockReturnValueOnce(pending);
@@ -551,6 +558,7 @@ describe('ProfileManageFacade save session ownership', () => {
             userService.getOverview.mockReturnValueOnce(of({ ...overview, user: newUser }));
             const nextProfile = nextPage.get(ProfileManageFacade);
             nextProfile.initialize();
+            TestBed.tick();
             expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
             expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
 
@@ -583,6 +591,7 @@ describe('ProfileManageFacade save session ownership', () => {
         });
         const profile = page.get(ProfileManageFacade);
         profile.initialize();
+        TestBed.tick();
         const pending = new Subject<User | null>();
         userService.update.mockReturnValueOnce(pending);
         const saving = profile.saveProfileAsync(new UpdateUserDto({ language: 'en', theme: 'dark' }));
@@ -600,7 +609,7 @@ describe('ProfileManageFacade save session ownership', () => {
 
 describe('ProfileManageFacade explicit profile save', () => {
     it('reports a successful save after updating the user without a success dialog', async () => {
-        facade.initialize();
+        initializeFacade();
         userService.update.mockReturnValueOnce(of({ ...user, firstName: 'Alexa' }));
 
         const saved = await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }));
@@ -615,7 +624,7 @@ describe('ProfileManageFacade explicit profile save', () => {
     });
 
     it('waits for the HTTP response before reporting a successful save', async () => {
-        facade.initialize();
+        initializeFacade();
         const response = new Subject<User | null>();
         userService.update.mockReturnValueOnce(response);
         let settled = false;
@@ -641,7 +650,7 @@ describe('ProfileManageFacade explicit profile save', () => {
     });
 
     it('rejects another save while a profile save is in flight', async () => {
-        facade.initialize();
+        initializeFacade();
 
         const inFlightUpdate = new Subject<User | null>();
         userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
@@ -658,7 +667,7 @@ describe('ProfileManageFacade explicit profile save', () => {
     });
 
     it('preserves the saved profile on request failure and allows a retry', async () => {
-        facade.initialize();
+        initializeFacade();
         const response = new Subject<User | null>();
         userService.update.mockReturnValueOnce(response);
 
@@ -677,7 +686,7 @@ describe('ProfileManageFacade explicit profile save', () => {
     });
 
     it('does not report success or discard the saved profile when the response is null', async () => {
-        facade.initialize();
+        initializeFacade();
         userService.update.mockReturnValueOnce(of(null));
 
         expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Alexa' }))).toBe(false);
@@ -692,7 +701,7 @@ describe('ProfileManageFacade pending overview', () => {
     it('leaves the initial read running when asked to save without an account baseline', async () => {
         const result = new Subject<UserProfileOverview | null>();
         userService.getOverview.mockReturnValueOnce(result);
-        facade.initialize();
+        initializeFacade();
 
         expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Incomplete profile' }))).toBe(false);
         expect(userService.update).not.toHaveBeenCalled();
@@ -709,7 +718,7 @@ describe('ProfileManageFacade pending account actions', () => {
         userService.getOverview.mockReturnValueOnce(of({ ...overview, user: linked }));
         const delivery = new Subject<void>();
         authService.requestTelegramBackupEmail.mockReturnValueOnce(delivery);
-        facade.initialize();
+        initializeFacade();
 
         const firstRequest = facade.requestBackupEmailAsync('first@example.test');
         await facade.requestBackupEmailAsync('second@example.test');
@@ -733,7 +742,7 @@ describe('ProfileManageFacade pending account actions', () => {
         dialogService.open
             .mockReturnValueOnce({ afterClosed: () => confirmation })
             .mockReturnValueOnce({ afterClosed: () => of(unlinked) });
-        facade.initialize();
+        initializeFacade();
 
         const firstAttempt = facade.unlinkTelegramAsync();
         await facade.unlinkTelegramAsync();
@@ -761,7 +770,7 @@ describe('ProfileManageFacade pending notification changes', () => {
         const saved = { ...overview.notificationPreferences, ...change };
         userService.getOverview.mockReturnValueOnce(pendingOverview);
         notificationService.updateNotificationPreferences.mockReturnValueOnce(of(saved));
-        facade.initialize();
+        initializeFacade();
 
         await expect(facade.updateNotificationPreferencesAsync(change)).resolves.toBeNull();
 
@@ -782,7 +791,7 @@ describe('ProfileManageFacade pending notification changes', () => {
         notificationService.updateNotificationPreferences
             .mockReturnValueOnce(saving)
             .mockReturnValueOnce(of({ ...saved, socialPushNotificationsEnabled: false }));
-        facade.initialize();
+        initializeFacade();
 
         const firstUpdate = facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: false });
         expect(await facade.updateNotificationPreferencesAsync({ socialPushNotificationsEnabled: false })).toEqual(user);
@@ -807,7 +816,7 @@ describe('ProfileManageFacade pending notification changes', () => {
         userService.getOverview.mockReturnValueOnce(of({ ...overview, webPushSubscriptions: [first, second] }));
         const removal = new Subject<void>();
         notificationService.removeWebPushSubscription.mockReturnValueOnce(removal);
-        facade.initialize();
+        initializeFacade();
 
         const firstRemoval = facade.removeWebPushSubscriptionAsync(first.endpoint);
         expect(await facade.removeWebPushSubscriptionAsync(second.endpoint)).toBe(false);
@@ -824,3 +833,8 @@ describe('ProfileManageFacade pending notification changes', () => {
         expect(facade.webPushSubscriptions()).toEqual([first]);
     });
 });
+
+function initializeFacade(): void {
+    facade.initialize();
+    TestBed.tick();
+}

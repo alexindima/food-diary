@@ -14,7 +14,7 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -25,7 +25,7 @@ import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { finalize, firstValueFrom, type Subscription } from 'rxjs';
+import { finalize, firstValueFrom, tap } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -149,7 +149,23 @@ export class MealManageFormComponent implements UnsavedEditor {
     protected readonly isSubmitting = signal(false);
     protected readonly photoOwnerId = computed(() => this.meal()?.id ?? null);
     protected readonly photosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
-    protected readonly isLoadingRecipeAmounts = signal(false);
+    private readonly mealItemsResource = rxResource({
+        params: () => this.meal() ?? undefined,
+        stream: ({ params: meal, abortSignal }) => {
+            const patch = buildMealManageFormPatchValue(meal);
+            this.patchMealFormModel({ ...patch, items: [] });
+            this.aiSessions.set(meal.aiSessions ?? []);
+            return this.mealManageFacade.prepareMealItems(meal.items).pipe(
+                tap(items => {
+                    if (!abortSignal.aborted && this.meal() === meal) {
+                        this.patchMealFormModel({ items });
+                        this.updateSummary();
+                    }
+                }),
+            );
+        },
+    });
+    protected readonly isLoadingRecipeAmounts = this.mealItemsResource.isLoading;
     protected readonly isBusy = computed(() => this.isSubmitting() || this.isLoadingRecipeAmounts());
     protected readonly isSubmitBusy = computed(() => this.isBusy() || this.photosUploading());
     protected readonly isSubmitDisabled = computed(() => this.isSubmitBusy() || !this.hasSelectedItems());
@@ -259,7 +275,6 @@ export class MealManageFormComponent implements UnsavedEditor {
         this.watchLanguageChanges();
         this.watchMealType();
         this.watchSignalFormModelChanges();
-        this.watchMealInput();
     }
 
     private connectDevelopmentTools(): void {
@@ -365,21 +380,6 @@ export class MealManageFormComponent implements UnsavedEditor {
                 this.postMealSatietyLevel.set(value.postMealSatietyLevel);
                 this.updateSummary();
                 this.clearGlobalError();
-            });
-        });
-    }
-
-    private watchMealInput(): void {
-        effect(onCleanup => {
-            const meal = this.meal();
-            if (meal === null) {
-                this.isLoadingRecipeAmounts.set(false);
-                return;
-            }
-
-            const subscription = untracked(() => this.populateForm(meal));
-            onCleanup(() => {
-                subscription.unsubscribe();
             });
         });
     }
@@ -709,21 +709,6 @@ export class MealManageFormComponent implements UnsavedEditor {
 
         this.patchMealFormModel({ mealType });
         this.selectedMealType.set(mealType);
-    }
-
-    private populateForm(meal: Meal): Subscription {
-        this.isLoadingRecipeAmounts.set(true);
-        const patch = buildMealManageFormPatchValue(meal);
-        this.patchMealFormModel({ ...patch, items: [] });
-        this.aiSessions.set(meal.aiSessions ?? []);
-        return this.mealManageFacade
-            .prepareMealItems(meal.items)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(items => {
-                this.patchMealFormModel({ items });
-                this.isLoadingRecipeAmounts.set(false);
-                this.updateSummary();
-            });
     }
 
     private updateSummary(): void {

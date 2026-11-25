@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCardComponent, FdUiDialogService } from 'fd-ui-kit';
-import { catchError, combineLatest, distinctUntilChanged, forkJoin, map, type Observable, of, startWith, Subject, switchMap } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -18,13 +18,7 @@ import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-p
 import { resolveAdminAvatarUrl } from '../lib/admin-avatar-url';
 import { buildAdminUserSections } from '../lib/admin-user-sections';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type {
-    AdminImpersonationStart,
-    AdminUser,
-    AdminUserLoginEvent,
-    AdminUserRoleAuditEvent,
-    PagedResponse,
-} from '../models/admin-user.models';
+import type { AdminImpersonationStart, AdminUser } from '../models/admin-user.models';
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
 
@@ -50,18 +44,37 @@ export class AdminUserPageComponent {
     private readonly dialogs = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
-    private readonly refresh = new Subject<void>();
-    protected readonly user = signal<AdminUser | null>(null);
-    protected readonly failed = signal(false);
+    // The account belongs to the path segment. Matrix parameters may contain a separate id.
+    private readonly accountId = toSignal(this.route.url.pipe(map(([segment]) => adminId<'user'>(segment.path))), { requireSync: true });
+    private readonly loadVersion = signal(0);
+    private readonly userRequest = computed(() => ({ id: this.accountId(), version: this.loadVersion() }));
+    private readonly userResource = rxResource({ params: this.userRequest, stream: ({ params }) => this.users.getUser(params.id) });
+    protected readonly user = computed(() => (this.userResource.hasValue() ? this.userResource.value() : null));
+    protected readonly failed = computed(() => this.userResource.error() !== undefined);
+    private readonly activityResource = rxResource({
+        params: () => {
+            const user = this.user();
+            return user === null ? undefined : { id: user.id, owner: this.userRequest() };
+        },
+        stream: ({ params }) =>
+            forkJoin({
+                loginEvents: this.users.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: params.id }),
+                roleAuditEvents: this.users.getUserRoleAudit(params.id),
+            }),
+    });
+    private readonly activity = computed(() => (this.activityResource.hasValue() ? this.activityResource.value() : null));
     private readonly translate = inject(TranslateService);
-    protected readonly activityLoading = signal(true);
-    protected readonly activityFailed = signal(false);
-    protected readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
-    protected readonly roleAuditEvents = signal<AdminUserRoleAuditEvent[]>([]);
+    protected readonly activityLoading = computed(() => this.userResource.isLoading() || this.activityResource.isLoading());
+    protected readonly activityFailed = computed(() => this.activityResource.error() !== undefined);
+    protected readonly loginEvents = computed(() => this.activity()?.loginEvents.items ?? []);
+    protected readonly roleAuditEvents = computed(() => this.activity()?.roleAuditEvents ?? []);
     private readonly passwordChangeLabel = toSignal(this.translate.stream('ADMIN_USER.PASSWORD_CHANGE_REQUIRED'), { initialValue: '' });
     private readonly lastActiveLabel = toSignal(this.translate.stream('ADMIN_USER.LAST_ACTIVE'), { initialValue: '' });
     private readonly unknownActivityLabel = toSignal(this.translate.stream('ADMIN_USER.ACTIVITY_UNKNOWN'), { initialValue: '' });
-    private readonly avatarLoadFailure = signal<{ userId: AdminUser['id']; url: string } | null>(null);
+    private readonly avatarLoadFailure = linkedSignal({
+        source: this.userRequest,
+        computation: (): { userId: AdminUser['id']; url: string } | null => null,
+    });
     protected readonly details = computed(() => {
         const account = this.user();
         if (account === null) {
@@ -90,44 +103,8 @@ export class AdminUserPageComponent {
         return user !== null && user.isActive && (user.deletedAt === null || user.deletedAt === undefined);
     });
 
-    public constructor() {
-        // This page owns the :id segment. Matrix parameters must not replace its account ID.
-        const accountId = this.route.url.pipe(
-            map(([segment]) => adminId<'user'>(segment.path)),
-            distinctUntilChanged(),
-        );
-        combineLatest([accountId, this.refresh.pipe(startWith(undefined))])
-            .pipe(
-                switchMap(([id]) => {
-                    this.user.set(null);
-                    this.avatarLoadFailure.set(null);
-                    this.failed.set(false);
-                    this.activityLoading.set(true);
-                    this.activityFailed.set(false);
-                    this.loginEvents.set([]);
-                    this.roleAuditEvents.set([]);
-                    return this.users.getUser(id).pipe(
-                        catchError(() => {
-                            this.failed.set(true);
-                            return of(null);
-                        }),
-                        switchMap(user => {
-                            this.user.set(user);
-                            return user === null ? of(null) : this.loadActivity(user.id);
-                        }),
-                    );
-                }),
-                takeUntilDestroyed(),
-            )
-            .subscribe(activity => {
-                this.loginEvents.set(activity?.loginEvents.items ?? []);
-                this.roleAuditEvents.set(activity?.roleAuditEvents ?? []);
-                this.activityLoading.set(false);
-            });
-    }
-
     protected reload(): void {
-        this.refresh.next();
+        this.loadVersion.update(version => version + 1);
     }
 
     protected onAvatarError(userId: AdminUser['id'], url: string): void {
@@ -170,20 +147,6 @@ export class AdminUserPageComponent {
     private buildInitials(user: AdminUser): string {
         const initials = `${user.firstName?.trim()[0] ?? ''}${user.lastName?.trim()[0] ?? ''}`;
         return (initials.length > 0 ? initials : (user.email?.trim().at(0) ?? '?')).toUpperCase();
-    }
-
-    private loadActivity(
-        userId: string,
-    ): Observable<{ loginEvents: PagedResponse<AdminUserLoginEvent>; roleAuditEvents: AdminUserRoleAuditEvent[] } | null> {
-        return forkJoin({
-            loginEvents: this.users.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId }),
-            roleAuditEvents: this.users.getUserRoleAudit(adminId<'user'>(userId)),
-        }).pipe(
-            catchError(() => {
-                this.activityFailed.set(true);
-                return of(null);
-            }),
-        );
     }
 
     protected impersonate(user: AdminUser): void {

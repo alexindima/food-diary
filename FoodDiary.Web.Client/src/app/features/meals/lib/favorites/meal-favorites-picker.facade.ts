@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import type { FavoriteMealId } from '../../../../shared/models/semantics/entity-id';
@@ -8,10 +8,7 @@ import { FavoriteMealService } from '../../api/favorite-meal.service';
 @Injectable()
 export class MealFavoritesPickerFacade {
     private readonly api = inject(FavoriteMealService);
-    private readonly state = new FavoritesPageState<FavoriteMeal>(
-        (page, size, search) => this.api.getPage(page, size, search),
-        inject(DestroyRef),
-    );
+    private readonly state = new FavoritesPageState<FavoriteMeal>((page, size, search) => this.api.getPage(page, size, search));
     public readonly items = this.state.items;
     public readonly loading = this.state.loading;
     public readonly failed = this.state.failed;

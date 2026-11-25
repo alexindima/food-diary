@@ -214,6 +214,7 @@ type RecipeListFacadeMock = Omit<
     loadFavorites: ReturnType<typeof vi.fn>;
     loadInitialOverview: ReturnType<typeof vi.fn>;
     loadRecipes: ReturnType<typeof vi.fn>;
+    requestView: ReturnType<typeof vi.fn>;
     navigateToAddRecipeAsync: ReturnType<typeof vi.fn>;
     openFilters: ReturnType<typeof vi.fn>;
     removeFavorite: ReturnType<typeof vi.fn>;
@@ -254,6 +255,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         loadFavorites: vi.fn().mockReturnValue(of(void 0)),
         loadInitialOverview: vi.fn().mockReturnValue(of(void 0)),
         loadRecipes: vi.fn().mockReturnValue(of(void 0)),
+        requestView: vi.fn(),
         navigateToAddRecipeAsync: vi.fn().mockResolvedValue(true),
         openFilters: vi.fn().mockReturnValue(of(null)),
         pageSize: PAGE_SIZE,

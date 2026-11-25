@@ -69,6 +69,7 @@ describe('RecipeSelectDialogComponent', () => {
         const scrollSpy = vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
 
         component['onPageChange'](SECOND_PAGE_INDEX);
+        TestBed.tick();
 
         expect(scrollSpy).toHaveBeenCalled();
         expect(recipeService.query).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, { search: undefined }, true);
@@ -92,22 +93,24 @@ describe('RecipeSelectDialogComponent query ownership', () => {
         initial.error(new Error('late initial failure'));
         expect(readRecipeItems(component)[0]?.recipe.name).toBe('Soup');
     });
-    it('cancels the initial request when pagination begins and ignores its late response', () => {
+    it('cancels the initial request when pagination begins and ignores its late response', async () => {
         const initial = new Subject<PageOf<Recipe>>();
         const page = new Subject<PageOf<Recipe>>();
-        const { component, recipeService } = setupComponent([], initial);
+        const { component, fixture, recipeService } = setupComponent([], initial);
         recipeService.query.mockReturnValueOnce(page);
 
         component['onPageChange'](SECOND_PAGE_INDEX);
         expect(initial.observed).toBe(false);
-        expect(component['recipeData'].isLoading()).toBe(true);
+        expect(component['isLoading']()).toBe(true);
+        fixture.detectChanges();
         initial.next(createPage([createRecipe({ name: 'Stale initial result' })]));
         expect(readRecipeItems(component)).toEqual([]);
         page.next({ ...createPage([createRecipe({ name: 'New page' })]), page: SECOND_PAGE });
         page.complete();
+        await fixture.whenStable();
         expect(readRecipeItems(component)[0]?.recipe.name).toBe('New page');
         expect(component['currentPageIndex']).toBe(SECOND_PAGE_INDEX);
-        expect(component['recipeData'].isLoading()).toBe(false);
+        expect(component['isLoading']()).toBe(false);
     });
 
     it('cancels a pending page when filters change and cancels the replacement on destroy', () => {
@@ -118,6 +121,7 @@ describe('RecipeSelectDialogComponent query ownership', () => {
         recipeService.query.mockReturnValueOnce(filtered);
         component['openFilters']();
         expect(pending.observed).toBe(false);
+        fixture.detectChanges();
         expect(filtered.observed).toBe(true);
         fixture.destroy();
         expect(filtered.observed).toBe(false);
@@ -141,6 +145,7 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
         );
 
         component['openFilters']();
+        TestBed.tick();
 
         expect(recipeService.openFilters).toHaveBeenCalledWith({
             onlyMine: false,
@@ -192,10 +197,11 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
         const { component, recipeService } = setupComponent([createRecipe()]);
         recipeService.query.mockReturnValueOnce(throwError(() => new Error('load failed')));
 
-        component['loadRecipes'](1).subscribe();
+        component['loadRecipes'](1);
+        TestBed.tick();
 
         expect(component['recipeData'].items()).toEqual([]);
-        expect(component['recipeData'].isLoading()).toBe(false);
+        expect(component['isLoading']()).toBe(false);
     });
 });
 

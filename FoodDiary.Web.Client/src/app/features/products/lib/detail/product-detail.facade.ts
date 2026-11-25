@@ -1,9 +1,9 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { catchError, map, of, switchMap, take } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -28,27 +28,35 @@ export class ProductDetailFacade {
     public readonly isFavoriteLoading = signal(false);
     public readonly isDuplicateInProgress = signal(false);
 
-    private readonly favoriteChanges = new Subject<void>();
     private initialFavoriteState = false;
     private favoriteProductId: string | null = null;
+    private readonly requestedFavorite = signal<{ id: Product['id']; fallback: boolean } | undefined>(undefined);
+    private readonly favoriteCheck = rxResource({
+        params: this.requestedFavorite,
+        stream: ({ params, abortSignal }) =>
+            this.favoriteProductService.isFavorite(params.id).pipe(
+                catchError(() => of(params.fallback)),
+                map(isFavorite => {
+                    if (!abortSignal.aborted && this.requestedFavorite() === params) {
+                        this.initialFavoriteState = isFavorite;
+                        this.isFavorite.set(isFavorite);
+                    }
+                }),
+            ),
+    });
 
     public initialize(product: Product): void {
-        this.favoriteChanges.next();
+        this.stopFavoriteCheck();
         this.initialFavoriteState = product.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteProductId = product.favoriteProductId ?? null;
 
-        this.favoriteProductService
-            .isFavorite(product.id)
-            .pipe(
-                catchError(() => of(this.initialFavoriteState)),
-                takeUntil(this.favoriteChanges),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(isFav => {
-                this.initialFavoriteState = isFav;
-                this.isFavorite.set(isFav);
-            });
+        this.requestedFavorite.set({ id: product.id, fallback: this.initialFavoriteState });
+    }
+
+    private stopFavoriteCheck(): void {
+        this.requestedFavorite.set(undefined);
+        this.favoriteCheck.set(undefined);
     }
 
     public close(product: Product): void {
@@ -102,7 +110,7 @@ export class ProductDetailFacade {
             return;
         }
 
-        this.favoriteChanges.next();
+        this.stopFavoriteCheck();
         this.isFavoriteLoading.set(true);
 
         if (this.isFavorite()) {

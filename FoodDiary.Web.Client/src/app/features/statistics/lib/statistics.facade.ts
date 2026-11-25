@@ -1,8 +1,8 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -61,6 +61,7 @@ export class StatisticsFacade {
         },
         'STATISTICS.LOAD_ERROR'
     >();
+    private readonly requestedStatistics = signal<{ range: DateRange; id: number } | undefined>(undefined);
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
 
@@ -124,6 +125,35 @@ export class StatisticsFacade {
     );
 
     public constructor() {
+        rxResource({
+            params: this.requestedStatistics,
+            stream: ({ params: { range, id } }) =>
+                this.statisticsService
+                    .getSummary(
+                        buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone),
+                        developmentRequestContext(this.statisticsRequest.bindRequest(id)),
+                    )
+                    .pipe(
+                        tap({
+                            next: data => {
+                                if (
+                                    this.statisticsRequest.succeed(id, {
+                                        statistics: mapStatistics(data.nutrition),
+                                        weight: data.weight,
+                                        waist: data.waist,
+                                        weightMeasurements: data.weightMeasurements,
+                                        waistMeasurements: data.waistMeasurements,
+                                    })
+                                ) {
+                                    this.appliedRange.set(range);
+                                }
+                            },
+                            error: () => {
+                                this.statisticsRequest.fail(id, 'STATISTICS.LOAD_ERROR');
+                            },
+                        }),
+                    ),
+        });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dateLabelFormatterCache = null;
             this.currentLocale.set(this.resolveCurrentLocale());
@@ -228,35 +258,7 @@ export class StatisticsFacade {
         }
 
         this.lastLoadedRangeKey = rangeKey;
-        this.loadStatistics(range);
-    }
-
-    private loadStatistics(range: DateRange): void {
-        const requestId = this.statisticsRequest.begin();
-        this.statisticsService
-            .getSummary(
-                buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone),
-                developmentRequestContext(this.statisticsRequest.bindRequest(requestId)),
-            )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: data => {
-                    if (
-                        this.statisticsRequest.succeed(requestId, {
-                            statistics: mapStatistics(data.nutrition),
-                            weight: data.weight,
-                            waist: data.waist,
-                            weightMeasurements: data.weightMeasurements,
-                            waistMeasurements: data.waistMeasurements,
-                        })
-                    ) {
-                        this.appliedRange.set(range);
-                    }
-                },
-                error: () => {
-                    this.statisticsRequest.fail(requestId, 'STATISTICS.LOAD_ERROR');
-                },
-            });
+        this.requestedStatistics.set({ range, id: this.statisticsRequest.begin() });
     }
 
     private initializeCustomRange(): void {

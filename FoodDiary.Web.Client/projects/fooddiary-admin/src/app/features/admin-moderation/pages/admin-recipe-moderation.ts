@@ -4,19 +4,21 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
     type ElementRef,
     inject,
     Injector,
+    linkedSignal,
     signal,
     viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import type { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminPageWithinTotal } from '../../../shared/period/admin-pagination';
@@ -56,49 +58,54 @@ export class AdminRecipeModerationComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
     private readonly detailPanel = viewChild<ElementRef<HTMLElement>>('detailPanel');
-    private queueRequest?: Subscription;
-    private detailsRequest?: Subscription;
+    private readonly queueRequest = signal<{ page: number; status: RecipeModerationStatus | undefined }>({ page: 1, status: undefined });
+    private readonly queueResource = rxResource({
+        params: this.queueRequest,
+        stream: ({ params }) =>
+            this.moderation.list(params.page, this.pageSize, params.status).pipe(
+                map(queue => {
+                    if (this.queueRequest() !== params) {
+                        return null;
+                    }
+                    const page = adminPageWithinTotal(params.page, queue.totalItems, this.pageSize);
+                    if (page !== params.page) {
+                        this.goToPage(page);
+                        return null;
+                    }
+                    return queue;
+                }),
+            ),
+    });
+    private readonly detailsRequest = signal<{ id: RecipeModerationRevisionId } | undefined>(undefined);
+    private readonly detailsResource = rxResource({
+        params: this.detailsRequest,
+        stream: ({ params }) => this.moderation.get(params.id),
+    });
     protected readonly statusLabels = RECIPE_MODERATION_STATUS_LABELS;
     protected readonly pageSize = QUEUE_PAGE_SIZE;
     protected readonly page = signal(1);
     protected readonly status = signal<RecipeModerationStatus | undefined>(undefined);
-    protected readonly queue = signal<AdminRecipeModerationPage | null>(null);
-    protected readonly queueLoading = signal(false);
-    protected readonly queueFailed = signal(false);
-    protected readonly selectedId = signal<RecipeModerationRevisionId | null>(null);
-    protected readonly selected = signal<AdminRecipeModerationItem | null>(null);
-    protected readonly detailsLoading = signal(false);
-    protected readonly detailsFailed = signal(false);
+    protected readonly queue = linkedSignal({
+        source: this.queueResource.snapshot,
+        computation: (snapshot, previous): AdminRecipeModerationPage | null =>
+            (snapshot.status === 'resolved' ? snapshot.value : null) ?? previous?.value ?? null,
+    });
+    protected readonly queueLoading = computed(
+        () => this.queueResource.isLoading() || (this.queueResource.hasValue() && this.queueResource.value() === null),
+    );
+    protected readonly queueFailed = computed(() => this.queueResource.error() !== undefined);
+    protected readonly selectedId = computed(() => this.detailsRequest()?.id ?? null);
+    protected readonly selected = computed<AdminRecipeModerationItem | null>(() =>
+        this.detailsResource.hasValue() ? this.detailsResource.value() : null,
+    );
+    protected readonly detailsLoading = this.detailsResource.isLoading;
+    protected readonly detailsFailed = computed(() => this.detailsResource.error() !== undefined);
     protected readonly actionInProgress = signal(false);
     protected readonly actionError = signal<string | null>(null);
     protected readonly reason = signal('');
 
-    public constructor() {
-        this.loadQueue();
-    }
-
     protected loadQueue(): void {
-        this.queueRequest?.unsubscribe();
-        this.queueLoading.set(true);
-        this.queueFailed.set(false);
-        this.queueRequest = this.moderation
-            .list(this.page(), this.pageSize, this.status())
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: queue => {
-                    const page = adminPageWithinTotal(this.page(), queue.totalItems, this.pageSize);
-                    if (page !== this.page()) {
-                        this.goToPage(page);
-                        return;
-                    }
-                    this.queue.set(queue);
-                    this.queueLoading.set(false);
-                },
-                error: () => {
-                    this.queueFailed.set(true);
-                    this.queueLoading.set(false);
-                },
-            });
+        this.queueRequest.set({ page: this.page(), status: this.status() });
     }
 
     protected setStatus(value: unknown): void {
@@ -118,7 +125,6 @@ export class AdminRecipeModerationComponent {
 
         this.reason.set('');
         this.actionError.set(null);
-        this.selectedId.set(id);
         this.loadDetails(id);
         afterNextRender(() => this.detailPanel()?.nativeElement.focus(), { injector: this.injector });
     }
@@ -130,23 +136,7 @@ export class AdminRecipeModerationComponent {
     }
 
     private loadDetails(id: RecipeModerationRevisionId): void {
-        this.detailsRequest?.unsubscribe();
-        this.selected.set(null);
-        this.detailsLoading.set(true);
-        this.detailsFailed.set(false);
-        this.detailsRequest = this.moderation
-            .get(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: item => {
-                    this.selected.set(item);
-                    this.detailsLoading.set(false);
-                },
-                error: () => {
-                    this.detailsFailed.set(true);
-                    this.detailsLoading.set(false);
-                },
-            });
+        this.detailsRequest.set({ id });
     }
 
     protected submit(action: AdminRecipeModerationAction): void {

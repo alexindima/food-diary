@@ -53,11 +53,12 @@ function page(): WeightEntry[] {
     });
 }
 describe('Weight measurement dialog pagination', () => {
-    it('keeps the last delta across New Year and lets the user load and edit the December entry', () => {
+    it('keeps the last delta across New Year and lets the user load and edit the December entry', async () => {
         const { fixture, component, responses, fetch, close } = setup();
         const entries = page();
         responses[0].next(entries);
         responses[0].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['items']()).toHaveLength(PAGE_SIZE);
         expect(component['items']().at(-1)?.change).toBe(-1);
@@ -66,10 +67,12 @@ describe('Weight measurement dialog pagination', () => {
             button.textContent.includes('MEASUREMENT_HISTORY_PAGING.MORE'),
         );
         more?.click();
+        fixture.detectChanges();
         expect(fetch).toHaveBeenLastCalledWith('2025-12-31');
         const oldest = entries[PAGE_SIZE];
         responses[1].next([oldest]);
         responses[1].complete();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['items']()).toHaveLength(FETCH_SIZE);
         expect(component['items']().at(-1)?.change).toBeNull();
@@ -77,9 +80,10 @@ describe('Weight measurement dialog pagination', () => {
         root.querySelectorAll<HTMLButtonElement>('button[aria-label="WEIGHT_HISTORY.EDIT"]').item(PAGE_SIZE).click();
         expect(close).toHaveBeenCalledWith({ action: 'edit', entry: oldest });
     });
-    it('renders retry rather than empty on failure, and cancels pending work when closed', () => {
+    it('renders retry rather than empty on failure, and cancels pending work when closed', async () => {
         const { fixture, responses, fetch } = setup();
         responses[0].error(new Error('offline'));
+        await fixture.whenStable();
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
         expect(root.querySelector('[role="alert"]')?.textContent).toContain('MEASUREMENT_HISTORY_PAGING.ERROR');
@@ -87,6 +91,7 @@ describe('Weight measurement dialog pagination', () => {
         Array.from(root.querySelectorAll('button'))
             .find(button => button.textContent.includes('MEASUREMENT_HISTORY_PAGING.RETRY'))
             ?.click();
+        fixture.detectChanges();
         expect(fetch).toHaveBeenCalledTimes(2);
         fixture.destroy();
         expect(responses[1].observed).toBe(false);

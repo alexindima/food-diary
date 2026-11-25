@@ -87,6 +87,7 @@ describe('PublicCatalogFavorites account replacement', () => {
         });
         account.set('bob');
         TestBed.tick();
+        expect(lookup.observed).toBe(false);
         lookup.next([]);
         lookup.complete();
         await action;
