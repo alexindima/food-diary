@@ -11,8 +11,8 @@
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 111,
-    "routedStandaloneComponents": 74,
-    "componentsWithoutDirectSpecs": 125,
+    "routedStandaloneComponents": 75,
+    "componentsWithoutDirectSpecs": 128,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -2033,6 +2033,75 @@
       "specPath": null
     },
     {
+      "class": "AdminDmarcComponent",
+      "selector": "fd-admin-dmarc",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.scss"
+      ],
+      "inputs": [
+        {
+          "name": "period",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminDmarcReportsComponent",
+      "selector": "fd-admin-dmarc-reports",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.scss"
+      ],
+      "inputs": [
+        {
+          "name": "data",
+          "type": "AdminDmarcView",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminMailboxViewsComponent",
+      "selector": "fd-admin-mailbox-views",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "hiddenRecipients",
+          "type": "readonly IncomingMailbox[]",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "recipientSelected",
+          "type": "string"
+        },
+        {
+          "name": "recipientVisibilityChanged",
+          "type": "{ recipient: IncomingMailbox; hidden: boolean }"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "AdminModerationContextComponent",
       "selector": "fd-admin-moderation-context",
       "feature": "admin-moderation",
@@ -2280,7 +2349,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "adminReturnUrl",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -5324,7 +5399,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "publicPageKey",
+          "type": "string",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -5400,7 +5481,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "seoPage",
+          "type": "",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": null
     },

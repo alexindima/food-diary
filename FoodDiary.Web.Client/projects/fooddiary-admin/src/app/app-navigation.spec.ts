@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -40,7 +40,7 @@ const protectedPages = [
 function configureAdminRoutes(isAdmin: boolean): void {
     TestBed.configureTestingModule({
         providers: [
-            provideRouter(routes),
+            provideRouter(routes, withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' })),
             provideHttpClient(),
             provideHttpClientTesting(),
             ...provideTranslateTesting(),
@@ -95,9 +95,39 @@ describe('Admin application route boundaries', () => {
         TestBed.inject(HttpTestingController).verify();
     });
 
+    it.each([
+        { path: '/feedback', queryMode: 'false', recipient: 'feedback@fooddiary.club' },
+        { path: '/mail-inbox', queryMode: 'true', recipient: 'other@example.test' },
+    ])('uses the configured mailbox mode for $path even with a conflicting query value', async ({ path, queryMode, recipient }) => {
+        configureAdminRoutes(true);
+        const harness = await RouterTestingHarness.create(`${path}?feedbackMailbox=${queryMode}&recipient=other@example.test`);
+        const http = TestBed.inject(HttpTestingController);
+        const request = http.expectOne(candidate => candidate.url.endsWith('/admin/mail-inbox/messages/page'));
+        expect(request.request.params.get('recipient')).toBe(recipient);
+        request.flush({
+            totalItems: 1,
+            items: [
+                {
+                    id: 'mail-message',
+                    subject: 'Message',
+                    toRecipients: [recipient],
+                    category: 'general',
+                    status: 'received',
+                    isTrustedRelay: false,
+                    receivedAtUtc: '2026-11-01T10:00:00Z',
+                },
+            ],
+        });
+
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(harness.routeNativeElement?.querySelector('tbody a')?.getAttribute('href')).toContain(`${path}?`);
+        http.verify();
+    });
+
     it('renders the public confirmation form without sending an administrative request', async () => {
         configureAdminRoutes(false);
-        const harness = await RouterTestingHarness.create('/sign-in?confirm=1&returnUrl=%2Fusers');
+        const harness = await RouterTestingHarness.create('/sign-in?confirm=1&confirm=0&returnUrl=%2Fusers');
 
         expect(harness.routeNativeElement?.matches('fd-admin-sign-in')).toBe(true);
         expect(harness.routeNativeElement?.querySelector('form')).toBeTruthy();

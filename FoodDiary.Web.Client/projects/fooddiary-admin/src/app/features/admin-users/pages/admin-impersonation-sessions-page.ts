@@ -52,10 +52,7 @@ export class AdminImpersonationSessionsPageComponent {
         filters: { actorId: this.actorId() ?? '', targetId: this.targetId() ?? '' },
         periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
     }));
-    private readonly sessionsRequest = linkedSignal(() => {
-        const { page, search, filters } = this.appliedQuery();
-        return this.buildRequest(page, search, filters);
-    });
+    private readonly sessionsRequest = linkedSignal(() => this.buildRequest());
     private readonly sessionsResource = rxResource({
         params: this.sessionsRequest,
         stream: ({ params }) =>
@@ -119,16 +116,11 @@ export class AdminImpersonationSessionsPageComponent {
     }
 
     protected loadSessions(): void {
-        this.sessionsRequest.set(
-            this.buildRequest(this.sessionsPage(), this.sessionsSearch(), {
-                actorId: this.firstFilter(),
-                targetId: this.secondFilter(),
-            }),
-        );
+        this.sessionsRequest.set(this.buildRequest());
     }
 
-    private buildRequest(page: number, search: string, filters: Record<string, string>): SessionsRequest | undefined {
-        const { periodParams } = this.appliedQuery();
+    private buildRequest(): SessionsRequest | undefined {
+        const { page, search, filters, periodParams } = this.appliedQuery();
         const range = adminPeriod(periodParams);
         if (range === null) {
             return undefined;

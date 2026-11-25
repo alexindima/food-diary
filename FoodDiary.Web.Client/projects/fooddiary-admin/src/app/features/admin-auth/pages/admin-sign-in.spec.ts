@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, type MockInstance, vi } from 'vitest';
@@ -49,8 +49,8 @@ async function createPageAsync({
     googleUnavailable = false,
     locale = 'en',
 }: {
-    confirm?: string;
-    returnUrl?: string;
+    confirm?: string | string[];
+    returnUrl?: string | string[];
     account?: string;
     restoredAccount?: string | null;
     unavailable?: boolean;
@@ -82,7 +82,6 @@ async function createPageAsync({
                 useValue: {
                     snapshot: {
                         fragment: new URLSearchParams({ account }).toString(),
-                        queryParamMap: convertToParamMap({ confirm, returnUrl }),
                     },
                 },
             },
@@ -101,6 +100,8 @@ async function createPageAsync({
     const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     const navigateByUrl = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
     const fixture = TestBed.createComponent(AdminSignInComponent);
+    fixture.componentRef.setInput('confirm', confirm);
+    fixture.componentRef.setInput('returnUrl', returnUrl);
     fixture.detectChanges();
     await fixture.whenStable();
     return { fixture, auth, renderGoogle, replace, navigate, navigateByUrl };
@@ -163,7 +164,7 @@ describe('Admin sign-in confirmation', () => {
     });
 
     it('hands off to the diary confirmation without a fragment when the handoff account is empty', async () => {
-        const { replace, auth } = await createPageAsync({ confirm: '0', account: '' });
+        const { replace, auth } = await createPageAsync({ confirm: ['0', '1'], account: '' });
 
         expect(replace).toHaveBeenCalledOnce();
         const redirect = new URL(replace.mock.calls[0][0]);
@@ -174,7 +175,9 @@ describe('Admin sign-in confirmation', () => {
     });
 
     it('blocks invalid credentials and submits a valid password to the account named in the fragment', async () => {
-        const { auth, fixture, navigateByUrl } = await createPageAsync({ returnUrl: `${RETURN_URL}&code=old#account=another&tab=active` });
+        const { auth, fixture, navigateByUrl } = await createPageAsync({
+            returnUrl: [`${RETURN_URL}&code=old#account=another&tab=active`, '/audit'],
+        });
         auth.signInWithPasswordAsync.mockResolvedValue(true);
 
         enterCredentials(fixture, 'not-an-email', 'password');
@@ -206,8 +209,10 @@ describe('Admin sign-in confirmation', () => {
         expect((element(fixture, 'input[type="email"]') as HTMLInputElement).value).toBe('admin@example.test');
         expect(navigateByUrl).not.toHaveBeenCalled();
     });
+});
 
-    it('ignores duplicate Google completion while busy and uses the requested account and locale', async () => {
+describe('Admin sign-in Google confirmation', () => {
+    it('keeps the initial Google confirmation and destination through later input updates', async () => {
         environment.googleClientId = 'test-google-client';
         const { fixture, auth, renderGoogle, navigateByUrl } = await createPageAsync({ locale: 'ru', returnUrl: '//other.example.test/' });
         const pending = new Subject<boolean>();
@@ -216,13 +221,19 @@ describe('Admin sign-in confirmation', () => {
         expect(renderGoogle).toHaveBeenCalledExactlyOnceWith(target, 'test-google-client', 'ru', expect.any(Function));
         const callback = renderGoogle.mock.calls[0][3];
 
+        fixture.componentRef.setInput('confirm', '0');
+        fixture.componentRef.setInput('returnUrl', '/mail-inbox');
+        fixture.detectChanges();
         callback('test-credential');
         callback('duplicate-credential');
+        fixture.componentRef.setInput('returnUrl', '/audit');
         fixture.detectChanges();
         expect(element(fixture, 'form').getAttribute('aria-busy')).toBe('true');
         expect(target.hasAttribute('inert')).toBe(true);
         expect((element(fixture, 'button[type="submit"]') as HTMLButtonElement).disabled).toBe(true);
         expect(auth.signInWithGoogleAsync).toHaveBeenCalledExactlyOnceWith('test-credential', ACCOUNT);
+        expect(auth.restoreSessionAsync).not.toHaveBeenCalled();
+        expect(renderGoogle).toHaveBeenCalledOnce();
         expect(navigateByUrl).not.toHaveBeenCalled();
 
         pending.next(true);

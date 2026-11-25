@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,6 +47,9 @@ import { telegramTimeZoneOptions } from '../../lib/telegram-time-zone-options';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelegramAuthComponent {
+    public readonly returnUrl = input(undefined, {
+        transform: (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value),
+    });
     protected readonly facade = inject(TelegramAuthFacade);
     protected readonly auth = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
@@ -226,7 +229,7 @@ export class TelegramAuthComponent {
         } else if (this.auth.mustChangePassword()) {
             await this.navigation.navigateToRequiredPasswordChangeAsync();
         } else {
-            const returnUrl = telegramMiniAppReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+            const returnUrl = telegramMiniAppReturnUrl(this.returnUrl() ?? null);
             if (returnUrl === null) {
                 await this.navigation.navigateToHomeAsync();
             } else {

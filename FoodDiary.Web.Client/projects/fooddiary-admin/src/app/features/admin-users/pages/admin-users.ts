@@ -91,7 +91,7 @@ export class AdminUsersComponent {
             lastActiveTo: query.lastActiveTo ?? '',
         };
     });
-    private readonly request = linkedSignal(() => this.buildRequest(this.appliedFilters()));
+    private readonly request = linkedSignal(() => this.buildRequest());
     private readonly usersResource = rxResource({
         params: this.request,
         stream: ({ params }) =>
@@ -178,17 +178,7 @@ export class AdminUsersComponent {
     }
 
     protected loadUsers(): void {
-        this.request.set(
-            this.buildRequest({
-                page: this.draftPage(),
-                search: this.draftSearch(),
-                status: this.draftStatus(),
-                role: this.draftRole(),
-                emailConfirmed: this.draftConfirmed(),
-                lastActiveFrom: this.draftLastActiveFrom(),
-                lastActiveTo: this.draftLastActiveTo(),
-            }),
-        );
+        this.request.set(this.buildRequest());
     }
 
     protected openCreate(): void {
@@ -248,7 +238,8 @@ export class AdminUsersComponent {
         });
     }
 
-    private buildRequest({ page, search, ...filters }: UserListFilters): UserListRequest | undefined {
+    private buildRequest(): UserListRequest | undefined {
+        const { page, search, ...filters } = this.appliedFilters();
         const range = this.registrationPeriod();
         return range === null ? undefined : { page, search: adminQueryValue(search.trim()), filters: { ...filters, ...range } };
     }

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -8,7 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
-import { distinctUntilChanged, finalize, map } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -45,7 +45,8 @@ import { MEAL_PLAN_DETAIL_TOUR } from './meal-plan-detail-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealPlanDetailPageComponent {
-    private readonly route = inject(ActivatedRoute);
+    public readonly id = input<string>();
+
     private readonly router = inject(Router);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -58,16 +59,13 @@ export class MealPlanDetailPageComponent {
 
     public constructor() {
         this.destroyRef.onDestroy(() => this.deleteDialog?.close());
-        this.route.paramMap
-            .pipe(
-                map(params => params.get('id')),
-                distinctUntilChanged(),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(id => {
+        effect(() => {
+            const id = this.id();
+            untracked(() => {
                 this.deleteDialog?.close();
-                this.facade.loadPlan(id === null || id.trim().length === 0 ? null : entityId<'meal-plan'>(id));
+                this.facade.loadPlan(id === undefined || id.trim().length === 0 ? null : entityId<'meal-plan'>(id));
             });
+        });
     }
 
     protected confirmDeletePlan(): void {

@@ -14,7 +14,7 @@ import { adminDailyAdvicesRoutes } from './features/admin-daily-advices/admin-da
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
 import { adminLessonsRoutes } from './features/admin-lessons/admin-lessons.routes';
-import { adminFeedbackRoutes, adminMailInboxRoutes } from './features/admin-mail-inbox/admin-mail-inbox.routes';
+import { adminDmarcRoutes, adminFeedbackRoutes, adminMailInboxRoutes } from './features/admin-mail-inbox/admin-mail-inbox.routes';
 import { adminMealPlansRoutes } from './features/admin-meal-plans/admin-meal-plans.routes';
 import { adminModerationRoutes } from './features/admin-moderation/admin-moderation.routes';
 import { adminOutgoingEmailsRoutes } from './features/admin-outgoing-emails/admin-outgoing-emails.routes';
@@ -37,6 +37,7 @@ const protectedFeatureRoutes: Routes[] = [
     adminOutgoingEmailsRoutes,
     adminMailInboxRoutes,
     adminFeedbackRoutes,
+    adminDmarcRoutes,
     adminDailyAdvicesRoutes,
     adminLessonsRoutes,
     adminAchievementsRoutes,

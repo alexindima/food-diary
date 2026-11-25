@@ -2,12 +2,12 @@ import { Location } from '@angular/common';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
-import { ChangeDetectionStrategy, Component, DestroyRef, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { filter, firstValueFrom, type Observable, of, Subject } from 'rxjs';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -88,7 +88,14 @@ async function waitForSignInButtonAsync(harness: RouterTestingHarness): Promise<
     });
 }
 
-it('keeps the Back destination when a pending Telegram sign-in accepts a session after leaving', async () => {
+async function startPendingTelegramSignInAsync(): Promise<{
+    router: Router;
+    harness: RouterTestingHarness;
+    component: TelegramAuthComponent;
+    pending: Subject<AuthResponse>;
+    isAuthenticated: WritableSignal<boolean>;
+    acceptExternalAuthentication: Mock<AuthService['acceptExternalAuthentication']>;
+}> {
     const pending = new Subject<AuthResponse>();
     const complete = vi.fn<TelegramAuthService['complete']>().mockReturnValue(pending);
     const isAuthenticated = signal(false);
@@ -97,11 +104,10 @@ it('keeps the Back destination when a pending Telegram sign-in accepts a session
     });
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                ...authRoutes,
-                { path: 'explore', component: RecipesDestination },
-                { path: 'profile', component: AuthReturnDestination },
-            ]),
+            provideRouter(
+                [...authRoutes, { path: 'explore', component: RecipesDestination }, { path: 'profile', component: AuthReturnDestination }],
+                withComponentInputBinding(),
+            ),
             provideLocationMocks(),
             provideTranslateTesting(),
             {
@@ -134,15 +140,38 @@ it('keeps the Back destination when a pending Telegram sign-in accepts a session
     });
     const router = TestBed.inject(Router);
     router.setUpLocationChangeListener();
-    const returnNavigation = vi.spyOn(TestBed.inject(NavigationService), 'navigateToReturnUrlAsync');
     const harness = await RouterTestingHarness.create(PRIOR_URL);
     const query = new URLSearchParams({ returnUrl: AUTH_RETURN_URL });
-    await harness.navigateByUrl(`/auth/telegram?${query.toString()}`, TelegramAuthComponent);
+    const component = await harness.navigateByUrl(`/auth/telegram?${query.toString()}`, TelegramAuthComponent);
     const signIn = await waitForSignInButtonAsync(harness);
     signIn.click();
     await vi.waitFor(() => {
         expect(complete).toHaveBeenCalledExactlyOnceWith(signInIntent.ticket, 'login', 'en', expect.any(String));
     });
+    return { router, harness, component, pending, isAuthenticated, acceptExternalAuthentication };
+}
+
+it('returns to the first updated destination when a Telegram sign-in completes on the same route', async () => {
+    const { router, harness, component, pending } = await startPendingTelegramSignInAsync();
+    const destination = '/profile?tab=settings';
+    const query = new URLSearchParams({ returnUrl: destination });
+    query.append('returnUrl', PRIOR_URL);
+    const reused = await harness.navigateByUrl(`/auth/telegram?${query.toString()}`, TelegramAuthComponent);
+    expect(reused).toBe(component);
+
+    pending.next(sessionResponse);
+    pending.complete();
+    await waitForAsyncTasksAsync();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(router.url).toBe(destination);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Account profile');
+});
+
+it('keeps the Back destination when a pending Telegram sign-in accepts a session after leaving', async () => {
+    const { router, harness, pending, isAuthenticated, acceptExternalAuthentication } = await startPendingTelegramSignInAsync();
+    const returnNavigation = vi.spyOn(TestBed.inject(NavigationService), 'navigateToReturnUrlAsync');
 
     const returned = firstValueFrom(
         router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === PRIOR_URL)),

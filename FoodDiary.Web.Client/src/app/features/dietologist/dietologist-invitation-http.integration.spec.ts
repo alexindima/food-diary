@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of, throwError } from 'rxjs';
@@ -31,11 +31,14 @@ beforeEach(() => {
     refresh.mockReset().mockReturnValue(of(true));
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                { path: 'dietologist-invitations/:invitationId', component: DietologistInvitationPageComponent },
-                { path: 'dietologist', component: InvitationDestinationComponent },
-                { path: 'dashboard', component: InvitationDestinationComponent },
-            ]),
+            provideRouter(
+                [
+                    { path: 'dietologist-invitations/:invitationId', component: DietologistInvitationPageComponent },
+                    { path: 'dietologist', component: InvitationDestinationComponent },
+                    { path: 'dashboard', component: InvitationDestinationComponent },
+                ],
+                withComponentInputBinding(),
+            ),
             provideHttpClient(),
             provideHttpClientTesting(),
             provideTranslateTesting(),
@@ -114,6 +117,31 @@ it('cancels the old decline request on navigation and submits only the newly dis
     await vi.waitFor(() => {
         expect(TestBed.inject(Router).url).toBe('/dashboard');
     });
+});
+
+it('hides the previous invitation while loading a missing replacement on the same route', async () => {
+    const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
+    respondToInvitation(INVITATION);
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    const host = harness.routeNativeElement;
+    expect(button(harness, ACCEPT).disabled).toBe(false);
+
+    await harness.navigateByUrl(`${URL_ROOT}/${NEXT_INVITATION}?invitationId=${INVITATION}`);
+    expect(harness.routeNativeElement).toBe(host);
+    expect(host?.textContent).toContain('DIETOLOGIST_INVITATION.LOADING');
+    expect(host?.textContent).not.toContain(ACCEPT);
+    expect(host?.textContent).not.toContain(DECLINE);
+    http.expectOne({ method: 'GET', url: `${invitationApi(NEXT_INVITATION)}/current-user` }).flush(null, {
+        status: HttpStatusCode.NotFound,
+        statusText: 'Not Found',
+    });
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(host?.querySelector('[role="alert"]')?.textContent).toContain('DIETOLOGIST_INVITATION.ERROR_LOAD');
+    expect(host?.textContent).not.toContain(ACCEPT);
+    expect(host?.textContent).not.toContain(DECLINE);
 });
 
 it.each([

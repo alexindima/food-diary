@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { Component, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -14,6 +14,7 @@ import { UnauthorizedComponent } from './unauthorized';
 
 // eslint-disable-next-line max-lines-per-function -- Keep component setup with its recovery and SSO outcomes.
 describe('UnauthorizedComponent', () => {
+    const defaultInputs = { reason: 'unauthenticated', returnUrl: '/users?code=sso-code&page=2' };
     let component: UnauthorizedComponent;
     let fixture: ComponentFixture<UnauthorizedComponent>;
     let authService: {
@@ -25,8 +26,6 @@ describe('UnauthorizedComponent', () => {
         isAuthenticated: ReturnType<typeof vi.fn>;
     };
     let router: { navigateByUrl: ReturnType<typeof vi.fn> };
-    let routeSnapshot: { queryParamMap: ReturnType<typeof convertToParamMap> };
-
     beforeEach(async () => {
         authService = {
             tryApplySsoFromReturnUrlAsync: vi.fn(),
@@ -41,26 +40,21 @@ describe('UnauthorizedComponent', () => {
         };
         router.navigateByUrl.mockResolvedValue(true);
 
-        routeSnapshot = {
-            queryParamMap: convertToParamMap({
-                reason: 'unauthenticated',
-                returnUrl: '/users?code=sso-code&page=2',
-            }),
-        };
-
         await TestBed.configureTestingModule({
             imports: [UnauthorizedComponent],
             providers: [
                 provideTranslateTesting(),
                 { provide: AdminAuthService, useValue: authService },
                 { provide: Router, useValue: router },
-                { provide: ActivatedRoute, useValue: { snapshot: routeSnapshot } },
+                { provide: ActivatedRoute, useValue: { snapshot: { fragment: null } } },
             ],
         }).compileComponents();
     });
 
-    function createComponent(): void {
+    function createComponent({ reason, returnUrl }: { reason: string; returnUrl?: string } = defaultInputs): void {
         fixture = TestBed.createComponent(UnauthorizedComponent);
+        fixture.componentRef.setInput('reason', reason);
+        fixture.componentRef.setInput('returnUrl', returnUrl);
         component = fixture.componentInstance;
     }
 
@@ -69,14 +63,13 @@ describe('UnauthorizedComponent', () => {
         fixture.detectChanges();
 
         expect(component).toBeTruthy();
-        expect(component['reason']).toBe('unauthenticated');
-        expect(component['returnUrl']).toBe('/users?code=sso-code&page=2');
+        expect(component.reason()).toBe('unauthenticated');
+        expect(component.returnUrl()).toBe('/users?code=sso-code&page=2');
     });
 
     it('offers restoration retry and returns to the requested route after recovery', async () => {
-        routeSnapshot.queryParamMap = convertToParamMap({ reason: 'unavailable', returnUrl: '/users?page=2' });
         authService.sessionUnavailable.set(true);
-        createComponent();
+        createComponent({ reason: 'unavailable', returnUrl: '/users?page=2' });
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         expect(element.querySelector('h1')?.textContent, 'An outage must offer session recovery instead of permission denial').toContain(
@@ -91,6 +84,8 @@ describe('UnauthorizedComponent', () => {
             }),
         );
         element.querySelector('button')?.click();
+        fixture.componentRef.setInput('returnUrl', '/audit');
+        fixture.detectChanges();
         authService.sessionUnavailable.set(false);
         complete();
         await fixture.whenStable();
@@ -109,13 +104,21 @@ describe('UnauthorizedComponent', () => {
         expect(router.navigateByUrl).toHaveBeenCalledWith('/users?page=2', { replaceUrl: true });
     });
 
+    it.each([
+        { returnUrl: undefined, calls: [['/']] },
+        { returnUrl: '', calls: [] },
+    ])('keeps missing and explicit empty return URL behavior for $returnUrl', ({ returnUrl, calls }) => {
+        createComponent({ reason: 'unauthenticated', returnUrl });
+        fixture.detectChanges();
+
+        expect(authService.tryApplySsoFromReturnUrlAsync.mock.calls).toEqual(calls);
+    });
+
     it('should not try to recover when reason is forbidden', () => {
-        routeSnapshot.queryParamMap = convertToParamMap({
+        createComponent({
             reason: 'forbidden',
             returnUrl: '/users?page=2',
         });
-
-        createComponent();
         fixture.detectChanges();
 
         expect(authService.tryApplySsoFromReturnUrlAsync).not.toHaveBeenCalled();
@@ -134,10 +137,12 @@ function createRateFeedback(reason: string): HTMLElement {
                 useValue: { ssoRateLimited: signal(true), sessionUnavailable: signal(false), tryApplySsoFromReturnUrlAsync: vi.fn() },
             },
             { provide: Router, useValue: { navigateByUrl: vi.fn() } },
-            { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ reason, returnUrl: '/users' }) } } },
+            { provide: ActivatedRoute, useValue: { snapshot: { fragment: null } } },
         ],
     });
     const fixture = TestBed.createComponent(UnauthorizedComponent);
+    fixture.componentRef.setInput('reason', reason);
+    fixture.componentRef.setInput('returnUrl', '/users');
     fixture.detectChanges();
     return fixture.nativeElement as HTMLElement;
 }
@@ -174,11 +179,14 @@ function configureRecoveryRoutes(): void {
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
-            provideRouter([
-                { path: 'users', component: ProtectedUsersFixture, canActivate: [adminAuthGuard] },
-                { path: 'unauthorized', component: UnauthorizedComponent },
-                { path: 'sign-in', component: ConfirmSignInFixture },
-            ]),
+            provideRouter(
+                [
+                    { path: 'users', component: ProtectedUsersFixture, canActivate: [adminAuthGuard] },
+                    { path: 'unauthorized', component: UnauthorizedComponent },
+                    { path: 'sign-in', component: ConfirmSignInFixture },
+                ],
+                withComponentInputBinding({ unmatchedInputBehavior: 'undefinedIfStale' }),
+            ),
         ],
     });
 }
@@ -302,6 +310,38 @@ describe('Native Admin recovery after another failed retry', () => {
             TestBed.inject(HttpTestingController).verify();
         },
     );
+});
+
+it('retains the initial recovery context when query and fragment change on the reused page', async () => {
+    configureRecoveryRoutes();
+    const recovery = vi.spyOn(TestBed.inject(AdminAuthService), 'tryApplySsoFromReturnUrlAsync').mockResolvedValue(null);
+    const rawReturnUrl = '/users?code=sso-code&page=2';
+    const query = new URLSearchParams([
+        ['reason', 'unauthenticated'],
+        ['reason', 'forbidden'],
+        ['returnUrl', rawReturnUrl],
+        ['returnUrl', '/audit'],
+    ]);
+    const harness = await RouterTestingHarness.create();
+    const first = await harness.navigateByUrl(`/unauthorized?${query.toString()}#${ACCOUNT_FRAGMENT}`, UnauthorizedComponent);
+    const second = await harness.navigateByUrl(
+        '/unauthorized?reason=unauthenticated&returnUrl=%2Faudit#account=other-admin',
+        UnauthorizedComponent,
+    );
+    expect(second).toBe(first);
+    expect(recovery).toHaveBeenCalledExactlyOnceWith(rawReturnUrl);
+
+    await harness.navigateByUrl('/unauthorized?reason=forbidden&returnUrl=%2Faudit#account=other-admin', UnauthorizedComponent);
+    expect(harness.routeNativeElement?.textContent).toContain('Your admin session is missing or expired');
+    recoveryButton(harness).click();
+    const router = TestBed.inject(Router);
+    await vi.waitFor(() => {
+        expect(router.url).toContain('/sign-in?');
+    });
+    const signIn = router.parseUrl(router.url);
+    expect(signIn.queryParams).toEqual({ returnUrl: RETURN_URL, confirm: '1' });
+    expect(signIn.fragment).toBe(ACCOUNT_FRAGMENT);
+    TestBed.inject(HttpTestingController).verify();
 });
 
 async function openUnavailableRouteAsync(): Promise<RouterTestingHarness> {

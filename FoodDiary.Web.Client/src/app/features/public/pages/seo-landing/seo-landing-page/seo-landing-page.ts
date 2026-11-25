@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
@@ -16,18 +16,9 @@ import { SeoLandingFooterSectionsComponent } from '../seo-landing-sections/seo-l
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoLandingPageComponent {
-    private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
-    private readonly page = resolveSeoLandingPageData(this.route.snapshot.data['seoPage']);
-    private readonly viewModel = buildSeoLandingViewModel(this.page);
+    public readonly seoPage = input.required({ transform: resolveSeoLandingPageData });
 
-    protected readonly baseKey = this.viewModel.baseKey;
+    private readonly router = inject(Router);
+    protected readonly viewModel = computed(() => buildSeoLandingViewModel(this.seoPage()));
     protected readonly home = localizedPublicPath('/', publicSiteLocale(this.router.url));
-    protected readonly hero = this.viewModel.hero;
-    protected readonly audience = this.viewModel.audience;
-    protected readonly features = this.viewModel.features;
-    protected readonly steps = this.viewModel.steps;
-    protected readonly faq = this.viewModel.faq;
-    protected readonly cta = this.viewModel.cta;
-    protected readonly relatedPages = this.viewModel.relatedPages;
 }

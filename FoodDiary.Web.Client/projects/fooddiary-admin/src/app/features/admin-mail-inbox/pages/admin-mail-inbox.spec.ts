@@ -273,12 +273,13 @@ describe('admin inbox requests', () => {
             PAGE_SIZE,
             expect.objectContaining({
                 category: 'dmarc-report',
-                search: 'Draft subject',
+                search: 'Current',
                 fromAddress: 'sender@example.test',
                 unread: undefined,
             }),
         );
         expect(router.parseUrl(router.url).queryParamMap.get('search')).toBe('Current');
+        expect(subject.value).toBe('Draft subject');
         expect(attach.mock.lastCall?.[0].read()).toMatchObject({
             loading: true,
             items: [{ id: currentMail.id, readAtUtc: currentMail.receivedAtUtc }, { id: 'another' }],
@@ -295,13 +296,19 @@ describe('admin inbox request recovery', () => {
             .fn<AdminMailInboxFacade['getMessagePage']>()
             .mockReturnValueOnce(throwError(() => new Error('Inbox unavailable')))
             .mockReturnValue(of({ items: [], totalItems: 0 }));
-        const { element, harness } = await setupInboxAsync(`${INBOX}?period=custom&from=2026-10-07&to=2026-10-06`, getMessagePage);
+        const { element, harness, router } = await setupInboxAsync(`${INBOX}?period=custom&from=2026-10-07&to=2026-10-06`, getMessagePage);
         requireNamedButton(element, 'Refresh').click();
         expect(getMessagePage).not.toHaveBeenCalled();
 
-        await harness.navigateByUrl(`${INBOX}?recipient=support@example.test&category=general`);
+        await harness.navigateByUrl(`${INBOX}?fromAddress=sender@example.test&category=general`);
         await renderInboxAsync(harness);
         expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LIST_LOAD_ERROR');
+        const sender = element.querySelector<HTMLInputElement>('input[aria-label="ADMIN_MAIL_INBOX.SENDER_FILTER"]');
+        if (sender === null) {
+            throw new Error('Expected the inbox sender filter');
+        }
+        sender.value = 'draft@example.test';
+        sender.dispatchEvent(new Event('input', { bubbles: true }));
         requireNamedButton(element, 'Refresh').click();
         await renderInboxAsync(harness);
         expect(element.querySelector('[role="alert"]')).toBeNull();
@@ -310,8 +317,10 @@ describe('admin inbox request recovery', () => {
         expect(getMessagePage).toHaveBeenLastCalledWith(
             1,
             PAGE_SIZE,
-            expect.objectContaining({ recipient: 'support@example.test', category: 'general' }),
+            expect.objectContaining({ fromAddress: 'sender@example.test', category: 'general' }),
         );
+        expect(router.parseUrl(router.url).queryParamMap.get('fromAddress')).toBe('sender@example.test');
+        expect(sender.value).toBe('draft@example.test');
     });
 });
 

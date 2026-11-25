@@ -123,6 +123,7 @@ dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 dotnet_diagnostic.IDE0305.severity = error
 dotnet_diagnostic.IDE0410.severity = error
+dotnet_diagnostic.IDE1006.severity = error
 dotnet_diagnostic.IDE2000.severity = error
 dotnet_diagnostic.ASP0015.severity = error
 dotnet_diagnostic.RCS1021.severity = error

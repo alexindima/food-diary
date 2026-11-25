@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2953,
-    "symbols": 886,
-    "routes": 115,
+    "typescriptFiles": 2960,
+    "symbols": 890,
+    "routes": 117,
     "features": 46,
-    "specs": 969,
+    "specs": 970,
     "localeFiles": 5,
     "roles": {
-      "Component": 508,
+      "Component": 511,
       "Directive": 22,
       "Facade": 92,
       "Other": 42,
       "Pipe": 5,
-      "Service": 217
+      "Service": 218
     }
   },
   "features": [
@@ -298,10 +298,14 @@
       "name": "admin-mail-inbox",
       "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox",
       "symbols": [
+        "AdminDmarcComponent",
+        "AdminDmarcReportsComponent",
         "AdminMailInboxComponent",
         "AdminMailInboxFacade",
+        "AdminMailInboxPreferences",
         "AdminMailInboxService",
-        "AdminMailMessageDialogComponent"
+        "AdminMailMessageDialogComponent",
+        "AdminMailboxViewsComponent"
       ],
       "routes": [
         ""
@@ -309,6 +313,7 @@
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-dmarc-summary.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-feedback.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.spec.ts"
       ]
@@ -2497,7 +2502,7 @@
       "role": "Component",
       "selector": "fd-admin-sign-in",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.ts",
-      "line": 22
+      "line": 36
     },
     {
       "name": "AdminBillingService",
@@ -2766,11 +2771,32 @@
       "line": 23
     },
     {
+      "name": "AdminDmarcReportsComponent",
+      "role": "Component",
+      "selector": "fd-admin-dmarc-reports",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.ts",
+      "line": 20
+    },
+    {
+      "name": "AdminMailboxViewsComponent",
+      "role": "Component",
+      "selector": "fd-admin-mailbox-views",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.ts",
+      "line": 14
+    },
+    {
       "name": "AdminMailMessageDialogComponent",
       "role": "Component",
       "selector": "fd-admin-mail-message-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
       "line": 34
+    },
+    {
+      "name": "AdminMailInboxPreferences",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-mail-inbox-preferences.ts",
+      "line": 14
     },
     {
       "name": "AdminMailInboxFacade",
@@ -2780,11 +2806,18 @@
       "line": 14
     },
     {
+      "name": "AdminDmarcComponent",
+      "role": "Component",
+      "selector": "fd-admin-dmarc",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.ts",
+      "line": 34
+    },
+    {
       "name": "AdminMailInboxComponent",
       "role": "Component",
       "selector": "fd-admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "line": 60
+      "line": 63
     },
     {
       "name": "AdminMealPlansService",
@@ -2952,7 +2985,7 @@
       "role": "Component",
       "selector": "fd-admin-unauthorized",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.ts",
-      "line": 17
+      "line": 20
     },
     {
       "name": "AdminRetentionService",
@@ -3225,7 +3258,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-mail-inbox.service.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "AdminMealPlansSdk",
@@ -4975,7 +5008,7 @@
       "role": "Component",
       "selector": "fd-lesson-detail-page",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.ts",
-      "line": 36
+      "line": 34
     },
     {
       "name": "LessonDetailContentComponent",
@@ -8014,34 +8047,39 @@
       "line": 67
     },
     {
-      "path": "daily-advices",
+      "path": "mail-dmarc",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 71
     },
     {
-      "path": "lessons",
+      "path": "daily-advices",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 75
     },
     {
-      "path": "achievements",
+      "path": "lessons",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 79
     },
     {
-      "path": "moderation",
+      "path": "achievements",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 83
     },
     {
-      "path": "unauthorized",
+      "path": "moderation",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 87
     },
     {
-      "path": "**",
+      "path": "unauthorized",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 91
+    },
+    {
+      "path": "**",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
+      "line": 95
     },
     {
       "path": "",
@@ -8106,7 +8144,12 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
-      "line": 14
+      "line": 15
+    },
+    {
+      "path": "",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
+      "line": 24
     },
     {
       "path": "",
@@ -8522,8 +8565,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1563,
-      "russianProperties": 1563,
+      "englishProperties": 1601,
+      "russianProperties": 1601,
       "countsMatch": true
     },
     {

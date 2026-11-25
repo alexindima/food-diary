@@ -1,4 +1,6 @@
 <div class="seo-landing">
+    @let page = viewModel();
+    @let hero = page.hero;
     <section class="seo-landing__hero">
         <div class="seo-landing__container seo-landing__container--hero">
             <div class="seo-landing__hero-copy">
@@ -33,9 +35,9 @@
     </section>
 
     @defer (on immediate; hydrate on viewport; hydrate on interaction) {
-        <fd-seo-landing-content-sections [audience]="audience" [features]="features" [steps]="steps" [faq]="faq" />
+        <fd-seo-landing-content-sections [audience]="page.audience" [features]="page.features" [steps]="page.steps" [faq]="page.faq" />
     }
     @defer (on immediate; hydrate on viewport; hydrate on interaction) {
-        <fd-seo-landing-footer-sections [relatedPages]="relatedPages" [cta]="cta" [home]="home" />
+        <fd-seo-landing-footer-sections [relatedPages]="page.relatedPages" [cta]="page.cta" [home]="home" />
     }
 </div>

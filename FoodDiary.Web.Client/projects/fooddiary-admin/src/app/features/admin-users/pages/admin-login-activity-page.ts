@@ -50,10 +50,7 @@ export class AdminLoginActivityPageComponent {
         userId: this.userId() ?? '',
         periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
     }));
-    private readonly request = linkedSignal(() => {
-        const { page, search, filters } = this.appliedQuery();
-        return this.buildRequest(page, search, filters);
-    });
+    private readonly request = linkedSignal(() => this.buildRequest());
     private readonly loginEventsResource = rxResource({
         params: this.request,
         stream: ({ params }) =>
@@ -116,16 +113,11 @@ export class AdminLoginActivityPageComponent {
     }
 
     protected loadLoginEvents(): void {
-        this.request.set(
-            this.buildRequest(this.loginEventsPage(), this.loginEventsSearch(), {
-                provider: this.firstFilter(),
-                device: this.secondFilter(),
-            }),
-        );
+        this.request.set(this.buildRequest());
     }
 
-    private buildRequest(page: number, search: string, filters: Record<string, string>): LoginEventsRequest | undefined {
-        const { periodParams, userId } = this.appliedQuery();
+    private buildRequest(): LoginEventsRequest | undefined {
+        const { page, search, filters, periodParams, userId } = this.appliedQuery();
         const range = adminPeriod(periodParams);
         if (range === null) {
             return undefined;

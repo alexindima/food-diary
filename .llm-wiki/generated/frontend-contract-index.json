@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 518,
-    "componentsWithoutDirectSpecs": 125,
-    "inputs": 1877,
-    "outputs": 567,
+    "components": 521,
+    "componentsWithoutDirectSpecs": 128,
+    "inputs": 1893,
+    "outputs": 569,
     "apiCalls": 344,
-    "templatesWithTranslations": 377,
-    "translationKeys": 2316,
-    "consumerEdges": 1360,
-    "consumedComponents": 332,
-    "unconsumedComponents": 185
+    "templatesWithTranslations": 380,
+    "translationKeys": 2346,
+    "consumerEdges": 1368,
+    "consumedComponents": 334,
+    "unconsumedComponents": 186
   },
   "components": [
     {
@@ -332,7 +332,18 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "confirm",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "returnUrl",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.spec.ts"
     },
@@ -944,6 +955,44 @@
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.spec.ts"
     },
     {
+      "class": "AdminDmarcComponent",
+      "selector": "fd-admin-dmarc",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.scss"
+      ],
+      "inputs": [
+        {
+          "name": "period",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminDmarcReportsComponent",
+      "selector": "fd-admin-dmarc-reports",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.scss"
+      ],
+      "inputs": [
+        {
+          "name": "data",
+          "type": "AdminDmarcView",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminMailInboxComponent",
       "selector": "fd-admin-mail-inbox",
       "feature": "admin-mail-inbox",
@@ -953,6 +1002,11 @@
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.scss"
       ],
       "inputs": [
+        {
+          "name": "feedbackMailbox",
+          "type": "",
+          "required": false
+        },
         {
           "name": "page",
           "type": "",
@@ -1019,6 +1073,37 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts"
+    },
+    {
+      "class": "AdminMailboxViewsComponent",
+      "selector": "fd-admin-mailbox-views",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "hiddenRecipients",
+          "type": "readonly IncomingMailbox[]",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "recipientSelected",
+          "type": "string"
+        },
+        {
+          "name": "recipientVisibilityChanged",
+          "type": "{ recipient: IncomingMailbox; hidden: boolean }"
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "AdminMealPlanEditorComponent",
@@ -1456,7 +1541,18 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "reason",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "returnUrl",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.spec.ts"
     },
@@ -1998,7 +2094,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "adminReturnUrl",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -2367,7 +2469,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "returnUrl",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.spec.ts"
     },
@@ -4486,7 +4594,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "invitationId",
+          "type": "string",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.spec.ts"
     },
@@ -9676,7 +9790,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.spec.ts"
     },
@@ -9886,7 +10006,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.spec.ts"
     },
@@ -13008,7 +13134,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "publicPageKey",
+          "type": "string",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -13127,7 +13259,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "seoPage",
+          "type": "",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -19468,7 +19606,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/mail-inbox/messages",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "line": 62,
+      "line": 67,
       "publicMethod": "getMessages",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/mail-inbox/messages`",
@@ -19480,7 +19618,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/mail-inbox/messages/{id}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "line": 68,
+      "line": 73,
       "publicMethod": "getMessage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/mail-inbox/messages`",
@@ -19492,7 +19630,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/mail-inbox/messages/{id}/read",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "line": 74,
+      "line": 79,
       "publicMethod": "markMessageRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/mail-inbox/messages`",
@@ -23465,6 +23603,32 @@
     },
     {
       "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.html",
+      "keys": [
+        "ADMIN_DMARC.ALL_REPORT_EMAILS",
+        "ADMIN_DMARC.DOMAIN",
+        "ADMIN_DMARC.LOADED",
+        "ADMIN_DMARC.NO_REPORTS",
+        "ADMIN_DMARC.OPEN_REPORT",
+        "ADMIN_DMARC.ORIGINAL",
+        "ADMIN_DMARC.RECEIVED",
+        "ADMIN_DMARC.REPORTER",
+        "ADMIN_DMARC.REPORTS",
+        "ADMIN_DMARC.SOURCE_STATUS"
+      ]
+    },
+    {
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.html",
+      "keys": [
+        "ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES",
+        "ADMIN_MAIL_INBOX.MAILBOX_PREFERENCES_HINT",
+        "ADMIN_MAIL_INBOX.MAIN_INBOX",
+        "ADMIN_MAIL_INBOX.RECIPIENT_VIEWS"
+      ]
+    },
+    {
+      "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "keys": [
         "ADMIN_COMMON.RETRY",
@@ -23489,12 +23653,35 @@
     },
     {
       "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_DMARC.COMPLETED_DAYS",
+        "ADMIN_DMARC.COUNTED_REPORTS",
+        "ADMIN_DMARC.DEDUPLICATION",
+        "ADMIN_DMARC.FAILED",
+        "ADMIN_DMARC.FAILURE_RATE",
+        "ADMIN_DMARC.FIRST_REPORTED",
+        "ADMIN_DMARC.HEADING",
+        "ADMIN_DMARC.MESSAGES",
+        "ADMIN_DMARC.NO_VERIFIED_REPORTS",
+        "ADMIN_DMARC.PARTIAL",
+        "ADMIN_DMARC.PASSED",
+        "ADMIN_DMARC.PERIOD",
+        "ADMIN_DMARC.SOURCES",
+        "ADMIN_DMARC.SOURCE_IP",
+        "ADMIN_DMARC.UNKNOWN"
+      ]
+    },
+    {
+      "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "keys": [
         "ADMIN_COMMON.APPLY",
         "ADMIN_FEEDBACK.ADDRESS_HINT",
         "ADMIN_MAIL_INBOX.ALL",
         "ADMIN_MAIL_INBOX.ALL_MESSAGES",
+        "ADMIN_MAIL_INBOX.DEFAULT_CATEGORY",
         "ADMIN_MAIL_INBOX.HEADER_FROM",
         "ADMIN_MAIL_INBOX.LIST_LOAD_ERROR",
         "ADMIN_MAIL_INBOX.MAIL",
@@ -28333,6 +28520,18 @@
       "outputsHandled": []
     },
     {
+      "component": "AdminDmarcReportsComponent",
+      "selector": "fd-admin-dmarc-reports",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "data"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "AdminLoadErrorComponent",
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
@@ -28422,6 +28621,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-lessons",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": [
@@ -28601,6 +28812,22 @@
       ],
       "outputsHandled": [
         "pageChange"
+      ]
+    },
+    {
+      "component": "AdminMailboxViewsComponent",
+      "selector": "fd-admin-mailbox-views",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "hiddenRecipients",
+        "recipient"
+      ],
+      "outputsHandled": [
+        "recipientSelected",
+        "recipientVisibilityChanged"
       ]
     },
     {
@@ -31615,6 +31842,34 @@
         "disabled",
         "disabledReason",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-dmarc-reports.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "ariaExpanded",
+        "ariaPressed",
+        "size",
         "variant"
       ],
       "outputsHandled": []
@@ -35679,6 +35934,16 @@
       "component": "FdUiCardComponent",
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "occurrences": 3,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "admin-retention",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.html",
       "occurrences": 2,
@@ -36555,6 +36820,21 @@
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/components/admin-mailbox-views.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "checked",
+        "label"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
     },
     {
       "component": "FdUiCheckboxComponent",
@@ -42519,6 +42799,24 @@
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "options",
+        "selectedValue",
+        "size",
+        "stackOnNarrow"
       ],
       "outputsHandled": [
         "selectedValueChange"

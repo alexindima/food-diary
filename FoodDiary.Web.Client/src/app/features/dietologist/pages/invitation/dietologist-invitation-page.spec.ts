@@ -109,9 +109,12 @@ describe('DietologistInvitationPageComponent invitation lifecycle', () => {
 
         invitationButton('DIETOLOGIST_INVITATION.ACCEPT').click();
         expect(dietologistService.acceptInvitationForCurrentUser).toHaveBeenCalledExactlyOnceWith(first.invitationId);
+        expect(pending.observed).toBe(true);
         routeParams.next(convertToParamMap({ invitationId: second.invitationId }));
+        expect(pending.observed).toBe(false);
         pending.next();
         pending.complete();
+        fixture.componentRef.setInput('invitationId', second.invitationId);
         fixture.detectChanges();
 
         expect(dietologistService.getInvitationForCurrentUser).toHaveBeenLastCalledWith(second.invitationId);
@@ -200,6 +203,7 @@ describe('DietologistInvitationPageComponent route changes', () => {
         dietologistService.getInvitationForCurrentUser.mockReturnValueOnce(oldRequest).mockReturnValueOnce(of(newInvitation));
         createComponent();
         routeParams.next(convertToParamMap({ invitationId: entityId<'dietologist-invitation'>('inv-2') }));
+        fixture.componentRef.setInput('invitationId', newInvitation.invitationId);
         oldRequest.next({ ...newInvitation, invitationId: entityId<'dietologist-invitation'>('inv-1'), status: 'Revoked' });
         fixture.detectChanges();
         expect(component['state']()).toBe('ready');
@@ -271,17 +275,13 @@ function createComponent(): void {
             { provide: AuthService, useValue: authService },
             {
                 provide: ActivatedRoute,
-                useValue: {
-                    paramMap: routeParams.asObservable(),
-                    snapshot: {
-                        paramMap: convertToParamMap({ invitationId: entityId<'dietologist-invitation'>('inv-1') }),
-                    },
-                },
+                useValue: { paramMap: routeParams.asObservable() },
             },
         ],
     });
 
     fixture = TestBed.createComponent(DietologistInvitationPageComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('invitationId', routeParams.value.get('invitationId') ?? undefined);
     fixture.detectChanges();
 }

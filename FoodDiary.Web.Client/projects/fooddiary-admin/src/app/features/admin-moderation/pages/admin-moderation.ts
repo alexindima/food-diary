@@ -91,7 +91,7 @@ export class AdminModerationComponent {
             targetId: query.targetId ?? '',
         };
     });
-    private readonly request = linkedSignal(() => this.buildRequest(this.appliedFilters()));
+    private readonly request = linkedSignal(() => this.buildRequest());
     private readonly reportsResource = rxResource({
         params: this.request,
         stream: ({ params }) =>
@@ -129,15 +129,7 @@ export class AdminModerationComponent {
     protected readonly limit = ADMIN_MODERATION_PAGE_SIZE;
 
     protected loadReports(): void {
-        this.request.set(
-            this.buildRequest({
-                page: this.pageNumber(),
-                status: this.statusFilter(),
-                targetType: this.draftTargetType(),
-                reporterId: this.draftReporterId(),
-                targetId: this.draftTargetId(),
-            }),
-        );
+        this.request.set(this.buildRequest());
     }
 
     protected applyFilters(): void {
@@ -182,7 +174,8 @@ export class AdminModerationComponent {
         return value === null || value === undefined ? '-' : formatDate(value, 'short', this.locale);
     }
 
-    private buildRequest({ page, status, ...filters }: ReportFilters): ReportRequest | undefined {
+    private buildRequest(): ReportRequest | undefined {
+        const { page, status, ...filters } = this.appliedFilters();
         const { period, from, to } = this.query();
         const range = adminPeriod(convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }));
         return range === null ? undefined : { page, status: adminQueryValue(status), filters: { ...adminUtcPeriod(range), ...filters } };

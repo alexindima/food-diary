@@ -98,7 +98,7 @@ describe.each(historyRoutes)('Protected history route $path', ({ path, filters, 
         expect(harness.routeNativeElement?.textContent).toContain(emptyText);
     });
 
-    it('retries the applied period with the current filter draft and corrects an obsolete page', async () => {
+    it('retries with the applied period and filters and corrects an obsolete page', async () => {
         request.mockReturnValueOnce(throwError(() => new Error('Load failed')));
         request.mockReturnValueOnce(
             of({ items: [], page: LARGE_PAGE, limit: PAGE_SIZE, totalPages: SECOND_PAGE, totalItems: TWO_PAGES_OF_ITEMS }),
@@ -136,7 +136,7 @@ describe.each(historyRoutes)('Protected history route $path', ({ path, filters, 
         harness.detectChanges();
         expect(request.mock.calls).toEqual([
             [LARGE_PAGE, PAGE_SIZE, 'admin', expectedFilters],
-            [LARGE_PAGE, PAGE_SIZE, 'admin', { ...expectedFilters, [firstFilter.key]: draft }],
+            [LARGE_PAGE, PAGE_SIZE, 'admin', expectedFilters],
             [SECOND_PAGE, PAGE_SIZE, 'admin', expectedFilters],
         ]);
         expect(router.parseUrl(router.url).queryParamMap.get(firstFilter.key)).toBe(params.get(firstFilter.key));

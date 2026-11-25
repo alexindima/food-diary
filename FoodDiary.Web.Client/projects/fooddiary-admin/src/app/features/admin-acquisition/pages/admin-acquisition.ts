@@ -81,7 +81,7 @@ export class AdminAcquisitionComponent {
         };
     });
     protected readonly eventPageSize = 50;
-    private readonly requestedReport = linkedSignal(() => this.buildRequest(this.appliedQuery().filters));
+    private readonly requestedReport = linkedSignal(() => this.buildRequest());
     private readonly reportResource = rxResource({
         params: this.requestedReport,
         stream: ({ params }) =>
@@ -140,13 +140,11 @@ export class AdminAcquisitionComponent {
         return ((data.attributedVisits / data.visits) * PERCENT_SCALE).toFixed(1);
     });
     protected loadSummary(): void {
-        this.requestedReport.set(
-            this.buildRequest({ search: this.eventSearch(), eventType: this.eventTypeFilter(), channel: this.channelFilter() }),
-        );
+        this.requestedReport.set(this.buildRequest());
     }
 
-    private buildRequest(filters: AcquisitionEventFilters): AcquisitionReportQuery | undefined {
-        const { page, periodParams } = this.appliedQuery();
+    private buildRequest(): AcquisitionReportQuery | undefined {
+        const { filters, page, periodParams } = this.appliedQuery();
         const range = adminPeriod(periodParams, '30d');
         if (range === null) {
             return undefined;

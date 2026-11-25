@@ -198,7 +198,7 @@ describe('AdminModerationComponent loading and pagination', () => {
         expect(element(fixture).querySelector('fd-ui-pagination [aria-current="page"]')?.textContent.trim()).toBe('2');
     });
 
-    it('shows a load error and retries the same filters before rendering an empty response', async () => {
+    it('retries the applied filters despite an edited draft and renders an empty response', async () => {
         const pending = new Subject<ReportPage>();
         getReports.mockReturnValueOnce(pending).mockReturnValueOnce(of(reportPage([])));
         const fixture = await renderAsync('?status=Reviewed&reporterId=reporter-2', true);
@@ -206,10 +206,15 @@ describe('AdminModerationComponent loading and pagination', () => {
         await settleAsync(fixture);
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
         expect(element(fixture).querySelector('tbody')).toBeNull();
+        const router = TestBed.inject(Router);
+        const appliedUrl = router.url;
+        edit(fixture, 'ADMIN_MODERATION.REPORTER_ID', 'draft-reporter');
         button(fixture, 'ADMIN_COMMON.RETRY').click();
         await settleAsync(fixture);
         expect(getReports).toHaveBeenCalledTimes(2);
         expect(getReports).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'Reviewed', { targetType: '', reporterId: 'reporter-2', targetId: '' });
+        expect(router.url).toBe(appliedUrl);
+        expect(input(fixture, 'ADMIN_MODERATION.REPORTER_ID').value).toBe('draft-reporter');
         expect(element(fixture).querySelector('[role="alert"]')).toBeNull();
         expect(element(fixture).textContent).toContain('ADMIN_COMMON.EMPTY');
     });
@@ -240,11 +245,13 @@ describe('AdminModerationComponent report actions', () => {
         );
         expect(element(fixture).querySelector('.reason-cell')?.textContent).toBe(REPORT.reason);
     });
+});
 
+describe('AdminModerationComponent report decisions', () => {
     it.each(['review', 'dismiss'] as const)(
-        'passes %s and the selected report to the dialog, refreshing only after confirmation',
+        'passes %s and the selected report to the dialog, refreshing the applied filters only after confirmation',
         async action => {
-            const fixture = await renderAsync();
+            const fixture = await renderAsync('?reporterId=reporter-1');
             const label = action === 'review' ? 'ADMIN_MODERATION.REVIEW' : 'ADMIN_MODERATION.DISMISS';
             button(fixture, label).click();
             const [component, options] = required(open.mock.calls[0]);
@@ -257,6 +264,7 @@ describe('AdminModerationComponent report actions', () => {
             closed.complete();
             await settleAsync(fixture);
             expect(getReports).toHaveBeenCalledTimes(1);
+            edit(fixture, 'ADMIN_MODERATION.REPORTER_ID', 'draft-reporter');
             closed = new Subject<AdminModerationActionDialogResult | undefined>();
             button(fixture, label).click();
             expect(open).toHaveBeenCalledTimes(2);
@@ -264,6 +272,13 @@ describe('AdminModerationComponent report actions', () => {
             closed.next({ confirmed: true });
             await settleAsync(fixture);
             expect(getReports).toHaveBeenCalledTimes(2);
+            expect(getReports).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'Pending', {
+                targetType: '',
+                reporterId: 'reporter-1',
+                targetId: '',
+            });
+            expect(TestBed.inject(Router).url).toBe('/?reporterId=reporter-1');
+            expect(input(fixture, 'ADMIN_MODERATION.REPORTER_ID').value).toBe('draft-reporter');
             expect(element(fixture).querySelector('.action-buttons')).toBeNull();
             expect(element(fixture).querySelector('.status-badge')?.textContent.trim()).toBe(
                 action === 'review' ? 'Reviewed' : 'Dismissed',

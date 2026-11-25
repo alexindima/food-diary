@@ -1,5 +1,5 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
-    @if (feedbackView) {
+    @if (feedbackMailbox()) {
         <p class="fd-ui-text-muted">{{ 'ADMIN_FEEDBACK.ADDRESS_HINT' | translate }}</p>
     } @else {
         <fd-admin-mailbox-views
@@ -18,7 +18,7 @@
         >
     </div>
     @if (recordId()) {
-        <a queryParamsHandling="merge" [routerLink]="inboxPath" [queryParams]="{ id: null, page: 1 }">{{
+        <a queryParamsHandling="merge" [routerLink]="inboxPath()" [queryParams]="{ id: null, page: 1 }">{{
             'ADMIN_MAIL_INBOX.ALL_MESSAGES' | translate
         }}</a>
     }
@@ -35,7 +35,7 @@
             (valueChange)="senderFilter.set($event?.toString() ?? '')"
         />
 
-        @if (!feedbackView) {
+        @if (!feedbackMailbox()) {
             <fd-ui-input
                 [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
                 [value]="recipientFilter()"
@@ -113,7 +113,7 @@
                                     <a
                                         queryParamsHandling="merge"
                                         fdUiStopActivation
-                                        [routerLink]="inboxPath"
+                                        [routerLink]="inboxPath()"
                                         [queryParams]="{ id: message.id, page: 1 }"
                                         >{{ 'ADMIN_MAIL_INBOX.PERMALINK' | translate }}</a
                                     >

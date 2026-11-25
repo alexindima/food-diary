@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, filter, finalize, map, type Observable, of, switchMap, takeUntil } from 'rxjs';
+import { catchError, filter, finalize, type Observable, of, switchMap, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -24,6 +24,8 @@ type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expi
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DietologistInvitationPageComponent {
+    public readonly invitationId = input<string>();
+
     private readonly route = inject(ActivatedRoute);
     private readonly dietologistFacade = inject(DietologistFacade);
     private readonly navigationService = inject(NavigationService);
@@ -32,20 +34,19 @@ export class DietologistInvitationPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly currentLanguage = signal(this.resolveCurrentLanguage());
 
-    private readonly invitationId = toSignal(this.route.paramMap.pipe(map(params => params.get('invitationId'))), { initialValue: null });
     private readonly invitationResource = rxResource({
         params: () => {
             const id = this.invitationId();
-            return id !== null && id.length > 0 ? id : undefined;
+            return id !== undefined && id.length > 0 ? id : undefined;
         },
         stream: ({ params }) => this.dietologistFacade.getInvitationForCurrentUser(entityId<'dietologist-invitation'>(params)),
     });
     protected readonly invitation = computed(() => (this.invitationResource.hasValue() ? this.invitationResource.value() : null));
-    private readonly actionState = linkedSignal<string | null, 'accepted' | 'declined' | null>({
+    private readonly actionState = linkedSignal<string | undefined, 'accepted' | 'declined' | null>({
         source: this.invitationId,
         computation: () => null,
     });
-    private readonly actionError = linkedSignal<string | null, string | null>({
+    private readonly actionError = linkedSignal<string | undefined, string | null>({
         source: this.invitationId,
         computation: () => null,
     });
@@ -153,6 +154,7 @@ export class DietologistInvitationPageComponent {
     }
 
     private invitationChanged(invitationId: string): Observable<unknown> {
+        // The router emits params before updating inputs on a reused page.
         return this.route.paramMap.pipe(filter(params => params.get('invitationId') !== invitationId));
     }
 

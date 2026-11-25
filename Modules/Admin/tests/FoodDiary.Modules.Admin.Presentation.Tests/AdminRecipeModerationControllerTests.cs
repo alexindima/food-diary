@@ -85,15 +85,15 @@ public sealed class AdminRecipeModerationControllerTests : IDisposable {
 
     [Fact]
     public async Task ResolveRecipe_TrimsTheReasonWhenRequestingChangesAsync() {
-        const string Reason = "Replace the cover photo.";
-        _administration.ResolveAsync(_revisionId, _actorId, approve: false, Reason, _request.Token)
+        const string reason = "Replace the cover photo.";
+        _administration.ResolveAsync(_revisionId, _actorId, approve: false, reason, _request.Token)
             .Returns(RecipeModerationActionOutcome.Applied);
 
         IActionResult result = await CreateController().ResolveRecipe(
-            _revisionId, _actorId, new AdminRecipeModerationResolveHttpRequest(Approve: false, $"  {Reason}  "));
+            _revisionId, _actorId, new AdminRecipeModerationResolveHttpRequest(Approve: false, $"  {reason}  "));
 
         Assert.IsType<NoContentResult>(result);
-        await _administration.Received(1).ResolveAsync(_revisionId, _actorId, approve: false, Reason, _request.Token);
+        await _administration.Received(1).ResolveAsync(_revisionId, _actorId, approve: false, reason, _request.Token);
     }
 
     [Fact]

@@ -2,7 +2,7 @@
     <fd-ui-card appearance="entry" density="relaxed" class="admin-sign-in">
         <div class="fd-stack fd-gap-md">
             <h1 id="admin-sign-in-title" class="fd-page-title">{{ 'ADMIN_AUTH.SIGN_IN_TITLE' | translate }}</h1>
-            @if (confirm) {
+            @if (confirmationRequired()) {
                 <p class="fd-ui-body-sm">{{ 'ADMIN_AUTH.SIGN_IN_HINT' | translate }}</p>
                 <form method="post" class="fd-stack fd-gap-md" [formRoot]="loginForm" [attr.aria-busy]="submitting()">
                     <fd-ui-input

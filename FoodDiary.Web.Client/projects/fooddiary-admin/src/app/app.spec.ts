@@ -10,7 +10,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { stubScrollIntoView } from '../../../../src/testing/dom-testing';
 import { AppComponent } from './app';
 
-const ADMIN_ROUTE_COUNT = 21;
+const ADMIN_ROUTE_COUNT = 22;
 
 @Component({ template: '<p>Section content</p>' })
 class AdminSectionStubComponent {}
@@ -30,6 +30,7 @@ async function createShellAsync(): Promise<ComponentFixture<AppComponent>> {
                 { path: 'users', component: AdminSectionStubComponent },
                 { path: 'users/login-activity', component: AdminSectionStubComponent },
                 { path: 'mail-inbox', component: AdminSectionStubComponent },
+                { path: 'mail-dmarc', component: AdminSectionStubComponent },
                 { path: 'outgoing-emails', component: AdminSectionStubComponent },
                 { path: 'sign-in', component: AdminSectionStubComponent },
             ]),
@@ -71,6 +72,7 @@ describe('AppComponent', () => {
         const options = TestBed.inject(DOCUMENT).querySelectorAll('[role=option]');
         expect(options).toHaveLength(ADMIN_ROUTE_COUNT);
         expect(Array.from(options).some(option => option.textContent.includes('ADMIN_FEEDBACK.TITLE'))).toBe(true);
+        expect(Array.from(options).some(option => option.textContent.includes('ADMIN_DMARC.TAB'))).toBe(true);
     });
 });
 
@@ -164,6 +166,10 @@ describe('admin shell navigation', () => {
         await router.navigateByUrl('/outgoing-emails');
         await renderShellAsync(fixture);
         expect(element.querySelector('fd-ui-tabs [aria-current="page"]')?.getAttribute('href')).toBe('/outgoing-emails');
+
+        await router.navigateByUrl('/mail-dmarc');
+        await renderShellAsync(fixture);
+        expect(element.querySelector('fd-ui-tabs [aria-current="page"]')?.getAttribute('href')).toBe('/mail-dmarc');
 
         await router.navigateByUrl('/sign-in');
         await renderShellAsync(fixture);

@@ -6,7 +6,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import ruCore from '../../../../../../../assets/i18n/ru/core.json';
@@ -210,10 +210,11 @@ describe('AdminUsersComponent dialogs', () => {
         expect(router.parseUrl(router.url).queryParams).toEqual({ page: '2', status: 'inactive' });
     });
 
-    it('reloads the first page once with the applied filters after account creation', async () => {
+    it.each([FIRST_PAGE, SECOND_PAGE])('reloads page one with applied filters after account creation from page %s', async page => {
         const router = TestBed.inject(Router);
-        await router.navigate([], { queryParams: { page: SECOND_PAGE, status: 'inactive' } });
+        await router.navigate([], { queryParams: { page, status: 'inactive', role: 'Support' } });
         await fixture.whenStable();
+        component['draftRole'].set('Admin');
         const close$ = new Subject<boolean>();
         dialogService.open.mockReturnValue({
             afterClosed: () => close$.asObservable(),
@@ -226,12 +227,12 @@ describe('AdminUsersComponent dialogs', () => {
         await fixture.whenStable();
 
         expect(dialogService.open).toHaveBeenCalled();
-        expect(router.parseUrl(router.url).queryParams).toEqual({ page: '1', status: 'inactive' });
+        expect(router.parseUrl(router.url).queryParams).toEqual({ page: '1', status: 'inactive', role: 'Support' });
         expect(usersService.getUsers).toHaveBeenCalledExactlyOnceWith(
             FIRST_PAGE,
             PAGE_SIZE,
             null,
-            expect.objectContaining({ status: 'inactive' }),
+            expect.objectContaining({ status: 'inactive', role: 'Support' }),
         );
     });
 
@@ -347,6 +348,23 @@ describe('Admin users filters and pagination', () => {
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
         expect(root.querySelector('tbody')?.textContent).toContain(pagedUsers.items[0].email);
     });
+});
+
+it('retries the applied role while keeping the edited role available', async () => {
+    await setupComponentAsync();
+    const router = TestBed.inject(Router);
+    usersService.getUsers.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
+    await router.navigateByUrl('/?role=Support');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    component['draftRole'].set('Admin');
+    findControl(fixture.nativeElement as HTMLElement, 'fd-admin-load-error button').click();
+    await fixture.whenStable();
+
+    expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, expect.objectContaining({ role: 'Support' }));
+    expect(router.url).toBe('/?role=Support');
+    expect(component['draftRole']()).toBe('Admin');
 });
 
 it('restores the first active page when the status select model is cleared', async () => {

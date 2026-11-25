@@ -61,6 +61,7 @@ const DEFAULT_MAIL_INBOX_LIMIT = 50;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminMailInboxComponent {
+    public readonly feedbackMailbox = input(false);
     public readonly page = input(undefined, { transform: firstAdminQueryValue });
     public readonly search = input(undefined, { transform: firstAdminQueryValue });
     public readonly recipient = input(undefined, { transform: firstAdminQueryValue });
@@ -77,8 +78,7 @@ export class AdminMailInboxComponent {
     private readonly preferences = inject(AdminMailInboxPreferences);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    protected readonly feedbackView = this.route.snapshot.data['feedbackMailbox'] === true;
-    protected readonly inboxPath = this.feedbackView ? '/feedback' : '/mail-inbox';
+    protected readonly inboxPath = computed(() => (this.feedbackMailbox() ? '/feedback' : '/mail-inbox'));
     private readonly appliedQuery = computed(() => ({
         page: this.page(),
         search: this.search(),
@@ -92,7 +92,7 @@ export class AdminMailInboxComponent {
         id: this.id(),
     }));
     protected readonly recordId = computed(() => this.appliedQuery().id ?? null);
-    protected readonly selectedRecipient = computed(() => (this.feedbackView ? FEEDBACK_MAILBOX : (this.recipient()?.trim() ?? '')));
+    protected readonly selectedRecipient = computed(() => (this.feedbackMailbox() ? FEEDBACK_MAILBOX : (this.recipient()?.trim() ?? '')));
     private readonly appliedCategory = computed<InboxFilterDraft['category']>(() => {
         const category = this.category();
         if (category === 'all' || category === 'general' || category === 'dmarc-report') {
@@ -111,6 +111,16 @@ export class AdminMailInboxComponent {
         };
     });
     protected readonly hiddenRecipients = this.preferences.hiddenRecipients;
+    private readonly excludedRecipients = computed(() => {
+        if (this.recordId() !== null || this.selectedRecipient() !== '' || this.appliedCategory() === 'dmarc-report') {
+            return;
+        }
+        const hidden = this.hiddenRecipients();
+        if (this.appliedCategory() === 'inbox') {
+            return [DMARC_MAILBOX, ...hidden];
+        }
+        return hidden.length > 0 ? hidden : undefined;
+    });
     protected readonly subjectFilter = linkedSignal(() => this.appliedFilters().search);
     protected readonly senderFilter = linkedSignal(() => this.appliedFilters().fromAddress);
     protected readonly recipientFilter = linkedSignal(() => this.appliedFilters().recipient);
@@ -118,7 +128,7 @@ export class AdminMailInboxComponent {
     protected readonly categoryFilter = linkedSignal(() => this.appliedFilters().category);
     protected readonly pageSize = DEFAULT_MAIL_INBOX_LIMIT;
     protected readonly pageNumber = computed(() => adminPage(this.appliedQuery().page ?? null));
-    private readonly requestedPage = linkedSignal(() => this.buildPageRequest(this.appliedFilters()));
+    private readonly requestedPage = linkedSignal(() => this.buildPageRequest());
     private readonly pageResource = rxResource({
         params: this.requestedPage,
         stream: ({ params }) =>
@@ -168,7 +178,7 @@ export class AdminMailInboxComponent {
             read: () => ({
                 filters: {
                     ...Object.fromEntries(fields.map(field => [field, this.appliedQuery()[field] ?? null])),
-                    ...(this.feedbackView ? { recipient: FEEDBACK_MAILBOX } : {}),
+                    ...(this.feedbackMailbox() ? { recipient: FEEDBACK_MAILBOX } : {}),
                 },
                 page: this.pageNumber(),
                 totalItems: this.totalItems(),
@@ -194,24 +204,16 @@ export class AdminMailInboxComponent {
             this.applyFilters();
             return;
         }
-        this.requestedPage.set(
-            this.buildPageRequest({
-                search: this.subjectFilter(),
-                fromAddress: this.senderFilter(),
-                recipient: this.recipientFilter(),
-                category: this.categoryFilter(),
-                unread: this.unreadFilter(),
-            }),
-        );
+        this.requestedPage.set(this.buildPageRequest());
     }
 
-    private buildPageRequest(filters: InboxFilterDraft): InboxPageRequest | undefined {
+    private buildPageRequest(): InboxPageRequest | undefined {
+        const filters = this.appliedFilters();
         const { period, from, to } = this.appliedQuery();
         const range = adminPeriod(convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }));
         if (range === null) {
             return undefined;
         }
-        const recipient = this.feedbackView ? FEEDBACK_MAILBOX : filters.recipient;
         return {
             page: this.pageNumber(),
             filters: {
@@ -219,23 +221,12 @@ export class AdminMailInboxComponent {
                 search: filters.search,
                 fromAddress: filters.fromAddress,
                 id: this.recordId() ?? '',
-                recipient,
-                excludeRecipients: this.excludedRecipientsFor(recipient, filters.category),
+                recipient: filters.recipient,
+                excludeRecipients: this.excludedRecipients(),
                 category: filters.category === 'general' || filters.category === 'dmarc-report' ? filters.category : '',
                 unread: filters.unread === 'all' ? undefined : filters.unread === 'unread',
             },
         };
-    }
-
-    private excludedRecipientsFor(recipient: string, category: InboxFilterDraft['category']): string[] | undefined {
-        if (category === 'dmarc-report' || this.recordId() !== null || recipient.trim() !== '') {
-            return;
-        }
-        const hidden = this.hiddenRecipients();
-        if (category === 'inbox') {
-            return [DMARC_MAILBOX, ...hidden];
-        }
-        return hidden.length > 0 ? hidden : undefined;
     }
 
     protected selectRecipient(recipient: string): void {

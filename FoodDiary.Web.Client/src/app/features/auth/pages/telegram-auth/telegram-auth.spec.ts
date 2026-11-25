@@ -129,6 +129,7 @@ function createHarness(
         add: { imports: [ExistingAuthStubComponent], providers: [{ provide: TelegramAuthFacade, useValue: doubles.facade }] },
     });
     const fixture = TestBed.createComponent(TelegramAuthComponent);
+    fixture.componentRef.setInput('returnUrl', query['returnUrl']);
     fixture.detectChanges();
     return Object.assign(doubles, { fixture, root: fixture.nativeElement as HTMLElement });
 }
@@ -273,15 +274,19 @@ describe('Mini App destinations and callbacks', () => {
         expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
     });
 
-    it('opens the diary when the Mini App session was already restored', async () => {
+    it.each([
+        { label: 'has no requested destination', returnUrl: undefined },
+        { label: 'requests an external destination', returnUrl: 'https://example.test/profile' },
+    ])('opens the diary when a restored Mini App session $label', async ({ returnUrl }) => {
         const doubles = new TelegramAuthDoubles();
         doubles.auth.isAuthenticated.set(true);
         doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
-        const harness = createHarness({}, doubles);
+        const harness = createHarness({ returnUrl }, doubles);
         await settleAsync(harness);
         expect(doubles.facade.beginAsync).not.toHaveBeenCalled();
         expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
         expect(doubles.navigation.navigateToHomeAsync).toHaveBeenCalledOnce();
+        expect(doubles.navigation.navigateToReturnUrlAsync).not.toHaveBeenCalled();
     });
 
     it.each([{ code: 'code', state: 'state' }, { error: 'denied' }])(

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 const TEST_PLAN_DURATION_DAYS = 7;
@@ -19,30 +19,49 @@ import { planDayNumberFromStored } from '../../models/meal-plan-values';
 import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlanDetailPageComponent } from './meal-plan-detail-page';
 
-describe('MealPlanDetailPageComponent', () => {
+describe('MealPlanDetailPageComponent route reuse', () => {
     it('loads and acts on the current plan when Angular reuses the detail route', async () => {
         const facade = createFacadeStub(null);
         facade.loadPlan.mockImplementation(id => {
-            facade.selectedPlan.set({ ...createMealPlan(), id: entityId<'meal-plan'>(id), name: id });
+            facade.selectedPlan.set(id === null ? null : { ...createMealPlan(), id, name: id, isCurated: false });
         });
+        const closed = new Subject<boolean>();
+        const deleteDialog = {
+            afterClosed: (): Subject<boolean> => closed,
+            close: vi.fn(() => {
+                closed.complete();
+            }),
+        };
         TestBed.configureTestingModule({
             imports: [MealPlanDetailPageComponent],
-            providers: [provideTranslateTesting(), provideRouter([{ path: 'meal-plans/:id', component: MealPlanDetailPageComponent }])],
+            providers: [
+                provideTranslateTesting(),
+                provideRouter([{ path: 'meal-plans/:id', component: MealPlanDetailPageComponent }], withComponentInputBinding()),
+                { provide: FdUiDialogService, useValue: { open: vi.fn(() => deleteDialog) } },
+            ],
         });
         TestBed.overrideComponent(MealPlanDetailPageComponent, {
             set: { providers: [{ provide: MealPlanFacade, useValue: facade }], template: '' },
         });
         const harness = await RouterTestingHarness.create();
         const first = await harness.navigateByUrl('/meal-plans/plan-1', MealPlanDetailPageComponent);
+        first['confirmDeletePlan']();
+        await harness.navigateByUrl('/meal-plans/plan-1?from=notice', MealPlanDetailPageComponent);
+        expect(deleteDialog.close).not.toHaveBeenCalled();
+
         const second = await harness.navigateByUrl('/meal-plans/plan-2', MealPlanDetailPageComponent);
 
         expect(second).toBe(first);
+        expect(deleteDialog.close).toHaveBeenCalledOnce();
         expect(facade.loadPlan.mock.calls).toEqual([['plan-1'], ['plan-2']]);
         second['adopt']();
         expect(facade.adopt).toHaveBeenCalledWith('plan-2', expect.any(Function));
         await harness.navigateByUrl('/meal-plans/plan-2?from=notice', MealPlanDetailPageComponent);
         expect(facade.loadPlan).toHaveBeenCalledTimes(2);
     });
+});
+
+describe('MealPlanDetailPageComponent', () => {
     it('loads plan from route param and maps detail view', () => {
         const facade = createFacadeStub(createMealPlan());
         const component = createComponent(facade, 'plan-1');
@@ -114,7 +133,7 @@ type FacadeStub = {
     deletePlan: ReturnType<typeof vi.fn<(id: string, onSuccess: () => void) => void>>;
     selectedPlan: ReturnType<typeof signal<MealPlan | null>>;
     isDetailLoading: ReturnType<typeof signal<boolean>>;
-    loadPlan: ReturnType<typeof vi.fn<(id: string) => void>>;
+    loadPlan: ReturnType<typeof vi.fn<MealPlanFacade['loadPlan']>>;
     adopt: ReturnType<typeof vi.fn<(id: string, onSuccess: () => void) => void>>;
     generateShoppingList: ReturnType<typeof vi.fn<(id: string, onSuccess: () => void) => void>>;
 };
@@ -126,27 +145,23 @@ function createComponent(
     closed = new Subject<boolean>(),
 ): MealPlanDetailPageComponent {
     TestBed.configureTestingModule({
+        imports: [MealPlanDetailPageComponent],
         providers: [
             provideTranslateTesting(),
             {
                 provide: FdUiDialogService,
                 useValue: { open: vi.fn(() => ({ afterClosed: (): Subject<boolean> => closed, close: vi.fn() })) },
             },
-            { provide: MealPlanFacade, useValue: facade },
-            {
-                provide: ActivatedRoute,
-                useValue: {
-                    paramMap: of(convertToParamMap(routeId === null ? {} : { id: routeId })),
-                    snapshot: {
-                        paramMap: convertToParamMap(routeId === null ? {} : { id: routeId }),
-                    },
-                },
-            },
             { provide: Router, useValue: router },
         ],
     });
-
-    return TestBed.runInInjectionContext(() => new MealPlanDetailPageComponent());
+    TestBed.overrideComponent(MealPlanDetailPageComponent, {
+        set: { providers: [{ provide: MealPlanFacade, useValue: facade }], template: '' },
+    });
+    const fixture = TestBed.createComponent(MealPlanDetailPageComponent);
+    fixture.componentRef.setInput('id', routeId ?? undefined);
+    fixture.detectChanges();
+    return fixture.componentInstance;
 }
 
 function createRouterStub(): { navigate: ReturnType<typeof vi.fn<(commands: string[]) => Promise<boolean>>> } {

@@ -5,6 +5,7 @@ export const adminMailInboxRoutes: Routes = [
     {
         path: '',
         loadComponent: async () => import('./pages/admin-mail-inbox').then(m => m.AdminMailInboxComponent),
+        data: { feedbackMailbox: false },
         canActivate: [adminAuthGuard],
     },
 ];

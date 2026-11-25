@@ -52,7 +52,7 @@ describe('AdminAcquisition search boundaries and error recovery', () => {
         },
     );
 
-    it('retries the search draft while keeping the applied search in the URL', async () => {
+    it('retries the applied search and keeps the draft available to apply', async () => {
         getRange.mockImplementationOnce(() => throwError(() => new HttpErrorResponse({ status: UNAVAILABLE })));
         await fixture.navigateByUrl('/?period=7d&search=applied');
         await fixture.fixture.whenStable();
@@ -65,9 +65,11 @@ describe('AdminAcquisition search boundaries and error recovery', () => {
         search.dispatchEvent(new Event('input', { bubbles: true }));
         retry.click();
         await fixture.fixture.whenStable();
+        fixture.detectChanges();
 
-        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ search: 'draft' }));
+        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ search: 'applied' }));
         expect(TestBed.inject(Router).url).toBe('/?period=7d&search=applied');
+        expect(fixture.routeNativeElement?.querySelector<HTMLInputElement>('input#acquisition-event-search')?.value).toBe('draft');
     });
 });
 

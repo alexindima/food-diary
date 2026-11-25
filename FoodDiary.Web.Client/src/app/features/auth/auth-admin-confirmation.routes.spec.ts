@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
@@ -48,7 +48,7 @@ function configureConfirmation(account: string | null, expectedAccount: string |
     );
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([...routes, { path: 'profile', component: ProfileDestinationComponent }]),
+            provideRouter([...routes, { path: 'profile', component: ProfileDestinationComponent }], withComponentInputBinding()),
             provideTranslateTesting(),
             {
                 provide: AuthService,
@@ -73,15 +73,18 @@ afterEach(() => {
 });
 
 describe('Client admin confirmation route', () => {
-    it('waits for the diary session before issuing a matching handoff for the selected return route', async () => {
+    it('keeps the first entry return path while the diary session is pending', async () => {
         environment.adminAppUrl = ADMIN_ORIGIN;
         const { ensureSessionReadyAsync, startAdminSso, replace } = configureConfirmation(ACCOUNT, ACCOUNT);
         const session = new Subject<void>();
         ensureSessionReadyAsync.mockReturnValueOnce(firstValueFrom(session));
-        const harness = await RouterTestingHarness.create(handoffUrl());
+        const laterReturn = new URLSearchParams({ adminReturnUrl: '/other' });
+        const harness = await RouterTestingHarness.create(`${handoffUrl()}&${laterReturn}`);
         expect(harness.routeNativeElement?.querySelector('[role="status"]')?.textContent).toContain('COMMON.LOADING');
         expect(startAdminSso).not.toHaveBeenCalled();
         expect(replace).not.toHaveBeenCalled();
+        await harness.navigateByUrl(`${AUTH_PATH}?${laterReturn}`);
+        expect(ensureSessionReadyAsync).toHaveBeenCalledOnce();
 
         session.next();
         session.complete();

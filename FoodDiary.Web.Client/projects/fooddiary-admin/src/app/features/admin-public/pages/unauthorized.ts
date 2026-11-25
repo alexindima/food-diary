@@ -1,11 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
+import { firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { adminSignInAccount, adminSignInAccountFragment, adminSignInReturnUrl } from '../../admin-auth/contracts/admin-sign-in-navigation';
+
+type UnauthorizedEntry = { reason: string | undefined; returnUrl: string };
 
 @Component({
     selector: 'fd-admin-unauthorized',
@@ -15,39 +18,38 @@ import { adminSignInAccount, adminSignInAccountFragment, adminSignInReturnUrl } 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnauthorizedComponent {
+    public readonly reason = input(undefined, { transform: firstAdminQueryValue });
+    public readonly returnUrl = input(undefined, { transform: firstAdminQueryValue });
+
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly authService = inject(AdminAuthService);
     private readonly document = inject(DOCUMENT);
     private readonly account = adminSignInAccount(this.route.snapshot.fragment);
 
-    protected readonly reason: string | null;
-    protected readonly returnUrl: string;
+    private readonly entry = linkedSignal<UnauthorizedEntry, UnauthorizedEntry>({
+        source: () => ({ reason: this.reason(), returnUrl: this.returnUrl() ?? '/' }),
+        computation: (current, previous) => previous?.value ?? current,
+    }).asReadonly();
     private readonly rejectedReason = signal<string | null>(null);
     protected readonly retryBusy = signal(false);
-    protected readonly effectiveReason = computed(() => this.rejectedReason() ?? this.reason);
+    protected readonly effectiveReason = computed(() => this.rejectedReason() ?? this.entry().reason);
     protected readonly restoreUnavailable = computed(
         () => this.rejectedReason() === null && (this.effectiveReason() === 'unavailable' || this.authService.sessionUnavailable()),
     );
     protected readonly rateLimited = computed(() => this.effectiveReason() === 'unauthenticated' && this.authService.ssoRateLimited());
 
     public constructor() {
-        this.reason = this.route.snapshot.queryParamMap.get('reason');
-        this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
-
-        if (this.reason !== 'unauthenticated') {
-            return;
-        }
-
-        if (this.returnUrl.length === 0) {
-            return;
-        }
-
-        void this.tryRecoverFromSsoAsync(this.returnUrl);
+        afterNextRender(() => {
+            const { reason, returnUrl } = this.entry();
+            if (reason === 'unauthenticated' && returnUrl.length > 0) {
+                void this.tryRecoverFromSsoAsync(returnUrl);
+            }
+        });
     }
 
     protected goToLogin(): void {
-        const returnUrl = adminSignInReturnUrl(this.returnUrl, this.document.location.origin);
+        const returnUrl = adminSignInReturnUrl(this.entry().returnUrl, this.document.location.origin);
         void this.router.navigate(['/sign-in'], {
             queryParams: { returnUrl, confirm: '1' },
             fragment: adminSignInAccountFragment(this.account),
@@ -63,7 +65,7 @@ export class UnauthorizedComponent {
             await this.authService.restoreSessionAsync(true);
             if (!this.authService.sessionUnavailable()) {
                 if (this.authService.isAdmin()) {
-                    const returnUrl = adminSignInReturnUrl(this.returnUrl, this.document.location.origin);
+                    const returnUrl = adminSignInReturnUrl(this.entry().returnUrl, this.document.location.origin);
                     if (this.account !== null && this.authService.getUserId() !== this.account) {
                         await this.router.navigate(['/sign-in'], {
                             queryParams: { returnUrl },

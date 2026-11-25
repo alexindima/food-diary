@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { firstValueFrom } from 'rxjs';
@@ -18,8 +18,10 @@ import { buildAdminSignInUrl, normalizeAdminReturnUrl } from '../../components/a
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminConfirmationComponent {
+    public readonly adminReturnUrl = input(undefined, {
+        transform: (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value),
+    });
     private readonly auth = inject(AuthService);
-    private readonly route = inject(ActivatedRoute);
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly failed = signal(false);
@@ -36,7 +38,7 @@ export class AdminConfirmationComponent {
         }
 
         const adminOrigin = new URL(adminAppUrl, this.document.location.origin);
-        const path = normalizeAdminReturnUrl(this.route.snapshot.queryParamMap.get('adminReturnUrl') ?? '/', adminOrigin.href);
+        const path = normalizeAdminReturnUrl(this.adminReturnUrl() ?? '/', adminOrigin.href);
         const expectedUserId = new URLSearchParams(this.document.location.hash.slice(1)).get('account');
         await this.auth.ensureSessionReadyAsync();
         if (this.destroyRef.destroyed) {

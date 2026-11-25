@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { distinctUntilChanged, map } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -34,7 +32,8 @@ import { LESSON_DETAIL_TOUR } from './lesson-detail-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonDetailPageComponent {
-    private readonly route = inject(ActivatedRoute);
+    public readonly id = input<string>();
+
     private readonly router = inject(Router);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -42,15 +41,12 @@ export class LessonDetailPageComponent {
     protected readonly lesson = computed(() => buildLessonDetailView(this.facade.selectedLesson()));
 
     public constructor() {
-        this.route.paramMap
-            .pipe(
-                map(params => params.get('id')),
-                distinctUntilChanged(),
-                takeUntilDestroyed(),
-            )
-            .subscribe(id => {
-                this.facade.loadLesson(id === null || id.trim().length === 0 ? null : entityId<'lesson'>(id));
+        effect(() => {
+            const id = this.id();
+            untracked(() => {
+                this.facade.loadLesson(id === undefined || id.trim().length === 0 ? null : entityId<'lesson'>(id));
             });
+        });
     }
 
     protected markRead(): void {

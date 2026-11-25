@@ -1,8 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -19,7 +18,7 @@ describe('LessonDetailPageComponent', () => {
         });
         TestBed.configureTestingModule({
             imports: [LessonDetailPageComponent],
-            providers: [provideRouter([{ path: 'lessons/:id', component: LessonDetailPageComponent }])],
+            providers: [provideRouter([{ path: 'lessons/:id', component: LessonDetailPageComponent }], withComponentInputBinding())],
         });
         TestBed.overrideComponent(LessonDetailPageComponent, {
             set: { providers: [{ provide: LessonFacade, useValue: facade }], template: '' },
@@ -92,22 +91,16 @@ type FacadeStub = {
 
 function createComponent(facade: FacadeStub, routeId: string | null, router = createRouterStub()): LessonDetailPageComponent {
     TestBed.configureTestingModule({
-        providers: [
-            { provide: LessonFacade, useValue: facade },
-            {
-                provide: ActivatedRoute,
-                useValue: {
-                    paramMap: of(convertToParamMap(routeId === null ? {} : { id: routeId })),
-                    snapshot: {
-                        paramMap: convertToParamMap(routeId === null ? {} : { id: routeId }),
-                    },
-                },
-            },
-            { provide: Router, useValue: router },
-        ],
+        imports: [LessonDetailPageComponent],
+        providers: [{ provide: Router, useValue: router }],
     });
-
-    return TestBed.runInInjectionContext(() => new LessonDetailPageComponent());
+    TestBed.overrideComponent(LessonDetailPageComponent, {
+        set: { providers: [{ provide: LessonFacade, useValue: facade }], template: '' },
+    });
+    const fixture = TestBed.createComponent(LessonDetailPageComponent);
+    fixture.componentRef.setInput('id', routeId ?? undefined);
+    fixture.detectChanges();
+    return fixture.componentInstance;
 }
 
 function createRouterStub(): { navigate: ReturnType<typeof vi.fn<(commands: string[]) => Promise<boolean>>> } {
