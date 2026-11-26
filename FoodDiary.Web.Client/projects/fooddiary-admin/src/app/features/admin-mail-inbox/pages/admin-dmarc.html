@@ -11,13 +11,10 @@
         />
     </div>
 
-    @let state = view();
-    @if (state.status === 'loading') {
+    @if (reportResource.isLoading()) {
         <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
-    } @else if (state.status === 'error') {
-        <fd-admin-load-error (retry)="retry()" />
-    } @else if (state.status === 'ready') {
-        @let data = state.data;
+    } @else if (reportResource.hasValue()) {
+        @let data = reportResource.value();
         @let summary = data.summary;
         <p class="fd-ui-body-sm">{{ 'ADMIN_DMARC.COMPLETED_DAYS' | translate }}</p>
 
@@ -82,5 +79,7 @@
         }
 
         <fd-admin-dmarc-reports [data]="data" />
+    } @else {
+        <fd-admin-load-error (retry)="retry()" />
     }
 </section>

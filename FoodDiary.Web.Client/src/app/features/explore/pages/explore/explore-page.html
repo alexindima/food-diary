@@ -30,11 +30,12 @@
             </div>
         </div>
 
-        @if (recipeData.isLoading()) {
+        @let page = recipePage();
+        @if (isLoading()) {
             <div class="explore-loader fd-row fd-justify-center">
                 <fd-ui-loader />
             </div>
-        } @else if (recipeData.items().length === 0) {
+        } @else if (page === undefined || page.data.length === 0) {
             <div class="explore-empty fd-stack fd-align-center">
                 <fd-ui-icon name="search_off" size="xl" />
                 <h3>{{ 'EXPLORE.NO_RESULTS' | translate }}</h3>
@@ -42,14 +43,14 @@
             </div>
         } @else {
             <div class="explore-grid fd-grid fd-gap-page-card" data-tour-id="explore-recipes">
-                @for (recipe of recipeData.items(); track recipe.id) {
+                @for (recipe of page.data; track recipe.id) {
                     <fd-recipe-card [recipe]="recipe" [imageUrl]="resolveImageUrl(recipe.imageUrl)" (open)="onRecipeClick(recipe)" />
                 }
             </div>
 
-            @if (recipeData.totalPages > 1) {
+            @if (page.totalPages > 1) {
                 <fd-ui-pagination
-                    [length]="recipeData.totalItems"
+                    [length]="page.totalItems"
                     [pageSize]="pageSize"
                     [pageIndex]="currentPageIndex()"
                     (pageIndexChange)="onPageChange($event)"

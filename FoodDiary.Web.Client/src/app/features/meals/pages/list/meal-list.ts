@@ -7,20 +7,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import {
-    catchError,
-    defaultIfEmpty,
-    EMPTY,
-    filter,
-    finalize,
-    firstValueFrom,
-    from,
-    type Observable,
-    Subject,
-    switchMap,
-    takeUntil,
-    tap,
-} from 'rxjs';
+import { catchError, defaultIfEmpty, EMPTY, filter, finalize, firstValueFrom, from, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
@@ -140,10 +127,20 @@ export class MealListComponent {
         return this.hasActiveFilters() ? 'no-results' : 'empty';
     });
     protected readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
-    private readonly requestedOverview = signal<Observable<void> | undefined>(undefined);
+    private readonly requestedOverview = signal<MealOverviewRequest | undefined>(undefined);
     private readonly overview = rxResource({
         params: this.requestedOverview,
-        stream: ({ params }) => params.pipe(defaultIfEmpty(void 0)),
+        stream: ({ params: { page, filters, initial } }) => {
+            const overview = initial
+                ? this.mealListFacade.loadInitialOverview(filters, page)
+                : this.mealListFacade.loadMeals(page, filters);
+            return overview.pipe(
+                tap(() => {
+                    this.syncResolvedPage(page);
+                }),
+                defaultIfEmpty(void 0),
+            );
+        },
     });
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
     private readonly routeQuery = computed(() =>
@@ -228,10 +225,10 @@ export class MealListComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(query => {
-                this.requestOverview(this.loadMeals(query.page));
+                this.requestOverview(query.page);
             });
         // An immediate overview result can normalize the URL before navigation finishes.
-        this.requestOverview(this.loadInitialOverview());
+        this.requestOverview(this.currentPageIndex() + 1, true);
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -296,36 +293,16 @@ export class MealListComponent {
             });
     }
 
-    protected loadMeals(page: number): Observable<void> {
-        this.syncRoute(page);
-        return this.mealListFacade.loadMeals(page, this.structuredFilters).pipe(
-            tap(() => {
-                this.syncResolvedPage(page);
-            }),
-        );
-    }
-
-    protected loadInitialOverview(): Observable<void> {
-        const page = this.currentPageIndex() + 1;
-        this.syncRoute(page, true);
-        return this.mealListFacade.loadInitialOverview(this.structuredFilters, page).pipe(
-            tap(() => {
-                this.syncResolvedPage(page);
-            }),
-        );
-    }
-
     protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
-        this.requestOverview(this.loadMeals(pageIndex + 1));
+        this.requestOverview(pageIndex + 1);
     }
 
     protected retryLoad(): void {
         if (this.mealData.isLoading()) {
             return;
         }
-        const request = this.hasActiveFilters() ? this.loadMeals(this.currentPageIndex() + 1) : this.loadInitialOverview();
-        this.requestOverview(request);
+        this.requestOverview(this.currentPageIndex() + 1, !this.hasActiveFilters());
     }
 
     protected async openMealDetailsAsync(meal: Meal): Promise<void> {
@@ -349,12 +326,12 @@ export class MealListComponent {
 
     protected removeFilter(id: string): void {
         this.searchModel.update(model => removeMealFilter(model, id));
-        this.requestOverview(this.loadMeals(1));
+        this.requestOverview(1);
     }
 
     protected resetFilters(): void {
         this.searchModel.set(emptyMealFilters());
-        this.requestOverview(this.loadMeals(1));
+        this.requestOverview(1);
     }
 
     protected openFilters(): void {
@@ -403,7 +380,7 @@ export class MealListComponent {
             hasImage: result.hasImage,
             hasAiSession: result.hasAiSession,
         }));
-        this.requestOverview(this.loadMeals(1));
+        this.requestOverview(1);
     }
 
     private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
@@ -422,12 +399,13 @@ export class MealListComponent {
     }
 
     protected reloadCurrentPage(): void {
-        this.requestOverview(this.loadMeals(this.currentPageIndex() + 1));
+        this.requestOverview(this.currentPageIndex() + 1);
     }
 
-    private requestOverview(read: Observable<void>): void {
+    private requestOverview(page: number, initial = false): void {
+        this.syncRoute(page, initial);
         this.overview.set(undefined);
-        this.requestedOverview.set(read);
+        this.requestedOverview.set({ page, filters: this.structuredFilters, initial });
     }
 
     private get structuredFilters(): MealListStructuredFilters {
@@ -535,6 +513,12 @@ export class MealListComponent {
         return isToday ? `${this.translateService.instant('MEAL_LIST.TODAY')} · ${formatted}` : formatted;
     }
 }
+
+type MealOverviewRequest = {
+    page: number;
+    filters: MealListStructuredFilters;
+    initial: boolean;
+};
 
 type SearchFormValues = {
     dateRange: FdUiDateRangeValue | null;

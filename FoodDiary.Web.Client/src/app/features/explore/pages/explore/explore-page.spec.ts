@@ -55,11 +55,12 @@ beforeEach(() => {
 describe('ExplorePageComponent', () => {
     it('loads newest recipes on init', () => {
         expect(exploreService.queryRecipes).toHaveBeenCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
-        expect(component['recipeData'].items()).toEqual([createRecipe()]);
+        expect(component['recipePage']()?.data).toEqual([createRecipe()]);
     });
 
     it('loads selected page using one-based API page number', () => {
         component['onPageChange'](SELECTED_PAGE_INDEX);
+        fixture.detectChanges();
 
         expect(component['currentPageIndex']()).toBe(SELECTED_PAGE_INDEX);
         expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(SELECTED_API_PAGE, EXPLORE_PAGE_SIZE, {
@@ -80,6 +81,7 @@ describe('ExplorePageComponent', () => {
         }
 
         nextPage.click();
+        fixture.detectChanges();
         expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(2, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
 
         search.value = 'ramen';
@@ -96,6 +98,7 @@ describe('ExplorePageComponent', () => {
         matchingPage.complete();
         previousPage.next({ ...createPage(), page: 2 });
         previousPage.complete();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const card = host.querySelector<HTMLElement>('.explore-grid .entity-card');

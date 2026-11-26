@@ -201,14 +201,13 @@ export class RecipeListComponent {
             }
         });
 
-        this.recipeListFacade.requestView(
-            this.recipeListFacade.loadInitialOverview(
-                this.routeState.initial.page,
-                this.pageSize,
-                this.buildRecipeFilters(),
-                this.searchModel().onlyMine,
-            ),
-        );
+        this.recipeListFacade.requestView({
+            page: this.routeState.initial.page,
+            limit: this.pageSize,
+            filters: this.buildRecipeFilters(),
+            onlyMine: this.searchModel().onlyMine,
+            initial: true,
+        });
 
         toObservable(computed(() => this.searchModel().search))
             .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed(this.destroyRef))
@@ -395,9 +394,12 @@ export class RecipeListComponent {
     }
 
     private requestPage(page: number): void {
-        this.recipeListFacade.requestView(
-            this.recipeListFacade.loadRecipes(page, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
-        );
+        this.recipeListFacade.requestView({
+            page,
+            limit: this.pageSize,
+            filters: this.buildRecipeFilters(),
+            onlyMine: this.searchModel().onlyMine,
+        });
     }
 
     private buildRecipeFilters(): RecipeFilters {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { convertToParamMap, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -32,10 +32,8 @@ export class AdminAiUsageComponent {
     public readonly to = input(undefined, { transform: firstAdminQueryValue });
 
     private readonly aiUsageFacade = inject(AdminAiUsageFacade);
-    private readonly retryVersion = signal(0);
     private readonly usageResource = rxResource({
         params: () => {
-            this.retryVersion();
             const range = adminPeriod(
                 convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
             );
@@ -66,6 +64,6 @@ export class AdminAiUsageComponent {
     });
 
     protected loadUsage(): void {
-        this.retryVersion.update(version => version + 1);
+        this.usageResource.reload();
     }
 }

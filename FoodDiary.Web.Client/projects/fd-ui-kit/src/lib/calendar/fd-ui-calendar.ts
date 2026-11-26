@@ -4,15 +4,14 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    effect,
     ElementRef,
     inject,
     Injector,
     input,
+    linkedSignal,
     LOCALE_ID,
     model,
     output,
-    signal,
     untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -85,12 +84,12 @@ export class FdUiCalendarComponent {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly today = this.stripTime(new Date());
-    private readonly activeDate = signal<Date>(this.today);
     private pendingFocusDate: Date | null = null;
 
     public readonly value = model<Date | null>(null);
     public readonly dateSelected = output<Date>();
     public readonly displayMonth = model<Date | null>(null);
+    private readonly activeDate = linkedSignal(() => this.value() ?? untracked(this.displayMonth) ?? this.today);
     public readonly min = input<Date | null>(null);
     public readonly max = input<Date | null>(null);
     public readonly weekStartsOn = input<0 | 1>(1);
@@ -190,12 +189,6 @@ export class FdUiCalendarComponent {
             }),
         );
     });
-
-    public constructor() {
-        effect(() => {
-            this.activeDate.set(this.value() ?? untracked(this.displayMonth) ?? this.today);
-        });
-    }
 
     protected selectDate(date: Date): void {
         if (this.isSelectionOutOfRange(date)) {

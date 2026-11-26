@@ -1,5 +1,5 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, DestroyRef, inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 
 import { WearableService } from '../api/wearable.service';
@@ -11,12 +11,18 @@ export class WearableConnectionsFacade {
     private readonly wearableService = inject(WearableService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly connections = signal<WearableConnection[]>([]);
-    public readonly providerRows = computed(() => buildWearableProviderRows(this.connections()));
+    private readonly connectionsRevision = signal(0);
+    private readonly connectionsResource = rxResource({
+        params: this.connectionsRevision,
+        stream: () => this.wearableService.getConnections(),
+    });
+    private readonly connections = linkedSignal({
+        source: this.connectionsResource.snapshot,
+        computation: (snapshot, previous): WearableConnection[] =>
+            snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
+    });
 
-    public initialize(): void {
-        this.loadConnections();
-    }
+    public readonly providerRows = computed(() => buildWearableProviderRows(this.connections()));
 
     public getAuthUrl(providerId: string, state: string): Observable<WearableAuthUrl> {
         return this.wearableService.getAuthUrl(providerId, state);
@@ -27,16 +33,7 @@ export class WearableConnectionsFacade {
             .disconnect(providerId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.loadConnections();
-            });
-    }
-
-    private loadConnections(): void {
-        this.wearableService
-            .getConnections()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(connections => {
-                this.connections.set(connections);
+                this.connectionsRevision.update(revision => revision + 1);
             });
     }
 }

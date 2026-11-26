@@ -24,9 +24,9 @@
     @if (invalid()) {
         <p role="alert">{{ 'ADMIN_OVERVIEW.INVALID' | translate }}</p>
     }
-    @if (dashboard.isLoading()) {
+    @if (isLoading()) {
         <p role="status">{{ 'ADMIN_OVERVIEW.LOADING' | translate }}</p>
-    } @else if (dashboard.failed()) {
+    } @else if (failed()) {
         <p role="alert">{{ 'ADMIN_OVERVIEW.ERROR' | translate }}</p>
     } @else if (data(); as overview) {
         <fd-admin-dashboard-content [data]="overview" [allTime]="allTime()" />

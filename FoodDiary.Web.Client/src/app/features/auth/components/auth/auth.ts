@@ -9,6 +9,7 @@ import {
     inject,
     Injector,
     input,
+    linkedSignal,
     output,
     PLATFORM_ID,
     signal,
@@ -97,7 +98,13 @@ export class AuthComponent {
     private readonly pwa = inject(PwaInstallService);
     protected readonly showRememberMe = computed(() => !this.pwa.shouldRememberSession());
 
-    protected authMode: 'login' | 'register' = 'login';
+    private readonly initialView = computed(() => ({
+        mode: this.initialMode(),
+        passwordReset: this.initialPasswordReset(),
+        returnUrl: this.initialReturnUrl(),
+        adminReturnUrl: this.initialAdminReturnUrl(),
+    }));
+    protected readonly authMode = linkedSignal(() => this.initialView().mode);
 
     protected readonly loginForm = this.formManager.loginForm;
     protected readonly registerForm = this.formManager.registerForm;
@@ -111,7 +118,7 @@ export class AuthComponent {
     protected readonly googleLinkRequired = signal(false);
     protected readonly showRestoreAction = signal<boolean>(false);
     protected readonly isRestoring = signal<boolean>(false);
-    protected readonly showPasswordReset = signal<boolean>(false);
+    protected readonly showPasswordReset = linkedSignal(() => this.initialView().passwordReset);
     protected readonly isPasswordResetting = signal<boolean>(false);
     protected readonly passwordResetSent = signal<boolean>(false);
     protected readonly passwordResetCooldownSeconds = signal<number>(0);
@@ -124,8 +131,6 @@ export class AuthComponent {
     private authTabVersion = 0;
     protected readonly authTabs = AUTH_TABS;
 
-    private returnUrl: string | null = null;
-    private adminReturnUrl: string | null = null;
     private authenticatedNavigation: Promise<void> | null = null;
     private pendingGoogleLinkCredential: string | null = null;
     private failedLoginValues: LoginFormValues | null = null;
@@ -164,13 +169,7 @@ export class AuthComponent {
             this.renderGoogleButton();
         });
         effect(() => {
-            this.authMode = this.initialMode();
-            this.showPasswordReset.set(this.initialPasswordReset());
-            this.returnUrl = this.initialReturnUrl();
-            this.adminReturnUrl = this.initialAdminReturnUrl();
-        });
-        effect(() => {
-            if ((this.adminReturnUrl ?? '').length === 0) {
+            if ((this.initialAdminReturnUrl() ?? '').length === 0) {
                 return;
             }
 
@@ -183,7 +182,7 @@ export class AuthComponent {
     }
 
     protected changeAuthMode(value: string): void {
-        this.authMode = value === 'register' ? 'register' : 'login';
+        this.authMode.set(value === 'register' ? 'register' : 'login');
         this.authTabVersion++;
         this.formManager.resetAll();
         this.pendingGoogleLinkCredential = null;
@@ -325,7 +324,7 @@ export class AuthComponent {
 
     private renderGoogleButton(): void {
         this.googleManager.renderButton(
-            this.authMode,
+            this.authMode(),
             this.loginFormComponent()?.googleButton()?.nativeElement,
             this.registerFormComponent()?.googleButton()?.nativeElement,
         );
@@ -373,7 +372,7 @@ export class AuthComponent {
             this.setGlobalError('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
         };
 
-        if (this.authMode === 'login') {
+        if (this.authMode() === 'login') {
             showLinkPrompt();
             return;
         }
@@ -505,11 +504,11 @@ export class AuthComponent {
             return;
         }
 
-        await this.navigationService.navigateToReturnUrlAsync(this.returnUrl);
+        await this.navigationService.navigateToReturnUrlAsync(this.initialReturnUrl());
     }
 
     private async tryBuildAdminRedirectUrlAsync(): Promise<string | null> {
-        const adminReturnUrl = this.adminReturnUrl;
+        const adminReturnUrl = this.initialAdminReturnUrl();
         const adminAppUrl = environment.adminAppUrl ?? '';
         if (adminReturnUrl === null || !this.isBrowser || adminReturnUrl.length === 0 || adminAppUrl.length === 0) {
             return null;

@@ -57,7 +57,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     public readonly touch = output();
     public readonly disabled = input(false);
 
-    protected readonly internalValue = signal('');
+    protected readonly internalValue = computed(() => this.value() ?? '');
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
     protected readonly hours = Array.from({ length: MAX_HOURS_VALUE + 1 }, (_, hour) => hour);
@@ -68,10 +68,6 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public constructor() {
-        effect(() => {
-            this.internalValue.set(this.value() ?? '');
-        });
-
         effect(() => {
             if (this.disabled()) {
                 this.closeTimePicker();
@@ -197,7 +193,6 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
 
     private setTime(hours: number, minutes: number): void {
         const formatted = `${this.padNumber(hours)}:${this.padNumber(minutes)}`;
-        this.internalValue.set(formatted);
         this.value.set(formatted);
     }
 

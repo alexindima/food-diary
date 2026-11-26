@@ -1809,7 +1809,7 @@
       "role": "Component",
       "selector": "fd-ui-calendar",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "line": 79
+      "line": 78
     },
     {
       "name": "FdUiCardActionsDirective",
@@ -1851,7 +1851,7 @@
       "role": "Component",
       "selector": "fd-ui-date-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "FdUiDatePickerButtonComponent",
@@ -2264,7 +2264,7 @@
       "role": "Component",
       "selector": "fd-ui-tabs",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-      "line": 32
+      "line": 21
     },
     {
       "name": "FdUiTextareaComponent",
@@ -2705,7 +2705,7 @@
       "role": "Component",
       "selector": "fd-admin-dashboard",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "AdminEmailTemplatesService",
@@ -2810,7 +2810,7 @@
       "role": "Component",
       "selector": "fd-admin-dmarc",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-dmarc.ts",
-      "line": 34
+      "line": 30
     },
     {
       "name": "AdminMailInboxComponent",
@@ -3986,7 +3986,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -4679,7 +4679,7 @@
       "role": "Component",
       "selector": "fd-explore-page",
       "path": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.ts",
-      "line": 50
+      "line": 51
     },
     {
       "name": "FastingService",
@@ -5379,7 +5379,7 @@
       "role": "Component",
       "selector": "fd-meal-list",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
-      "line": 70
+      "line": 57
     },
     {
       "name": "MealAddComponent",
@@ -5960,7 +5960,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 101
+      "line": 102
     },
     {
       "name": "DietologistPromoComponent",
@@ -6401,7 +6401,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
-      "line": 45
+      "line": 61
     },
     {
       "name": "RecipeManageFacade",

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
@@ -22,7 +22,6 @@ export class AdminTemplateHistoryComponent {
     public readonly refreshToken = input<string | number | null>();
     public readonly restored = output<AdminTemplateRevision>();
     private readonly api = inject(AdminTemplateHistoryFacade);
-    private readonly retryVersion = signal(0);
     private readonly historyResource = rxResource({
         params: () => {
             const key = this.templateKey();
@@ -30,7 +29,7 @@ export class AdminTemplateHistoryComponent {
             if (key.length === 0 || locale.length === 0) {
                 return;
             }
-            return { kind: this.kind(), key, locale, token: this.refreshToken(), retryVersion: this.retryVersion() };
+            return { kind: this.kind(), key, locale, token: this.refreshToken() };
         },
         stream: ({ params }) => this.api.getRevisions(params.kind, params.key, params.locale),
     });
@@ -40,6 +39,6 @@ export class AdminTemplateHistoryComponent {
     protected readonly failed = computed(() => this.historyResource.error() !== undefined);
 
     protected retry(): void {
-        this.retryVersion.update(version => version + 1);
+        this.historyResource.reload();
     }
 }

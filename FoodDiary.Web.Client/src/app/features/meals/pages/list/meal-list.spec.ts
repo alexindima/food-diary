@@ -241,7 +241,8 @@ function registerLoadingTests(context: TestContext): void {
         it('should expose load errors for retry state', () => {
             context.mockMealService.queryOverview.mockReturnValue(throwError(() => new Error('Network error')));
 
-            context.component()['loadMeals'](1).subscribe();
+            context.component()['reloadCurrentPage']();
+            TestBed.tick();
 
             expect(context.component()['errorKey']()).toBe('ERRORS.LOAD_FAILED_TITLE');
             expect(context.component()['mealData'].isLoading()).toBe(false);
@@ -299,7 +300,8 @@ function registerGroupingTests(context: TestContext): void {
                     daySummaries: [{ date: '2024-03-15', totalCalories: 2500, mealCount: 8 }],
                 }),
             );
-            context.component()['loadMeals'](1).subscribe();
+            context.component()['reloadCurrentPage']();
+            TestBed.tick();
 
             const grouped = context.component()['groupedMeals']();
             expect(grouped.length).toBe(NEXT_PAGE_NUMBER);
@@ -335,7 +337,8 @@ function registerGroupingTests(context: TestContext): void {
             });
 
             context.mockMealService.queryOverview.mockReturnValue(of(createOverview([afterMidnightMeal, lateMeal])));
-            context.component()['loadMeals'](1).subscribe();
+            context.component()['reloadCurrentPage']();
+            TestBed.tick();
 
             const grouped = context.component()['groupedMeals']();
             expect(grouped.length).toBe(NEXT_PAGE_NUMBER);
@@ -368,7 +371,8 @@ function registerPlannedGroupingTests(context: TestContext): void {
             });
 
             context.mockMealService.queryOverview.mockReturnValue(of(createOverview([laterFutureMeal, currentMeal, nearerFutureMeal])));
-            context.component()['loadMeals'](1).subscribe();
+            context.component()['reloadCurrentPage']();
+            TestBed.tick();
 
             expect(context.component()['groupedMeals']()).toHaveLength(1);
             expect(context.component()['groupedMeals']()[0].items).toEqual([currentMeal]);
@@ -387,7 +391,8 @@ function registerRangeTests(context: TestContext): void {
             context.component()['searchModel'].update(value => ({ ...value, dateRange: { start, end } }));
             context.mockMealService.queryOverview.mockClear();
 
-            context.component()['loadMeals'](1).subscribe();
+            context.component()['reloadCurrentPage']();
+            TestBed.tick();
 
             expect(context.mockMealService.queryOverview).toHaveBeenCalledWith(
                 1,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -104,7 +104,6 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
 export class FdUiSatietyScaleComponent implements FormValueControl<number | null> {
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
-    private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly label = input<string>();
     public readonly hint = input<string>();
@@ -120,20 +119,10 @@ export class FdUiSatietyScaleComponent implements FormValueControl<number | null
     public readonly disabled = input(false);
     public readonly levelSelected = output<number>();
 
-    protected selectedValue: number | null = null;
-
-    public constructor() {
-        effect(() => {
-            this.selectedValue = this.value();
-            this.cdr.markForCheck();
-        });
-    }
-
     protected selectLevel(level: number): void {
         if (this.disabled()) {
             return;
         }
-        this.selectedValue = level;
         this.value.set(level);
         this.touched.set(true);
         this.touch.emit();
@@ -146,6 +135,6 @@ export class FdUiSatietyScaleComponent implements FormValueControl<number | null
     }
 
     protected isSelected(level: number): boolean {
-        return this.selectedValue === level;
+        return this.value() === level;
     }
 }

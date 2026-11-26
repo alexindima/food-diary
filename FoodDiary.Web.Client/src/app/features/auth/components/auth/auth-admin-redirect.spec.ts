@@ -13,7 +13,7 @@ import { AuthGoogleManager } from './auth-lib/auth-google.manager';
 
 const adminAppUrl = environment.adminAppUrl ?? '';
 
-function createComponent(): {
+function createComponent(adminReturnUrl: string | null = null): {
     component: AuthComponent;
     authService: {
         isAuthenticated: ReturnType<typeof vi.fn>;
@@ -52,6 +52,7 @@ function createComponent(): {
         },
     });
     const fixture = TestBed.createComponent(AuthComponent);
+    fixture.componentRef.setInput('initialAdminReturnUrl', adminReturnUrl);
     fixture.detectChanges();
     return { component: fixture.componentInstance, authService };
 }
@@ -70,8 +71,7 @@ describe('AuthComponent admin SSO destination', () => {
         `${adminAppUrl}/%2f%2fattacker.example/capture`,
         encodeURIComponent(`${adminAppUrl}//attacker.example/capture`),
     ])('keeps a freshly issued code on the admin origin for %s', async value => {
-        const { component, authService } = createComponent();
-        component['adminReturnUrl'] = value;
+        const { component, authService } = createComponent(value);
 
         const result = await component['tryBuildAdminRedirectUrlAsync']();
 
@@ -92,8 +92,7 @@ describe('AuthComponent admin SSO destination', () => {
     });
 
     it.each(['/users?tab=active', `${adminAppUrl}/users?tab=active`])('preserves a valid return URL: %s', async value => {
-        const { component } = createComponent();
-        component['adminReturnUrl'] = value;
+        const { component } = createComponent(value);
 
         const destination = new URL((await component['tryBuildAdminRedirectUrlAsync']()) ?? '');
 
@@ -105,9 +104,8 @@ describe('AuthComponent admin SSO destination', () => {
     });
 
     it('sends a non-admin to the trusted unauthorized page without issuing a code', async () => {
-        const { component, authService } = createComponent();
+        const { component, authService } = createComponent(`${adminAppUrl}//attacker.example/capture`);
         authService.isAdmin.mockReturnValue(false);
-        component['adminReturnUrl'] = `${adminAppUrl}//attacker.example/capture`;
 
         const destination = new URL((await component['tryBuildAdminRedirectUrlAsync']()) ?? '');
 
@@ -119,8 +117,7 @@ describe('AuthComponent admin SSO destination', () => {
     });
 
     it('preserves the unauthorized fallback when code issuance fails', async () => {
-        const { component, authService } = createComponent();
-        component['adminReturnUrl'] = '/users?tab=active';
+        const { component, authService } = createComponent('/users?tab=active');
         authService.startAdminSso.mockReturnValue(throwError(() => new Error('Unavailable')));
 
         const destination = new URL((await component['tryBuildAdminRedirectUrlAsync']()) ?? '');

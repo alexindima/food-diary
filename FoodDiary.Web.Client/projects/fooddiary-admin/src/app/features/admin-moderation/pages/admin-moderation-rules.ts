@@ -56,9 +56,7 @@ const MAX_SAMPLE_PERCENT = 100;
 export class AdminModerationRulesComponent {
     private readonly moderation = inject(AdminRecipeModerationFacade);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly loadVersion = signal(0);
     private readonly policyResource = rxResource({
-        params: this.loadVersion,
         stream: () =>
             this.moderation.getPolicy().pipe(
                 tap(policy => {
@@ -90,10 +88,7 @@ export class AdminModerationRulesComponent {
     );
 
     protected load(): void {
-        if (this.loading()) {
-            return;
-        }
-        this.loadVersion.update(version => version + 1);
+        this.policyResource.reload();
     }
 
     protected setCategory(kind: 'text' | 'image', category: string, selected: boolean): void {

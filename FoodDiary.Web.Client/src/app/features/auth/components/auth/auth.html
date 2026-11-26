@@ -5,13 +5,13 @@
             class="auth__tabs"
             [ariaLabel]="'AUTH.DIALOG_TITLE' | translate"
             [tabs]="authTabs"
-            [selectedValue]="authMode"
+            [selectedValue]="authMode()"
             (selectedValueChange)="changeAuthMode($event)"
         />
     </div>
 
     <p class="auth__subtitle fd-ui-body-sm" [hidden]="confirmationUserId() !== null">
-        @if (authMode === 'login') {
+        @if (authMode() === 'login') {
             {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
         } @else {
             {{ 'AUTH.REGISTER.SUBTITLE' | translate }}
@@ -19,12 +19,12 @@
     </p>
 
     <div class="auth__content fd-stack fd-gap-md">
-        @if (authMode === 'login') {
+        @if (authMode() === 'login') {
             <div
                 [attr.role]="inlineSignIn() ? null : 'tabpanel'"
                 [id]="modeTabs.panelId('login')"
                 [attr.aria-labelledby]="inlineSignIn() ? null : modeTabs.tabId('login')"
-                [hidden]="authMode !== 'login'"
+                [hidden]="authMode() !== 'login'"
             >
                 @if (showPasswordReset()) {
                     <fd-auth-password-reset-form
@@ -66,7 +66,7 @@
                 role="tabpanel"
                 [id]="modeTabs.panelId('register')"
                 [attr.aria-labelledby]="modeTabs.tabId('register')"
-                [hidden]="authMode !== 'register'"
+                [hidden]="authMode() !== 'register'"
             >
                 <fd-auth-register-form
                     [form]="registerForm"

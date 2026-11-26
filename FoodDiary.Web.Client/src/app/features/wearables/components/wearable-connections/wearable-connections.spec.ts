@@ -31,12 +31,39 @@ describe('WearableConnectionsComponent', () => {
     });
 
     it('delegates disconnect to service and reloads connections', () => {
-        const { component, service } = setupComponent();
+        const { component, fixture, service } = setupComponent();
 
         component['disconnect']('Fitbit');
+        fixture.detectChanges();
 
         expect(service.disconnect).toHaveBeenCalledWith('Fitbit');
         expect(service.getConnections).toHaveBeenCalledTimes(2);
+    });
+
+    it('supersedes an in-flight refresh when another disconnect succeeds', async () => {
+        const garmin = { ...CONNECTION, provider: 'Garmin', externalUserId: 'garmin-user' };
+        const { component, fixture, service } = setupComponent(undefined, [CONNECTION, garmin]);
+        const firstRefresh = new Subject<WearableConnection[]>();
+        const latestRefresh = new Subject<WearableConnection[]>();
+        service.getConnections.mockReturnValueOnce(firstRefresh).mockReturnValueOnce(latestRefresh);
+
+        component['disconnect']('Fitbit');
+        fixture.detectChanges();
+        expect(firstRefresh.observed).toBe(true);
+        expect(component['providerRows']().filter(row => row.connection !== undefined)).toHaveLength(2);
+
+        component['disconnect']('Garmin');
+        fixture.detectChanges();
+        expect(firstRefresh.observed).toBe(false);
+        expect(latestRefresh.observed).toBe(true);
+
+        latestRefresh.next([]);
+        latestRefresh.complete();
+        firstRefresh.next([garmin]);
+        firstRefresh.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component['providerRows']().every(row => row.connection === undefined)).toBe(true);
     });
 
     it.each([

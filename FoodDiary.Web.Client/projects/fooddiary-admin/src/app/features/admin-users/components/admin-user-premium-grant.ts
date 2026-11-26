@@ -35,10 +35,9 @@ export class AdminUserPremiumGrantComponent {
 
     private readonly users = inject(AdminUsersFacade);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly loadVersion = signal(0);
-    private readonly grantRequest = computed(() => ({ userId: this.userId(), version: this.loadVersion() }));
+    private readonly grantOwner = computed(() => ({ userId: this.userId() }));
     private readonly grantResource = rxResource({
-        params: this.grantRequest,
+        params: this.grantOwner,
         stream: ({ params }) => {
             this.closeEditor();
             return this.users.getPremiumGrant(params.userId);
@@ -66,7 +65,7 @@ export class AdminUserPremiumGrantComponent {
     );
 
     protected reload(): void {
-        this.loadVersion.update(version => version + 1);
+        this.grantResource.reload();
     }
 
     protected edit(): void {
@@ -121,17 +120,17 @@ export class AdminUserPremiumGrantComponent {
         if (this.saving()) {
             return;
         }
-        const owner = this.grantRequest();
+        const owner = this.grantOwner();
         this.saving.set(true);
         this.errorKey.set(null);
         try {
             const grant = await firstValueFrom(request.pipe(takeUntilDestroyed(this.destroyRef)));
-            if (!this.destroyRef.destroyed && this.grantRequest() === owner) {
+            if (!this.destroyRef.destroyed && this.grantOwner() === owner) {
                 this.grantResource.set(grant);
                 this.closeEditor();
             }
         } catch {
-            if (!this.destroyRef.destroyed && this.grantRequest() === owner) {
+            if (!this.destroyRef.destroyed && this.grantOwner() === owner) {
                 this.errorKey.set('ADMIN_USER_PREMIUM.SAVE_ERROR');
             }
         } finally {

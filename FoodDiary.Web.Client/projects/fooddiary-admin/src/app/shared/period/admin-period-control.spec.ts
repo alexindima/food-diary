@@ -166,3 +166,22 @@ it('adapts date model values to calendar dates and clears them when the period m
     expect(router.parseUrl(router.url).queryParams).toEqual({ period: 'all' });
     expect(host.querySelector('fd-ui-date-input')).toBeNull();
 });
+
+it('resets both custom date drafts when only one date changes in the URL', async () => {
+    const fixture = await openPeriodAsync('/?period=custom&from=2024-02-28&to=2024-03-03');
+    const router = TestBed.inject(Router);
+    const [start, end] = fixture.debugElement
+        .queryAll(By.directive(FdUiDateInputComponent))
+        .map(node => node.injector.get(FdUiDateInputComponent));
+    start.value.set('2024-02-29');
+    end.value.set('2024-03-01');
+    fixture.detectChanges();
+    expect(start.value()).toBe('2024-02-29');
+    expect(end.value()).toBe('2024-03-01');
+
+    await router.navigateByUrl('/?period=custom&from=2024-02-28&to=2024-03-04');
+    fixture.detectChanges();
+
+    expect(start.value()).toBe('2024-02-28');
+    expect(end.value()).toBe('2024-03-04');
+});

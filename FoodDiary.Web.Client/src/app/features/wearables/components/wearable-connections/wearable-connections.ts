@@ -21,10 +21,6 @@ export class WearableConnectionsComponent {
 
     protected readonly providerRows = this.facade.providerRows;
 
-    public constructor() {
-        this.facade.initialize();
-    }
-
     protected connect(providerId: string): void {
         const state = crypto.randomUUID();
         this.facade

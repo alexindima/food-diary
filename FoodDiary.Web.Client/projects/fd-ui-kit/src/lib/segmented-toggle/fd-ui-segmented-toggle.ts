@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, model, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
 export type FdUiSegmentedToggleOption<Value extends string = string> = {
@@ -25,8 +25,7 @@ export type FdUiSegmentedToggleSize = 'compact' | 'sm' | 'md';
 })
 export class FdUiSegmentedToggleComponent<Value extends string = string> {
     private readonly translate = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translate.onLangChange);
 
     public readonly options = input<Array<FdUiSegmentedToggleOption<Value>>>([]);
     public readonly selectedValue = model.required<Value>();
@@ -39,7 +38,7 @@ export class FdUiSegmentedToggleComponent<Value extends string = string> {
     public readonly stackOnNarrow = input(true);
     public readonly wrapOnNarrow = input(false);
     protected readonly optionViewModels = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.options().map(option => ({
             ...option,
             labelText: option.label ?? (option.labelKey !== undefined ? this.translate.instant(option.labelKey) : ''),
@@ -66,12 +65,6 @@ export class FdUiSegmentedToggleComponent<Value extends string = string> {
         }
         return classes.join(' ');
     });
-
-    public constructor() {
-        this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected select(value: Value): void {
         if (value === this.selectedValue()) {

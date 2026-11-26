@@ -8,6 +8,7 @@ import {
     type ElementRef,
     inject,
     input,
+    linkedSignal,
     PLATFORM_ID,
     Renderer2,
     signal,
@@ -124,7 +125,7 @@ export class UserManageComponent {
     private lastProfileSavedVersion = 0;
     private pendingProfileSave: ProfileSaveSnapshot | null = null;
     private activeProfileSave: Promise<boolean> | null = null;
-    private readonly pendingPasswordSetupIntent = signal(false);
+    private readonly pendingPasswordSetupIntent = linkedSignal(() => this.intent() === 'set-password');
 
     protected genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
     protected activityLevelOptions: Array<FdUiSelectOption<ActivityLevelOption | null>> = [];
@@ -207,7 +208,6 @@ export class UserManageComponent {
         });
         this.buildSelectOptions();
         this.watchTranslations();
-        this.watchPasswordSetupIntent();
         this.watchGoogleLinkResult();
         this.watchUserProfile();
         this.watchPasswordSetupDialog();
@@ -239,12 +239,6 @@ export class UserManageComponent {
                 this.buildSelectOptions();
                 this.updateDietologistInviteEmailError();
             });
-    }
-
-    private watchPasswordSetupIntent(): void {
-        effect(() => {
-            this.pendingPasswordSetupIntent.set(this.intent() === 'set-password');
-        });
     }
 
     private watchGoogleLinkResult(): void {

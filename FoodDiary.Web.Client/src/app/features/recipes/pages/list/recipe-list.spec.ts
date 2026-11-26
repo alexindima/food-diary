@@ -66,7 +66,13 @@ describe('RecipeListComponent initial loading and filters', () => {
     it('loads initial overview on creation', () => {
         setupComponent();
 
-        expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.requestView).toHaveBeenCalledExactlyOnceWith({
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: true,
+            initial: true,
+        });
     });
 
     it('allows including public recipes after initially showing only owned recipes', async () => {
@@ -75,7 +81,12 @@ describe('RecipeListComponent initial loading and filters', () => {
         component['searchForm'].onlyMine().value.set(false);
         await flushPromisesAsync();
 
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: false,
+        });
     });
 
     it('applies changed filter dialog result', () => {
@@ -107,10 +118,15 @@ describe('RecipeListComponent detail actions', () => {
         });
 
         component['onRecipeClick'](createRecipe());
-        await waitForAsync(() => facade.loadRecipes.mock.calls.length > 0);
+        await waitForAsync(() => facade.requestView.mock.calls.length > 1);
 
         expect(facade.loadFavorites).not.toHaveBeenCalled();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: true,
+        });
     });
 
     it('delegates edit action from detail dialog to facade', async () => {
@@ -135,7 +151,12 @@ describe('RecipeListComponent actions', () => {
         component['onPageChange'](SECOND_PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
-        expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: SECOND_PAGE,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: true,
+        });
     });
 
     it('opens favorite recipe from favorite entry', () => {
@@ -201,6 +222,7 @@ type RecipeListFacadeMock = Omit<
     | 'openFilters'
     | 'removeFavorite'
     | 'removePickerFavorite'
+    | 'requestView'
     | 'restorePickerFavorite'
     | 'toggleRecipeFavorite'
 > & {
@@ -212,13 +234,11 @@ type RecipeListFacadeMock = Omit<
     hasActiveFilters: ReturnType<typeof vi.fn>;
     hasSearch: ReturnType<typeof vi.fn>;
     loadFavorites: ReturnType<typeof vi.fn>;
-    loadInitialOverview: ReturnType<typeof vi.fn>;
-    loadRecipes: ReturnType<typeof vi.fn>;
-    requestView: ReturnType<typeof vi.fn>;
     navigateToAddRecipeAsync: ReturnType<typeof vi.fn>;
     openFilters: ReturnType<typeof vi.fn>;
     removeFavorite: ReturnType<typeof vi.fn>;
     removePickerFavorite: ReturnType<typeof vi.fn<RecipeListFacade['removePickerFavorite']>>;
+    requestView: ReturnType<typeof vi.fn<RecipeListFacade['requestView']>>;
     restorePickerFavorite: ReturnType<typeof vi.fn<RecipeListFacade['restorePickerFavorite']>>;
     toggleRecipeFavorite: ReturnType<typeof vi.fn>;
 };
@@ -253,9 +273,6 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         isDeleting: signal(false),
         isFavoritesLoadingMore: signal(false),
         loadFavorites: vi.fn().mockReturnValue(of(void 0)),
-        loadInitialOverview: vi.fn().mockReturnValue(of(void 0)),
-        loadRecipes: vi.fn().mockReturnValue(of(void 0)),
-        requestView: vi.fn(),
         navigateToAddRecipeAsync: vi.fn().mockResolvedValue(true),
         openFilters: vi.fn().mockReturnValue(of(null)),
         pageSize: PAGE_SIZE,
@@ -264,6 +281,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         removeFavorite: vi.fn().mockReturnValue(of(void 0)),
         removePickerFavorite: vi.fn<RecipeListFacade['removePickerFavorite']>().mockReturnValue(of(true)),
         requestProvenance: signal(null),
+        requestView: vi.fn<RecipeListFacade['requestView']>(),
         restorePickerFavorite: vi.fn<RecipeListFacade['restorePickerFavorite']>().mockReturnValue(of(false)),
         showRecentSection: signal(true),
         toggleRecipeFavorite: vi.fn().mockReturnValue(of(void 0)),
@@ -336,24 +354,40 @@ describe('RecipeListComponent search and recovery', () => {
         component['searchForm'].search().value.set('Rice');
         TestBed.tick();
         await flushPromisesAsync();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, true);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: { ...emptyRecipeFilters(), search: 'Rice' },
+            onlyMine: true,
+        });
+        const nextRequest = facade.requestView.mock.calls.length + 1;
         component['clearSearch']();
         TestBed.tick();
         await flushPromisesAsync();
         expect(component['searchModel']().search).toBe('');
-        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: '' }, true);
+        expect(facade.requestView).toHaveBeenNthCalledWith(nextRequest, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: { ...emptyRecipeFilters(), search: '' },
+            onlyMine: true,
+        });
     });
 
     it('does not reload when the filter dialog is cancelled', () => {
         const { component } = setupComponent();
         component['openFilters']();
-        expect(facade.loadRecipes).not.toHaveBeenCalled();
+        expect(facade.requestView).toHaveBeenCalledTimes(1);
     });
 
     it('retries loading and delegates new recipe navigation', async () => {
         const { component } = setupComponent();
         component['retryLoad']();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: true,
+        });
         await component['onAddRecipeClickAsync']();
         expect(facade.navigateToAddRecipeAsync).toHaveBeenCalledTimes(1);
     });
@@ -365,13 +399,14 @@ describe('RecipeListComponent search and recovery', () => {
 
         component['retryLoad']();
 
-        expect(facade.loadRecipes).toHaveBeenCalledWith(
-            SECOND_PAGE,
-            PAGE_SIZE,
-            { ...emptyRecipeFilters(), search: 'Rice', hasImage: false },
-            true,
-        );
-        expect(facade.loadInitialOverview).toHaveBeenCalledTimes(1);
+        expect(facade.requestView).toHaveBeenCalledTimes(2);
+        expect(facade.requestView).toHaveBeenNthCalledWith(1, expect.objectContaining({ initial: true }));
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: SECOND_PAGE,
+            limit: PAGE_SIZE,
+            filters: { ...emptyRecipeFilters(), search: 'Rice', hasImage: false },
+            onlyMine: true,
+        });
     });
 
     it('keeps unavailable favorites from opening or adding a meal', () => {
@@ -466,7 +501,12 @@ describe('RecipeListComponent presentation state', () => {
             hasImage: null,
         });
         expect(component['activeFilterChips']()).toEqual([]);
-        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, false);
+        expect(facade.requestView).toHaveBeenLastCalledWith({
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: { ...emptyRecipeFilters(), search: 'Rice' },
+            onlyMine: false,
+        });
     });
 
     it('does not reload when filters are unchanged', () => {
@@ -475,7 +515,7 @@ describe('RecipeListComponent presentation state', () => {
             of({ onlyMine: true, category: null, maxTotalTime: null, caloriesFrom: null, caloriesTo: null, hasImage: null }),
         );
         component['openFilters']();
-        expect(facade.loadRecipes).not.toHaveBeenCalled();
+        expect(facade.requestView).toHaveBeenCalledTimes(1);
     });
 
     it('opens the favorites picker lazily without querying every favorite', () => {
@@ -523,9 +563,15 @@ describe('RecipeListComponent rendered catalogue', () => {
         const { fixture } = setupComponent({ renderTemplate: true });
         dialogService.open.mockReturnValue({ afterClosed: (): Observable<undefined> => of(undefined) });
         recipeListButton(fixture, 'button[aria-label="Recipe"]').click();
-        await waitForAsync(() => facade.loadRecipes.mock.calls.length > 0);
+        await waitForAsync(() => facade.requestView.mock.calls.length > 1);
 
-        expect(facade.loadRecipes).toHaveBeenCalledExactlyOnceWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.requestView).toHaveBeenCalledTimes(2);
+        expect(facade.requestView).toHaveBeenNthCalledWith(2, {
+            page: 1,
+            limit: PAGE_SIZE,
+            filters: emptyRecipeFilters(),
+            onlyMine: true,
+        });
         expect(facade.handleDetailActionAsync).not.toHaveBeenCalled();
     });
 

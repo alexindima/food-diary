@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { convertToParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -44,10 +44,8 @@ export class AdminRetentionComponent {
     private readonly cohortPeriod = computed(() =>
         adminPeriod(convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }), '90d'),
     );
-    private readonly retryVersion = signal(0);
     private readonly reportResource = rxResource({
         params: () => {
-            this.retryVersion();
             const range = this.activityPeriod();
             const cohorts = this.cohortPeriod();
             if (range === null || cohorts === null) {
@@ -68,7 +66,7 @@ export class AdminRetentionComponent {
     protected readonly failed = computed(() => this.reportResource.error() !== undefined);
 
     protected retry(): void {
-        this.retryVersion.update(version => version + 1);
+        this.reportResource.reload();
     }
 
     protected ratio(value: number | null, total: number): string {

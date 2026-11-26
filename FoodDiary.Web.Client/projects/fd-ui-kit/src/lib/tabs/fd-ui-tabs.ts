@@ -1,16 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    type ElementRef,
-    inject,
-    input,
-    model,
-    signal,
-    viewChildren,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, inject, input, model, viewChildren } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -31,9 +20,8 @@ export type FdUiTabsAppearance = 'default' | 'wrap-compact';
 })
 export class FdUiTabsComponent {
     private static nextId = 0;
-    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly tabs = input<FdUiTab[]>([]);
     public readonly selectedValue = model.required<string>();
@@ -53,7 +41,7 @@ export class FdUiTabsComponent {
         return Math.max(index, 0);
     });
     protected readonly tabItems = computed<FdUiTabViewModel[]>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         const mode = this.mode();
         const selectedIndex = this.selectedIndex();
@@ -68,12 +56,6 @@ export class FdUiTabsComponent {
             tabIndex: mode !== 'tabs' || index === selectedIndex ? 0 : -1,
         }));
     });
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected selectIndex(index: number): void {
         const tab = this.tabs().at(index);

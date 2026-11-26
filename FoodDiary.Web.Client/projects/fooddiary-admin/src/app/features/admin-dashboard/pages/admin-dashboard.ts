@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
@@ -39,7 +40,7 @@ export class AdminDashboardComponent {
     public readonly from = input(undefined, { transform: firstAdminQueryValue });
     public readonly to = input(undefined, { transform: firstAdminQueryValue });
 
-    protected readonly dashboard = inject(AdminDashboardFacade);
+    private readonly dashboard = inject(AdminDashboardFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     protected readonly today = isoDate(new Date());
@@ -54,13 +55,17 @@ export class AdminDashboardComponent {
     protected readonly draftFrom = linkedSignal<string | Date | null>(() => this.appliedPeriod().from);
     protected readonly draftTo = linkedSignal<string | Date | null>(() => this.appliedPeriod().to);
     protected readonly invalid = linkedSignal(() => this.appliedPeriod().range === null);
-    protected readonly data = this.dashboard.overview;
-
-    public constructor() {
-        effect(() => {
-            this.reload();
-        });
-    }
+    private readonly refreshRevision = signal(0);
+    private readonly overviewResource = rxResource({
+        params: () => {
+            const range = this.appliedPeriod().range;
+            return range === null ? undefined : { range, revision: this.refreshRevision() };
+        },
+        stream: ({ params }) => this.dashboard.getOverview(params.range),
+    });
+    protected readonly data = computed(() => (this.overviewResource.hasValue() ? this.overviewResource.value() : null));
+    protected readonly isLoading = this.overviewResource.isLoading;
+    protected readonly failed = computed(() => this.overviewResource.error() !== undefined);
 
     protected setPreset(value: string | null): void {
         const preset = dashboardPreset(value);
@@ -89,12 +94,8 @@ export class AdminDashboardComponent {
     }
 
     protected reload(): void {
-        const range = this.appliedPeriod().range;
-        if (range !== null) {
-            this.dashboard.load(range);
-        } else {
-            this.dashboard.clear();
-        }
+        // Refresh replaces an in-flight request for the applied period.
+        this.refreshRevision.update(revision => revision + 1);
     }
 
     private range(preset: Preset, draftFrom: string | Date | null, draftTo: string | Date | null): DashboardRange | null {

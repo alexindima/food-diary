@@ -167,7 +167,7 @@ describe('AuthComponent tabs', () => {
 
         component['changeAuthMode']('register');
 
-        expect(component['authMode']).toBe('register');
+        expect(component['authMode']()).toBe('register');
         expect(component['loginModel']().email).toBe('');
         expect(component['showPasswordReset']()).toBe(false);
         expect(component['passwordResetSent']()).toBe(false);
@@ -343,7 +343,7 @@ describe('AuthComponent Google login', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component['authMode']).toBe('login');
+        expect(component['authMode']()).toBe('login');
         expect(component['googleLinkRequired']()).toBe(true);
         expect(component['pendingGoogleLinkCredential']).toBe('google-credential');
         expect(component['globalError']()).toBe('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
@@ -354,12 +354,12 @@ describe('AuthComponent Google login', () => {
         authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('accountLinkRequired'));
 
         initializeGoogle.mock.calls[0][0]('google-credential');
-        expect(component['authMode']).toBe('login');
+        expect(component['authMode']()).toBe('login');
         component['changeAuthMode']('register');
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component['authMode']).toBe('register');
+        expect(component['authMode']()).toBe('register');
         expect(component['googleLinkRequired']()).toBe(false);
         expect(component['pendingGoogleLinkCredential']).toBeNull();
     });

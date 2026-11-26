@@ -7,6 +7,7 @@ import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
+import { DEVELOPMENT_REQUEST_SCOPE } from '../../../shared/development/development-request-context';
 import { type FavoriteRecipe, type RecipeOverview, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -389,6 +390,52 @@ describe('RecipeListFacade favorite picker', () => {
 });
 
 describe('RecipeListFacade competing requests', () => {
+    it('supersedes a queued view read with the awaited deletion refresh', () => {
+        const refresh = new Subject<RecipeOverview>();
+        const refreshRequestId = 42;
+        const complete = vi.fn();
+        const replacement = { ...recipe, id: entityId<'recipe'>('replacement'), name: 'Refreshed recipe' };
+        recipeService.queryOverview.mockImplementationOnce((_query: unknown, context: HttpContext) => {
+            context.get(DEVELOPMENT_REQUEST_SCOPE)?.(refreshRequestId);
+            return refresh;
+        });
+
+        facade.requestView({ page: 2, limit: PAGE_LIMIT, filters: { search: 'obsolete' }, onlyMine: false });
+        expect(recipeService.queryOverview).not.toHaveBeenCalled();
+        facade.deleteRecipe(recipe, 'soup', true).subscribe({ complete });
+        const refreshRevision = facade.requestProvenance().queryRevision;
+        TestBed.tick();
+
+        expect(recipeService.deleteById).toHaveBeenCalledExactlyOnceWith(recipe.id);
+        expect(recipeService.queryOverview).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ page: 1, filters: { search: 'soup' }, includePublic: false }),
+            expect.any(HttpContext),
+        );
+        expect(refresh.observed).toBe(true);
+        expect(facade.recipeData.isLoading()).toBe(true);
+        expect(facade.isDeleting()).toBe(true);
+        expect(complete).not.toHaveBeenCalled();
+
+        refresh.next({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allRecipes: { data: [replacement], page: 1, limit: PAGE_LIMIT, totalPages: 1, totalItems: 1 },
+        });
+        refresh.complete();
+        TestBed.tick();
+
+        expect(facade.recipeData.items()).toEqual([replacement]);
+        expect(facade.recipeData.isLoading()).toBe(false);
+        expect(facade.isDeleting()).toBe(false);
+        expect(complete).toHaveBeenCalledOnce();
+        expect(facade.requestProvenance()).toEqual({
+            queryRevision: refreshRevision,
+            lastAppliedQueryRevision: refreshRevision,
+            lastAppliedRequestId: refreshRequestId,
+        });
+    });
+
     it('cancels initial load when search starts and preserves newer results', () => {
         const initial = new Subject<unknown>();
         const search = new Subject<unknown>();

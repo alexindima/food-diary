@@ -1,5 +1,5 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
@@ -134,3 +134,57 @@ describe('Admin application route boundaries', () => {
         TestBed.inject(HttpTestingController).verify();
     });
 });
+
+const MILLISECONDS_PER_DAY = 86_400_000;
+const SHORT_DMARC_PERIOD = 7;
+const LONG_DMARC_PERIOD = 30;
+
+it('cancels the old DMARC period on navigation and retries the first repeated period', async () => {
+    configureAdminRoutes(true);
+    const harness = await RouterTestingHarness.create('/mail-dmarc?period=7');
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the DMARC route to render');
+    }
+    const http = TestBed.inject(HttpTestingController);
+    const oldRequest = expectDmarcListRequest(http, SHORT_DMARC_PERIOD);
+
+    const destination = '/mail-dmarc?period=30&period=7';
+    await harness.navigateByUrl(destination);
+    expect(harness.routeNativeElement).toBe(host);
+    expect(oldRequest.cancelled).toBe(true);
+    expect(host.querySelector('[role="radio"][aria-checked="true"]')?.textContent).toContain('ADMIN_DMARC.PERIOD_30');
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
+    expectDmarcListRequest(http, LONG_DMARC_PERIOD).flush(null, {
+        status: HttpStatusCode.ServiceUnavailable,
+        statusText: 'Service unavailable',
+    });
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
+    const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+    if (retry === null) {
+        throw new Error('Expected the DMARC retry button');
+    }
+    retry.click();
+    harness.detectChanges();
+    expectDmarcListRequest(http, LONG_DMARC_PERIOD).flush({ items: [], totalItems: 0 });
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(TestBed.inject(Router).url).toBe(destination);
+    expect(host.querySelector('fd-admin-load-error')).toBeNull();
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('ADMIN_DMARC.NO_VERIFIED_REPORTS');
+    http.verify();
+});
+
+function expectDmarcListRequest(http: HttpTestingController, days: number): TestRequest {
+    const request = http.expectOne(candidate => candidate.method === 'GET' && candidate.url.endsWith('/admin/mail-inbox/messages/page'));
+    const params = request.request.params;
+    const from = Date.parse(params.get('fromUtc') ?? '');
+    const to = Date.parse(params.get('toUtc') ?? '');
+    expect(params.get('recipient')).toBe('dmarc@fooddiary.club');
+    expect(Math.floor((to - from) / MILLISECONDS_PER_DAY)).toBe(days);
+    return request;
+}

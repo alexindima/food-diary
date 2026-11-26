@@ -2044,7 +2044,7 @@
       "inputs": [
         {
           "name": "period",
-          "type": "string",
+          "type": "",
           "required": false
         }
       ],

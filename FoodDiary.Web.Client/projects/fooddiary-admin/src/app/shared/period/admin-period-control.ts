@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -27,10 +27,22 @@ export class AdminPeriodControlComponent {
     public readonly inline = input(false);
     public readonly defaultPeriod = input('all');
     public readonly label = input('ADMIN_COMMON.PERIOD');
-    protected readonly preset = signal('all');
-    protected readonly from = signal<string | Date | null>(null);
-    protected readonly to = signal<string | Date | null>(null);
-    protected readonly invalid = signal(false);
+    private readonly urlPeriod = computed(() => {
+        const defaultPeriod = this.defaultPeriod();
+        return {
+            defaultPeriod,
+            period: this.period() ?? defaultPeriod,
+            from: this.periodFrom() ?? null,
+            to: this.periodTo() ?? null,
+        };
+    });
+    protected readonly preset = linkedSignal(() => this.urlPeriod().period);
+    protected readonly from = linkedSignal<string | Date | null>(() => this.urlPeriod().from);
+    protected readonly to = linkedSignal<string | Date | null>(() => this.urlPeriod().to);
+    protected readonly invalid = computed(() => {
+        const { period, from, to, defaultPeriod } = this.urlPeriod();
+        return adminPeriod(convertToParamMap({ period, from, to }), defaultPeriod) === null;
+    });
     protected readonly today = new Date().toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH);
     protected readonly presets = computed(() => {
         this.language();
@@ -39,19 +51,6 @@ export class AdminPeriodControlComponent {
             label: String(this.translate.instant(`ADMIN_COMMON.PERIOD_${value}`)),
         }));
     });
-
-    public constructor() {
-        effect(() => {
-            const period = this.period() ?? this.defaultPeriod();
-            const from = this.periodFrom() ?? null;
-            const to = this.periodTo() ?? null;
-            const params = convertToParamMap({ period, from, to });
-            this.preset.set(period);
-            this.from.set(from);
-            this.to.set(to);
-            this.invalid.set(adminPeriod(params, this.defaultPeriod()) === null);
-        });
-    }
 
     protected select(value: string | null): void {
         this.preset.set(value ?? 'all');
