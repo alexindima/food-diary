@@ -6,7 +6,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
+import { FdUiInlineAlertComponent, type FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -74,6 +74,7 @@ import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
+        FdUiInlineAlertComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -97,6 +98,7 @@ export class FastingPageComponent {
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
     protected readonly isLoading = this.facade.isLoading;
+    protected readonly overviewLoadError = this.facade.overviewLoadError;
     protected readonly isEnding = this.facade.isEnding;
     protected readonly isStarting = this.facade.isStarting;
     protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
@@ -176,6 +178,10 @@ export class FastingPageComponent {
                 this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
             });
         });
+    }
+
+    protected retryOverview(): void {
+        this.facade.initialize();
     }
 
     protected saveCheckIn(): void {

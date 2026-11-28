@@ -19,6 +19,7 @@ import {
     of,
     skip,
     Subject,
+    type Subscription,
     switchMap,
     take,
     takeUntil,
@@ -90,6 +91,9 @@ export class ProductListFacade {
     private readonly navigationError = signal<string | null>(null);
     private readonly deletingProduct = signal(false);
     private readonly cancelCommandRead = new Subject<void>();
+    private favoriteCountRead: Subscription | null = null;
+    private favoriteCountRevision = 0;
+    private favoriteOverviewReadId: number | null = null;
 
     public readonly pageSize = PRODUCT_LIST_PAGE_SIZE;
     public readonly searchModel = signal<ProductSearchFormValues>({
@@ -376,8 +380,12 @@ export class ProductListFacade {
 
     private readProducts(request: ProductListRead): Observable<void> {
         const { id, query, filters, overview } = request;
+        const favoriteCountRevision = this.favoriteCountRevision;
+        if (overview) {
+            this.favoriteOverviewReadId = id;
+        }
         const page = overview
-            ? this.readOverview(request)
+            ? this.readOverview(request, favoriteCountRevision)
             : this.productService.query(query.page, this.pageSize, filters, {
                   includePublic: !query.onlyMine,
                   context: developmentRequestContext(this.productData.bindRequest(id)),
@@ -396,15 +404,22 @@ export class ProductListFacade {
                     this.recentProducts.set([]);
                     if (overview) {
                         this.favorites.set([]);
-                        this.favoriteTotalCount.set(0);
+                        if (favoriteCountRevision === this.favoriteCountRevision) {
+                            this.favoriteTotalCount.set(0);
+                        }
                     }
                 }
                 return of(void 0);
             }),
+            finalize(() => {
+                if (this.favoriteOverviewReadId === id) {
+                    this.favoriteOverviewReadId = null;
+                }
+            }),
         );
     }
 
-    private readOverview({ id, query, filters }: ProductListRead): Observable<PageOf<Product>> {
+    private readOverview({ id, query, filters }: ProductListRead, favoriteCountRevision: number): Observable<PageOf<Product>> {
         return this.productService
             .queryOverview(
                 {
@@ -424,7 +439,10 @@ export class ProductListFacade {
                     }
                     this.recentProducts.set(data.recentItems);
                     this.favorites.set(data.favoriteItems);
-                    this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    if (favoriteCountRevision === this.favoriteCountRevision) {
+                        this.favoriteCountRead?.unsubscribe();
+                        this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    }
                 }),
                 map(data => data.allProducts),
             );
@@ -444,9 +462,11 @@ export class ProductListFacade {
     }
 
     public loadFavorites(): void {
-        this.favoriteProductService
+        this.favoriteCountRevision++;
+        this.favoriteCountRead?.unsubscribe();
+        this.favoriteCountRead = this.favoriteProductService
             .getPage(1, 1)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: result => {
                     this.favoriteTotalCount.set(result.totalItems);
@@ -474,8 +494,8 @@ export class ProductListFacade {
                     remove: favorite =>
                         this.favoriteProductService.remove(favorite.id).pipe(
                             tap(() => {
-                                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                                 this.syncProductFavoriteState(favorite.productId, false, null);
+                                this.applyFavoriteCountDelta(-1);
                             }),
                             map(() => true),
                         ),
@@ -485,8 +505,8 @@ export class ProductListFacade {
                             .pipe(
                                 tap(restored => {
                                     favorite.id = restored.id;
-                                    this.favoriteTotalCount.update(count => count + 1);
                                     this.syncProductFavoriteState(favorite.productId, true, restored.id);
+                                    this.applyFavoriteCountDelta(1);
                                 }),
                                 map(() => true),
                             ),
@@ -522,7 +542,7 @@ export class ProductListFacade {
             .subscribe({
                 next: favorite => {
                     this.syncProductFavoriteState(product.id, true, favorite.id);
-                    this.favoriteTotalCount.update(count => count + 1);
+                    this.applyFavoriteCountDelta(1);
                 },
                 error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.ADD_ERROR')),
             });
@@ -719,6 +739,13 @@ export class ProductListFacade {
         );
     }
 
+    private applyFavoriteCountDelta(delta: 1 | -1): void {
+        this.favoriteTotalCount.update(count => Math.max(0, count + delta));
+        if (this.favoriteCountRead?.closed === false || this.favoriteOverviewReadId !== null) {
+            this.loadFavorites();
+        }
+    }
+
     private removeProductFavorite(product: Product): void {
         const favoriteId = product.favoriteProductId;
         const favoriteId$ =
@@ -740,7 +767,7 @@ export class ProductListFacade {
                 next: removed => {
                     this.syncProductFavoriteState(product.id, false, null);
                     if (removed) {
-                        this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                        this.applyFavoriteCountDelta(-1);
                     }
                 },
                 error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.REMOVE_ERROR')),

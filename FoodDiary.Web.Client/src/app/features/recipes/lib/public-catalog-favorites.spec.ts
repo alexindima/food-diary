@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
@@ -167,17 +167,14 @@ describe('PublicCatalogFavorites login ownership', () => {
         });
         const action = favorites.toggleAsync(publicRecipeFixture());
         await vi.waitFor(() => {
-            expect(api.getLookupPage).toHaveBeenCalledTimes(2);
+            expect(api.getLookupPage).toHaveBeenCalledExactlyOnceWith();
         });
         lookup.next([]);
         lookup.complete();
-        const replacement = firstValueFrom(of(undefined)).then(async () => {
-            await firstValueFrom(of(undefined));
-            api.getLookupPage.mockReturnValue(of([]));
-            account.set('bob');
-            TestBed.tick();
-        });
-        await Promise.all([action, replacement]);
+        api.getLookupPage.mockReturnValue(of([]));
+        account.set('bob');
+        TestBed.tick();
+        await action;
         expect(account()).toBe('bob');
         expect(api.add).not.toHaveBeenCalled();
         expect(api.remove).not.toHaveBeenCalled();
@@ -186,22 +183,27 @@ describe('PublicCatalogFavorites login ownership', () => {
 
     it('does not save for a replacement account while the signed-in favorite lookup is pending', async () => {
         const lookup = new Subject<FavoriteRecipe[]>();
+        const loginClosed = new Subject<boolean>();
         api.getLookupPage.mockReturnValue(lookup);
         dialog.openAsync.mockImplementation(() => {
             authenticated.set(true);
             TestBed.tick();
-            return { afterClosed: (): Observable<boolean> => of(true) };
+            return { afterClosed: (): Observable<boolean> => loginClosed };
         });
         const action = favorites.toggleAsync(publicRecipeFixture());
         await vi.waitFor(() => {
-            expect(api.getLookupPage).toHaveBeenCalledTimes(2);
+            expect(loginClosed.observed).toBe(true);
         });
+        loginClosed.next(true);
+        loginClosed.complete();
+        await new Promise<void>(queueMicrotask);
+
         api.getLookupPage.mockReturnValueOnce(of([]));
         account.set('bob');
         TestBed.tick();
-        lookup.next([]);
-        lookup.complete();
+        expect(lookup.observed).toBe(false);
         await action;
+        expect(api.getLookupPage).toHaveBeenCalledTimes(2);
         expect(api.add).not.toHaveBeenCalled();
         expect(api.remove).not.toHaveBeenCalled();
         expect(favorites.message()).toBeNull();
@@ -223,6 +225,7 @@ describe('PublicCatalogFavorites', () => {
         });
         await favorites.toggleAsync(publicRecipeFixture());
         expect(api.add).toHaveBeenCalledWith('recipe', 'Soup');
+        expect(api.getLookupPage).toHaveBeenCalledExactlyOnceWith();
         expect(favorites.savedIds().has('recipe')).toBe(true);
         await favorites.toggleAsync(publicRecipeFixture());
         expect(api.remove).toHaveBeenCalledWith('favorite-id');

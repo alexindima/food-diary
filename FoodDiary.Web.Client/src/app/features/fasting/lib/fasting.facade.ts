@@ -79,17 +79,10 @@ export class FastingFacade {
         params: this.initialOverviewRequest,
         stream: ({ params }) =>
             this.fastingService.getOverview().pipe(
-                tap({
-                    next: overview => {
-                        if (this.initialOverviewRequest() === params) {
-                            this.applyOverview(overview);
-                        }
-                    },
-                    error: () => {
-                        if (this.initialOverviewRequest() === params) {
-                            this.reportRequestError();
-                        }
-                    },
+                tap(overview => {
+                    if (this.initialOverviewRequest() === params) {
+                        this.applyOverview(overview);
+                    }
                 }),
             ),
     });
@@ -130,6 +123,7 @@ export class FastingFacade {
     });
 
     public readonly isLoading = this.initialOverview.isLoading;
+    public readonly overviewLoadError = computed(() => this.initialOverview.error() !== undefined);
     public readonly isStarting = signal(false);
     public readonly requestError = signal<string | null>(null);
     public readonly isEnding = signal(false);
@@ -237,6 +231,9 @@ export class FastingFacade {
     }
 
     public startFasting(): void {
+        if (this.isLoading() || this.overviewLoadError()) {
+            return;
+        }
         const intent = this.buildStartIntent();
         if (intent === null) {
             this.requestError.set('FASTING.REQUEST_ERROR');

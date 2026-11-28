@@ -6,7 +6,7 @@ import { FdUiHintDirective, FdUiIconComponent, FdUiWeekPickerComponent } from 'f
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -118,7 +118,7 @@ export class WeeklyCheckInPageComponent {
             return;
         }
 
-        void this.openGoalDialogAsync(this.facade.goalWeekStartIso(), this.weeklyGoal(), 'WEEKLY_CHECK_IN.GOAL.DIALOG_TITLE');
+        this.openGoalDialogForWeek(this.facade.goalWeekStartIso(), this.weeklyGoal(), 'WEEKLY_CHECK_IN.GOAL.DIALOG_TITLE');
     }
 
     protected openSelectedWeekGoalDialog(): void {
@@ -126,7 +126,7 @@ export class WeeklyCheckInPageComponent {
             return;
         }
 
-        void this.openGoalDialogAsync(
+        this.openGoalDialogForWeek(
             this.facade.selectedWeekStartIso(),
             this.selectedWeekGoal(),
             'WEEKLY_CHECK_IN.GOAL.CURRENT_DIALOG_TITLE',
@@ -157,22 +157,15 @@ export class WeeklyCheckInPageComponent {
         });
     }
 
-    private async openGoalDialogAsync(weekStart: CalendarDate, goal: WeeklyGoal | null, titleKey: string): Promise<void> {
-        const dialogRef = this.dialogService.open<WeeklyGoalDialogComponent, WeeklyGoalDialogData, WeeklyGoal | null>(
-            WeeklyGoalDialogComponent,
-            {
-                preset: 'form',
-                data: {
-                    weekStart,
-                    titleKey,
-                    goal,
-                    saveGoalAsync: async payload => this.facade.saveGoalAsync(payload),
-                },
+    private openGoalDialogForWeek(weekStart: CalendarDate, goal: WeeklyGoal | null, titleKey: string): void {
+        this.dialogService.open<WeeklyGoalDialogComponent, WeeklyGoalDialogData, WeeklyGoal | null>(WeeklyGoalDialogComponent, {
+            preset: 'form',
+            data: {
+                weekStart,
+                titleKey,
+                goal,
+                saveGoalAsync: async payload => this.facade.saveGoalAsync(payload),
             },
-        );
-        const result = await firstValueFrom(dialogRef.afterClosed());
-        if (result !== null && result !== undefined) {
-            this.facade.reloadGoal();
-        }
+        });
     }
 }

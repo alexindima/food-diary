@@ -15,7 +15,7 @@ const SECOND_LIMIT = 5;
 describe('RecipeSelectFacade', () => {
     it('delegates query to recipe service with includePublic default', () => {
         const page = { items: [], page: FIRST_PAGE, pageSize: FIRST_LIMIT, totalCount: 0 };
-        const recipeService = { query: vi.fn().mockReturnValue(of(page)) };
+        const recipeService = { queryForPicker: vi.fn().mockReturnValue(of(page)) };
         TestBed.configureTestingModule({
             providers: [
                 RecipeSelectFacade,
@@ -31,12 +31,12 @@ describe('RecipeSelectFacade', () => {
             expect(result).toBe(page);
         });
 
-        expect(recipeService.query).toHaveBeenCalledWith(FIRST_PAGE, FIRST_LIMIT, filters, true);
+        expect(recipeService.queryForPicker).toHaveBeenCalledWith(FIRST_PAGE, FIRST_LIMIT, filters, true);
     });
 
     it('passes explicit includePublic flag through to recipe service', () => {
         const page = { items: [], page: SECOND_PAGE, pageSize: SECOND_LIMIT, totalCount: 0 };
-        const recipeService = { query: vi.fn().mockReturnValue(of(page)) };
+        const recipeService = { queryForPicker: vi.fn().mockReturnValue(of(page)) };
         TestBed.configureTestingModule({
             providers: [
                 RecipeSelectFacade,
@@ -51,7 +51,7 @@ describe('RecipeSelectFacade', () => {
             expect(result).toBe(page);
         });
 
-        expect(recipeService.query).toHaveBeenCalledWith(SECOND_PAGE, SECOND_LIMIT, undefined, false);
+        expect(recipeService.queryForPicker).toHaveBeenCalledWith(SECOND_PAGE, SECOND_LIMIT, undefined, false);
     });
 
     it('opens filters through the dialog service', () => {
@@ -70,7 +70,7 @@ describe('RecipeSelectFacade', () => {
         TestBed.configureTestingModule({
             providers: [
                 RecipeSelectFacade,
-                { provide: RecipeService, useValue: { query: vi.fn() } },
+                { provide: RecipeService, useValue: {} },
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
         });

@@ -19,7 +19,7 @@
         </div>
         <fd-ui-emoji-picker
             [size]="pickerSize()"
-            [options]="hungerEmojiOptions"
+            [options]="hungerEmojiOptions()"
             [selectedValue]="preMealSatietyLevel()"
             [ariaLabel]="preMealSatietyAriaLabel()"
             (selectedValueChange)="onSatietyLevelChange('before', $event)"
@@ -42,7 +42,7 @@
         </div>
         <fd-ui-emoji-picker
             [size]="pickerSize()"
-            [options]="satietyEmojiOptions"
+            [options]="satietyEmojiOptions()"
             [selectedValue]="postMealSatietyLevel()"
             [ariaLabel]="postMealSatietyAriaLabel()"
             (selectedValueChange)="onSatietyLevelChange('after', $event)"

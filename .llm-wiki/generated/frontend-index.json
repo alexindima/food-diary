@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2960,
+    "typescriptFiles": 2959,
     "symbols": 890,
     "routes": 117,
     "features": 46,
@@ -1788,7 +1788,7 @@
       "role": "Component",
       "selector": "fd-ui-autocomplete",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
-      "line": 47
+      "line": 51
     },
     {
       "name": "FdUiBarChartComponent",
@@ -2145,7 +2145,7 @@
       "role": "Component",
       "selector": "fd-ui-nutrient-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/nutrient-input/fd-ui-nutrient-input.ts",
-      "line": 31
+      "line": 20
     },
     {
       "name": "FdUiPaginationComponent",
@@ -4196,7 +4196,7 @@
       "role": "Component",
       "selector": "fd-cycle-nutrition-summary-card",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-nutrition-summary-card/cycle-nutrition-summary-card.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CycleOverviewCardComponent",
@@ -4525,7 +4525,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 121
+      "line": 120
     },
     {
       "name": "DietologistService",
@@ -4679,7 +4679,7 @@
       "role": "Component",
       "selector": "fd-explore-page",
       "path": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.ts",
-      "line": 51
+      "line": 53
     },
     {
       "name": "FastingService",
@@ -4861,7 +4861,7 @@
       "role": "Component",
       "selector": "fd-fasting-page",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "line": 88
+      "line": 89
     },
     {
       "name": "GamificationService",
@@ -5316,7 +5316,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.ts",
-      "line": 33
+      "line": 47
     },
     {
       "name": "MealManageFacade",
@@ -5610,7 +5610,7 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 112
+      "line": 114
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -5708,7 +5708,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "line": 74
+      "line": 75
     },
     {
       "name": "ProductExternalFoodFacade",
@@ -5799,7 +5799,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/profile-measurements.service.ts",
-      "line": 18
+      "line": 13
     },
     {
       "name": "AccountDeletionOfferComponent",
@@ -5883,14 +5883,14 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 56
+      "line": 58
     },
     {
       "name": "UserManageConnectedDevicesComponent",
       "role": "Component",
       "selector": "fd-user-manage-connected-devices",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "UserManageDietologistCardComponent",
@@ -6345,7 +6345,7 @@
       "role": "Component",
       "selector": "fd-recipe-select-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.ts",
-      "line": 53
+      "line": 55
     },
     {
       "name": "RecipeDetailFacade",
@@ -6401,7 +6401,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
-      "line": 61
+      "line": 63
     },
     {
       "name": "RecipeManageFacade",
@@ -6772,7 +6772,7 @@
       "role": "Component",
       "selector": "fd-wearable-connections",
       "path": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-connections/wearable-connections.ts",
-      "line": 17
+      "line": 19
     },
     {
       "name": "WearableDailyCardComponent",
@@ -6786,7 +6786,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/wearables/lib/wearable-connections.facade.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "WeeklyCheckInService",
@@ -8557,8 +8557,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4234,
-      "russianProperties": 4234,
+      "englishProperties": 4239,
+      "russianProperties": 4239,
       "countsMatch": true
     },
     {

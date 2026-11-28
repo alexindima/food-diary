@@ -2,6 +2,7 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import {
     afterNextRender,
+    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -10,6 +11,7 @@ import {
     inject,
     Injector,
     input,
+    linkedSignal,
     model,
     output,
     signal,
@@ -36,6 +38,8 @@ const PREVIOUS_OPTION_OFFSET = -1;
 const EMPTY_STATE_MIN_QUERY_LENGTH = 2;
 
 let uniqueId = 0;
+
+type AutocompleteDraft<T> = { selection: T | null; text: string };
 
 @Component({
     selector: 'fd-ui-autocomplete',
@@ -79,24 +83,24 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly queryChange = output<string>();
     public readonly optionSelected = output<FdUiAutocompleteOption<T>>();
 
-    protected readonly internalValue = signal<T | null>(null);
-    protected readonly queryText = signal('');
+    private readonly draft = linkedSignal<AutocompleteDraft<T>>(() => {
+        const value = this.value();
+        return typeof value === 'string' ? { selection: null, text: value } : { selection: value, text: this.getDisplayText(value) };
+    });
+    // Native focus and Enter can run before a new model value is rendered.
+    private interactionDraft: AutocompleteDraft<T> = { selection: null, text: '' };
+    protected readonly internalValue = computed(() => this.draft().selection);
+    protected readonly queryText = computed(() => this.draft().text);
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
 
     public constructor() {
-        effect(() => {
-            const value = this.value();
-            if (typeof value === 'string') {
-                this.internalValue.set(null);
-                this.queryText.set(value);
-                return;
-            }
-
-            this.internalValue.set(value);
-            this.queryText.set(this.getDisplayText(value));
+        afterRenderEffect({
+            earlyRead: () => {
+                this.interactionDraft = this.draft();
+            },
         });
         effect(() => {
             const options = this.options();
@@ -131,23 +135,14 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
 
     protected readonly hasSelectedValue = computed(() => this.internalValue() !== null && this.internalValue() !== undefined);
 
-    protected readonly shouldOpenOverlay = computed(
-        () =>
-            this.isOpen() &&
-            ((this.loading() && this.showEmptyState()) ||
-                this.options().length > 0 ||
-                (this.showEmptyState() &&
-                    this.queryText().trim().length >= EMPTY_STATE_MIN_QUERY_LENGTH &&
-                    this.emptyText() !== undefined)),
-    );
+    protected readonly shouldOpenOverlay = computed(() => this.canOpenOverlay(this.queryText()));
 
     protected onInput(value: string): void {
         if (this.disabled()) {
             return;
         }
 
-        this.queryText.set(value);
-        this.internalValue.set(null);
+        this.writeDraft(null, value);
         this.value.set(value);
         this.queryChange.emit(value);
         this.openMenu();
@@ -177,8 +172,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
             return;
         }
 
-        this.internalValue.set(null);
-        this.queryText.set('');
+        this.writeDraft(null, '');
         this.value.set('');
         this.queryChange.emit('');
         this.closeMenu();
@@ -190,8 +184,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
             return;
         }
 
-        this.internalValue.set(option.value);
-        this.queryText.set(option.label);
+        this.writeDraft(option.value, option.label);
         this.value.set(option.value);
         this.touched.set(true);
         this.touch.emit();
@@ -218,7 +211,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
                 break;
             }
             case 'Enter': {
-                if (this.shouldOpenOverlay()) {
+                if (this.canOpenOverlay(this.interactionDraft.text)) {
                     event.preventDefault();
                     const activeIndex = this.activeIndex();
                     const option = activeIndex < FIRST_OPTION_INDEX ? undefined : this.options().at(activeIndex);
@@ -260,7 +253,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.overlayMinWidth.set(this.controlWrapRef().nativeElement.getBoundingClientRect().width);
         this.isOpen.set(true);
         const options = this.options();
-        const selectedValue = this.internalValue() ?? this.value();
+        const selectedValue = this.interactionDraft.selection ?? this.value();
         const selectedIndex = options.findIndex(option => this.isEqual(option.value, selectedValue));
         this.activeIndex.set(options.length > 0 ? Math.max(selectedIndex, FIRST_OPTION_INDEX) : NO_ACTIVE_OPTION_INDEX);
     }
@@ -303,5 +296,20 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         }
 
         return this.displayWith()?.(value) ?? String(value);
+    }
+
+    private canOpenOverlay(queryText: string): boolean {
+        return (
+            this.isOpen() &&
+            ((this.loading() && this.showEmptyState()) ||
+                this.options().length > 0 ||
+                (this.showEmptyState() && queryText.trim().length >= EMPTY_STATE_MIN_QUERY_LENGTH && this.emptyText() !== undefined))
+        );
+    }
+
+    private writeDraft(selection: T | null, text: string): void {
+        const draft = { selection, text };
+        this.draft.set(draft);
+        this.interactionDraft = draft;
     }
 }

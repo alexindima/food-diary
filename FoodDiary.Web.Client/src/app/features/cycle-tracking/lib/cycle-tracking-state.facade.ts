@@ -62,7 +62,7 @@ export class CycleTrackingStateFacade {
             this.cyclesService.getNutritionSummary(from, to).pipe(
                 tap({
                     next: summary => this.nutritionLoad.succeed(id, summary),
-                    error: () => this.nutritionLoad.fail(id, 'CYCLE_TRACKING.LOAD_FAILED', { preserveData: false }),
+                    error: () => this.nutritionLoad.fail(id, 'CYCLE_TRACKING.NUTRITION_SUMMARY_LOAD_ERROR', { preserveData: false }),
                 }),
             ),
     });

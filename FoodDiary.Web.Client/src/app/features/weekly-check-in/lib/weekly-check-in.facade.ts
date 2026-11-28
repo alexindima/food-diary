@@ -34,11 +34,11 @@ export class WeeklyCheckInFacade {
     public readonly goalWeekStartIso = computed(() => formatLocalDate(this.goalWeekStart()));
     public readonly selectedWeekStartIso = computed(() => formatLocalDate(this.selectedWeek()));
     private readonly goalResource = rxResource({
-        params: () => formatLocalDate(this.goalWeekStart()),
+        params: this.goalWeekStartIso,
         stream: ({ params }) => this.goalService.getGoal(params),
     });
     private readonly selectedWeekGoalResource = rxResource({
-        params: () => formatLocalDate(this.selectedWeek()),
+        params: this.selectedWeekStartIso,
         stream: ({ params }) => this.goalService.getGoal(params),
     });
 
@@ -81,14 +81,12 @@ export class WeeklyCheckInFacade {
 
     public async saveGoalAsync(payload: UpsertWeeklyGoalPayload): Promise<WeeklyGoal | null> {
         const goal = await firstValueFrom(this.goalService.upsertGoal(payload));
-        this.goalResource.reload();
-        this.selectedWeekGoalResource.reload();
+        if (goal.weekStart === this.selectedWeekStartIso()) {
+            this.selectedWeekGoalResource.set(goal);
+        } else if (goal.weekStart === this.goalWeekStartIso()) {
+            this.goalResource.set(goal);
+        }
         return goal;
-    }
-
-    public reloadGoal(): void {
-        this.goalResource.reload();
-        this.selectedWeekGoalResource.reload();
     }
 
     public retryData(): void {

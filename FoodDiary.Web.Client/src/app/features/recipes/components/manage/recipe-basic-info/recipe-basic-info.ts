@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -36,9 +36,8 @@ type FieldErrors = Record<ErrorField, string | null>;
 })
 export class RecipeBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
     public readonly photoOwnerId = input<RecipeId | null>(null);
@@ -49,21 +48,16 @@ export class RecipeBasicInfoComponent {
         const cover = value.imageUrl;
         return value.images ?? (cover !== null && (cover.kind === 'legacy-asset-only' || (cover.url?.length ?? 0) > 0) ? [cover] : []);
     });
-    protected readonly selectedVisibility = computed(() => this.visibilityLabel(this.form().visibility().value()));
-    protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() =>
-        Object.values(RecipeVisibility).map(value => ({ value, label: this.visibilityLabel(value) })),
-    );
+    protected readonly selectedVisibility = this.translateService.translate(() => this.visibilityKey(this.form().visibility().value()));
+    protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() => {
+        this.languageChange();
+        return Object.values(RecipeVisibility).map(value => ({ value, label: this.translateService.instant(this.visibilityKey(value)) }));
+    });
     protected readonly fieldErrors = computed<FieldErrors>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         return this.buildFieldErrors();
     });
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected setPhotos(images: ImageSelection[]): void {
         const changed = !sameOrderedImageSelections(this.photos(), images);
@@ -78,9 +72,8 @@ export class RecipeBasicInfoComponent {
         }
     }
 
-    private visibilityLabel(visibility: RecipeVisibility): string {
-        this.languageVersion();
-        return this.translateService.instant(`RECIPE_VISIBILITY.${visibility}`);
+    private visibilityKey(visibility: RecipeVisibility): string {
+        return `RECIPE_VISIBILITY.${visibility}`;
     }
 
     private buildFieldErrors(): FieldErrors {

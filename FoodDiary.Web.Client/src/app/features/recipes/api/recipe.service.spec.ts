@@ -9,6 +9,7 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
+import { RecipeSelectFacade } from '../lib/recipe-select.facade';
 import { RecipeService } from './recipe.service';
 import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
@@ -125,6 +126,19 @@ describe('RecipeService query', () => {
 
         const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+
+    it('propagates HTTP failures to the recipe picker through its facade', async () => {
+        const filters = { search: 'salad', category: 'Dinner' };
+        const pending = firstValueFrom(TestBed.inject(RecipeSelectFacade).query(1, DEFAULT_PAGE_LIMIT, filters, false));
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
+        expect(req.request.params.get('search')).toBe('salad');
+        expect(req.request.params.get('category')).toBe('Dinner');
+        expect(req.request.params.get('includePublic')).toBe('false');
+
+        req.flush('Service Unavailable', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable });
     });
 });
 

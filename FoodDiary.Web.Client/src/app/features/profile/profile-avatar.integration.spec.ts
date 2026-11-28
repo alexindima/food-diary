@@ -37,7 +37,7 @@ import { ViewportService } from '../../shared/platform/viewport.service';
 import { PrivacyConsentFacade } from '../../shared/privacy/privacy-consent.facade';
 import { ThemeService } from '../../shared/theme/theme.service';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../dietologist/contracts/relationship-actions';
-import { ProfileMeasurementsService, type ProfileMeasurementSummary } from './api/profile-measurements.service';
+import { ProfileMeasurementsService } from './api/profile-measurements.service';
 import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './lib/user-manage.config';
 import profileRoutes from './profile.routes';
 
@@ -80,7 +80,8 @@ type ProfileFixture = {
 
 type ProfileReads = {
     account?: ReturnType<UserService['getOverview']>;
-    measurements?: ReturnType<ProfileMeasurementsService['getLatest']>;
+    weight?: ReturnType<ProfileMeasurementsService['getLatestWeight']>;
+    waist?: ReturnType<ProfileMeasurementsService['getLatestWaist']>;
     locale?: 'en' | 'ru';
     additionalRoutes?: Routes;
     providers?: Array<Provider | EnvironmentProviders>;
@@ -120,7 +121,10 @@ async function renderProfileAsync(reads: ProfileReads = {}): Promise<ProfileFixt
             },
             {
                 provide: ProfileMeasurementsService,
-                useValue: { getLatest: vi.fn().mockReturnValue(reads.measurements ?? of({ weightKg: WEIGHT_KG, waistCm: WAIST_CM })) },
+                useValue: {
+                    getLatestWeight: vi.fn().mockReturnValue(reads.weight ?? of(WEIGHT_KG)),
+                    getLatestWaist: vi.fn().mockReturnValue(reads.waist ?? of(WAIST_CM)),
+                },
             },
             { provide: ImageUploadFacade, useValue: { upload, deleteAsset } },
             {
@@ -384,17 +388,21 @@ describe('Profile replacement draft cleanup', () => {
 describe('Profile measurements and route ownership', () => {
     it('updates both comparison cards and the height input when units change without dirtying the profile', async () => {
         installOptionScrolling();
-        const measurement = new Subject<ProfileMeasurementSummary>();
-        const { router, update, savedPreferences } = await renderProfileAsync({ measurements: measurement });
+        const weightResponse = new Subject<number | null>();
+        const waistResponse = new Subject<number | null>();
+        const { router, update, savedPreferences } = await renderProfileAsync({ weight: weightResponse, waist: waistResponse });
         const profile = profilePage(router);
         const weight = measurementValue(profile, 'weight');
         const waist = measurementValue(profile, 'waist');
         expect(weight.textContent.trim()).toBe('—');
         expect(waist.textContent.trim()).toBe('—');
-        measurement.next({ weightKg: WEIGHT_KG, waistCm: WAIST_CM });
-        router.detectChanges();
-        expect(weight.textContent).toContain('GENERAL.UNITS.KG');
-        expect(waist.textContent).toContain('GENERAL.UNITS.CM');
+        weightResponse.next(WEIGHT_KG);
+        waistResponse.next(WAIST_CM);
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(weight.textContent).toContain('GENERAL.UNITS.KG');
+            expect(waist.textContent).toContain('GENERAL.UNITS.CM');
+        });
 
         getButton(profile, 'USER_MANAGE.COMPARISON.UNIT_SYSTEM_METRIC').click();
         router.detectChanges();
@@ -413,41 +421,92 @@ describe('Profile measurements and route ownership', () => {
 
     it('releases pending account and measurement reads when leaving the profile', async () => {
         const account = new Subject<UserProfileOverview | null>();
-        const measurements = new Subject<ProfileMeasurementSummary>();
-        const { router, applyLanguage } = await renderProfileAsync({ account, measurements });
+        const weight = new Subject<number | null>();
+        const waist = new Subject<number | null>();
+        const { router, applyLanguage } = await renderProfileAsync({ account, weight, waist });
         expect(account.observed).toBe(true);
-        expect(measurements.observed).toBe(true);
+        expect(weight.observed).toBe(true);
+        expect(waist.observed).toBe(true);
 
         await router.navigateByUrl(OTHER_URL);
         account.next(profileOverview());
-        measurements.next({ weightKg: WEIGHT_KG, waistCm: WAIST_CM });
+        weight.next(WEIGHT_KG);
+        waist.next(WAIST_CM);
 
         expect(TestBed.inject(Router).url).toBe(OTHER_URL);
         expect(account.observed).toBe(false);
-        expect(measurements.observed).toBe(false);
+        expect(weight.observed).toBe(false);
+        expect(waist.observed).toBe(false);
         expect(applyLanguage).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile measurement retry', () => {
+    it('keeps the successful measurement visible and retries only the failed measurement', async () => {
+        const { router } = await renderProfileAsync({
+            providers: [provideHttpClient(), provideHttpClientTesting(), ProfileMeasurementsService],
+        });
+        const http = TestBed.inject(HttpTestingController);
+        onTestFinished(() => {
+            http.verify();
+        });
+        const latestWeightUrl = `${environment.apiUrls.weights}/latest`;
+        const latestWaistUrl = `${environment.apiUrls.waists}/latest`;
+        http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.auth}/sessions`).flush([]);
+        http.expectOne({ method: 'GET', url: latestWeightUrl }).flush({ weightKg: WEIGHT_KG });
+        http.expectOne({ method: 'GET', url: latestWaistUrl }).flush('Unavailable', {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Service Unavailable',
+        });
+        const profile = profilePage(router);
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(measurementValue(profile, 'weight').textContent).toContain('GENERAL.UNITS.KG');
+            expect(profile.querySelectorAll('fd-ui-inline-alert[role="alert"]')).toHaveLength(1);
+        });
+        expect(measurementValue(profile, 'waist').textContent.trim()).toBe('—');
+        getButton(profile, 'ERRORS.RETRY').click();
+        router.detectChanges();
+
+        http.expectNone({ method: 'GET', url: latestWeightUrl });
+        http.expectOne({ method: 'GET', url: latestWaistUrl }).flush({ circumferenceCm: WAIST_CM });
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(measurementValue(profile, 'waist').textContent).toContain('GENERAL.UNITS.CM');
+        });
+
+        expect(measurementValue(profile, 'weight').textContent).toContain('GENERAL.UNITS.KG');
+        expect(profile.querySelector('fd-ui-inline-alert[role="alert"]')).toBeNull();
     });
 });
 
 describe('Profile measurement recovery', () => {
     it('preserves and saves the username draft after a measurement failure, then reloads the measurements on return', async () => {
-        const response = new Subject<ProfileMeasurementSummary>();
+        const waistResponse = new Subject<number | null>();
         const firstAccount = profileOverview({ username: 'alex-example' });
         const updatedUsername = 'alex-hikes';
         const savedAccount = profileOverview({ username: updatedUsername });
         const getAccount = vi.fn<UserService['getOverview']>().mockReturnValueOnce(of(firstAccount)).mockReturnValueOnce(of(savedAccount));
-        const getLatest = vi
-            .fn<ProfileMeasurementsService['getLatest']>()
-            .mockReturnValueOnce(response)
-            .mockReturnValueOnce(of({ weightKg: WEIGHT_KG, waistCm: WAIST_CM }));
-        const { router, update } = await renderProfileAsync({ account: defer(getAccount), measurements: defer(getLatest) });
+        const getWeight = vi
+            .fn<ProfileMeasurementsService['getLatestWeight']>()
+            .mockReturnValueOnce(of(null))
+            .mockReturnValueOnce(of(WEIGHT_KG));
+        const getWaist = vi
+            .fn<ProfileMeasurementsService['getLatestWaist']>()
+            .mockReturnValueOnce(waistResponse)
+            .mockReturnValueOnce(of(WAIST_CM));
+        const { router, update } = await renderProfileAsync({
+            account: defer(getAccount),
+            weight: defer(getWeight),
+            waist: defer(getWaist),
+        });
         const profile = profilePage(router);
         const usernameSelector = '[data-user-field="username"] input';
         const username = accountField(profile, usernameSelector);
         expect(username.value).toBe(firstAccount.user.username);
         typeIntoProfile(username, updatedUsername, router);
 
-        response.error(new Error('Measurements temporarily unavailable'));
+        waistResponse.error(new Error('Waist temporarily unavailable'));
         router.detectChanges();
 
         expect(accountField(profile, '[data-user-field="firstName"] input').value).toBe('Alex');
@@ -470,7 +529,8 @@ describe('Profile measurement recovery', () => {
                 heightCm: firstAccount.user.heightCm,
             }),
         );
-        expect(getLatest).toHaveBeenCalledOnce();
+        expect(getWeight).toHaveBeenCalledOnce();
+        expect(getWaist).toHaveBeenCalledOnce();
 
         await router.navigateByUrl(OTHER_URL, OtherPageComponent);
         await router.navigateByUrl(PROFILE_URL);
@@ -479,7 +539,8 @@ describe('Profile measurement recovery', () => {
         expect(measurementValue(reopened, 'weight').textContent.trim().replaceAll(/\s+/gu, ' ')).toBe(`${WEIGHT_KG} GENERAL.UNITS.KG`);
         expect(measurementValue(reopened, 'waist').textContent.trim().replaceAll(/\s+/gu, ' ')).toBe(`${WAIST_CM} GENERAL.UNITS.CM`);
         expect(getAccount).toHaveBeenCalledTimes(2);
-        expect(getLatest).toHaveBeenCalledTimes(2);
+        expect(getWeight).toHaveBeenCalledTimes(2);
+        expect(getWaist).toHaveBeenCalledTimes(2);
         expect(update).toHaveBeenCalledOnce();
     });
 });

@@ -22,10 +22,11 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, finalize, firstValueFrom, map, type Observable, of } from 'rxjs';
+import { finalize, firstValueFrom, map, type Observable } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
+import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../../services/navigation.service';
@@ -107,6 +108,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
         PageHeaderComponent,
         ProductBasicInfoComponent,
         ProductNutritionEditorComponent,
+        ErrorStateComponent,
     ],
 })
 export class ProductManageFormComponent implements UnsavedEditor {
@@ -128,14 +130,14 @@ export class ProductManageFormComponent implements UnsavedEditor {
     protected readonly globalError = signal<string | null>(null);
     protected readonly photoImportLimitReached = signal(false);
     private appliedPrefillKey: string | null = null;
-    private readonly externalPrefill = signal<
-        | { source: 'barcode'; barcode: string }
-        | { source: 'usda'; fdcId: UsdaFoodId; name: string; product: Product | null; unit: ProductFormValues['baseUnit'] }
-        | undefined
-    >(undefined);
+    private readonly externalPrefill = signal<ExternalPrefillRequest | undefined>(undefined);
     private readonly externalPrefillResource = rxResource({
         params: this.externalPrefill,
         stream: ({ params, abortSignal }) => this.readExternalPrefill(params, abortSignal),
+    });
+    protected readonly hasUsdaDetailError = computed(() => {
+        const request = this.externalPrefill();
+        return this.externalPrefillResource.status() === 'error' && request?.source === 'usda' && this.matchesUsdaSelection(request);
     });
     protected readonly isDeleting = signal(false);
     protected readonly photoOwnerId = computed(() => this.product()?.id ?? null);
@@ -370,7 +372,13 @@ export class ProductManageFormComponent implements UnsavedEditor {
         }
     }
 
-    private readExternalPrefill(request: NonNullable<ReturnType<typeof this.externalPrefill>>, abortSignal: AbortSignal): Observable<void> {
+    protected retryUsdaDetail(): void {
+        if (this.hasUsdaDetailError()) {
+            this.externalPrefillResource.reload();
+        }
+    }
+
+    private readExternalPrefill(request: ExternalPrefillRequest, abortSignal: AbortSignal): Observable<void> {
         if (request.source === 'barcode') {
             return this.externalFoodFacade.searchByBarcode(request.barcode).pipe(
                 map(offProduct => {
@@ -388,19 +396,16 @@ export class ProductManageFormComponent implements UnsavedEditor {
         }
 
         return this.externalFoodFacade.getUsdaFoodDetail(request.fdcId).pipe(
-            catchError(() => of<UsdaFoodDetail | null>(null)),
             map(detail => {
-                if (
-                    detail !== null &&
-                    !abortSignal.aborted &&
-                    this.externalPrefill() === request &&
-                    this.product() === request.product &&
-                    this.productFormModel().usdaFdcId === request.fdcId
-                ) {
+                if (!abortSignal.aborted && this.externalPrefill() === request && this.matchesUsdaSelection(request)) {
                     this.prefillFromUsdaFoodDetail(detail, request.name, request.unit);
                 }
             }),
         );
+    }
+
+    private matchesUsdaSelection(request: UsdaPrefillRequest): boolean {
+        return this.product() === request.product && this.productFormModel().usdaFdcId === request.fdcId;
     }
 
     private prefillFromOffProduct(offProduct: OpenFoodFactsProduct | ProductNameSuggestion): void {
@@ -768,6 +773,10 @@ export class ProductManageFormComponent implements UnsavedEditor {
 }
 
 type ResolvedProductPrefill = { key: string; offProduct: OpenFoodFactsProduct } | { key: string; barcode: string };
+
+type ExternalPrefillRequest = { source: 'barcode'; barcode: string } | UsdaPrefillRequest;
+
+type UsdaPrefillRequest = { source: 'usda'; fdcId: UsdaFoodId; name: string; product: Product | null; unit: ProductFormValues['baseUnit'] };
 
 type ProductManageHeaderState = {
     titleKey: string;

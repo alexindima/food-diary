@@ -1,7 +1,7 @@
 import { DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { finalize, firstValueFrom, Subject, tap } from 'rxjs';
+import { finalize, firstValueFrom, map, Subject, tap } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
 import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
@@ -10,7 +10,7 @@ import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import type { PublicRecipe } from '../models/public-recipe.data';
 
-type FavoriteLookup = { session: number; finished: Subject<void> };
+type FavoriteLookup = { session: number; finished: Subject<void>; ready: Promise<void> };
 
 @Injectable()
 export class PublicCatalogFavorites {
@@ -60,6 +60,9 @@ export class PublicCatalogFavorites {
     }
 
     private bindOwner(ownerId: string | null): void {
+        if (this.ownerId === ownerId) {
+            return;
+        }
         const session = ++this.session;
         this.ownerId = ownerId;
         this.ids = new Map();
@@ -71,20 +74,25 @@ export class PublicCatalogFavorites {
         this.requestedLookup.set(undefined);
         this.lookup.set(undefined);
         previous?.finished.complete();
-        if (ownerId === null) {
-            this.ready = undefined;
-            return;
+        this.ready = undefined;
+        if (ownerId !== null) {
+            this.requestLookup(session);
         }
+    }
 
+    private requestLookup(session: number): FavoriteLookup {
         const finished = new Subject<void>();
-        this.ready = firstValueFrom(finished, { defaultValue: undefined });
-        this.requestedLookup.set({ session, finished });
-        void this.ready.catch(() => {
-            if (this.isCurrent(session)) {
+        const ready = firstValueFrom(finished, { defaultValue: undefined });
+        const lookup = { session, finished, ready };
+        this.ready = ready;
+        this.requestedLookup.set(lookup);
+        void ready.catch(() => {
+            if (this.isCurrent(session) && this.ready === ready) {
                 this.ready = undefined;
                 this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
             }
         });
+        return lookup;
     }
 
     public async toggleAsync(recipe: PublicRecipe): Promise<void> {
@@ -94,6 +102,7 @@ export class PublicCatalogFavorites {
         this.busyIds.update(ids => new Set([...ids, recipe.id]));
         this.message.set(null);
         let session = this.session;
+        let ready: Promise<void> | undefined;
         try {
             const authenticatedSession = await this.authenticateAsync();
             if (authenticatedSession === null) {
@@ -104,16 +113,14 @@ export class PublicCatalogFavorites {
                 return;
             }
             this.busyIds.update(ids => new Set([...ids, recipe.id]));
-            await (this.ready ??= this.loadAsync(session));
+            ready = this.ready ?? this.requestLookup(session).ready;
+            await ready;
             if (!this.isCurrent(session)) {
                 return;
             }
             await this.changeAsync(recipe, session);
         } catch {
-            if (this.isCurrentSession(session)) {
-                this.ready = undefined;
-                this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
-            }
+            this.showToggleError(session, ready);
         } finally {
             if (this.isCurrentSession(session)) {
                 this.busyIds.update(ids => new Set([...ids].filter(id => id !== recipe.id)));
@@ -121,9 +128,20 @@ export class PublicCatalogFavorites {
         }
     }
 
+    private showToggleError(session: number, ready: Promise<void> | undefined): void {
+        const isCurrent = ready === undefined ? this.isCurrentSession(session) : this.isCurrent(session);
+        if (!isCurrent) {
+            return;
+        }
+        if (this.ready === ready) {
+            this.ready = undefined;
+        }
+        this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
+    }
+
     private async authenticateAsync(): Promise<number | null> {
         if (this.auth.isAuthenticated()) {
-            return this.session;
+            return this.bindAuthenticatedOwner();
         }
         const ref = await this.dialog.openAsync({
             mode: 'login',
@@ -131,15 +149,21 @@ export class PublicCatalogFavorites {
             returnUrl: this.router.url,
             destroyRef: this.destroyRef,
         });
-        if (ref !== null) {
-            await firstValueFrom(ref.afterClosed());
-        }
+        return ref === null
+            ? this.bindAuthenticatedOwner()
+            : firstValueFrom(ref.afterClosed().pipe(map(() => this.bindAuthenticatedOwner())));
+    }
+
+    private bindAuthenticatedOwner(): number | null {
         if (this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
             return null;
         }
-        const session = this.session;
-        await this.loadAsync(session);
-        return this.isCurrent(session) ? session : null;
+        const ownerId = this.auth.getUserId();
+        if (ownerId === null) {
+            return null;
+        }
+        this.bindOwner(ownerId);
+        return this.session;
     }
 
     private async changeAsync(recipe: PublicRecipe, session: number): Promise<void> {
@@ -169,10 +193,6 @@ export class PublicCatalogFavorites {
 
     private isCurrentSession(session: number): boolean {
         return session === this.session && !this.destroyRef.destroyed;
-    }
-
-    private async loadAsync(session: number): Promise<void> {
-        this.applyLookup(await firstValueFrom(this.api.getLookupPage()), session);
     }
 
     private applyLookup(favorites: readonly FavoriteRecipe[], session: number): void {

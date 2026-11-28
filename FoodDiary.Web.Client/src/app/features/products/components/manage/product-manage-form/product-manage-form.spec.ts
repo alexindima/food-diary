@@ -1275,6 +1275,7 @@ describe('Product editor rendered suggestion ownership', () => {
         const editor = await setupComponentAsync();
         editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(throwError(() => new Error('USDA unavailable')));
         await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        expect(editor.el.querySelector('fd-error-state [role="alert"]')?.textContent).toContain('PRODUCT_MANAGE.USDA_DETAIL_LOAD_ERROR');
         expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(USDA_SUGGESTION.name);
         const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
         expect(calories.disabled).toBe(false);
@@ -1291,6 +1292,43 @@ describe('Product editor rendered suggestion ownership', () => {
             false,
             expect.any(Function),
         );
+    });
+});
+
+describe('Product editor USDA details and manual entry', () => {
+    it('retries USDA details for the current selection without resetting the edited draft', async () => {
+        const editor = await setupComponentAsync();
+        const detail = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail
+            .mockReturnValueOnce(throwError(() => new Error('USDA unavailable')))
+            .mockReturnValueOnce(detail);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+
+        const name = requiredProductInput(editor.el, 'fd-ui-autocomplete input');
+        const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
+        const proteins = requiredProductInput(editor.el, '.nutrition-editor__input--proteins input');
+        const ownName = 'My morning oats';
+        enterProductValue(name, ownName);
+        enterProductValue(calories, String(BASE_CALORIES));
+        editor.fixture.detectChanges();
+
+        requiredFormButton(editor.el, 'fd-error-state button').click();
+        editor.fixture.detectChanges();
+
+        expect(editor.externalFoodFacade.getUsdaFoodDetail.mock.calls).toEqual([[USDA_FDC_ID], [USDA_FDC_ID]]);
+        expect(name.value).toBe(ownName);
+        expect(calories.value).toBe(String(BASE_CALORIES));
+        expect(editor.el.querySelector('fd-error-state')).toBeNull();
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        detail.next(createUsdaFoodDetail(USDA_FDC_ID, 'Provider description'));
+        detail.complete();
+        editor.fixture.detectChanges();
+
+        expect(name.value).toBe(ownName);
+        expect(calories.value).toBe(String(BASE_CALORIES));
+        expect(proteins.value).toBe(String(EXPECTED_ROUNDED_USDA_PROTEIN));
+        expect(editor.el.querySelector('fd-error-state')).toBeNull();
     });
 
     it('saves a manually entered product from a USDA suggestion without a source ID', async () => {
@@ -1526,7 +1564,7 @@ describe('Product editor USDA lookup from a piece product', () => {
     });
 });
 
-describe('Product editor refresh while recognition is pending', () => {
+describe('Product editor refresh while USDA lookup is pending', () => {
     it.each([
         ['opening another product', SECOND_PRODUCT],
         ['refreshing the current product', SAME_ID_UPDATED_PRODUCT],
@@ -1554,6 +1592,26 @@ describe('Product editor refresh while recognition is pending', () => {
         expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
     });
 
+    it('does not show a late USDA detail failure after the editor has opened another product', async () => {
+        const editor = await setupComponentAsync();
+        const oldProduct = { ...PRODUCT, usdaFdcId: USDA_FDC_ID };
+        const currentProduct = { ...SECOND_PRODUCT, usdaFdcId: USDA_FDC_ID };
+        editor.fixture.componentRef.setInput('product', oldProduct);
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+
+        editor.fixture.componentRef.setInput('product', currentProduct);
+        editor.fixture.detectChanges();
+        pending.error(new Error('Late USDA failure'));
+        editor.fixture.detectChanges();
+
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(currentProduct.name);
+        expect(editor.el.querySelector('fd-error-state')).toBeNull();
+    });
+});
+
+describe('Product editor refresh while AI recognition is pending', () => {
     it('keeps the new product fields when the old AI dialog completes', async () => {
         const editor = await setupComponentAsync();
         const pending = new Subject<ProductAiRecognitionResult>();

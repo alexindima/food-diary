@@ -85,6 +85,17 @@ describe('FastingFacade request failures', () => {
         expect(facade.requestError()).toBe('FASTING.REQUEST_ERROR');
     });
 
+    it('does not start a fast when loading the current overview failed', () => {
+        fastingService.getOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
+        fastingService.start.mockReturnValueOnce(of(activeSession));
+        facade.initialize();
+        TestBed.tick();
+
+        facade.startFasting();
+
+        expect(fastingService.start).not.toHaveBeenCalled();
+    });
+
     it('reports an incompatible draft mode without emitting a malformed request', () => {
         facade.selectMode('intermittent');
         facade.selectProtocol('Fast36');

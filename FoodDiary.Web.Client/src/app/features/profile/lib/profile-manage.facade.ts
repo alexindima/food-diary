@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -105,11 +105,8 @@ export class ProfileManageFacade {
     }
 
     public readonly isUpdatingNotifications = signal(false);
-    public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     private readonly dietologistRelationshipState = signal<DietologistRelationship | null>(null);
     public readonly dietologistRelationship = this.dietologistRelationshipState.asReadonly();
-    public readonly currentWeight = signal<number | null>(null);
-    public readonly currentWaist = signal<number | null>(null);
     private dietologistRelationshipVersion = 0;
     private readonly profileRequest = signal<{ relationshipVersion: number } | undefined>(undefined);
     private readonly profileResource = rxResource({
@@ -125,7 +122,7 @@ export class ProfileManageFacade {
                     error: () => {
                         if (this.profileRequest() === params) {
                             this.user.set(null);
-                            this.webPushSubscriptions.set([]);
+                            this.webPushSubscriptionList.set([]);
                             this.applyOverviewDietologistRelationship(null, params.relationshipVersion);
                             this.setGlobalError('USER_MANAGE.LOAD_ERROR');
                         }
@@ -136,32 +133,37 @@ export class ProfileManageFacade {
     private readonly webPushRequest = signal<number | undefined>(undefined);
     private readonly webPushResource = rxResource({
         params: this.webPushRequest,
-        stream: ({ params }) =>
-            this.notificationService.getWebPushSubscriptions().pipe(
-                tap(subscriptions => {
-                    if (this.webPushRequest() === params) {
-                        this.webPushSubscriptions.set(subscriptions);
-                    }
-                }),
-            ),
+        stream: () => this.notificationService.getWebPushSubscriptions(),
     });
+    private readonly webPushSubscriptionList = linkedSignal({
+        source: this.webPushResource.snapshot,
+        computation: (snapshot, previous): WebPushSubscriptionItem[] =>
+            snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
+    });
+    public readonly webPushSubscriptions = this.webPushSubscriptionList.asReadonly();
     public readonly isLoadingWebPushSubscriptions = this.webPushResource.isLoading;
+    public readonly hasWebPushSubscriptionsLoadError = computed(() => this.webPushResource.error() !== undefined);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
     private readonly measurementsRequest = signal<number | undefined>(undefined);
+    private readonly weightResource = rxResource({
+        params: this.measurementsRequest,
+        stream: () => this.profileMeasurementsService.getLatestWeight(),
+    });
+    private readonly waistResource = rxResource({
+        params: this.measurementsRequest,
+        stream: () => this.profileMeasurementsService.getLatestWaist(),
+    });
+    public readonly currentWeight = computed(() => (this.weightResource.hasValue() ? this.weightResource.value() : null));
+    public readonly currentWaist = computed(() => (this.waistResource.hasValue() ? this.waistResource.value() : null));
+    public readonly hasWeightLoadError = computed(() => this.weightResource.error() !== undefined);
+    public readonly hasWaistLoadError = computed(() => this.waistResource.error() !== undefined);
 
-    public constructor() {
-        rxResource({
-            params: this.measurementsRequest,
-            stream: ({ params }) =>
-                this.profileMeasurementsService.getLatest().pipe(
-                    tap(summary => {
-                        if (this.measurementsRequest() === params) {
-                            this.currentWeight.set(summary.weightKg);
-                            this.currentWaist.set(summary.waistCm);
-                        }
-                    }),
-                ),
-        });
+    public retryWeight(): void {
+        this.weightResource.reload();
+    }
+
+    public retryWaist(): void {
+        this.waistResource.reload();
     }
 
     public initialize(): void {
@@ -360,7 +362,10 @@ export class ProfileManageFacade {
 
         this.user.set(overview.user);
         this.applyNotificationPreferences(overview.notificationPreferences);
-        this.webPushSubscriptions.set(overview.webPushSubscriptions);
+        if (this.hasWebPushSubscriptionsLoadError()) {
+            this.webPushResource.set(undefined);
+        }
+        this.webPushSubscriptionList.set(overview.webPushSubscriptions);
         this.applyOverviewDietologistRelationship(overview.dietologistRelationship, relationshipVersion);
         this.clearGlobalError();
         if (this.backupEmailFlow.read()?.failed === true) {
@@ -400,6 +405,8 @@ export class ProfileManageFacade {
     }
 
     public refreshWebPushSubscriptions(): void {
+        // Preserve the latest successful snapshot even if the device list hasn't read it yet.
+        this.webPushSubscriptionList();
         this.webPushRequest.update(version => (version ?? 0) + 1);
     }
 
@@ -412,7 +419,7 @@ export class ProfileManageFacade {
 
         try {
             await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint));
-            this.webPushSubscriptions.update(items => items.filter(item => item.endpoint !== endpoint));
+            this.webPushSubscriptionList.update(items => items.filter(item => item.endpoint !== endpoint));
             return true;
         } catch {
             return false;

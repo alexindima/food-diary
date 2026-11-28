@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete';
@@ -56,9 +56,8 @@ type FieldErrors = Record<ErrorField, string | null>;
 })
 export class ProductBasicInfoComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
     public readonly photoOwnerId = input<ProductId | null>(null);
@@ -71,16 +70,18 @@ export class ProductBasicInfoComponent {
     protected readonly additionalOpen = computed(
         () => this.expandAdditional() || Boolean(this.fieldErrors().visibility) || Boolean(this.fieldErrors().comment),
     );
-    protected readonly selectedVisibilityLabel = computed(() => this.visibilityLabel(this.form().visibility().value()));
+    protected readonly selectedVisibilityLabel = this.translateService.translate(() =>
+        this.visibilityKey(this.form().visibility().value()),
+    );
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
     protected readonly fieldErrors = computed<FieldErrors>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         return this.buildFieldErrors();
     });
     protected readonly unitOptions = computed<Array<FdUiSelectOption<MeasurementUnit>>>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         return (Object.values(MeasurementUnit) as MeasurementUnit[]).map(unit => ({
             value: unit,
@@ -88,16 +89,17 @@ export class ProductBasicInfoComponent {
         }));
     });
     protected readonly productTypeOptions = computed<Array<FdUiSelectOption<ProductType>>>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         return (Object.values(ProductType) as ProductType[]).map(type => ({
             value: type,
             label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
         }));
     });
-    protected readonly visibilityOptions = computed<Array<FdUiSelectOption<ProductVisibility>>>(() =>
-        Object.values(ProductVisibility).map(value => ({ value, label: this.visibilityLabel(value) })),
-    );
+    protected readonly visibilityOptions = computed<Array<FdUiSelectOption<ProductVisibility>>>(() => {
+        this.languageChange();
+        return Object.values(ProductVisibility).map(value => ({ value, label: this.translateService.instant(this.visibilityKey(value)) }));
+    });
 
     public readonly openBarcodeScanner = output();
     public readonly openAiRecognition = output();
@@ -110,12 +112,6 @@ export class ProductBasicInfoComponent {
     protected readonly descriptionMaxLength = PRODUCT_DESCRIPTION_MAX_LENGTH;
     protected readonly commentMaxLength = PRODUCT_COMMENT_MAX_LENGTH;
     protected readonly maxAmount = computed(() => getProductMaxAmountForUnit(this.form().baseUnit().value()));
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected onNameOptionSelected(option: FdUiAutocompleteOption<string>): void {
         if (this.isProductNameSuggestion(option.data)) {
@@ -138,9 +134,8 @@ export class ProductBasicInfoComponent {
         }
     }
 
-    private visibilityLabel(visibility: ProductVisibility): string {
-        this.languageVersion();
-        return this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
+    private visibilityKey(visibility: ProductVisibility): string {
+        return `PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`;
     }
 
     private isProductNameSuggestion(value: unknown): value is ProductNameSuggestion {

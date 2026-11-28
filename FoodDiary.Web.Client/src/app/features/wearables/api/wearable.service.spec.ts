@@ -55,13 +55,11 @@ describe('WearableService connections', () => {
         req.flush([CONNECTION]);
     });
 
-    it('returns empty connections on error', () => {
-        service.getConnections().subscribe(connections => {
-            expect(connections).toEqual([]);
-        });
-
+    it('propagates connection load failures to the caller', async () => {
+        const pending = firstValueFrom(service.getConnections());
         const req = httpMock.expectOne(`${BASE_URL}/connections`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.InternalServerError });
     });
 
     it('gets auth url with state query param', () => {

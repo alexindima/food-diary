@@ -1,6 +1,14 @@
 <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.NUTRITION_SUMMARY_TITLE' | translate">
     @if (isLoading()) {
         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</p>
+    } @else if (loadError(); as error) {
+        <fd-ui-inline-alert
+            role="alert"
+            severity="danger"
+            [message]="error | translate"
+            [primaryActionLabel]="'CYCLE_TRACKING.RETRY_LOAD' | translate"
+            (primaryAction)="retry.emit()"
+        />
     } @else if (summary(); as item) {
         <p class="cycle-tracking__nutrition-note fd-ui-body-sm">
             {{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_PERIOD' | translate: { from: item.dateFromLabel, to: item.dateToLabel } }}

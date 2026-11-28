@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -87,9 +87,9 @@ export class ChangePasswordDialogComponent {
 
     protected readonly passwordError = signal<string | null>(null);
     protected readonly isSubmitting = signal<boolean>(false);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     protected readonly fieldErrors = computed<FieldErrors>(() => {
-        this.languageVersion();
+        this.languageChange();
         this.formModel();
 
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
@@ -114,9 +114,6 @@ export class ChangePasswordDialogComponent {
             });
             this.destroyRef.onDestroy(unregister);
         }
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
     }
 
     protected onCancel(): void {

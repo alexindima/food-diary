@@ -7,7 +7,7 @@ import { cycleDayFromSdk, cycleFromSdk, cycleNutritionFromSdk } from '../../../s
 import { CyclesSdk } from '../../../shared/api/sdk/generated/api/cycles.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type {
     CreateCyclePayload,
     CycleLogDay,
@@ -44,7 +44,7 @@ export class CyclesService {
             })
             .pipe(
                 map(value => sdkOptional(value, cycleNutritionFromSdk)),
-                catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
+                catchError((error: unknown) => rethrowApiError('Cycle nutrition summary fetch error', error)),
             );
     }
 

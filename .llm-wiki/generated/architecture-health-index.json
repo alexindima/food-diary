@@ -2609,9 +2609,19 @@
           "name": "summary",
           "type": "CycleNutritionSummaryViewModel | null",
           "required": true
+        },
+        {
+          "name": "loadError",
+          "type": "string | null",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "retry",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {

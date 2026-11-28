@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
@@ -34,7 +34,7 @@ export class NotificationsDialogComponent {
     private readonly notificationService = inject(NotificationService);
     private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     private navigationRevision = 0;
 
     protected readonly notifications = this.notificationService.notifications;
@@ -49,9 +49,6 @@ export class NotificationsDialogComponent {
     );
 
     public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
         this.router.events
             .pipe(
                 filter(event => event instanceof NavigationStart),
@@ -116,7 +113,7 @@ export class NotificationsDialogComponent {
     }
 
     private buildNotificationViewModel(notification: NotificationItem): NotificationViewModel {
-        this.languageVersion();
+        this.languageChange();
         return {
             notification,
             ...notificationPresentation(notification.type),

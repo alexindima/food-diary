@@ -376,6 +376,7 @@ type ProfileManageFacadeMock = {
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: ReturnType<typeof signal<WebPushSubscriptionItem[]>>;
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
+    hasWebPushSubscriptionsLoadError: ReturnType<typeof signal<boolean>>;
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     updateNotificationPreferencesAsync: ReturnType<typeof vi.fn>;
     refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
@@ -435,6 +436,7 @@ function createProfileManageFacadeMock(options: TestSetupOptions): ProfileManage
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         isLoadingWebPushSubscriptions: signal(false),
+        hasWebPushSubscriptionsLoadError: signal(false),
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         updateNotificationPreferencesAsync: vi.fn().mockResolvedValue(options.updateResult ?? options.user ?? createUser()),
         refreshWebPushSubscriptions: vi.fn(),

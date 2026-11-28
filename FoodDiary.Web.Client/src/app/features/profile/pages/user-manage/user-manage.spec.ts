@@ -1592,6 +1592,7 @@ type UserManageNotificationsFacadeMock = {
     currentSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     connectedDeviceItems: ReturnType<typeof signal<[]>>;
     isLoadingConnectedDevices: ReturnType<typeof signal<boolean>>;
+    hasConnectedDevicesLoadError: ReturnType<typeof signal<boolean>>;
     removingConnectedDeviceEndpoint: ReturnType<typeof signal<string | null>>;
     syncFromUser: ReturnType<typeof vi.fn>;
     togglePushNotificationsAsync: ReturnType<typeof vi.fn>;
@@ -1603,6 +1604,7 @@ type UserManageNotificationsFacadeMock = {
     saveFastingReminderHoursAsync: ReturnType<typeof vi.fn>;
     scheduleTestNotification: ReturnType<typeof vi.fn>;
     removeConnectedDeviceAsync: ReturnType<typeof vi.fn>;
+    retryConnectedDevices: ReturnType<typeof vi.fn>;
 };
 
 type ProfileManageFacadeMock = {
@@ -1623,6 +1625,10 @@ type ProfileManageFacadeMock = {
     setDietologistRelationship: ProfileManageFacade['setDietologistRelationship'];
     currentWeight: WritableSignal<number | null>;
     currentWaist: WritableSignal<number | null>;
+    hasWeightLoadError: WritableSignal<boolean>;
+    hasWaistLoadError: WritableSignal<boolean>;
+    retryWeight: ProfileManageFacade['retryWeight'];
+    retryWaist: ProfileManageFacade['retryWaist'];
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     initialize: ReturnType<typeof vi.fn>;
@@ -1760,6 +1766,7 @@ function createUserManageNotificationsFacadeMock(
         currentSubscriptionEndpoint: signal<string | null>(null),
         connectedDeviceItems: signal([]),
         isLoadingConnectedDevices: signal(false),
+        hasConnectedDevicesLoadError: signal(false),
         removingConnectedDeviceEndpoint: signal<string | null>(null),
         syncFromUser: vi.fn(),
         togglePushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
@@ -1771,6 +1778,7 @@ function createUserManageNotificationsFacadeMock(
         saveFastingReminderHoursAsync: vi.fn().mockResolvedValue(void 0),
         scheduleTestNotification: vi.fn(),
         removeConnectedDeviceAsync: vi.fn().mockResolvedValue(void 0),
+        retryConnectedDevices: vi.fn(),
     };
 }
 
@@ -1831,6 +1839,10 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         },
         currentWeight: signal<number | null>(null),
         currentWaist: signal<number | null>(null),
+        hasWeightLoadError: signal(false),
+        hasWaistLoadError: signal(false),
+        retryWeight: vi.fn(),
+        retryWaist: vi.fn(),
         isLoadingWebPushSubscriptions: signal(false),
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         initialize: vi.fn(),

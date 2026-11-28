@@ -14,7 +14,7 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { form, max, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -132,7 +132,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         ...inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true }),
         nonexistentLocalTime: (): string => 'MEAL_MANAGE.NONEXISTENT_TIME',
     };
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly meal = input<Meal | null>(null);
     public readonly initialMealType = input<MealTypeOption | null>(null);
@@ -173,7 +173,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),
         errorMessage: () => this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY'),
-        dependencies: [this.languageVersion],
+        dependencies: [this.languageChange],
     });
     protected readonly itemsTouched = this.itemsTouchedState.touched;
     protected readonly nutritionMode = signal<NutritionMode>('auto');
@@ -182,7 +182,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     protected readonly selectedMealType = signal<string | null>(null);
     protected readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     protected readonly generalFieldErrors = computed<MealGeneralFieldErrors>(() => {
-        this.languageVersion();
+        this.languageChange();
 
         return GENERAL_ERROR_FIELDS.reduce<MealGeneralFieldErrors>((errors, field) => {
             errors[field] = resolveSignalFormFieldError(this.mealSignalForm[field], this.validationErrors, this.translateService);
@@ -262,7 +262,10 @@ export class MealManageFormComponent implements UnsavedEditor {
     });
     protected readonly itemsError = this.itemsTouchedState.error;
 
-    protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
+    protected readonly mealTypeSelectOptions = computed<Array<FdUiSelectOption<string>>>(() => {
+        this.languageChange();
+        return buildMealTypeSelectOptions(this.translateService);
+    });
 
     public constructor() {
         this.connectDevelopmentTools();
@@ -271,8 +274,6 @@ export class MealManageFormComponent implements UnsavedEditor {
                 this.addMealItem();
             }
         });
-        this.buildMealTypeOptions();
-        this.watchLanguageChanges();
         this.watchMealType();
         this.watchSignalFormModelChanges();
     }
@@ -361,13 +362,6 @@ export class MealManageFormComponent implements UnsavedEditor {
         this.patchMealFormModel({ ...draft, items });
         this.selectedMealType.set(draft.mealType);
         this.updateSummary();
-    }
-
-    private watchLanguageChanges(): void {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-            this.buildMealTypeOptions();
-        });
     }
 
     private watchSignalFormModelChanges(): void {
@@ -885,10 +879,6 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     private findReusableEmptyItemIndex(): number {
         return findReusableEmptyMealItemIndex(this.items);
-    }
-
-    private buildMealTypeOptions(): void {
-        this.mealTypeSelectOptions = buildMealTypeSelectOptions(this.translateService);
     }
 
     private getDateInputValue(date: Date): string {

@@ -149,7 +149,77 @@ describe('RecipeListFacade favorites', () => {
         expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: true, favoriteRecipeId: 'favorite-1' }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
     });
+});
 
+describe('RecipeListFacade favorite count freshness', () => {
+    it('keeps the latest total when counts for different recipe toggles finish in reverse order', () => {
+        const earlier = new Subject<{ totalItems: number }>();
+        const later = new Subject<{ totalItems: number }>();
+        favoriteRecipeService.getPage.mockReturnValueOnce(earlier).mockReturnValueOnce(later);
+
+        facade.toggleRecipeFavorite(recipe).subscribe();
+        facade.toggleRecipeFavorite({ ...recipe, id: entityId<'recipe'>('recipe-2') }).subscribe();
+
+        later.next({ totalItems: 2 });
+        later.complete();
+        earlier.next({ totalItems: 1 });
+        earlier.complete();
+
+        expect(favoriteRecipeService.getPage).toHaveBeenCalledTimes(2);
+        expect(facade.favoriteTotalCount()).toBe(2);
+        expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+
+    it('keeps the current catalog total when an outdated count arrives later', () => {
+        const count = new Subject<{ totalItems: number }>();
+        favoriteRecipeService.getPage.mockReturnValueOnce(count);
+        facade.toggleRecipeFavorite(recipe).subscribe();
+        recipeService.queryOverview.mockReturnValueOnce(of(recipeOverviewWithFavoriteCount(2)));
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, true).subscribe();
+
+        count.next({ totalItems: 1 });
+        count.complete();
+
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('keeps the refreshed total when an earlier catalog response finishes after the count', () => {
+        const overview = new Subject<RecipeOverview>();
+        recipeService.queryOverview.mockReturnValueOnce(overview);
+        facade.loadInitialOverview(1, PAGE_LIMIT, {}, true).subscribe();
+        favoriteRecipeService.getPage.mockReturnValueOnce(of({ totalItems: 2 }));
+        facade.toggleRecipeFavorite(recipe).subscribe();
+
+        overview.next(recipeOverviewWithFavoriteCount(1));
+        overview.complete();
+
+        expect(facade.recipeData.items()).toEqual([recipe]);
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('keeps picker undo visible and reconciles the total after a pending count is superseded', () => {
+        const previous = new Subject<{ totalItems: number }>();
+        const refreshed = new Subject<{ totalItems: number }>();
+        const refreshedTotal = 3;
+        favoriteRecipeService.getPage.mockReturnValueOnce(previous).mockReturnValueOnce(refreshed);
+        facade.favoriteTotalCount.set(1);
+        facade.loadFavorites().subscribe();
+
+        const result = vi.fn();
+        facade.restorePickerFavorite(createFavoriteRecipe()).subscribe(result);
+        expect(result).toHaveBeenCalledExactlyOnceWith(true);
+        expect(facade.favoriteTotalCount()).toBe(2);
+        previous.next({ totalItems: 1 });
+        previous.complete();
+        expect(facade.favoriteTotalCount()).toBe(2);
+
+        refreshed.next({ totalItems: refreshedTotal });
+        refreshed.complete();
+        expect(facade.favoriteTotalCount()).toBe(refreshedTotal);
+    });
+});
+
+describe('RecipeListFacade favorite removals', () => {
     it('removes favorite recipe by looking up favorite id when recipe state has no favorite id', () => {
         const favoriteRecipe = { ...recipe, isFavorite: true, favoriteRecipeId: null };
         facade.recipeData.setData({
@@ -188,6 +258,15 @@ describe('RecipeListFacade favorites', () => {
         expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteRecipeId: null }));
     });
 });
+
+function recipeOverviewWithFavoriteCount(favoriteTotalCount: number): RecipeOverview {
+    return {
+        allRecipes: { data: [recipe], page: 1, limit: PAGE_LIMIT, totalPages: 1, totalItems: 1 },
+        recentItems: [],
+        favoriteItems: [],
+        favoriteTotalCount,
+    };
+}
 
 it('reconciles a stale favorite marker without deleting the unrelated saved recipe returned by lookup', async () => {
     const otherFavorite: FavoriteRecipe = {

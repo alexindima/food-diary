@@ -44,6 +44,7 @@ export class UserManageNotificationsCardComponent {
     public readonly fastingCheckInFollowUpReminderHours = input.required<number>();
     public readonly isSchedulingTestNotification = input.required<boolean>();
     public readonly isLoadingConnectedDevices = input.required<boolean>();
+    public readonly hasConnectedDevicesLoadError = input(false);
     public readonly connectedDeviceItems = input.required<ConnectedDeviceViewModel[]>();
     public readonly removingConnectedDeviceEndpoint = input.required<string | null>();
 
@@ -121,6 +122,7 @@ export class UserManageNotificationsCardComponent {
     public readonly fastingReminderHoursSave = output();
     public readonly testNotificationSchedule = output();
     public readonly connectedDeviceRemove = output<WebPushSubscriptionItem>();
+    public readonly connectedDevicesRetry = output();
 
     protected normalizeReminderHoursValue(value: string | number | null | undefined): string | number {
         return value ?? '';

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective, FdUiStopActivationDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -37,9 +37,8 @@ import { EntityCardThumbComponent } from './entity-card-thumb/entity-card-thumb'
 })
 export class EntityCardComponent {
     private readonly config = DEFAULT_ENTITY_CARD_CONFIG;
-    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly backgroundKey = input('');
     public readonly imageUrl = input<string | null | undefined>(null);
@@ -129,7 +128,7 @@ export class EntityCardComponent {
         return this.previewable() && (this.normalizedImageUrl() !== null || this.collageState().hasImages);
     });
     protected readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
-        this.languageVersion();
+        this.languageChange();
         const hasPreviewImage = this.hasPreviewImage();
         const previewLabel = hasPreviewImage ? this.translateService.instant('IMAGE_PREVIEW.OPEN') : null;
 
@@ -140,12 +139,6 @@ export class EntityCardComponent {
             ariaLabel: previewLabel,
         };
     });
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected openCard(): void {
         this.open.emit();

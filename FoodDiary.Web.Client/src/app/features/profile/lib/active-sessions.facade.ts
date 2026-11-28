@@ -1,6 +1,6 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { finalize, map } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import type { RefreshTokenSessionId } from '../../../shared/models/semantics/entity-id';
 import { ActiveSessionsService } from '../api/active-sessions.service';
@@ -9,16 +9,15 @@ import type { ActiveSession, SessionRevocation } from '../models/active-session.
 @Injectable()
 export class ActiveSessionsFacade {
     private readonly api = inject(ActiveSessionsService);
-    private readonly loadVersion = signal<number | undefined>(undefined);
-    private readonly sessionList = signal<ActiveSession[]>([]);
+    private readonly loadRequested = signal(false);
     private readonly sessionsResource = rxResource({
-        params: this.loadVersion,
-        stream: () =>
-            this.api.getAll().pipe(
-                map(sessions => {
-                    this.sessionList.set(sessions);
-                }),
-            ),
+        params: () => this.loadRequested() || undefined,
+        stream: () => this.api.getAll(),
+    });
+    private readonly sessionList = linkedSignal({
+        source: this.sessionsResource.snapshot,
+        computation: (snapshot, previous): ActiveSession[] =>
+            snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
     });
     private readonly revokeFailed = signal(false);
     public readonly sessions = this.sessionList.asReadonly();
@@ -43,7 +42,13 @@ export class ActiveSessionsFacade {
             return;
         }
         this.revokeFailed.set(false);
-        this.loadVersion.update(version => (version ?? 0) + 1);
+        if (!this.loadRequested()) {
+            this.loadRequested.set(true);
+            return;
+        }
+        // A retry keeps the last successful list even before the caller reads it.
+        this.sessionList();
+        this.sessionsResource.reload();
     }
 
     public revoke(sessionId: RefreshTokenSessionId): void {

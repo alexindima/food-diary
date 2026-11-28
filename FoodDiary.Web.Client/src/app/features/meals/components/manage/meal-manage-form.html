@@ -77,7 +77,7 @@
                     <fd-meal-general-info
                         data-tour-id="meal-manage-general"
                         [mealForm]="mealSignalForm"
-                        [mealTypeSelectOptions]="mealTypeSelectOptions"
+                        [mealTypeSelectOptions]="mealTypeSelectOptions()"
                         [generalErrors]="generalErrors"
                         [photoOwnerId]="photoOwnerId()"
                         (photosUploading)="photosUploading.set($event)"

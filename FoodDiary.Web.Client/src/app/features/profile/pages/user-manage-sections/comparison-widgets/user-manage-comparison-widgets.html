@@ -231,38 +231,58 @@
                 <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'USER_MANAGE.ACTIVITY_DEFAULT_HINT' | translate }}</p>
             </div>
             <div class="profile-comparison__measurements fd-grid fd-gap-sm">
-                <a class="profile-comparison__measurement" routerLink="/weight-history">
-                    <span class="profile-comparison__measurement-title fd-row fd-gap-xs">
-                        <fd-ui-icon name="monitor_weight" />
-                        <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WEIGHT' | translate }}</span>
-                    </span>
-                    <strong
-                        >{{ (displayedWeight() | localizedNumber: locale() : 0 : 2) || '—' }}
-                        @if (displayedWeight() !== null) {
-                            {{ measurements.weightUnitKey() | translate }}
-                        }
-                    </strong>
-                    <span class="profile-comparison__measurement-action fd-row fd-gap-xs">
-                        <small>{{ 'USER_MANAGE.COMPARISON.OPEN_WEIGHT_HISTORY' | translate }}</small>
-                        <fd-ui-icon name="arrow_forward" size="sm" />
-                    </span>
-                </a>
-                <a class="profile-comparison__measurement" routerLink="/waist-history">
-                    <span class="profile-comparison__measurement-title fd-row fd-gap-xs">
-                        <fd-ui-icon name="straighten" />
-                        <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WAIST' | translate }}</span>
-                    </span>
-                    <strong
-                        >{{ (displayedWaist() | localizedNumber: locale() : 0 : 2) || '—' }}
-                        @if (displayedWaist() !== null) {
-                            {{ measurements.lengthUnitKey() | translate }}
-                        }
-                    </strong>
-                    <span class="profile-comparison__measurement-action fd-row fd-gap-xs">
-                        <small>{{ 'USER_MANAGE.COMPARISON.OPEN_WAIST_HISTORY' | translate }}</small>
-                        <fd-ui-icon name="arrow_forward" size="sm" />
-                    </span>
-                </a>
+                <div class="fd-stack fd-gap-xs">
+                    <a class="profile-comparison__measurement" routerLink="/weight-history">
+                        <span class="profile-comparison__measurement-title fd-row fd-gap-xs">
+                            <fd-ui-icon name="monitor_weight" />
+                            <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WEIGHT' | translate }}</span>
+                        </span>
+                        @let weight = displayedWeight();
+                        <strong>
+                            {{ (weight | localizedNumber: locale() : 0 : 2) || '—' }}
+                            {{ (weight === null ? '' : measurements.weightUnitKey()) | translate }}
+                        </strong>
+                        <span class="profile-comparison__measurement-action fd-row fd-gap-xs">
+                            <small>{{ 'USER_MANAGE.COMPARISON.OPEN_WEIGHT_HISTORY' | translate }}</small>
+                            <fd-ui-icon name="arrow_forward" size="sm" />
+                        </span>
+                    </a>
+                    @if (hasWeightLoadError()) {
+                        <fd-ui-inline-alert
+                            role="alert"
+                            severity="danger"
+                            [message]="'ERRORS.LOAD_FAILED_TITLE' | translate"
+                            [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                            (primaryAction)="weightRetry.emit()"
+                        />
+                    }
+                </div>
+                <div class="fd-stack fd-gap-xs">
+                    <a class="profile-comparison__measurement" routerLink="/waist-history">
+                        <span class="profile-comparison__measurement-title fd-row fd-gap-xs">
+                            <fd-ui-icon name="straighten" />
+                            <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WAIST' | translate }}</span>
+                        </span>
+                        @let waist = displayedWaist();
+                        <strong>
+                            {{ (waist | localizedNumber: locale() : 0 : 2) || '—' }}
+                            {{ (waist === null ? '' : measurements.lengthUnitKey()) | translate }}
+                        </strong>
+                        <span class="profile-comparison__measurement-action fd-row fd-gap-xs">
+                            <small>{{ 'USER_MANAGE.COMPARISON.OPEN_WAIST_HISTORY' | translate }}</small>
+                            <fd-ui-icon name="arrow_forward" size="sm" />
+                        </span>
+                    </a>
+                    @if (hasWaistLoadError()) {
+                        <fd-ui-inline-alert
+                            role="alert"
+                            severity="danger"
+                            [message]="'ERRORS.LOAD_FAILED_TITLE' | translate"
+                            [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                            (primaryAction)="waistRetry.emit()"
+                        />
+                    }
+                </div>
             </div>
             <p class="profile-comparison__body-hint">{{ 'USER_MANAGE.COMPARISON.BODY_HINT' | translate }}</p>
         </fd-ui-card>

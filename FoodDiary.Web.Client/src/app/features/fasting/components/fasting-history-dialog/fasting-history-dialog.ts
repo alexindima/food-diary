@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, type Signal, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, type Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -40,21 +40,14 @@ export type FastingHistoryDialogData = {
 })
 export class FastingHistoryDialogComponent {
     protected readonly data = inject<FastingHistoryDialogData>(FD_UI_DIALOG_DATA);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject<FdUiDialogRef<FastingHistoryDialogComponent, void>>(FdUiDialogRef);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     protected readonly currentLocale = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.translateService.currentLang() ?? 'en';
     });
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected readonly sessionDurationView = getFastingDurationDisplay;
 

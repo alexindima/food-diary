@@ -194,11 +194,21 @@ export class UserManageComponent {
     protected readonly isDietologistConnected = this.dietologist.isDietologistConnected;
     protected readonly currentWeight = this.facade.currentWeight;
     protected readonly currentWaist = this.facade.currentWaist;
+    protected readonly hasWeightLoadError = this.facade.hasWeightLoadError;
+    protected readonly hasWaistLoadError = this.facade.hasWaistLoadError;
     protected readonly dietologistInviteEmailError = this.dietologist.dietologistInviteEmailError;
     protected readonly hasUnsavedProfileChanges = computed(() => {
         this.userFormInputVersion();
         return this.birthDateInputInvalid() || this.heightInputInvalid() || this.hasUserFormChanges();
     });
+
+    protected retryWeight(): void {
+        this.facade.retryWeight();
+    }
+
+    protected retryWaist(): void {
+        this.facade.retryWaist();
+    }
 
     public constructor() {
         effect(() => {

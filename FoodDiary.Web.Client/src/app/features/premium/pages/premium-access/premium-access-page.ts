@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -87,7 +87,7 @@ export class PremiumAccessPageComponent {
     private readonly accessActivationBusy = computed(() => this.checkoutLoadingPlan() !== null || this.trialLoading());
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     private overviewRevision = 0;
     private openingPaddleTransaction = false;
     private openedPaddleTransactionId: string | null = null;
@@ -117,7 +117,7 @@ export class PremiumAccessPageComponent {
             this.checkoutAvailable(),
     );
     protected readonly currentPeriodEndLabel = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
     });
     protected readonly overviewViewModel = computed<PremiumOverviewCardViewModel>(() =>
@@ -132,9 +132,6 @@ export class PremiumAccessPageComponent {
     );
 
     public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
         void this.initializePageAsync();
     }
 

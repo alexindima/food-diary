@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -17,7 +17,7 @@ const CONNECTION: WearableConnection = {
 };
 const PROVIDER_COUNT = 3;
 
-describe('WearableConnectionsComponent', () => {
+describe('WearableConnectionsComponent loading', () => {
     it('loads provider rows and renders connection status', () => {
         const { component, fixture } = setupComponent();
         const text = getText(fixture);
@@ -30,6 +30,52 @@ describe('WearableConnectionsComponent', () => {
         expect(text).toContain('WEARABLES.NOT_CONNECTED');
     });
 
+    it('shows loading and retry before any connection status is known', async () => {
+        const initial = new Subject<WearableConnection[]>();
+        const { fixture, service } = setupComponent(undefined, initial);
+        const host = fixture.nativeElement as HTMLElement;
+        service.getConnections.mockReturnValueOnce(of([]));
+
+        expect(host.querySelector('[role="status"]')).not.toBeNull();
+        expect(host.querySelector('.provider-row')).toBeNull();
+        initial.error(new Error('Offline'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const alert = host.querySelector<HTMLElement>('[role="alert"]');
+        expect(alert?.textContent).toContain('WEARABLES.CONNECTIONS_LOAD_ERROR');
+        expect(host.querySelector('.provider-row')).toBeNull();
+        expect(host.querySelector('[role="status"]')).toBeNull();
+        alert?.querySelector<HTMLButtonElement>('button')?.click();
+        fixture.detectChanges();
+
+        expect(service.getConnections).toHaveBeenCalledTimes(2);
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(host.querySelectorAll('.provider-row')).toHaveLength(PROVIDER_COUNT);
+        expect(host.textContent).toContain('WEARABLES.NOT_CONNECTED');
+    });
+
+    it('keeps the last known rows if refreshing connections fails', () => {
+        const { fixture, service } = setupComponent();
+        const host = fixture.nativeElement as HTMLElement;
+        service.getConnections.mockReturnValueOnce(throwError(() => new Error('Offline'))).mockReturnValueOnce(of([]));
+
+        host.querySelector<HTMLButtonElement>('.provider-row button')?.click();
+        fixture.detectChanges();
+
+        const alert = host.querySelector<HTMLElement>('[role="alert"]');
+        expect(alert?.textContent).toContain('WEARABLES.CONNECTIONS_LOAD_ERROR');
+        expect(host.querySelector('.provider-row')?.textContent).toContain('WEARABLES.CONNECTED');
+        const attemptsBeforeRetry = service.getConnections.mock.calls.length;
+        alert?.querySelector<HTMLButtonElement>('button')?.click();
+        fixture.detectChanges();
+
+        expect(service.getConnections).toHaveBeenCalledTimes(attemptsBeforeRetry + 1);
+        expect(host.querySelector('.provider-row')?.textContent).toContain('WEARABLES.NOT_CONNECTED');
+    });
+});
+
+describe('WearableConnectionsComponent actions', () => {
     it('delegates disconnect to service and reloads connections', () => {
         const { component, fixture, service } = setupComponent();
 
@@ -42,7 +88,7 @@ describe('WearableConnectionsComponent', () => {
 
     it('supersedes an in-flight refresh when another disconnect succeeds', async () => {
         const garmin = { ...CONNECTION, provider: 'Garmin', externalUserId: 'garmin-user' };
-        const { component, fixture, service } = setupComponent(undefined, [CONNECTION, garmin]);
+        const { component, fixture, service } = setupComponent(undefined, of([CONNECTION, garmin]));
         const firstRefresh = new Subject<WearableConnection[]>();
         const latestRefresh = new Subject<WearableConnection[]>();
         service.getConnections.mockReturnValueOnce(firstRefresh).mockReturnValueOnce(latestRefresh);
@@ -71,7 +117,7 @@ describe('WearableConnectionsComponent', () => {
         { when: 'after leaving the connection screen', destroyed: true },
     ])('handles the pending Fitbit authorization $when', ({ destroyed }) => {
         const navigate = vi.fn<BrowserWindowService['navigateCurrentTab']>();
-        const { fixture, service } = setupComponent(navigate, []);
+        const { fixture, service } = setupComponent(navigate, of([]));
         const authorization = new Subject<WearableAuthUrl>();
         service.getAuthUrl.mockReturnValueOnce(authorization);
         const element = fixture.nativeElement as HTMLElement;
@@ -104,7 +150,7 @@ describe('WearableConnectionsComponent', () => {
 
 function setupComponent(
     navigateCurrentTab = vi.fn<BrowserWindowService['navigateCurrentTab']>(),
-    connections = [CONNECTION],
+    connections: Observable<WearableConnection[]> = of([CONNECTION]),
 ): {
     component: WearableConnectionsComponent;
     fixture: ComponentFixture<WearableConnectionsComponent>;
@@ -117,7 +163,7 @@ function setupComponent(
     const service = {
         disconnect: vi.fn().mockReturnValue(of(void 0)),
         getAuthUrl: vi.fn<WearableService['getAuthUrl']>(),
-        getConnections: vi.fn().mockReturnValue(of(connections)),
+        getConnections: vi.fn().mockReturnValue(connections),
     };
 
     TestBed.configureTestingModule({

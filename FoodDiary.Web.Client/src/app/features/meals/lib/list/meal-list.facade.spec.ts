@@ -164,6 +164,7 @@ describe('MealListFacade', () => {
     registerMutationTests();
     registerUndoTests();
     registerFavoriteMutationTests();
+    registerFavoriteCountRaceTests();
     registerListFailureTests();
     registerListRaceTests();
     registerDetailActionTests();
@@ -394,6 +395,73 @@ function registerFavoriteMutationTests(): void {
         TestBed.resetTestingModule();
         expect(request.observed).toBe(false);
         expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+}
+
+function registerFavoriteCountRaceTests(): void {
+    it('keeps the latest favorite count when reads for two different toggles finish in reverse order', () => {
+        const firstCount = new Subject<Pick<PageOf<FavoriteMeal>, 'totalItems'>>();
+        const secondCount = new Subject<Pick<PageOf<FavoriteMeal>, 'totalItems'>>();
+        favoriteMealService.getPage.mockReturnValueOnce(firstCount).mockReturnValueOnce(secondCount);
+
+        const breakfast = createMeal();
+        const lunch = createMeal({ id: entityId<'meal'>('meal-2') });
+        facade.toggleMealFavorite(breakfast);
+        facade.toggleMealFavorite(lunch);
+
+        secondCount.next({ totalItems: 2 });
+        secondCount.complete();
+        firstCount.next({ totalItems: 1 });
+        firstCount.complete();
+
+        expect(favoriteMealService.getPage).toHaveBeenCalledTimes(2);
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('uses a newer overview count even when an earlier count request finishes later', () => {
+        const pendingCount = new Subject<Pick<PageOf<FavoriteMeal>, 'totalItems'>>();
+        favoriteMealService.getPage.mockReturnValueOnce(pendingCount);
+        facade.loadFavorites();
+
+        mealService.queryOverview.mockReturnValueOnce(of({ ...createOverview([]), favoriteTotalCount: 2 }));
+        facade.loadInitialOverview(emptyMealFilters()).subscribe();
+        pendingCount.next({ totalItems: 1 });
+        pendingCount.complete();
+
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('keeps the refreshed count when an earlier overview finishes with a stale count', () => {
+        const overview = new Subject<MealOverview>();
+        mealService.queryOverview.mockReturnValueOnce(overview);
+        facade.loadInitialOverview(emptyMealFilters()).subscribe();
+
+        favoriteMealService.getPage.mockReturnValueOnce(of({ totalItems: 2 }));
+        facade.toggleMealFavorite(createMeal());
+        const loaded = createMeal({ id: entityId<'meal'>('meal-2') });
+        overview.next({ ...createOverview([loaded]), favoriteTotalCount: 1 });
+        overview.complete();
+
+        expect(facade.mealData.items()).toEqual([loaded]);
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
+    it('decrements immediately when the picker removes a favorite and reconciles the pending count', () => {
+        const pendingCount = new Subject<Pick<PageOf<FavoriteMeal>, 'totalItems'>>();
+        const refreshedCount = new Subject<Pick<PageOf<FavoriteMeal>, 'totalItems'>>();
+        favoriteMealService.getPage.mockReturnValueOnce(pendingCount).mockReturnValueOnce(refreshedCount);
+        facade.favoriteTotalCount.set(1);
+        facade.toggleMealFavorite(createMeal());
+
+        facade.removeFavoriteRequest(createFavorite({ mealId: entityId<'meal'>('meal-2') })).subscribe();
+        expect(facade.favoriteTotalCount()).toBe(0);
+        pendingCount.next({ totalItems: 2 });
+        pendingCount.complete();
+        expect(facade.favoriteTotalCount()).toBe(0);
+
+        refreshedCount.next({ totalItems: 1 });
+        refreshedCount.complete();
+        expect(facade.favoriteTotalCount()).toBe(1);
     });
 }
 

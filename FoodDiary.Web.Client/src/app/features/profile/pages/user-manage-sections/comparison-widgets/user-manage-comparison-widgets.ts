@@ -6,6 +6,7 @@ import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-ki
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { fdUiCoerceInputTextValue, FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiMenuComponent } from 'fd-ui-kit/menu/fd-ui-menu';
 import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
@@ -41,6 +42,7 @@ type ImperialHeightDraft = {
         FdUiCardComponent,
         FdUiDateInputComponent,
         FdUiIconComponent,
+        FdUiInlineAlertComponent,
         FdUiInputComponent,
         FdUiMenuComponent,
         FdUiMenuDividerComponent,
@@ -68,12 +70,16 @@ export class UserManageComparisonWidgetsComponent {
     public readonly activityLevelOptions = input.required<Array<FdUiSelectOption<ActivityLevelOption | null>>>();
     public readonly currentWeight = input.required<number | null>();
     public readonly currentWaist = input.required<number | null>();
+    public readonly hasWeightLoadError = input(false);
+    public readonly hasWaistLoadError = input(false);
     public readonly securityExpanded = input(false);
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
     public readonly birthDateEdited = output();
     public readonly birthDateInputInvalidChange = output<boolean>();
     public readonly heightInputInvalidChange = output<boolean>();
+    public readonly weightRetry = output();
+    public readonly waistRetry = output();
     protected readonly timeZoneQuery = signal<string | null>(null);
     protected readonly timeZoneValue = computed(() => this.timeZoneQuery() ?? this.userForm().timeZoneId().value());
     protected readonly timeZoneOptions = computed<Array<FdUiAutocompleteOption<string>>>(() => {

@@ -872,6 +872,30 @@ describe('FdUiInputComponent delayed browser autofill', () => {
     });
 });
 
+it.each([
+    { nativeUpdate: null, expectedEvents: [] },
+    { nativeUpdate: 'autofilled@example.test', expectedEvents: [['autofilled@example.test']] },
+])('distinguishes a pending model render from a native update: $nativeUpdate', async ({ nativeUpdate, expectedEvents }) => {
+    const { component, fixture, input } = await setupInputAsync();
+    const replacement = 'replacement@example.test';
+    fixture.componentRef.setInput('value', 'previous@example.test');
+    fixture.detectChanges();
+    const field = input();
+    const changed = vi.fn();
+    component.value.subscribe(changed);
+
+    fixture.componentRef.setInput('value', replacement);
+    if (nativeUpdate !== null) {
+        field.value = nativeUpdate;
+    }
+    field.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+
+    expect(component.value()).toBe(nativeUpdate ?? replacement);
+    expect(field.value).toBe(nativeUpdate ?? replacement);
+    expect(changed.mock.calls).toEqual(expectedEvents);
+});
+
 describe('FdUiInputComponent rendered focused and cleared controls', () => {
     it('allows a form to request focus before or after rendering the field', () => {
         const fixture = TestBed.createComponent(FdUiInputComponent);

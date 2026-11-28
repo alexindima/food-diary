@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
@@ -38,7 +38,7 @@ export class UserManageNotificationsFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
     private readonly document = inject(DOCUMENT);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     private readonly hasTrackedNotificationsView = signal(false);
     private readonly isEnablingDeviceNotifications = signal(false);
     private readonly invalidReminderFields = new Set<'first' | 'followUp'>();
@@ -60,9 +60,10 @@ export class UserManageNotificationsFacade {
     public readonly currentSubscriptionEndpoint = this.pushNotifications.currentSubscriptionEndpoint;
     public readonly connectedDevices = this.facade.webPushSubscriptions;
     public readonly isLoadingConnectedDevices = this.facade.isLoadingWebPushSubscriptions;
+    public readonly hasConnectedDevicesLoadError = this.facade.hasWebPushSubscriptionsLoadError;
     public readonly removingConnectedDeviceEndpoint = this.facade.removingWebPushSubscriptionEndpoint;
     public readonly connectedDeviceItems = computed<ConnectedDeviceViewModel[]>(() => {
-        this.languageVersion();
+        this.languageChange();
         return buildConnectedDeviceItems(
             this.connectedDevices(),
             this.currentSubscriptionEndpoint(),
@@ -72,9 +73,6 @@ export class UserManageNotificationsFacade {
     });
 
     public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
         if (this.notificationPermission() !== 'unsupported') {
             const refreshPermission = (): void => {
                 this.notificationPermission.set(this.browserNotifications.getPermission());
@@ -264,6 +262,10 @@ export class UserManageNotificationsFacade {
         if (this.isViewActive()) {
             this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED'));
         }
+    }
+
+    public retryConnectedDevices(): void {
+        this.facade.refreshWebPushSubscriptions();
     }
 
     public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {

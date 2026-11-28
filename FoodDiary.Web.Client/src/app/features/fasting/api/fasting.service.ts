@@ -6,7 +6,7 @@ import { fastingOverviewFromSdk, fastingSessionFromSdk } from '../../../shared/a
 import { FastingSdk } from '../../../shared/api/sdk/generated/api/fasting.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type {
     ExtendFastingPayload,
     FastingHistoryQuery,
@@ -80,37 +80,14 @@ export class FastingService {
     }
 
     public getOverview(): Observable<FastingOverview> {
-        return this.requestOverview().pipe(
-            catchError((error: unknown) =>
-                fallbackApiError('Get fasting overview error', error, {
-                    currentSession: null,
-                    stats: {
-                        totalCompleted: 0,
-                        currentStreak: 0,
-                        averageDurationHours: 0,
-                        completionRateLast30Days: 0,
-                        checkInRateLast30Days: 0,
-                        lastCheckInAtUtc: null,
-                        topSymptom: null,
-                    },
-                    insights: {
-                        alerts: [],
-                        insights: [],
-                    },
-                    history: {
-                        data: [],
-                        page: 1,
-                        limit: this.defaultLimits.historyPageSize,
-                        totalPages: 0,
-                        totalItems: 0,
-                    },
-                }),
-            ),
+        return this.sdk.client.getFastingOverview({ version: this.sdk.version }).pipe(
+            map(fastingOverviewFromSdk),
+            catchError((error: unknown) => rethrowApiError('Get fasting overview error', error)),
         );
     }
 
     public getOverviewStrict(): Observable<FastingOverview> {
-        return this.requestOverview().pipe(catchError((error: unknown) => rethrowApiError('Get fasting overview error', error)));
+        return this.getOverview();
     }
 
     public getHistory(query: FastingHistoryQuery): Observable<PageOf<FastingSession>> {
@@ -126,10 +103,6 @@ export class FastingService {
                 map(value => sdkPage(value, fastingSessionFromSdk)),
                 catchError((error: unknown) => rethrowApiError('Get fasting history error', error)),
             );
-    }
-
-    private requestOverview(): Observable<FastingOverview> {
-        return this.sdk.client.getFastingOverview({ version: this.sdk.version }).pipe(map(fastingOverviewFromSdk));
     }
 }
 import { HttpClient } from '@angular/common/http';

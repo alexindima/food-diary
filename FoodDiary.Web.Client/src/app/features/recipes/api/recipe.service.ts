@@ -32,11 +32,16 @@ export class RecipeService {
     private readonly sdk = createSdkConnection(RecipesSdk, this.baseUrl, inject(HttpClient));
 
     public query(page: number, limit: number, filters?: RecipeFilters, includePublic = true): Observable<PageOf<Recipe>> {
-        return this.sdk.client.getRecipes({ ...this.recipeFiltersToSdk(filters), page, limit, includePublic }).pipe(
-            map(value => sdkPage(value, recipeFromSdk)),
+        return this.fetchPage(page, limit, filters, includePublic).pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Query recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
             ),
+        );
+    }
+
+    public queryForPicker(page: number, limit: number, filters?: RecipeFilters, includePublic = true): Observable<PageOf<Recipe>> {
+        return this.fetchPage(page, limit, filters, includePublic).pipe(
+            catchError((error: unknown) => rethrowApiError('Query recipes error', error)),
         );
     }
 
@@ -91,6 +96,12 @@ export class RecipeService {
             map(recipeFromSdk),
             catchError((error: unknown) => rethrowApiError('Create recipe error', error)),
         );
+    }
+
+    private fetchPage(page: number, limit: number, filters: RecipeFilters | undefined, includePublic: boolean): Observable<PageOf<Recipe>> {
+        return this.sdk.client
+            .getRecipes({ ...this.recipeFiltersToSdk(filters), page, limit, includePublic })
+            .pipe(map(value => sdkPage(value, recipeFromSdk)));
     }
 
     private recipeFiltersToSdk(filters?: RecipeFilters): GetRecipesRequestParams {

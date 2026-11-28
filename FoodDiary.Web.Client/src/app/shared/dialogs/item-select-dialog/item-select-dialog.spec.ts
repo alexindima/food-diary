@@ -366,7 +366,10 @@ function configureRenderedPicker(parent?: { close: ReturnType<typeof vi.fn> }): 
                         ),
                 },
             },
-            { provide: RecipeService, useValue: { query: vi.fn<RecipeService['query']>().mockReturnValue(of(pickerPage([recipe]))) } },
+            {
+                provide: RecipeService,
+                useValue: { queryForPicker: vi.fn<RecipeService['queryForPicker']>().mockReturnValue(of(pickerPage([recipe]))) },
+            },
         ],
     });
     const dialogs = TestBed.inject(FdUiDialogService);

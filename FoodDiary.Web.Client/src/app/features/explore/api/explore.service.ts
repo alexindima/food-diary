@@ -8,7 +8,7 @@ import { recipeFromSdk } from '../../../shared/api/sdk/recipe-sdk.mapper';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkQueryString } from '../../../shared/api/sdk/sdk-query';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 
@@ -30,9 +30,7 @@ export class ExploreService {
             })
             .pipe(
                 map(value => sdkPage(value, recipeFromSdk)),
-                catchError((error: unknown) =>
-                    fallbackApiError('Explore recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
-                ),
+                catchError((error: unknown) => rethrowApiError('Explore recipes error', error)),
             );
     }
 }

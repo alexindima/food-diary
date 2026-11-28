@@ -19,6 +19,14 @@
                 <fd-skeleton-card class="fasting__skeleton fasting__skeleton--section" />
                 <fd-skeleton-card class="fasting__skeleton fasting__skeleton--section" />
             </div>
+        } @else if (overviewLoadError()) {
+            <fd-ui-inline-alert
+                role="alert"
+                severity="danger"
+                [message]="'FASTING.OVERVIEW_LOAD_ERROR' | translate"
+                [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                (primaryAction)="retryOverview()"
+            />
         } @else {
             <fd-fasting-redesign-preview
                 [session]="currentSession()"

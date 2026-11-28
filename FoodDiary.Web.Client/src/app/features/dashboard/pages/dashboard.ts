@@ -14,7 +14,7 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -49,7 +49,6 @@ import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardLocalDayFacade } from '../lib/dashboard-local-day.facade';
 import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
 import { DashboardSetupFacade } from '../lib/dashboard-setup.facade';
-import { DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
     DashboardBlockState,
@@ -159,7 +158,7 @@ export class DashboardComponent {
     protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     protected readonly setup = inject(DashboardSetupFacade);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     private readonly fastingPriorityOnOpen = signal<boolean | null>(null);
     private toolbarDialogOpening = false;
 
@@ -225,7 +224,7 @@ export class DashboardComponent {
         return labelKey !== null ? this.translateService.instant(labelKey) : null;
     });
     protected readonly dashboardHeaderState = computed<DashboardHeaderState>(() => {
-        this.languageVersion();
+        this.languageChange();
         const isToday = this.isTodaySelected();
         const selectedDateLabel = this.formatSelectedDate();
 
@@ -233,7 +232,7 @@ export class DashboardComponent {
     });
     protected readonly mobileHydrationFirst = computed(() => this.viewportService.isMobile() && this.isTodaySelected());
     protected readonly calendarLocale = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return resolveTranslateLanguage(this.translateService);
     });
     protected readonly dashboardTitle = computed(() => {
@@ -276,7 +275,7 @@ export class DashboardComponent {
         };
     });
     protected readonly dashboardBlockStates = computed<Record<DashboardBlockId, DashboardBlockState>>(() => {
-        this.languageVersion();
+        this.languageChange();
         const editing = this.layout.isEditingLayout();
 
         const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions): DashboardBlockState =>
@@ -346,9 +345,6 @@ export class DashboardComponent {
                 this.facade.initialize(date);
                 this.facade.setSelectedDate(date);
             });
-        });
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + DASHBOARD_LANGUAGE_VERSION_INCREMENT);
         });
         afterNextRender(() => {
             this.observeDashboardWidth();

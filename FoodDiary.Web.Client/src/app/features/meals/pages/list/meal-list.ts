@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, input, signal, viewChild } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -77,7 +77,7 @@ export class MealListComponent {
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     protected readonly searchModel = signal<SearchFormValues>(this.routeState.initial);
     protected readonly mealData = this.mealListFacade.mealData;
@@ -89,11 +89,11 @@ export class MealListComponent {
     protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
     protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
     protected readonly plannedGroups = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.groupByDate(this.plannedMeals(), 'asc');
     });
     protected readonly groupedMeals = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.groupByDate(this.currentMeals(), 'desc');
     });
     protected readonly isPlannedOpen = signal(true);
@@ -111,7 +111,7 @@ export class MealListComponent {
             this.searchModel().hasAiSession !== null,
     );
     protected readonly activeFilterChips = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return mealFilterChips(
             this.searchModel(),
             key => this.translateService.instant(key),
@@ -229,9 +229,6 @@ export class MealListComponent {
             });
         // An immediate overview result can normalize the URL before navigation finishes.
         this.requestOverview(this.currentPageIndex() + 1, true);
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
     }
 
     protected async openFavoritesAsync(): Promise<void> {

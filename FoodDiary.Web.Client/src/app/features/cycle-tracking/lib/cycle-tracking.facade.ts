@@ -56,6 +56,7 @@ export class CycleTrackingFacade {
     public readonly isLoadingNutritionSummary = this.state.isLoadingNutritionSummary;
     public readonly cycle = this.state.cycle;
     public readonly nutritionSummary = this.state.nutritionSummary;
+    public readonly nutritionError = this.state.nutritionError;
     public readonly startCycleModel = this.settings.startCycleModel;
     public readonly startCycleForm = this.settings.startCycleForm;
     public readonly settingsModel = this.settings.settingsModel;
@@ -145,6 +146,13 @@ export class CycleTrackingFacade {
             }
         });
     }
+
+    public retryNutritionSummary(): void {
+        if (this.nutritionError() !== null) {
+            this.state.refreshNutritionSummary();
+        }
+    }
+
     public async deleteCycleAsync(): Promise<void> {
         const currentCycle = this.state.cycle();
         if (currentCycle === null || this.state.isDeletingCycle() || this.state.isSavingSettings()) {

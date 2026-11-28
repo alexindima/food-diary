@@ -52,6 +52,9 @@
 
                 <div class="product-manage__column product-manage__column--secondary fd-stack">
                     <div class="product-manage__sticky-stack fd-stack">
+                        @if (hasUsdaDetailError()) {
+                            <fd-error-state messageKey="PRODUCT_MANAGE.USDA_DETAIL_LOAD_ERROR" (retry)="retryUsdaDetail()" />
+                        }
                         <fd-product-nutrition-editor
                             [form]="productForm"
                             [nutritionMode]="nutritionMode"

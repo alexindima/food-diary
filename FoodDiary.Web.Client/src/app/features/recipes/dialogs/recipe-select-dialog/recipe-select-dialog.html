@@ -36,16 +36,20 @@
         </fd-ui-button>
     </div>
 
-    <fd-recipe-select-dialog-content [isLoading]="isLoading()" [items]="recipeItems()" (recipeSelected)="onRecipeClick($event)" />
+    @if (hasLoadError()) {
+        <fd-error-state (retry)="retryLoad()" />
+    } @else {
+        <fd-recipe-select-dialog-content [isLoading]="isLoading()" [items]="recipeItems()" (recipeSelected)="onRecipeClick($event)" />
 
-    @if (recipeData.totalPages > 1) {
-        <fd-ui-pagination
-            class="recipe-select__pagination"
-            [length]="recipeData.totalItems"
-            [pageSize]="pageSize"
-            [pageIndex]="currentPageIndex"
-            (pageIndexChange)="onPageChange($event)"
-        />
+        @if (recipeData.totalPages > 1) {
+            <fd-ui-pagination
+                class="recipe-select__pagination"
+                [length]="recipeData.totalItems"
+                [pageSize]="pageSize"
+                [pageIndex]="currentPageIndex"
+                (pageIndexChange)="onPageChange($event)"
+            />
+        }
     }
     @if (!embedded()) {
         <div class="recipe-select__footer fd-row fd-justify-end">

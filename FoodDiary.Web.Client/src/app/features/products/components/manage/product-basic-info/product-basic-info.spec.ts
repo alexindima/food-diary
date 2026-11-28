@@ -2,9 +2,9 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form, min, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import {
@@ -23,38 +23,25 @@ const INVALID_AMOUNT = 0;
 
 let fixture: ComponentFixture<ProductBasicInfoComponent>;
 let component: ProductBasicInfoComponent;
-let languageChanges$: Subject<unknown>;
 
 beforeEach(() => {
-    languageChanges$ = new Subject<unknown>();
-
     TestBed.configureTestingModule({
         imports: [ProductBasicInfoComponent],
-        providers: [
-            {
-                provide: TranslateService,
-                useValue: {
-                    instant: vi.fn((key: string, params?: { max?: number; min?: number; requiredLength?: number }) => {
-                        if (params?.min !== undefined) {
-                            return `${key}:${params.min}`;
-                        }
-                        if (params?.max !== undefined) {
-                            return `${key}:${params.max}`;
-                        }
-                        if (params?.requiredLength !== undefined) {
-                            return `${key}:${params.requiredLength}`;
-                        }
-
-                        return key;
-                    }),
-                    onLangChange: languageChanges$.asObservable(),
-                },
-            },
-        ],
+        providers: [provideTranslateTesting()],
     });
     TestBed.overrideComponent(ProductBasicInfoComponent, {
         set: { template: '' },
     });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', {
+        FORM_ERRORS: {
+            INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:{{min}}',
+            INVALID_MAX_AMOUNT: 'FORM_ERRORS.INVALID_MAX_AMOUNT:{{max}}',
+            MAX_LENGTH: 'FORM_ERRORS.MAX_LENGTH:{{requiredLength}}',
+        },
+        PRODUCT_AMOUNT_UNITS: { G: 'g' },
+    });
+    translate.use('en');
 
     fixture = TestBed.createComponent(ProductBasicInfoComponent);
     component = fixture.componentInstance;
@@ -94,11 +81,12 @@ describe('ProductBasicInfoComponent options', () => {
     it('rebuilds select options when language changes', () => {
         setRequiredInputs();
         fixture.detectChanges();
-        const firstOptions = component['unitOptions']();
+        expect(component['unitOptions']().find(option => option.value === MeasurementUnit.G)?.label).toBe('g');
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', { PRODUCT_AMOUNT_UNITS: { G: 'г' } });
+        translate.use('ru');
 
-        languageChanges$.next(null);
-
-        expect(component['unitOptions']()).not.toBe(firstOptions);
+        expect(component['unitOptions']().find(option => option.value === MeasurementUnit.G)?.label).toBe('г');
     });
 });
 

@@ -192,7 +192,9 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
 
         expect(requests.length).toBe(1);
     });
+});
 
+describe('RecipeSelectDialogComponent load failure and retry', () => {
     it('clears data and resets loading on load failure', () => {
         const { component, recipeService } = setupComponent([createRecipe()]);
         recipeService.query.mockReturnValueOnce(throwError(() => new Error('load failed')));
@@ -202,6 +204,42 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
 
         expect(component['recipeData'].items()).toEqual([]);
         expect(component['isLoading']()).toBe(false);
+    });
+
+    it('shows a load failure and retries the same filtered search page before showing a successful empty result', async () => {
+        const { component, fixture, recipeService } = setupComponent([createRecipe()], undefined, true);
+        const element = fixture.nativeElement as HTMLElement;
+        const search = 'Soup';
+        const category = 'Dinner';
+        recipeService.openFilters.mockReturnValueOnce(of({ ...component['searchModel'](), category, onlyMine: true }));
+        component['openFilters']();
+        fixture.detectChanges();
+        component['searchForm'].search().value.set(search);
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(recipeService.query).toHaveBeenLastCalledWith(1, PAGE_SIZE, { search, category }, false);
+        });
+
+        vi.spyOn(component as unknown as { scrollToTop: () => void }, 'scrollToTop').mockImplementation(() => {});
+        recipeService.query.mockReturnValueOnce(throwError(() => new Error('load failed')));
+        component['onPageChange'](SECOND_PAGE_INDEX);
+        fixture.detectChanges();
+
+        expect(element.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+        expect(element.querySelector('.recipe-select__no-results')).toBeNull();
+        expect(element.querySelector('.recipe-select__item')).toBeNull();
+
+        const retry = element.querySelector<HTMLButtonElement>('fd-error-state button');
+        if (retry === null) {
+            throw new Error('Recipe retry button was not rendered');
+        }
+        recipeService.query.mockReturnValueOnce(of({ ...createPage([]), page: SECOND_PAGE }));
+        retry.click();
+        fixture.detectChanges();
+
+        expect(recipeService.query).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, { search, category }, false);
+        expect(element.querySelector('fd-error-state')).toBeNull();
+        expect(element.querySelector('.recipe-select__no-results')?.textContent).toContain('RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND');
     });
 });
 

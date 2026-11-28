@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state';
 
 import type { WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
@@ -8,13 +9,14 @@ import type { ConnectedDevicesSectionState, ConnectedDeviceViewModel } from '../
 
 @Component({
     selector: 'fd-user-manage-connected-devices',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiSectionStateComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiInlineAlertComponent, FdUiSectionStateComponent],
     templateUrl: './user-manage-connected-devices.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageConnectedDevicesComponent {
     public readonly isLoading = input.required<boolean>();
+    public readonly hasLoadError = input(false);
     public readonly items = input.required<ConnectedDeviceViewModel[]>();
     public readonly pushNotificationsBusy = input.required<boolean>();
     public readonly removingEndpoint = input.required<string | null>();
@@ -29,4 +31,5 @@ export class UserManageConnectedDevicesComponent {
     });
 
     public readonly deviceRemove = output<WebPushSubscriptionItem>();
+    public readonly retryLoad = output();
 }

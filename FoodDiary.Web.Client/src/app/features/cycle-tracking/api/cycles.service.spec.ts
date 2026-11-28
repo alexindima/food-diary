@@ -583,14 +583,14 @@ describe('Cycle episode and factor conflicts', () => {
     });
 });
 
-describe('Cycle nutrition summary is optional', () => {
-    it('permits the rest of the cycle report after nutrition fails and recovers for the same date range', async () => {
+describe('Cycle nutrition summary failures', () => {
+    it('rejects a failed summary and recovers for the same date range', async () => {
         const { dateFrom, dateTo } = MOCK_NUTRITION_SUMMARY;
         const matches = (candidate: { url: string; method: string }): boolean =>
             candidate.method === 'GET' && candidate.url === `${BASE_URL}/current/nutrition-summary`;
         const failed = firstValueFrom(service.getNutritionSummary(dateFrom, dateTo));
         httpMock.expectOne(matches).flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
-        await expect(failed).resolves.toBeNull();
+        await expect(failed).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable });
 
         const pending = firstValueFrom(service.getNutritionSummary(dateFrom, dateTo));
         const request = httpMock.expectOne(matches);

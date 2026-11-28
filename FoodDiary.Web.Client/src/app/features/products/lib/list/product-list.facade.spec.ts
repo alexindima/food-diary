@@ -202,6 +202,22 @@ describe('ProductListFacade product details', () => {
         expect(reloadSpy).toHaveBeenCalledTimes(1);
     });
 
+    it('fetches the favorites total separately when the detail change reloads a filtered page', async () => {
+        dialogService.open.mockReturnValue({
+            afterClosed: () => of(new ProductDetailActionResult('product-1', 'FavoriteChanged')),
+        });
+        facade.searchModel.update(search => ({ ...search, search: 'Oats' }));
+        favoriteProductService.getPage.mockReturnValueOnce(of({ totalItems: 2 }));
+
+        await facade.handleProductDetailsAsync(createProduct());
+        TestBed.tick();
+
+        expect(productService.query).toHaveBeenCalled();
+        expect(productService.queryOverview).toHaveBeenCalledTimes(1);
+        expect(favoriteProductService.getPage).toHaveBeenCalledExactlyOnceWith(1, 1);
+        expect(facade.favoriteTotalCount()).toBe(2);
+    });
+
     it('navigates to edit and does not report deletion for edit actions', async () => {
         dialogService.open.mockReturnValue({ afterClosed: () => of(new ProductDetailActionResult('product-1', 'Edit')) });
 
@@ -649,6 +665,25 @@ describe('Product favorites picker callbacks', () => {
         expect(facade.productData.items()[0].favoriteProductId).toBe('restored-id');
         callbacks.remove(favorite).subscribe();
         expect(favoriteProductService.remove).toHaveBeenLastCalledWith('restored-id');
+    });
+
+    it('keeps the picker removal visible when an older count finishes and reconciles the pending total', () => {
+        const previous = new Subject<{ totalItems: number }>();
+        const refreshed = new Subject<{ totalItems: number }>();
+        favoriteProductService.getPage.mockReturnValueOnce(previous).mockReturnValueOnce(refreshed);
+        facade.loadFavorites();
+
+        const result = vi.fn();
+        actions().remove(createFavoriteProduct()).subscribe(result);
+        expect(result).toHaveBeenCalledExactlyOnceWith(true);
+        expect(facade.favoriteTotalCount()).toBe(0);
+        previous.next({ totalItems: 2 });
+        previous.complete();
+        expect(facade.favoriteTotalCount()).toBe(0);
+
+        refreshed.next({ totalItems: 1 });
+        refreshed.complete();
+        expect(facade.favoriteTotalCount()).toBe(1);
     });
 });
 

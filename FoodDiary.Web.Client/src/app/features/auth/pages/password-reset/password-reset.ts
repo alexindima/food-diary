@@ -1,7 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -62,9 +62,9 @@ export class PasswordResetComponent {
     protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     protected readonly fieldErrors = computed<FieldErrors>(() => {
-        this.languageVersion();
+        this.languageChange();
         this.formModel();
 
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
@@ -98,9 +98,6 @@ export class PasswordResetComponent {
 
     public constructor() {
         this.resolveResetCredentials();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
     }
 
     protected onSubmit(): void {

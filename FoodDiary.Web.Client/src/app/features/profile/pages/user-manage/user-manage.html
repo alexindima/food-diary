@@ -38,11 +38,15 @@
                     [activityLevelOptions]="activityLevelOptions"
                     [currentWeight]="currentWeight()"
                     [currentWaist]="currentWaist()"
+                    [hasWeightLoadError]="hasWeightLoadError()"
+                    [hasWaistLoadError]="hasWaistLoadError()"
                     [securityExpanded]="securityExpanded()"
                     (userFormPatch)="onUserFormPatch($event)"
                     (birthDateEdited)="markUserFormChanged()"
                     (birthDateInputInvalidChange)="birthDateInputInvalid.set($event)"
                     (heightInputInvalidChange)="heightInputInvalid.set($event)"
+                    (weightRetry)="retryWeight()"
+                    (waistRetry)="retryWaist()"
                 >
                     <fd-user-manage-backup-email profileSecurity />
                     <fd-user-manage-security-card
@@ -78,6 +82,7 @@
                         [fastingCheckInFollowUpReminderHours]="notifications.fastingCheckInFollowUpReminderHours()"
                         [isSchedulingTestNotification]="notifications.isSchedulingTestNotification()"
                         [isLoadingConnectedDevices]="notifications.isLoadingConnectedDevices()"
+                        [hasConnectedDevicesLoadError]="notifications.hasConnectedDevicesLoadError()"
                         [connectedDeviceItems]="notifications.connectedDeviceItems()"
                         [removingConnectedDeviceEndpoint]="notifications.removingConnectedDeviceEndpoint()"
                         (pushNotificationsToggle)="notifications.togglePushNotificationsAsync()"
@@ -89,6 +94,7 @@
                         (fastingReminderHoursSave)="notifications.saveFastingReminderHoursAsync()"
                         (testNotificationSchedule)="notifications.scheduleTestNotification()"
                         (connectedDeviceRemove)="notifications.removeConnectedDeviceAsync($event)"
+                        (connectedDevicesRetry)="notifications.retryConnectedDevices()"
                     />
 
                     <fd-user-manage-dietologist-card

@@ -6,6 +6,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
     defaultIfEmpty,
+    defer,
     EMPTY,
     filter,
     finalize,
@@ -16,6 +17,7 @@ import {
     of,
     Subject,
     switchMap,
+    take,
     takeUntil,
     tap,
 } from 'rxjs';
@@ -71,6 +73,8 @@ export class RecipeListFacade {
     private readonly queryState = inject(RECIPE_LIST_QUERY_STATE, { optional: true });
     private activeRouteQuery: RecipeListQuery | null = null;
     private readonly appliedRequest = new RequestStateController<void>();
+    private favoriteCountRevision = 0;
+    private favoriteOverviewReadId: number | null = null;
     private readonly requestedView = signal<RecipeOverviewRequest | undefined>(undefined);
     private readonly viewResource = rxResource({
         params: this.requestedView,
@@ -186,6 +190,8 @@ export class RecipeListFacade {
         }
 
         let recovering = false;
+        const favoriteCountRevision = this.favoriteCountRevision;
+        this.favoriteOverviewReadId = requestId;
         return this.recipeService
             .queryOverview(
                 {
@@ -205,7 +211,11 @@ export class RecipeListFacade {
                     if (!this.isCurrentRequest(requestId, query)) {
                         return;
                     }
-                    this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    if (favoriteCountRevision === this.favoriteCountRevision) {
+                        this.favoriteCountRevision++;
+                        this.isFavoritesLoadingMore.set(false);
+                        this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    }
                     if (initial) {
                         this.favoriteRecipes.set(data.favoriteItems);
                     }
@@ -230,12 +240,17 @@ export class RecipeListFacade {
                     this.recentRecipes.set([]);
                     if (initial) {
                         this.favoriteRecipes.set([]);
-                        this.favoriteTotalCount.set(0);
+                        if (favoriteCountRevision === this.favoriteCountRevision) {
+                            this.favoriteTotalCount.set(0);
+                        }
                     }
                     this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                     return of(void 0);
                 }),
                 finalize(() => {
+                    if (this.favoriteOverviewReadId === requestId) {
+                        this.favoriteOverviewReadId = null;
+                    }
                     if (!recovering && this.appliedRequest.isCurrent(requestId)) {
                         this.recipeData.setLoading(false);
                     }
@@ -345,18 +360,26 @@ export class RecipeListFacade {
     }
 
     public loadFavorites(): Observable<void> {
-        this.isFavoritesLoadingMore.set(true);
-
-        return this.favoriteRecipeService.getPage(1, 1).pipe(
-            tap(result => {
-                this.favoriteTotalCount.set(result.totalItems);
-            }),
-            map(() => void 0),
-            catchError(() => of(void 0)),
-            finalize(() => {
-                this.isFavoritesLoadingMore.set(false);
-            }),
-        );
+        return defer(() => {
+            const revision = ++this.favoriteCountRevision;
+            this.isFavoritesLoadingMore.set(true);
+            return this.favoriteRecipeService.getPage(1, 1).pipe(
+                take(1),
+                tap(result => {
+                    if (revision === this.favoriteCountRevision) {
+                        this.favoriteTotalCount.set(result.totalItems);
+                    }
+                }),
+                map(() => void 0),
+                catchError(() => of(void 0)),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    if (revision === this.favoriteCountRevision) {
+                        this.isFavoritesLoadingMore.set(false);
+                    }
+                }),
+            );
+        });
     }
 
     public toggleRecipeFavorite(recipe: Recipe): Observable<void> {
@@ -411,8 +434,8 @@ export class RecipeListFacade {
         return this.favoriteRecipeService.remove(favorite.id).pipe(
             tap(() => {
                 this.favoriteRecipes.update(favorites => favorites.filter(item => item.id !== favorite.id));
-                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                 this.syncRecipeFavoriteState(favorite.recipeId, false, null);
+                this.applyFavoriteCountDelta(-1);
             }),
             map(() => void 0),
         );
@@ -443,7 +466,7 @@ export class RecipeListFacade {
             tap(restored => {
                 favorite.id = restored.id;
                 this.syncRecipeFavoriteState(favorite.recipeId, true, restored.id);
-                this.favoriteTotalCount.update(count => count + 1);
+                this.applyFavoriteCountDelta(1);
             }),
             map(() => true),
             catchError(() => of(false)),
@@ -456,6 +479,13 @@ export class RecipeListFacade {
 
     public hasSearch(search: string | null): boolean {
         return this.hasSearchValue(search);
+    }
+
+    private applyFavoriteCountDelta(delta: 1 | -1): void {
+        this.favoriteTotalCount.update(count => Math.max(0, count + delta));
+        if (this.isFavoritesLoadingMore() || this.favoriteOverviewReadId !== null) {
+            this.loadFavorites().subscribe();
+        }
     }
 
     private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: FavoriteRecipeId | null): void {

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, model, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS, type FdUiSatietyScaleLevel } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
@@ -15,8 +15,7 @@ import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 })
 export class MealSatietyFieldsComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly preMealSatietyLevel = model<number | null>(null);
     public readonly postMealSatietyLevel = model<number | null>(null);
@@ -25,18 +24,10 @@ export class MealSatietyFieldsComponent {
     public readonly pickerSize = input<'sm' | 'md'>('sm');
     public readonly layout = input<'stacked' | 'columns' | 'compactColumns'>('stacked');
 
-    protected hungerEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-    protected satietyEmojiOptions: Array<FdUiEmojiPickerOption<number>> = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
+    protected readonly hungerEmojiOptions = computed(() => this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS));
+    protected readonly satietyEmojiOptions = computed(() => this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS));
     protected readonly preMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('before'));
     protected readonly postMealSatietyAriaLabel = computed(() => this.buildSatietyButtonAriaLabel('after'));
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-            this.hungerEmojiOptions = this.buildEmojiOptions(DEFAULT_HUNGER_LEVELS);
-            this.satietyEmojiOptions = this.buildEmojiOptions(DEFAULT_SATIETY_LEVELS);
-        });
-    }
 
     protected onSatietyLevelChange(kind: 'before' | 'after', value: number | null): void {
         const normalized = normalizeSatietyLevel(value);
@@ -48,7 +39,7 @@ export class MealSatietyFieldsComponent {
     }
 
     private buildSatietyButtonAriaLabel(kind: 'before' | 'after'): string {
-        this.languageVersion();
+        this.languageChange();
         const value = kind === 'before' ? this.preMealSatietyLevel() : this.postMealSatietyLevel();
         const meta = this.getSatietyLevelMeta(kind, value);
         const labelKey = kind === 'before' ? this.labelBeforeKey() : this.labelAfterKey();
@@ -57,6 +48,7 @@ export class MealSatietyFieldsComponent {
     }
 
     private buildEmojiOptions(levels: readonly FdUiSatietyScaleLevel[]): Array<FdUiEmojiPickerOption<number>> {
+        this.languageChange();
         return levels.map(level => {
             const label = this.translateService.instant(level.titleKey);
             const description = this.translateService.instant(level.descriptionKey);

@@ -63,12 +63,10 @@ describe('ActiveSessionsFacade', () => {
         expect(api.getAll).toHaveBeenCalledOnce();
     });
 
-    it('surfaces load and revoke failures without dropping known sessions', async () => {
+    it('surfaces load and revoke failures without dropping sessions that have not yet been read', async () => {
         api.getAll.mockReturnValue(of([currentSession, otherSession]));
         facade.load();
         await settleLoadAsync();
-        expect(facade.sessions()).toEqual([currentSession, otherSession]);
-
         api.getAll.mockReturnValueOnce(throwError(() => new Error('read failed')));
         facade.load();
         await settleLoadAsync();

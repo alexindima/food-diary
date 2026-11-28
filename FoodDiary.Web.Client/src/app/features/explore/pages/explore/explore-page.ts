@@ -7,6 +7,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
@@ -41,6 +42,7 @@ type ExploreQuery = { pageIndex: number; search: string; sortBy: ExploreSort };
         FdUiInputComponent,
         FdUiPaginationComponent,
         FdUiIconComponent,
+        FdUiInlineAlertComponent,
         FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -76,6 +78,7 @@ export class ExplorePageComponent {
             this.exploreInteractionsFacade.queryRecipes(pageIndex + 1, this.pageSize, { search, sortBy }),
     });
     protected readonly isLoading = this.recipes.isLoading;
+    protected readonly hasLoadError = computed(() => this.recipes.error() !== undefined);
     protected readonly recipePage = computed(() => (this.recipes.hasValue() ? this.recipes.value() : undefined));
 
     protected readonly resolveImageUrl = resolveRecipeImageUrl;
@@ -94,6 +97,10 @@ export class ExplorePageComponent {
 
     protected onPageChange(pageIndex: number): void {
         this.requestRecipes(pageIndex);
+    }
+
+    protected retryLoad(): void {
+        this.recipes.reload();
     }
 
     protected startExploreTour(force = true): void {

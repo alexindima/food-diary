@@ -19,8 +19,9 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { catchError, debounceTime, map, of, skip } from 'rxjs';
+import { debounceTime, map, skip, tap } from 'rxjs';
 
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
@@ -48,6 +49,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
         FdUiPaginationComponent,
         FdUiInputComponent,
         RecipeSelectDialogContentComponent,
+        ErrorStateComponent,
     ],
 })
 export class RecipeSelectDialogComponent {
@@ -108,21 +110,24 @@ export class RecipeSelectDialogComponent {
         params: this.requestedPage,
         stream: ({ params, abortSignal }) =>
             this.recipeSelectFacade.query(params.page, this.pageSize, params.filters, params.includePublic).pipe(
-                catchError(() => of(null)),
                 map(page => {
                     if (abortSignal.aborted || this.requestedPage() !== params) {
-                        return;
-                    }
-                    if (page === null) {
-                        this.recipeData.clearData();
                         return;
                     }
                     this.recipeData.setData(page);
                     this.currentPageIndex = page.page - 1;
                 }),
+                tap({
+                    error: () => {
+                        if (!abortSignal.aborted && this.requestedPage() === params) {
+                            this.recipeData.clearData();
+                        }
+                    },
+                }),
             ),
     });
     protected readonly isLoading = this.pageResource.isLoading;
+    protected readonly hasLoadError = computed(() => this.pageResource.status() === 'error');
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -142,6 +147,10 @@ export class RecipeSelectDialogComponent {
     protected loadRecipes(page: number): void {
         this.pageResource.set(undefined);
         this.requestedPage.set({ page, filters: this.buildRecipeFilters(), includePublic: !this.onlyMineFilter() });
+    }
+
+    protected retryLoad(): void {
+        this.pageResource.reload();
     }
 
     protected onPageChange(pageIndex: number): void {

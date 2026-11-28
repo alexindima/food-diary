@@ -152,7 +152,10 @@ beforeEach(() => {
             { provide: ThemeService, useValue: { syncWithUserPreferences: syncProfileTheme } },
             {
                 provide: ProfileMeasurementsService,
-                useValue: { getLatest: vi.fn().mockReturnValue(of({ weightKg: null, waistCm: null })) },
+                useValue: {
+                    getLatestWeight: vi.fn<ProfileMeasurementsService['getLatestWeight']>().mockReturnValue(of(null)),
+                    getLatestWaist: vi.fn<ProfileMeasurementsService['getLatestWaist']>().mockReturnValue(of(null)),
+                },
             },
             { provide: TelegramWebAppService, useValue: telegram },
             { provide: UserService, useValue: userService },

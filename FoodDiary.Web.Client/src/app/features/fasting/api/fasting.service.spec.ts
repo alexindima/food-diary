@@ -180,15 +180,12 @@ describe('FastingService overview', () => {
         req.flush(overview);
     });
 
-    it('should fallback overview on error', () => {
-        service.getOverview().subscribe(result => {
-            expect(result.currentSession).toBeNull();
-            expect(result.stats.totalCompleted).toBe(0);
-            expect(result.history.data).toEqual([]);
-        });
-
+    it('propagates a failed overview request', async () => {
+        const failed = firstValueFrom(service.getOverview());
         const req = httpMock.expectOne(`${BASE_URL}/overview`);
         req.flush({ message: 'failed' }, { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
+
+        await expect(failed).rejects.toMatchObject({ status: HttpStatusCode.InternalServerError });
     });
 
     it('should rethrow strict overview errors', () => {

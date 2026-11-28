@@ -6,7 +6,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { SwPush } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { defer, firstValueFrom, type Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { defer, firstValueFrom, type Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -224,7 +224,10 @@ function createProfileProviders(
     const overview = createProfileOverview(preferences, devices);
     return [
         { provide: UserService, useValue: { getOverview: (): ReturnType<UserService['getOverview']> => of(overview) } },
-        { provide: ProfileMeasurementsService, useValue: { getLatest: () => of({ weightKg: null, waistCm: null }) } },
+        {
+            provide: ProfileMeasurementsService,
+            useValue: { getLatestWeight: (): Observable<null> => of(null), getLatestWaist: (): Observable<null> => of(null) },
+        },
         { provide: DIETOLOGIST_RELATIONSHIP_ACTIONS, useValue: { getRelationship: () => of(null) } },
         { provide: AuthService, useValue: { isAdmin: () => false } },
         {
@@ -596,6 +599,32 @@ describe('Profile connected notification devices', () => {
             fixture.detectChanges();
             expect(element(fixture, 'fd-user-manage-connected-devices').textContent).not.toContain('Firefox / Linux');
         });
+    });
+});
+
+it('keeps known devices after a refresh fails and retries from the notification settings', async () => {
+    const { fixture, account } = setup();
+    account.getWebPushSubscriptions
+        .mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })))
+        .mockReturnValueOnce(of([localDevice]));
+
+    removeButton(fixture, 'Firefox / Linux').click();
+    const connectedDevices = (): HTMLElement => element(fixture, 'fd-user-manage-connected-devices');
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(account.getWebPushSubscriptions).toHaveBeenCalledOnce();
+        expect(connectedDevices().querySelector('[role="alert"]')?.textContent ?? '').toContain('ERRORS.LOAD_FAILED_TITLE');
+    });
+    expect(connectedDevices().textContent).toContain('Chrome / Windows');
+    expect(connectedDevices().textContent).not.toContain('Firefox / Linux');
+
+    const refreshes = account.getWebPushSubscriptions.mock.calls.length;
+    element(fixture, 'fd-user-manage-connected-devices [role="alert"] button').click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(account.getWebPushSubscriptions).toHaveBeenCalledTimes(refreshes + 1);
+        expect(connectedDevices().querySelector('[role="alert"]')).toBeNull();
+        expect(connectedDevices().textContent).toContain('Chrome / Windows');
     });
 });
 

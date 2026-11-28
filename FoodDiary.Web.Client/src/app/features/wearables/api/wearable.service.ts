@@ -19,7 +19,7 @@ export class WearableService {
     public getConnections(): Observable<WearableConnection[]> {
         return this.sdk.client.getWearablesConnections({ version: this.sdk.version }).pipe(
             map(values => values.map(wearableConnectionFromSdk)),
-            catchError((error: unknown) => fallbackApiError('Get wearable connections error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Get wearable connections error', error)),
         );
     }
 

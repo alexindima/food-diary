@@ -1,5 +1,16 @@
 <div class="connections">
     <h3 class="title fd-ui-card-title">{{ 'WEARABLES.CONNECTIONS_TITLE' | translate }}</h3>
+    @if (isLoading() && providerRows().length === 0) {
+        <fd-ui-loader />
+    } @else if (hasLoadError()) {
+        <fd-ui-inline-alert
+            role="alert"
+            severity="danger"
+            [message]="'WEARABLES.CONNECTIONS_LOAD_ERROR' | translate"
+            [primaryActionLabel]="'ERRORS.RETRY' | translate"
+            (primaryAction)="retryLoad()"
+        />
+    }
     @for (provider of providerRows(); track provider.id) {
         <div class="provider-row">
             <span class="provider-icon">{{ provider.icon }}</span>

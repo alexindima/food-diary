@@ -2,7 +2,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -67,6 +67,31 @@ describe('ExplorePageComponent', () => {
             search: '',
             sortBy: 'newest',
         });
+    });
+
+    it('shows a load error and retries the same page', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const nextPage = host.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
+        if (nextPage === null) {
+            throw new Error('Expected recipe pagination');
+        }
+        const emptyPage = { ...createPage(), page: 2, data: [], totalPages: 0, totalItems: 0 };
+        exploreService.queryRecipes.mockReturnValueOnce(throwError(() => new Error('Offline'))).mockReturnValueOnce(of(emptyPage));
+
+        nextPage.click();
+        fixture.detectChanges();
+
+        const alert = host.querySelector<HTMLElement>('[role="alert"]');
+        expect(alert?.textContent).toContain('EXPLORE.LOAD_ERROR');
+        expect(host.textContent).not.toContain('EXPLORE.NO_RESULTS');
+        const attemptsBeforeRetry = exploreService.queryRecipes.mock.calls.length;
+        alert?.querySelector<HTMLButtonElement>('button')?.click();
+        fixture.detectChanges();
+
+        expect(exploreService.queryRecipes).toHaveBeenCalledTimes(attemptsBeforeRetry + 1);
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(2, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(host.textContent).toContain('EXPLORE.NO_RESULTS');
     });
 
     it('restarts pagination on a search and keeps the matching recipes after a late page response', async () => {

@@ -137,6 +137,27 @@ describe('FastingPageComponent rendered workflow', () => {
     });
 });
 
+describe('FastingPageComponent overview recovery', () => {
+    beforeEach(createComponentAsync);
+
+    it('offers Retry while hiding the start action after an overview failure', () => {
+        facade.overviewLoadError.set(true);
+        fixture.detectChanges();
+
+        expect(pageHost().querySelector('[role="alert"]')?.textContent ?? '').toContain('FASTING.OVERVIEW_LOAD_ERROR');
+        expect(pageHost().querySelector('fd-fasting-redesign-preview')).toBeNull();
+
+        pageButton('ERRORS.RETRY').click();
+        expect(facade.initialize).toHaveBeenCalledTimes(2);
+
+        facade.overviewLoadError.set(false);
+        fixture.detectChanges();
+
+        expect(pageHost().querySelector('[role="alert"]')).toBeNull();
+        expect(pageButton('FASTING.START_FAST').disabled).toBe(false);
+    });
+});
+
 describe('FastingPageComponent rendered dialogs', () => {
     beforeEach(createComponentAsync);
 
@@ -656,6 +677,7 @@ type FastingFacadeMock = {
     postponeCyclicDay: ReturnType<typeof vi.fn>;
     isPromptVisible: ReturnType<typeof vi.fn>;
     isLoading: ReturnType<typeof signal<boolean>>;
+    overviewLoadError: ReturnType<typeof signal<boolean>>;
     isStarting: ReturnType<typeof signal<boolean>>;
     isEnding: ReturnType<typeof signal<boolean>>;
     isExtending: ReturnType<typeof signal<boolean>>;
@@ -776,6 +798,7 @@ function createFacadeActions(): Pick<
 function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof createFacadeActions>> {
     return {
         isLoading: signal(false),
+        overviewLoadError: signal(false),
         isStarting: signal(false),
         isEnding: signal(false),
         isExtending: signal(false),

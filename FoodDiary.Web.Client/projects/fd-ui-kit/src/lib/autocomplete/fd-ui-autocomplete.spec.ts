@@ -189,6 +189,62 @@ describe('Autocomplete saved selection', () => {
         expect(input?.value).toBe('Charlie');
         expect(input?.getAttribute('aria-expanded')).toBe('false');
     });
+
+    it.each([
+        { model: 'previous', text: 'stored-key', selected: 'false', events: ['value', 'touched', 'touch', 'option'] },
+        { model: 'stored-key', text: 'Display label', selected: 'true', events: ['touched', 'touch', 'option'] },
+    ])('keeps the string option label contract when the model is $model', ({ model, text, selected, events }) => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        const component = fixture.componentInstance;
+        const option = { value: 'stored-key', label: 'Display label' };
+        const published: string[] = [];
+        fixture.componentRef.setInput('options', [option]);
+        fixture.componentRef.setInput('value', model);
+        fixture.detectChanges();
+        const control = requireAutocompleteInput(fixture);
+        expect(control.value).toBe(model);
+
+        component.value.subscribe(() => published.push('value'));
+        component.touched.subscribe(() => published.push('touched'));
+        component.touch.subscribe(() => published.push('touch'));
+        component.optionSelected.subscribe(() => published.push('option'));
+        control.focus();
+        fixture.detectChanges();
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        fixture.detectChanges();
+
+        expect(component.value()).toBe(option.value);
+        expect(control.value).toBe(text);
+        expect(published).toEqual(events);
+        expect(document.activeElement).toBe(control);
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+
+        control.blur();
+        control.focus();
+        fixture.detectChanges();
+        expect(document.querySelector('[role="option"]')?.getAttribute('aria-selected')).toBe(selected);
+    });
+
+    it('uses the displayed selection when focus precedes a replacement model render', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        const apple = { id: 'apple' };
+        const pear = { id: 'pear' };
+        fixture.componentRef.setInput('options', [
+            { value: apple, label: 'Apple' },
+            { value: pear, label: 'Pear' },
+        ]);
+        fixture.componentRef.setInput('value', pear);
+        fixture.detectChanges();
+        const control = requireAutocompleteInput(fixture);
+        expect(control.value).toBe('Pear');
+
+        fixture.componentRef.setInput('value', apple);
+        control.focus();
+        fixture.detectChanges();
+
+        expect(control.value).toBe('Apple');
+        expect(control.getAttribute('aria-activedescendant')).toBe(`${control.id}-option-1`);
+    });
 });
 
 describe('Autocomplete multi-option keyboard navigation', () => {
@@ -316,6 +372,26 @@ describe('Autocomplete changing suggestions', () => {
         expect(document.querySelector('[role="listbox"]')).toBeNull();
     });
 
+    it('lets Enter pass until a programmatic query renders its no-results popup', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('emptyText', 'No matches');
+        fixture.componentRef.setInput('value', 'x');
+        fixture.detectChanges();
+        const control = requireAutocompleteInput(fixture);
+        control.focus();
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('value', 'Longer query');
+        const earlyEnter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+        control.dispatchEvent(earlyEnter);
+        expect(earlyEnter.defaultPrevented).toBe(false);
+
+        fixture.detectChanges();
+        const renderedEnter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+        control.dispatchEvent(renderedEnter);
+        expect(renderedEnter.defaultPrevented).toBe(true);
+    });
+
     it('activates a returned suggestion for keyboard selection after a search without results', () => {
         const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
         fixture.detectChanges();
@@ -326,6 +402,11 @@ describe('Autocomplete changing suggestions', () => {
         component['onFocus']();
         fixture.detectChanges();
         fixture.componentRef.setInput('options', [option]);
+        const earlyEnter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+        component['onControlKeydown'](earlyEnter);
+        expect(earlyEnter.defaultPrevented).toBe(true);
+        expect(selected).not.toHaveBeenCalled();
+
         fixture.detectChanges();
         component['onControlKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
         fixture.detectChanges();

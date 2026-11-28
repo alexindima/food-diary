@@ -4,7 +4,21 @@ import { TranslateService } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+    catchError,
+    defer,
+    finalize,
+    firstValueFrom,
+    map,
+    type Observable,
+    of,
+    Subject,
+    type Subscription,
+    switchMap,
+    take,
+    takeUntil,
+    tap,
+} from 'rxjs';
 
 import { NavigationService } from '../../../../services/navigation.service';
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/local-date.utils';
@@ -41,6 +55,9 @@ export class MealListFacade {
     private readonly invalidation = inject(NutritionDataInvalidationService);
 
     private readonly overviewRequests = new Subject<void>();
+    private favoriteCountRead: Subscription | null = null;
+    private favoriteCountRevision = 0;
+    private favoriteOverviewPending = false;
 
     public readonly daySummaries = signal<MealDaySummary[]>([]);
     public readonly pageSize = MEAL_LIST_PAGE_SIZE;
@@ -51,9 +68,11 @@ export class MealListFacade {
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
     public loadFavorites(): void {
-        this.favoriteMealService
+        this.favoriteCountRevision++;
+        this.favoriteCountRead?.unsubscribe();
+        this.favoriteCountRead = this.favoriteMealService
             .getPage(1, 1)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: page => {
                     this.favoriteTotalCount.set(page.totalItems);
@@ -139,6 +158,8 @@ export class MealListFacade {
     private loadOverview(page: number, filtersModel: MealListStructuredFilters, includeFavorites: boolean): Observable<void> {
         return defer(() => {
             this.overviewRequests.next();
+            const favoriteCountRevision = includeFavorites ? this.favoriteCountRevision : null;
+            this.favoriteOverviewPending = includeFavorites;
             this.clearError();
             this.mealData.setLoading(true);
             return this.queryOverview(page, filtersModel, includeFavorites).pipe(
@@ -150,7 +171,8 @@ export class MealListFacade {
                     this.mealData.setData(data.allMeals);
                     this.daySummaries.set(data.daySummaries ?? []);
                     this.currentPageIndex.set(data.allMeals.page - 1);
-                    if (includeFavorites) {
+                    if (favoriteCountRevision === this.favoriteCountRevision) {
+                        this.favoriteCountRead?.unsubscribe();
                         this.favoriteTotalCount.set(data.favoriteTotalCount);
                     }
                     this.clearError();
@@ -159,13 +181,14 @@ export class MealListFacade {
                 catchError(() => {
                     this.mealData.clearData();
                     this.daySummaries.set([]);
-                    if (includeFavorites) {
+                    if (favoriteCountRevision === this.favoriteCountRevision) {
                         this.favoriteTotalCount.set(0);
                     }
                     this.showLoadError();
                     return of(void 0);
                 }),
                 finalize(() => {
+                    this.favoriteOverviewPending = false;
                     this.mealData.setLoading(false);
                 }),
                 takeUntil(this.overviewRequests),
@@ -227,6 +250,10 @@ export class MealListFacade {
             tap(() => {
                 this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                 this.syncMealFavoriteState(favorite.mealId, false, null);
+                // The local count may precede an earlier mutation whose count is still loading.
+                if (this.favoriteCountRead?.closed === false || this.favoriteOverviewPending) {
+                    this.loadFavorites();
+                }
             }),
             map(() => true),
             catchError(() => {

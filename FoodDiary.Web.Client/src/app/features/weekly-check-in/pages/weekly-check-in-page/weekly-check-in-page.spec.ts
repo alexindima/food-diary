@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiWeekPickerComponent } from 'fd-ui-kit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import {
     CURRENT_WEEK_START,
     getButton,
@@ -277,7 +276,7 @@ describe('WeeklyCheckInPageComponent goal dialogs', () => {
         expect(element.querySelector(`${NEXT_GOAL} .check-in__focus-count`)?.textContent).toContain('2 / 5');
     });
 
-    it('forwards dialog saves and reloads goals when the successful dialog closes', async () => {
+    it('forwards one save for the requested goal week', async () => {
         const element = getElement(renderWeeklyPage());
         getButton(element, `${NEXT_GOAL} button`).click();
         const payload: UpsertWeeklyGoalPayload = {
@@ -289,22 +288,9 @@ describe('WeeklyCheckInPageComponent goal dialogs', () => {
         };
         await expect(getGoalDialogData(context.dialog).saveGoalAsync(payload)).resolves.toEqual(GOAL);
         expect(context.facade.saveGoalAsync).toHaveBeenCalledExactlyOnceWith(payload);
-        expect(context.facade.reloadGoal).not.toHaveBeenCalled();
-        context.closed.next(GOAL);
-        await waitForAsyncTasksAsync();
-        expect(context.facade.reloadGoal).toHaveBeenCalledExactlyOnceWith();
     });
 
-    it.each([null, undefined])('does not reload after a dismissed dialog (%s)', async result => {
-        const element = getElement(renderWeeklyPage());
-        getButton(element, `${CURRENT_GOAL} button`).click();
-        context.closed.next(result);
-        await waitForAsyncTasksAsync();
-        expect(context.facade.saveGoalAsync).not.toHaveBeenCalled();
-        expect(context.facade.reloadGoal).not.toHaveBeenCalled();
-    });
-
-    it('returns save failures to the dialog without reloading existing goals', async () => {
+    it('returns save failures to the dialog', async () => {
         const failure = new Error('Goal save failed');
         context.facade.saveGoalAsync.mockRejectedValueOnce(failure);
         const element = getElement(renderWeeklyPage());
@@ -317,7 +303,6 @@ describe('WeeklyCheckInPageComponent goal dialogs', () => {
             timeZoneOffsetMinutes: null,
         };
         await expect(getGoalDialogData(context.dialog).saveGoalAsync(payload)).rejects.toBe(failure);
-        expect(context.facade.reloadGoal).not.toHaveBeenCalled();
     });
 });
 

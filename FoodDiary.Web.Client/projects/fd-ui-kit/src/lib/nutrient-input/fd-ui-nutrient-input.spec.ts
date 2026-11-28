@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { FdUiNutrientInputComponent } from './fd-ui-nutrient-input';
 
 const NUMERIC_VALUE = 100;
-const CLAMPED_INPUT_SIZE = 5;
+const INPUT_SIZE = 5;
+const MAX_INPUT_SIZE = 8;
 const INTEGER_INPUT_VALUE = 123;
 const DECIMAL_INPUT_VALUE = 123.5;
 const COMMA_INPUT_VALUE = 12.5;
@@ -118,28 +119,28 @@ describe('FdUiNutrientInputComponent', () => {
 
 describe('FdUiNutrientInputComponent signal form control', () => {
     it('should write value from model', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set('42');
         fixture.detectChanges();
-        expect(component['displayValue']).toBe('42');
+        expect(input().value).toBe('42');
     });
 
     it('should write numeric value from model and convert to string', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set(NUMERIC_VALUE);
         fixture.detectChanges();
-        expect(component['displayValue']).toBe(String(NUMERIC_VALUE));
+        expect(input().value).toBe(String(NUMERIC_VALUE));
     });
 
     it('should write null value as empty string', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set('50');
         fixture.detectChanges();
-        expect(component['displayValue']).toBe('50');
+        expect(input().value).toBe('50');
 
         component.value.set(null);
         fixture.detectChanges();
-        expect(component['displayValue']).toBe('');
+        expect(input().value).toBe('');
     });
 
     it('should set disabled state', async () => {
@@ -194,7 +195,7 @@ describe('FdUiNutrientInputComponent input handling', () => {
         inputEl.dispatchEvent(new Event('input'));
 
         expect(component.value()).toBe(DECIMAL_INPUT_VALUE);
-        expect(component['displayValue']).toBe('123.5');
+        expect(input().value).toBe('123.5');
     });
 
     it('should replace comma with dot in number type', async () => {
@@ -244,6 +245,20 @@ describe('FdUiNutrientInputComponent input handling', () => {
         }
     });
 
+    it('replaces a decimal draft when the model receives a different value', async () => {
+        const { component, fixture, input } = await setupNutrientInputAsync();
+        input().value = '1.';
+        input().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(input().value).toBe('1.');
+
+        component.value.set(NUMERIC_VALUE);
+        fixture.detectChanges();
+
+        expect(input().value).toBe(String(NUMERIC_VALUE));
+        expect(input().style.width).toBe(`${String(NUMERIC_VALUE).length}ch`);
+    });
+
     it('should not sanitize text type input', async () => {
         const { component, fixture, input } = await setupNutrientInputAsync();
         fixture.componentRef.setInput('type', 'text');
@@ -253,33 +268,33 @@ describe('FdUiNutrientInputComponent input handling', () => {
         inputEl.dispatchEvent(new Event('input'));
 
         expect(component.value()).toBe('abc123');
-        expect(component['displayValue']).toBe('abc123');
+        expect(input().value).toBe('abc123');
     });
 });
 
 describe('FdUiNutrientInputComponent dynamic width', () => {
     it('should update inputWidth based on value length', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set('12345');
         fixture.detectChanges();
-        expect(component['inputWidth']).toBe(`${CLAMPED_INPUT_SIZE}ch`);
-        expect(component['inputSize']).toBe(CLAMPED_INPUT_SIZE);
+        expect(input().style.width).toBe(`${INPUT_SIZE}ch`);
+        expect(input().size).toBe(INPUT_SIZE);
     });
 
     it('should clamp inputWidth to maxInputChars', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set('1234567890');
         fixture.detectChanges();
-        expect(component['inputSize']).toBe(component['maxInputChars']);
-        expect(component['inputWidth']).toBe(`${component['maxInputChars']}ch`);
+        expect(input().size).toBe(MAX_INPUT_SIZE);
+        expect(input().style.width).toBe(`${MAX_INPUT_SIZE}ch`);
     });
 
     it('should default inputWidth to 1ch for empty value', async () => {
-        const { component, fixture } = await setupNutrientInputAsync();
+        const { component, fixture, input } = await setupNutrientInputAsync();
         component.value.set('');
         fixture.detectChanges();
-        expect(component['inputWidth']).toBe('1ch');
-        expect(component['inputSize']).toBe(1);
+        expect(input().style.width).toBe('1ch');
+        expect(input().size).toBe(1);
     });
 
     it('should apply compact value density for long values', async () => {

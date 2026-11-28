@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -68,7 +68,7 @@ export class DietologistClientsPageComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     private readonly clientsResource = rxResource({
         stream: () => this.dietologistFacade.getMyClients(),
@@ -94,7 +94,7 @@ export class DietologistClientsPageComponent {
     protected readonly attentionError = computed(() => this.attentionResource.error() !== undefined);
     protected readonly pendingAttentionIds = signal<ReadonlySet<AttentionSignalId>>(new Set<AttentionSignalId>());
     protected readonly attentionItems = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         const language = resolveTranslateLanguage(this.translateService);
         return this.attentionSignals().map(attentionSignal => ({
             ...attentionSignal,
@@ -116,11 +116,11 @@ export class DietologistClientsPageComponent {
         disabled(path.text, { when: () => this.bulkSending() });
     });
     protected readonly bulkTextError = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return resolveSignalFormFieldError(this.bulkForm.text, this.validationErrors, this.translateService);
     });
     protected readonly clientItems = computed<ClientCardViewModel[]>(() => {
-        this.languageVersion();
+        this.languageChange();
         return buildClientCardViewModels(this.clients(), resolveTranslateLanguage(this.translateService));
     });
 
@@ -139,9 +139,6 @@ export class DietologistClientsPageComponent {
                 }
                 await router.navigate(['/dietologist/clients', id]);
             },
-        });
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
         });
     }
 

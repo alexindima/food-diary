@@ -439,9 +439,7 @@ describe('Rendered weekly reminder creation', () => {
         retry.flush(savedGoal);
         await settleAsync(harness);
         expect(document.querySelector('fd-weekly-goal-dialog')).toBeNull();
-        expectWeekRead(http, GOALS_URL, CURRENT_WEEK).flush(null);
-        expectWeekRead(http, GOALS_URL, NEXT_WEEK).flush(savedGoal);
-        await settleAsync(harness);
+        http.expectNone(request => request.method === 'GET' && request.url === GOALS_URL);
         const goalCard = queryElement(page, '[data-tour-id="weekly-check-in-suggestions"]');
         expect(goalCard.textContent).toContain('0 / 7');
         expectDaysLogged(page, CURRENT_DAYS_LOGGED);

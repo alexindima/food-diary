@@ -3,7 +3,6 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { FdTourService } from 'fd-tour';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { Subject } from 'rxjs';
 import { vi } from 'vitest';
 
 import type { WeeklyGoalDialogData } from '../app/features/weekly-check-in/dialogs/weekly-goal-dialog/weekly-goal-dialog';
@@ -86,7 +85,6 @@ export type WeeklyCheckInFacadeMock = WritableFacadeSignals & {
     retryData: ReturnType<typeof vi.fn<WeeklyCheckInFacade['retryData']>>;
     retryNextWeekGoal: ReturnType<typeof vi.fn<WeeklyCheckInFacade['retryNextWeekGoal']>>;
     retrySelectedWeekGoal: ReturnType<typeof vi.fn<WeeklyCheckInFacade['retrySelectedWeekGoal']>>;
-    reloadGoal: ReturnType<typeof vi.fn<WeeklyCheckInFacade['reloadGoal']>>;
     saveGoalAsync: ReturnType<typeof vi.fn<WeeklyCheckInFacade['saveGoalAsync']>>;
 };
 
@@ -112,7 +110,6 @@ function createFacadeMock(): WeeklyCheckInFacadeMock {
         retryData: vi.fn(),
         retryNextWeekGoal: vi.fn(),
         retrySelectedWeekGoal: vi.fn(),
-        reloadGoal: vi.fn(),
         saveGoalAsync: vi.fn(async (_payload: UpsertWeeklyGoalPayload) => {
             await waitForAsyncTasksAsync();
             return GOAL;
@@ -121,22 +118,15 @@ function createFacadeMock(): WeeklyCheckInFacadeMock {
 }
 
 type DialogData = WeeklyGoalDialogData | WeeklyReviewDialogData;
-type GoalDialogRefMock = { afterClosed: () => Subject<WeeklyGoal | null | undefined> };
 
 export function setupWeeklyPage(): {
     facade: WeeklyCheckInFacadeMock;
-    closed: Subject<WeeklyGoal | null | undefined>;
     dialog: { open: ReturnType<typeof vi.fn<(_component: unknown, config?: FdUiDialogConfig<DialogData>) => unknown>> };
     tour: { start: ReturnType<typeof vi.fn<FdTourService['start']>> };
     measurements: WritableSignal<'metric' | 'imperial'>;
 } {
     const facade = createFacadeMock();
-    const closed = new Subject<WeeklyGoal | null | undefined>();
-    const dialog = {
-        open: vi.fn((_component: unknown, _config?: FdUiDialogConfig<DialogData>): GoalDialogRefMock => ({
-            afterClosed: (): Subject<WeeklyGoal | null | undefined> => closed,
-        })),
-    };
+    const dialog = { open: vi.fn<(_component: unknown, config?: FdUiDialogConfig<DialogData>) => unknown>() };
     const tour = { start: vi.fn<FdTourService['start']>() };
     const measurements = signal<'metric' | 'imperial'>('metric');
     TestBed.configureTestingModule({
@@ -150,7 +140,7 @@ export function setupWeeklyPage(): {
     }).overrideComponent(WeeklyCheckInPageComponent, {
         set: { providers: [{ provide: WeeklyCheckInFacade, useValue: facade }] },
     });
-    return { facade, closed, dialog, tour, measurements };
+    return { facade, dialog, tour, measurements };
 }
 
 export function renderWeeklyPage(): ComponentFixture<WeeklyCheckInPageComponent> {

@@ -248,18 +248,58 @@ describe('WeeklyCheckInFacade (2)', () => {
         expect(facade.thisWeek()?.totalCalories).toBe(WEEKLY_CALORIES);
         expect(facade.selectedWeekStartIso()).toBe('2026-03-09');
     });
-    it('reloads both goal resources after saving and supports explicit reload', async () => {
+});
+
+describe('WeeklyCheckInFacade saved goals', () => {
+    it.each(['current', 'next'] as const)('applies the saved %s goal and cancels only its older read', async selected => {
         const { facade, goals } = setup();
+        const weekStart = selected === 'current' ? facade.selectedWeekStartIso() : facade.goalWeekStartIso();
+        const otherWeekStart = selected === 'current' ? facade.goalWeekStartIso() : facade.selectedWeekStartIso();
+        const pending = new Subject<WeeklyGoal | null>();
+        const otherPending = new Subject<WeeklyGoal | null>();
+        const savedGoal = { ...GOAL, weekStart, targetDays: DAYS_PER_WEEK };
+        const otherGoal = { ...GOAL, weekStart: otherWeekStart };
+        const payload = { ...PAYLOAD, weekStart, targetDays: savedGoal.targetDays };
+        goals.upsertGoal.mockReturnValueOnce(of(savedGoal));
+        goals.getGoal.mockImplementation(week => (week === weekStart ? pending : otherPending));
+        await settleAsync();
+        expect(pending.observed).toBe(true);
+        expect(otherPending.observed).toBe(true);
+        goals.getGoal.mockClear();
+
+        await expect(facade.saveGoalAsync(payload)).resolves.toEqual(savedGoal);
+        expect(goals.upsertGoal).toHaveBeenCalledExactlyOnceWith(payload);
+        expect(pending.observed).toBe(false);
+        expect(otherPending.observed).toBe(true);
+
+        pending.next({ ...GOAL, weekStart });
+        pending.complete();
+        otherPending.next(otherGoal);
+        otherPending.complete();
+        await settleAsync();
+        expect(goals.getGoal).not.toHaveBeenCalled();
+        expect(facade.selectedWeekGoal()).toEqual(selected === 'current' ? savedGoal : otherGoal);
+        expect(facade.weeklyGoal()).toEqual(selected === 'next' ? savedGoal : otherGoal);
+    });
+
+    it('does not apply a saved goal to the visible cards after its week is no longer shown', async () => {
+        const { facade, goals } = setup();
+        const saving = new Subject<WeeklyGoal>();
+        goals.getGoal.mockImplementation((week: CalendarDate) => of({ ...GOAL, weekStart: week }));
+        goals.upsertGoal.mockReturnValueOnce(saving);
+        await settleAsync();
+        const save = facade.saveGoalAsync(PAYLOAD);
+        facade.selectedWeek.set(new Date(TEST_YEAR, 2, PREVIOUS_MONDAY));
         await settleAsync();
         goals.getGoal.mockClear();
-        await expect(facade.saveGoalAsync(PAYLOAD)).resolves.toEqual(GOAL);
+
+        saving.next({ ...GOAL, targetDays: DAYS_PER_WEEK });
+        saving.complete();
+        await save;
         await settleAsync();
-        expect(goals.upsertGoal).toHaveBeenCalledWith(PAYLOAD);
-        expect(goals.getGoal).toHaveBeenCalledTimes(2);
-        goals.getGoal.mockClear();
-        facade.reloadGoal();
-        await settleAsync();
-        expect(goals.getGoal).toHaveBeenCalledTimes(2);
+        expect(facade.selectedWeekGoal()?.weekStart).toBe(facade.selectedWeekStartIso());
+        expect(facade.weeklyGoal()?.weekStart).toBe(facade.goalWeekStartIso());
+        expect(goals.getGoal).not.toHaveBeenCalled();
     });
 });
 

@@ -14,7 +14,7 @@ export class RecipeSelectFacade {
     private readonly dialogService = inject(FdUiDialogService);
 
     public query(page: number, limit: number, filters?: RecipeFilters, includePublic = true): Observable<PageOf<Recipe>> {
-        return this.recipeService.query(page, limit, filters, includePublic);
+        return this.recipeService.queryForPicker(page, limit, filters, includePublic);
     }
 
     public openFilters(filters: RecipeSelectFilterValues): Observable<RecipeListFiltersDialogResult | null | undefined> {

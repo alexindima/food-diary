@@ -166,10 +166,12 @@
 
     <fd-user-manage-connected-devices
         [isLoading]="isLoadingConnectedDevices()"
+        [hasLoadError]="hasConnectedDevicesLoadError()"
         [items]="connectedDeviceItems()"
         [pushNotificationsBusy]="pushNotificationsBusy()"
         [removingEndpoint]="removingConnectedDeviceEndpoint()"
         (deviceRemove)="connectedDeviceRemove.emit($event)"
+        (retryLoad)="connectedDevicesRetry.emit()"
     />
 
     <!-- Fasting telemetry summary moved to fasting page. -->

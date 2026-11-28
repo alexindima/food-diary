@@ -1,5 +1,5 @@
-import { computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, inject, linkedSignal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { email, type FieldTree, form, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -36,10 +36,9 @@ type AuthFormSubmissionActions = {
 
 export class AuthFormManager {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly fieldErrorsVersion = signal(0);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly loginModel = signal(createLoginFormModel());
     public readonly registerModel = signal(createRegisterFormModel());
@@ -51,7 +50,7 @@ export class AuthFormManager {
     public readonly passwordResetForm: FieldTree<PasswordResetFormValues>;
     public readonly loginFieldErrors = computed<LoginFieldErrors>(() => {
         this.fieldErrorsVersion();
-        this.languageVersion();
+        this.languageChange();
         this.loginModel();
 
         return LOGIN_ERROR_FIELDS.reduce<LoginFieldErrors>((errors, field) => {
@@ -61,7 +60,7 @@ export class AuthFormManager {
     });
     public readonly registerFieldErrors = computed<RegisterFieldErrors>(() => {
         this.fieldErrorsVersion();
-        this.languageVersion();
+        this.languageChange();
         this.registerModel();
 
         return REGISTER_ERROR_FIELDS.reduce<RegisterFieldErrors>((errors, field) => {
@@ -71,7 +70,7 @@ export class AuthFormManager {
     });
     public readonly passwordResetFieldErrors = computed<PasswordResetFieldErrors>(() => {
         this.fieldErrorsVersion();
-        this.languageVersion();
+        this.languageChange();
         this.passwordResetModel();
 
         return PASSWORD_RESET_ERROR_FIELDS.reduce<PasswordResetFieldErrors>((errors, field) => {
@@ -133,10 +132,6 @@ export class AuthFormManager {
                 },
             },
         );
-
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
     }
 
     public resetAll(): void {

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -46,10 +46,9 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingRedesignPreviewComponent {
-    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly today = inject(CurrentLocalDayService).today;
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
 
     public readonly session = input.required<FastingSession | null>();
     public readonly stats = input.required<FastingStats | null>();
@@ -81,7 +80,7 @@ export class FastingRedesignPreviewComponent {
     protected readonly progress = computed(() => Math.min(COMPLETE_PROGRESS, Math.max(0, this.progressPercent())));
     protected readonly primaryAlert = computed(() => this.alerts()[0] ?? null);
     protected readonly streakDayUnitKey = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         const language = this.translateService.getCurrentLang() ?? 'en';
         return `FASTING.DAY_UNIT_${new Intl.PluralRules(language).select(this.stats()?.currentStreak ?? 0).toUpperCase()}`;
     });
@@ -174,7 +173,7 @@ export class FastingRedesignPreviewComponent {
         };
     });
     protected readonly protocolLabel = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         const protocol = this.displayedProtocol();
         if (protocol.mode === 'cyclic') {
             return `${protocol.fastDays}:${protocol.eatDays}`;
@@ -222,19 +221,13 @@ export class FastingRedesignPreviewComponent {
         return history.slice(0, RECENT_SESSIONS_LIMIT);
     });
     protected readonly currentLocale = computed(() => {
-        this.languageVersion();
+        this.languageChange();
         return this.translateService.currentLang() ?? 'en';
     });
     protected readonly rhythmDays = computed<RhythmDay[]>(() => {
-        this.languageVersion();
+        this.languageChange();
         return buildRhythmDays(this.history(), this.today(), (key, params) => this.translateService.instant(key, params));
     });
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
-    }
 
     protected readonly sessionDurationView = getFastingDurationDisplay;
 
@@ -259,7 +252,7 @@ export class FastingRedesignPreviewComponent {
     }
 
     protected historyProtocolLabel(session: FastingSession): string {
-        this.languageVersion();
+        this.languageChange();
         if (session.planType === 'Cyclic') {
             const cycle = `${session.cyclicFastDays ?? 1}:${session.cyclicEatDays ?? 1}`;
             const eatingWindow = `${session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_FAST_HOURS}:${

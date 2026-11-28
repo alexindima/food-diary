@@ -10,7 +10,7 @@ import {
     type Type,
     untracked,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -139,7 +139,7 @@ export class CycleTrackingPageComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly dialogService = inject(FdUiDialogService);
-    private readonly languageVersion = signal(0);
+    private readonly languageChange = toSignal(this.translateService.onLangChange);
     private readonly cycleProfileId = computed(() => this.facade.cycle()?.id);
     protected readonly isDayEditorOpen = linkedSignal({
         source: this.cycleProfileId,
@@ -180,6 +180,7 @@ export class CycleTrackingPageComponent {
     protected readonly isLoadingNutritionSummary = this.facade.isLoadingNutritionSummary;
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
+    protected readonly nutritionError = this.facade.nutritionError;
     protected readonly startCycleForm = this.facade.startCycleForm;
     protected readonly cycleConsentError = computed(() => {
         const field = this.startCycleForm.cycleTrackingConsentGranted();
@@ -232,7 +233,7 @@ export class CycleTrackingPageComponent {
         this.isHistoryExpanded() ? this.dayItems() : this.dayItems().slice(0, RECENT_DAY_LIMIT),
     );
     protected readonly goalOptions = computed<Array<FdUiSelectOption<CycleTrackingGoal>>>(() => {
-        this.languageVersion();
+        this.languageChange();
         return [
             this.option(CYCLE_TRACKING_GOAL_PERIOD_AWARENESS, 'CYCLE_TRACKING.GOAL_PERIOD_AWARENESS'),
             this.option(CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS, 'CYCLE_TRACKING.GOAL_SYMPTOM_AWARENESS'),
@@ -240,7 +241,7 @@ export class CycleTrackingPageComponent {
         ];
     });
     protected readonly reproductiveStateOptions = computed<Array<FdUiSelectOption<CycleReproductiveState>>>(() => {
-        this.languageVersion();
+        this.languageChange();
         return [
             this.option(CYCLE_REPRODUCTIVE_STATE_CYCLING, 'CYCLE_TRACKING.STATE_CYCLING'),
             this.option(CYCLE_REPRODUCTIVE_STATE_PREGNANCY, 'CYCLE_TRACKING.STATE_PREGNANCY'),
@@ -251,7 +252,7 @@ export class CycleTrackingPageComponent {
         ];
     });
     protected readonly ovulationTestOptions = computed<Array<FdUiSelectOption<OvulationTestResult>>>(() => {
-        this.languageVersion();
+        this.languageChange();
         return [
             this.option(OVULATION_TEST_RESULT_UNKNOWN, 'CYCLE_TRACKING.OVULATION_TEST_NONE'),
             this.option(OVULATION_TEST_RESULT_NEGATIVE, 'CYCLE_TRACKING.OVULATION_TEST_NEGATIVE'),
@@ -259,7 +260,7 @@ export class CycleTrackingPageComponent {
         ];
     });
     protected readonly factorTypeOptions = computed<Array<FdUiSelectOption<CycleFactorType>>>(() => {
-        this.languageVersion();
+        this.languageChange();
         return [
             this.option(CYCLE_FACTOR_TYPE_PREGNANCY, 'CYCLE_TRACKING.FACTOR_PREGNANCY'),
             this.option(CYCLE_FACTOR_TYPE_LACTATION, 'CYCLE_TRACKING.FACTOR_LACTATION'),
@@ -302,9 +303,6 @@ export class CycleTrackingPageComponent {
                 }
             },
         });
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
-        });
         effect(() => {
             if (this.facade.daySaveRevision() > 0) {
                 untracked(() => {
@@ -324,6 +322,10 @@ export class CycleTrackingPageComponent {
 
     protected retryLoad(): void {
         this.facade.initialize();
+    }
+
+    protected retryNutritionSummary(): void {
+        this.facade.retryNutritionSummary();
     }
 
     protected editDay(date: string, renderedProfileId: CycleProfileId): void {
@@ -551,7 +553,7 @@ export class CycleTrackingPageComponent {
     }
 
     protected appLocale(): string {
-        this.languageVersion();
+        this.languageChange();
         return resolveAppLocale(this.translateService.getCurrentLang());
     }
 

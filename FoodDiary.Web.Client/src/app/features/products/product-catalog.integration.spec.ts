@@ -912,6 +912,34 @@ describe('Catalog favorites search and removal', () => {
     });
 });
 
+describe('Catalog favorite count freshness', () => {
+    it('keeps the newer overview count when the detail count request finishes later', async () => {
+        const { openDialog, products, readFavorites } = configureCatalog();
+        openDialog.mockReturnValue({
+            afterClosed: (): Observable<ProductDetailActionResult> => of(new ProductDetailActionResult(RECENT_ITEM.id, 'FavoriteChanged')),
+        });
+        const count = new Subject<PageOf<FavoriteProduct>>();
+        readFavorites.mockReturnValueOnce(count);
+        const harness = await RouterTestingHarness.create('/products');
+        const host = catalogRoot(harness);
+        products.queryOverview.mockReturnValueOnce(
+            of({ allProducts: page([CATALOG_ITEM]), recentItems: [RECENT_ITEM], favoriteItems: [], favoriteTotalCount: 2 }),
+        );
+
+        button(host, '.recent-products__open').click();
+        await vi.dynamicImportSettled();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(favoriteCount(host)).toBe('2');
+        });
+
+        count.next({ data: [], page: 1, limit: 1, totalItems: 1, totalPages: 1 });
+        count.complete();
+        harness.detectChanges();
+        expect(favoriteCount(host)).toBe('2');
+    });
+});
+
 describe('Catalog favorite load recovery', () => {
     it('keeps the current header count when the detail refresh fails and restores it on the next refresh', async () => {
         const { openDialog, products, readFavorites, showError } = configureCatalog();

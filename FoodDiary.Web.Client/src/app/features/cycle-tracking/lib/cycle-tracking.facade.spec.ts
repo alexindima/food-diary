@@ -218,7 +218,7 @@ describe('CycleTrackingFacade read lifetime', () => {
         cyclesService.getNutritionSummary.mockReturnValueOnce(throwError(() => new Error('unavailable')));
         initializeFacade();
         const state = TestBed.inject(CycleTrackingStateFacade);
-        expect(state.nutritionError()).toBe('CYCLE_TRACKING.LOAD_FAILED');
+        expect(state.nutritionError()).toBe('CYCLE_TRACKING.NUTRITION_SUMMARY_LOAD_ERROR');
         expect(facade.isLoadingNutritionSummary()).toBe(false);
         initializeFacade();
         expect(state.nutritionError()).toBeNull();

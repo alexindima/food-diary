@@ -1,15 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    computed,
-    effect,
-    inject,
-    input,
-    model,
-    output,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, model, output, signal } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
 import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
@@ -31,7 +20,6 @@ const EXTRA_DENSE_VALUE_LENGTH = 8;
 export class FdUiNutrientInputComponent implements FormValueControl<string | number | null> {
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
-    private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly label = input('');
     public readonly ariaLabel = input<string>();
@@ -61,11 +49,20 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     public readonly touch = output();
     public readonly disabled = input(false);
 
-    protected displayValue = '';
-    protected inputSize = 1;
-    protected inputWidth = '1ch';
-    protected valueDensityClass = 'fd-ui-nutrient-input--value-normal';
-    protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
+    protected readonly displayValue = linkedSignal({
+        source: () => ({ type: this.type(), value: this.value() }),
+        computation: ({ type, value }, previous): string => {
+            const draft = previous?.value ?? '';
+            if (type === 'number' && Object.is(this.toNumericValue(draft), value)) {
+                return draft;
+            }
+            return value === null ? '' : String(value);
+        },
+    });
+    private readonly displayLength = computed(() => Math.max(1, this.displayValue().length));
+    protected readonly inputSize = computed(() => Math.min(DEFAULT_MAX_INPUT_CHARS, this.displayLength()));
+    protected readonly inputWidth = computed(() => `${this.inputSize()}ch`);
+    private readonly valueDensityClass = computed(() => this.resolveValueDensityClass(this.displayLength()));
     protected readonly isFocused = signal(false);
     protected readonly visiblePlaceholder = computed(() => (this.isFocused() ? null : this.placeholder()));
     protected readonly effectiveAriaLabel = computed(() => {
@@ -79,20 +76,10 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
         return unit !== undefined && unit.length > 0 ? `${label}, ${unit}` : label.length > 0 ? label : null;
     });
 
-    public constructor() {
-        effect(() => {
-            const value = this.value();
-            if (this.type() === 'number' && Object.is(this.toNumericValue(this.displayValue), value)) {
-                return;
-            }
-            this.setValue(value);
-        });
-    }
-
     protected get hostClass(): string {
         const error = this.resolvedError();
         const hasError = error !== null && error.length > 0;
-        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()} ${this.valueDensityClass}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
+        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()} ${this.valueDensityClass()}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
     }
 
     protected isReadonly(): boolean {
@@ -113,15 +100,13 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
 
         if (this.type() === 'number') {
             const sanitized = this.sanitizeDecimalInput(rawValue);
-            this.displayValue = sanitized;
+            this.displayValue.set(sanitized);
             control.value = sanitized;
-            this.updateInputMeasure(sanitized);
             this.value.set(this.toNumericValue(sanitized));
             return;
         }
 
-        this.displayValue = rawValue;
-        this.updateInputMeasure(rawValue);
+        this.displayValue.set(rawValue);
         this.value.set(rawValue);
     }
 
@@ -155,14 +140,6 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
         return value.trim() === '' ? null : Number(value);
     }
 
-    private updateInputMeasure(value: string): void {
-        const length = Math.max(1, value.length);
-        const clamped = Math.min(this.maxInputChars, length);
-        this.inputSize = clamped;
-        this.inputWidth = `${clamped}ch`;
-        this.valueDensityClass = this.resolveValueDensityClass(length);
-    }
-
     private resolveValueDensityClass(length: number): string {
         if (length >= EXTRA_DENSE_VALUE_LENGTH) {
             return 'fd-ui-nutrient-input--value-x-dense';
@@ -177,11 +154,5 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
         }
 
         return 'fd-ui-nutrient-input--value-normal';
-    }
-
-    private setValue(value: string | number | null): void {
-        this.displayValue = value === null ? '' : String(value);
-        this.updateInputMeasure(this.displayValue);
-        this.cdr.markForCheck();
     }
 }

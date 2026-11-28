@@ -4220,6 +4220,33 @@ async function prepareCycleSettingsRereadAsync(
     return { harness, host, drawer, duration, freshRequested };
 }
 
+describe('Cycle nutrition summary recovery', () => {
+    it('retries a failed nutrition summary without replacing the current cycle', async () => {
+        const { harness, host, http } = await mountCycleMutationsOverHttpAsync(cycleProfile(), true);
+        const summaryRequest = (request: { method: string; url: string }): boolean =>
+            request.method === 'GET' && request.url === `${environment.apiUrls.cycles}/current/nutrition-summary`;
+        const failed = http.expectOne(summaryRequest);
+        failed.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        harness.detectChanges();
+
+        const card = requiredElement(host, 'fd-cycle-nutrition-summary-card');
+        expect(card.querySelector('[role="alert"]')?.textContent ?? '').toContain('CYCLE_TRACKING.NUTRITION_SUMMARY_LOAD_ERROR');
+        expect(card.textContent).not.toContain('CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY');
+        expect(host.querySelector('fd-cycle-overview-card')).not.toBeNull();
+
+        click('CYCLE_TRACKING.RETRY_LOAD', card);
+        harness.detectChanges();
+        const retry = http.expectOne(summaryRequest);
+        expect(retry.request.params.toString()).toBe(failed.request.params.toString());
+        http.expectNone(currentCycleRead);
+        retry.flush(null);
+        harness.detectChanges();
+
+        expect(card.querySelector('[role="alert"]')).toBeNull();
+        expect(card.textContent).toContain('CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY');
+    });
+});
+
 describe('Cycle nutrition consent acknowledged by period confirmation', () => {
     it.each(['already rendered', 'still in flight'] as const)(
         'removes the summary that is %s after a same-profile confirmation',

@@ -35,6 +35,14 @@
             <div class="explore-loader fd-row fd-justify-center">
                 <fd-ui-loader />
             </div>
+        } @else if (hasLoadError()) {
+            <fd-ui-inline-alert
+                role="alert"
+                severity="danger"
+                [message]="'EXPLORE.LOAD_ERROR' | translate"
+                [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                (primaryAction)="retryLoad()"
+            />
         } @else if (page === undefined || page.data.length === 0) {
             <div class="explore-empty fd-stack fd-align-center">
                 <fd-ui-icon name="search_off" size="xl" />

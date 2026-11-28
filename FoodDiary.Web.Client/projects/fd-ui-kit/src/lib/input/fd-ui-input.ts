@@ -1,7 +1,7 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, untracked } from '@angular/core';
-import { afterNextRender, DestroyRef, ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, model, output, signal } from '@angular/core';
+import { afterNextRender, afterRenderEffect, DestroyRef, ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
@@ -95,7 +95,19 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly suffixButtonClicked = output();
     public readonly nativeNumberDraftInvalidChange = output<boolean>();
 
-    protected readonly internalValue = signal<string | number>('');
+    protected readonly internalValue = linkedSignal({
+        source: this.value,
+        computation: (value, previous): string | number => {
+            const draft = previous?.value ?? '';
+            if (this.nativeNumberDraftInvalid) {
+                return draft;
+            }
+            if (this.localizedNumber() && this.type() === 'number' && Object.is(this.toModelValue(String(draft)), value)) {
+                return draft;
+            }
+            return value ?? '';
+        },
+    });
     protected readonly isFocused = signal(false);
     protected readonly isIdentifier = computed(
         () =>
@@ -106,18 +118,13 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     private readonly autofillSyncTimers = new Set<ReturnType<typeof setTimeout>>();
     private nativeNumberDraftInvalid = false;
+    private synchronizedNativeValue = '';
 
     public constructor() {
-        effect(() => {
-            const value = this.value();
-            if (this.nativeNumberDraftInvalid) {
-                return;
-            }
-            const raw = untracked(this.internalValue);
-            if (this.localizedNumber() && this.type() === 'number' && Object.is(this.toModelValue(String(raw)), value)) {
-                return;
-            }
-            this.internalValue.set(value ?? '');
+        afterRenderEffect({
+            earlyRead: () => {
+                this.synchronizedNativeValue = String(this.internalValue());
+            },
         });
 
         afterNextRender(() => {
@@ -198,7 +205,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
         const value = this.value() ?? '';
         this.control().nativeElement.value = String(value);
-        this.internalValue.set(value);
+        this.writeDraft(value);
         this.setNativeNumberDraftInvalid(false);
     }
 
@@ -249,12 +256,13 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     private syncValue(control: HTMLInputElement): void {
         const value = control.value;
-        if (this.nativeNumberDraftInvalid || value === String(this.internalValue())) {
+        // The DOM can still show the previous value when focus arrives before rendering a model update.
+        if (this.nativeNumberDraftInvalid || value === this.synchronizedNativeValue) {
             return;
         }
 
         if (this.disabled()) {
-            this.internalValue.set(value);
+            this.writeDraft(value);
             return;
         }
         this.updateInputValue(control);
@@ -272,13 +280,18 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         if (normalizer !== undefined && typeof parsed !== 'string' && this.type() === 'number') {
             const normalized = normalizer(parsed);
             const display = normalized === null ? '' : String(normalized);
-            this.internalValue.set(display);
+            this.writeDraft(display);
             control.value = display;
             this.value.set(normalized);
             return;
         }
-        this.internalValue.set(raw);
+        this.writeDraft(raw);
         this.value.set(parsed);
+    }
+
+    private writeDraft(value: string | number): void {
+        this.internalValue.set(value);
+        this.synchronizedNativeValue = String(value);
     }
 
     private setNativeNumberDraftInvalid(invalid: boolean): void {

@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -68,13 +69,11 @@ describe('ExploreService query', () => {
         req.flush(createPage());
     });
 
-    it('returns empty page on query failure', () => {
-        service.query(PAGE, LIMIT).subscribe(result => {
-            expect(result).toEqual({ data: [], page: PAGE, limit: LIMIT, totalPages: 0, totalItems: 0 });
-        });
-
+    it('propagates query failures to the caller', async () => {
+        const pending = firstValueFrom(service.query(PAGE, LIMIT));
         const req = httpMock.expectOne(request => request.url === BASE_URL && request.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.InternalServerError });
     });
 });
 
