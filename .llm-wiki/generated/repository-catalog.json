@@ -12964,6 +12964,10 @@
         ],
         "packageReferences": [
           {
+            "name": "DnsClient",
+            "version": null
+          },
+          {
             "name": "MailKit",
             "version": null
           },

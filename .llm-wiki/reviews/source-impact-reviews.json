@@ -435,6 +435,11 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "268208c13d3bee05a4fb91545495b1d97f87e37fe1b3e350ea8c0ee6ace02c5c",
+          "reviewReason": "Reviewed the actual Recipes.Contracts reference in Admin presentation tests and Recipes.Infrastructure reference in JobManager tests against the executable dependency matrix. The regenerated architecture index reports zero dependency violations. Routed UI entries and direct test references follow the documented candidate rules."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
           "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
           "reviewReason": "Reviewed conservative removal diagnostics: retained JSON projection inputs are never marked removable solely by a limited text scan. This agrees with the existing dynamic-consumer and behavior-proof guidance; dependency drift enforcement and SQLite query contracts are unchanged."
@@ -452,13 +457,13 @@
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
           "sha256": "3890142f6ef5bf0cbcac0f4412c380e721e0cd6bac4aefe347b4d5f6ef5c3ec5",
-          "reviewReason": "The exact project-reference checks still enforce the same rule. New entries describe the two direct test-only moderation dependencies verified by the solution build. The architecture-review workflow remains accurate."
+          "reviewReason": "Reviewed the actual Recipes.Contracts reference in Admin presentation tests and Recipes.Infrastructure reference in JobManager tests against the executable dependency matrix. The regenerated architecture index reports zero dependency violations. Routed UI entries and direct test references follow the documented candidate rules."
         }
       ],
-      "reason": "The exact project-reference checks still enforce the same rule. New entries describe the two direct test-only moderation dependencies verified by the solution build. The architecture-review workflow remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "a99d23b505940158aab883157531027a8266b7d4",
-      "reviewedAtUtc": "2026-11-23T15:25:33.1561397Z"
+      "reason": "Reviewed the actual Recipes.Contracts reference in Admin presentation tests and Recipes.Infrastructure reference in JobManager tests against the executable dependency matrix. The regenerated architecture index reports zero dependency violations. Routed UI entries and direct test references follow the documented candidate rules.",
+      "baseRef": "a99d23b505940158aab883157531027a8266b7d4",
+      "gitHead": "eb8e92f04a6dd358407c21ff9db677629f03c0fa",
+      "reviewedAtUtc": "2026-11-28T10:25:11.6181101Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1317,8 +1322,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "008e22aead4085e8ae62a34ded5b8256fddead0902e66ca66f08192d3051a1ed",
-          "reviewReason": "Followed merged recipe images from signed raw upload through server-owned private storage, authenticated previews and approval. The merged gallery and cook/detail flows retain owner reads without a CDN fallback for private bytes."
+          "sha256": "aa70b796dd7a88d01e3116a91da7c399854dedcfe6ce40017c42077c0ed83233",
+          "reviewReason": "Traced the added LeaseToken candidate to the server-side recipe moderation worker lease. The value guards the current revision before publication and is cleared on completion or supersession. The provider receives moderation content and cancellation, and the workflow correctly marks index matches for source review."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1331,10 +1336,10 @@
           "reviewReason": "Followed merged recipe images from signed raw upload through server-owned private storage, authenticated previews and approval. The merged gallery and cook/detail flows retain owner reads without a CDN fallback for private bytes."
         }
       ],
-      "reason": "Reviewed the shared code graph implementation. The edit is confined to result selection for frontend-runtime-owner, so the backend contract and impact simulation routes, sensitive data queries, schema and graph freshness checks described by these pages are preserved.",
-      "baseRef": "f8be0c29dc00915b4be338268407c3240d9d2007",
-      "gitHead": "f8be0c29dc00915b4be338268407c3240d9d2007",
-      "reviewedAtUtc": "2026-11-23T09:27:12.8677964Z"
+      "reason": "Traced the added LeaseToken candidate to the server-side recipe moderation worker lease. The value guards the current revision before publication and is cleared on completion or supersession. The provider receives moderation content and cancellation, and the workflow correctly marks index matches for source review.",
+      "baseRef": "a99d23b505940158aab883157531027a8266b7d4",
+      "gitHead": "eb8e92f04a6dd358407c21ff9db677629f03c0fa",
+      "reviewedAtUtc": "2026-11-28T10:25:11.8921120Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1520,14 +1525,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "57d68b9a0eb55a87440bc6bd2b0c75d92c508787a76567d14dfd3934327ed7fa",
-          "reviewReason": "The runtime topology snapshot was regenerated after the Compose GSS option change in both API services. Only its source-content fingerprint changed. Its service inventory, runtime signals and the documented impact workflow remain accurate."
+          "sha256": "b0812cac32505ddfa4e28290f4b543b92c1e8add335e11ee52dda4b6f856bfeb",
+          "reviewReason": "Regenerated and checked the runtime topology against 4931 current source files. The MailInbox detail path performs bounded DKIM lookup via the existing host after releasing the database reader. The documented runtime review starts at the inventory and follows the owning implementation for transports such as DNS."
         }
       ],
-      "reason": "The runtime topology snapshot was regenerated after the Compose GSS option change in both API services. Only its source-content fingerprint changed. Its service inventory, runtime signals and the documented impact workflow remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ae4ce53ce4f396a93ca20fab940c84521028b0ff",
-      "reviewedAtUtc": "2026-11-23T12:26:48.0918402Z"
+      "reason": "Regenerated and checked the runtime topology against 4931 current source files. The MailInbox detail path performs bounded DKIM lookup via the existing host after releasing the database reader. The documented runtime review starts at the inventory and follows the owning implementation for transports such as DNS.",
+      "baseRef": "a99d23b505940158aab883157531027a8266b7d4",
+      "gitHead": "eb8e92f04a6dd358407c21ff9db677629f03c0fa",
+      "reviewedAtUtc": "2026-11-28T10:25:12.1135020Z"
     },
     {
       "pageId": "workflow-security-review",

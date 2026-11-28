@@ -66752,7 +66752,7 @@
       "name": "GetAdminMailInboxMessagePageQueryValidator",
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
-      "line": 4,
+      "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
@@ -67032,7 +67032,7 @@
       "name": "GetInboundMailMessagePageQueryValidator",
       "role": "Validator",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
-      "line": 4,
+      "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
         "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MessagePageValidationTests.cs"

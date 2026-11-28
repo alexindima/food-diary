@@ -97,7 +97,8 @@ change rankings even when Wiki scripts are untouched. CI runs
 `Test-LlmWikiSqlContextEvaluation.ps1` through the focused Wiki regressions,
 using frozen corpora, quality thresholds and Node/.NET parity checks. Run it
 locally when changing retrieval behavior. Index freshness alone does not validate
-search quality; pre-push only checks outgoing whitespace.
+search quality. Pre-push checks outgoing whitespace, affected page contracts, and
+source-impact reviews against the committed revision.
 
 On failure, inspect `.artifacts/llm-wiki/context-evaluation/`. Reports contain
 per-case expected/actual paths, confidence, score margins and ranking reasons;

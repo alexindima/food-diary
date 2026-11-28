@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4928,
-    "symbols": 4900,
+    "sourceFiles": 4930,
+    "symbols": 4902,
     "interfaceImplementationLinks": 222,
-    "dependencyInjectionRegistrations": 80,
+    "dependencyInjectionRegistrations": 81,
     "kinds": {
-      "class": 2530,
+      "class": 2532,
       "enum": 78,
       "interface": 442,
       "record": 1692,
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 78,
-      "Other": 2069,
+      "Other": 2071,
       "Query": 313,
       "QueryHandler": 226,
       "ReadModelRepository": 33,
@@ -4282,7 +4282,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetAdminMailInboxMessagesQuery",
@@ -31176,7 +31176,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetInboundMailMessagesQuery",
@@ -31344,7 +31344,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "MailInboxTelemetryPrivacyProcessor",
@@ -31396,11 +31396,25 @@
       "line": 29
     },
     {
+      "name": "DmarcReportDnsKeyLocator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportDnsKeyLocator.cs",
+      "line": 7
+    },
+    {
       "name": "DmarcReportParser",
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
       "line": 11
+    },
+    {
+      "name": "DmarcReportSourceVerifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportSourceVerifier.cs",
+      "line": 10
     },
     {
       "name": "IMailInboxDmarcReportParser",
@@ -36381,14 +36395,21 @@
       "implementation": "NpgsqlInboundMailExportStore",
       "lifetime": "Singleton",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 41
+      "line": 43
+    },
+    {
+      "service": "IDkimPublicKeyLocator",
+      "implementation": "DmarcReportDnsKeyLocator",
+      "lifetime": "Singleton",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "line": 49
     },
     {
       "service": "IMailInboxReadinessChecker",
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 48
+      "line": 53
     },
     {
       "service": "IMailInboxReadinessChecker",
