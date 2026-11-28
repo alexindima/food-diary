@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Observable } from 'rxjs';
+import { type Observable, tap } from 'rxjs';
 
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
@@ -16,11 +16,12 @@ export class AdminDailyAdvicesFacade {
         params: this.reloadVersion,
         stream: () => this.api.getAll(),
     });
-    public readonly advices = linkedSignal({
+    private readonly cachedAdvices = linkedSignal({
         source: this.advicesResource.snapshot,
         computation: (snapshot, previous): AdminDailyAdvice[] =>
             snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
-    }).asReadonly();
+    });
+    public readonly advices = this.cachedAdvices.asReadonly();
     public readonly loading = this.advicesResource.isLoading;
     public readonly loadFailed = computed(() => this.advicesResource.error() !== undefined);
     public readonly importing = signal(false);
@@ -28,11 +29,21 @@ export class AdminDailyAdvicesFacade {
     public readonly importResult = signal<AdminDailyAdvicesImportResponse | null>(null);
 
     public update(id: AdminId<'daily-advice'>, value: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
-        return this.api.update(id, value);
+        return this.api.update(id, value).pipe(
+            tap(updated => {
+                this.cachedAdvices.update(advices => advices.map(advice => (advice.id === id ? updated : advice)));
+                this.loadAdvices();
+            }),
+        );
     }
 
     public delete(id: AdminId<'daily-advice'>): Observable<void> {
-        return this.api.delete(id);
+        return this.api.delete(id).pipe(
+            tap(() => {
+                this.cachedAdvices.update(advices => advices.filter(advice => advice.id !== id));
+                this.loadAdvices();
+            }),
+        );
     }
 
     public loadAdvices(): void {

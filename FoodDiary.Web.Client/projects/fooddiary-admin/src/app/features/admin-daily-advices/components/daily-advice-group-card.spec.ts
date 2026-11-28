@@ -65,17 +65,16 @@ describe('daily advice group editor', () => {
     it('requires delete confirmation and allows retry without removing the card on failure', () => {
         const fixture = createEditor();
         const component = fixture.componentInstance;
-        const changed = vi.fn();
-        component.changed.subscribe(changed);
         component['delete']();
         expect(deleteGroup).not.toHaveBeenCalled();
         component['confirmingDelete'].set(true);
         deleteGroup.mockReturnValueOnce(throwError(() => new Error('offline')));
         component['delete']();
-        expect(changed).not.toHaveBeenCalled();
         expect(component['error']()).toBe(true);
         component['delete']();
+        expect(deleteGroup).toHaveBeenCalledTimes(2);
         expect(deleteGroup).toHaveBeenCalledWith(advice.id);
-        expect(changed).toHaveBeenCalledTimes(1);
+        expect(component['error']()).toBe(false);
+        expect(component['busy']()).toBe(false);
     });
 });

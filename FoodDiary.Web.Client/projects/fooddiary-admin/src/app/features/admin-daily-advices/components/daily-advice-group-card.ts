@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, max, maxLength, min, pattern, readonly, required, validate } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,7 +22,6 @@ export class DailyAdviceGroupCardComponent {
     private readonly api = inject(AdminDailyAdvicesFacade);
     private readonly destroyRef = inject(DestroyRef);
     public readonly advice = input.required<AdminDailyAdvice>();
-    public readonly changed = output();
     protected readonly editing = signal(false);
     protected readonly confirmingDelete = signal(false);
     protected readonly busy = signal(false);
@@ -76,7 +75,6 @@ export class DailyAdviceGroupCardComponent {
                     .pipe(takeUntilDestroyed(this.destroyRef)),
             );
             this.editing.set(false);
-            this.changed.emit();
         } catch {
             this.error.set(true);
         } finally {
@@ -96,7 +94,6 @@ export class DailyAdviceGroupCardComponent {
             .subscribe({
                 next: () => {
                     this.busy.set(false);
-                    this.changed.emit();
                 },
                 error: () => {
                     this.busy.set(false);

@@ -1086,7 +1086,7 @@ describe('UserManageComponent birthday calendar', () => {
         fixture.detectChanges();
 
         expect(document.querySelector('fd-ui-calendar')).toBeNull();
-        expect(document.activeElement).toBe(input);
+        expect(document.activeElement).toBe(picker);
         expect(input.getAttribute('aria-invalid')).toBeNull();
         expect(input.value).toBe('02/29/2000');
         const save = profileSaveButton();

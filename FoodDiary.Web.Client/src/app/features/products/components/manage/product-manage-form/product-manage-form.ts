@@ -201,6 +201,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     private leaveDecision: Promise<boolean> | null = null;
 
     public constructor() {
+        this.nameSearch.bindProduct(this.product);
         const requireNewEditor = (): void => {
             if (this.product() !== null || this.isSubmitting() || this.isDeleting() || this.photosUploading()) {
                 throw new DevelopmentToolError('A ready NEW product editor is required.');

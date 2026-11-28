@@ -1,6 +1,6 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, NO_ERRORS_SCHEMA, type Signal, signal } from '@angular/core';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -13,6 +13,7 @@ import {
     Scroll,
 } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourHostComponent, FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -43,6 +44,7 @@ import { AppComponent } from './app';
 const NAVIGATION_ID = 1;
 const BROWSER_NOTIFICATION_CLIENTS = [NotificationRealtimeService, PushNotificationService, PushNotificationReadSyncService] as const;
 const SHELL_TEST_TIMEOUT_MS = 15000;
+const SESSION_SHELL_IMPORTS = [RouterOutlet, TranslatePipe, MarketingConsentComponent, PublicSiteFooterComponent, FdTourHostComponent];
 const disposePrivateEditor = vi.fn();
 const createLatePrivateEditor = vi.fn();
 const disposeRootDialog = vi.fn();
@@ -53,7 +55,7 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-@Component({ template: 'Private Alice draft', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ template: '<p id="tour-owner">Private Alice draft</p>', changeDetection: ChangeDetectionStrategy.OnPush })
 class SessionPrivateEditor {
     public constructor() {
         inject(DestroyRef).onDestroy(disposePrivateEditor);
@@ -75,6 +77,9 @@ class SessionLatePrivateEditor {
 
 @Component({ template: 'Public sign in', changeDetection: ChangeDetectionStrategy.OnPush })
 class SessionPublicLogin {}
+
+@Component({ template: '<p id="tour-owner">Other page tour target</p>', changeDetection: ChangeDetectionStrategy.OnPush })
+class SessionSecondTourOwner {}
 
 @Component({ selector: 'fd-shell-public-catalog-test', template: 'Public catalog', changeDetection: ChangeDetectionStrategy.OnPush })
 class SessionPublicCatalog {}
@@ -138,6 +143,81 @@ it('keeps the native main region and skip link on the active signed-out route', 
     expect(main?.textContent).not.toContain('Public sign in');
     expect(host.querySelector('a.fd-skip-nav')?.getAttribute('href')).toBe('/explore?category=public#main-content');
 });
+
+it(
+    'keeps the tour on the same page and closes it after a successful departure',
+    async () => {
+        const { fixture, rootElement, router } = await createSessionShellAsync();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(rootElement.querySelector('fd-tour-host')).not.toBeNull();
+        });
+        const tour = TestBed.inject(FdTourService);
+        const definition = {
+            id: 'editor-navigation',
+            version: 1,
+            steps: [{ id: 'start', target: '#tour-owner', title: 'Editor help' }],
+        };
+        expect(tour.start(definition, { force: true })).toBe(true);
+
+        expect(await router.navigateByUrl('/editor?filter=test#details')).toBe(true);
+        fixture.detectChanges();
+        expect(tour.activeTour()).toBe(definition);
+        expect(await router.navigateByUrl('/explore')).toBe(false);
+        expect(tour.activeTour()).toBe(definition);
+
+        allowPrivateEditorDeparture = true;
+        expect(await router.navigateByUrl('/explore')).toBe(true);
+        fixture.detectChanges();
+        expect(tour.snapshot()).toBeNull();
+    },
+    SHELL_TEST_TIMEOUT_MS,
+);
+
+it.each([
+    { page: 'the same page', url: '/editor?filter=test#details', samePage: true },
+    { page: 'a different page', url: '/explore', samePage: false },
+    { page: 'a different page with the same target selector', url: '/another-tour', samePage: false },
+])(
+    'resolves a tour started before the host mounts after navigating to $page',
+    async ({ url, samePage }) => {
+        const { fixture, rootElement, router } = await createSessionShellAsync(
+            { path: 'another-tour', component: SessionSecondTourOwner },
+            false,
+            { deferBlockBehavior: DeferBlockBehavior.Manual },
+        );
+        expect(rootElement.querySelector('fd-tour-host')).toBeNull();
+        expect(await router.navigateByUrl('/editor?filter=initial#intro')).toBe(true);
+        fixture.detectChanges();
+        const tour = TestBed.inject(FdTourService);
+        const definition = {
+            id: 'editor-deferred-navigation',
+            version: 1,
+            steps: [{ id: 'start', target: '#tour-owner', title: 'Editor help' }],
+        };
+        expect(tour.start(definition, { force: true })).toBe(true);
+        const target = tour.target();
+        expect(target?.isConnected).toBe(true);
+
+        allowPrivateEditorDeparture = true;
+        expect(await router.navigateByUrl(url)).toBe(true);
+        fixture.detectChanges();
+        expect(rootElement.querySelector('fd-tour-host')).toBeNull();
+        expect(target?.isConnected).toBe(samePage);
+        if (url === '/another-tour') {
+            expect(rootElement.querySelector('#tour-owner')?.textContent).toBe('Other page tour target');
+        }
+
+        for (const block of await fixture.getDeferBlocks()) {
+            await block.render(DeferBlockState.Complete);
+        }
+        fixture.detectChanges();
+
+        expect(rootElement.querySelector('fd-tour-host')).not.toBeNull();
+        expect(tour.activeTour()).toBe(samePage ? definition : null);
+    },
+    SHELL_TEST_TIMEOUT_MS,
+);
 
 describe('AppComponent session-owned route lifetime', () => {
     it('mounts the marketing notice only on public marketing pages', async () => {
@@ -577,7 +657,7 @@ type SessionShellFixture = {
 async function createSessionShellAsync(
     lateRoute?: Route,
     marketingAttributionEnabled = false,
-    options: { browserAvailable?: boolean; impersonationReason?: string } = {},
+    options: { browserAvailable?: boolean; deferBlockBehavior?: DeferBlockBehavior; impersonationReason?: string } = {},
 ): Promise<SessionShellFixture> {
     resetSessionShellFixture();
     stubMatchMedia();
@@ -586,6 +666,7 @@ async function createSessionShellAsync(
     const endSupportSession = vi.fn<AuthService['onLogoutAsync']>().mockResolvedValue(undefined);
     const setInstallPromotionActive = vi.fn<PwaInstallPromotionService['setActive']>();
     TestBed.configureTestingModule({
+        deferBlockBehavior: options.deferBlockBehavior,
         imports: [AppComponent],
         providers: [
             provideTranslateTesting(),
@@ -628,9 +709,7 @@ async function createSessionShellAsync(
             { provide: PwaInstallPromotionService, useValue: { setActive: setInstallPromotionActive, shouldShowBanner: signal(false) } },
         ],
     });
-    TestBed.overrideComponent(AppComponent, {
-        set: { imports: [RouterOutlet, TranslatePipe, MarketingConsentComponent, PublicSiteFooterComponent], schemas: [NO_ERRORS_SCHEMA] },
-    });
+    TestBed.overrideComponent(AppComponent, { set: { imports: SESSION_SHELL_IMPORTS, schemas: [NO_ERRORS_SCHEMA] } });
     await TestBed.compileComponents();
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();

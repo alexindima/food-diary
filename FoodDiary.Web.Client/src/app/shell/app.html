@@ -57,5 +57,5 @@
     <fd-ui-toast-host [closeLabel]="'COMMON.CLOSE_NOTIFICATION' | translate" />
 </div>
 @defer (when usesAuthenticatedShell()) {
-    <fd-tour-host />
+    <fd-tour-host [pageKey]="currentPath()" />
 }

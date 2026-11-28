@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -27,6 +27,7 @@ const SAVED_LIST = {
     items: [{ id: 'saved-rice', shoppingListId: DESTINATION.id, name: 'Rice', isChecked: false, sortOrder: 1 }],
 };
 const SHOPPING_PICKER = 'fd-shopping-list-picker';
+const PICKER_PAGE_SIZE = 50;
 
 @Component({
     template: `<button type="button" data-add-rice [disabled]="shopping.busy() || shopping.isAdded(0)" (click)="addRice()">Add rice</button>
@@ -38,10 +39,13 @@ const SHOPPING_PICKER = 'fd-shopping-list-picker';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ShoppingAppendHostComponent {
+    public readonly recipeId = input('recipe-1');
     protected readonly shopping = inject(ShoppingListAddFacade);
 
     public constructor() {
-        this.shopping.setScope('recipe-1', 'Soup');
+        effect(() => {
+            this.shopping.setScope(this.recipeId(), 'Soup');
+        });
     }
 
     protected addRice(): void {
@@ -73,7 +77,7 @@ describe('Shopping append across a session boundary', () => {
                 fixture.detectChanges();
             }
 
-            delayedRead.flush(EXISTING_LIST);
+            expect(delayedRead.cancelled).toBe(true);
             await waitForAsyncTasksAsync();
             const abandonedWrites = http.match({ method: 'PATCH', url: DESTINATION_URL });
             expect(abandonedWrites).toHaveLength(0);
@@ -98,6 +102,49 @@ describe('Shopping append across a session boundary', () => {
             }
         },
     );
+});
+
+describe('Shopping destination read ownership', () => {
+    it.each(['recipe change', 'owner destruction'])('cancels destination pagination after %s', async transition => {
+        const { fixture, http } = renderShopping();
+        const host = fixture.nativeElement as HTMLElement;
+        button(host, 'button[data-choose-list]').click();
+        const firstPage = await vi.waitFor(() => http.expectOne(`${LIST_URL}/page?page=1&limit=${String(PICKER_PAGE_SIZE)}`));
+        firstPage.flush(Array.from({ length: PICKER_PAGE_SIZE }, (_, index) => ({ ...DESTINATION, id: `list-${index}`, itemsCount: 0 })));
+        const nextPage = http.expectOne(`${LIST_URL}/page?page=2&limit=${String(PICKER_PAGE_SIZE)}`);
+
+        if (transition === 'recipe change') {
+            fixture.componentRef.setInput('recipeId', 'recipe-2');
+            fixture.detectChanges();
+        } else {
+            fixture.destroy();
+        }
+
+        expect(nextPage.cancelled).toBe(true);
+        expect(document.querySelector(SHOPPING_PICKER)).toBeNull();
+        if (transition === 'recipe change') {
+            await chooseDestinationAsync(fixture, http, 'button[data-choose-list]', DESTINATION);
+        }
+    });
+
+    it('keeps an already accepted append alive after changing recipes', async () => {
+        const { fixture, http } = renderShopping();
+        const read = await chooseExistingListAsync(fixture, http);
+        read.flush(EXISTING_LIST);
+        const write = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: DESTINATION_URL }));
+
+        fixture.componentRef.setInput('recipeId', 'recipe-2');
+        fixture.detectChanges();
+        expect(write.cancelled).toBe(false);
+        write.flush(SAVED_LIST);
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[data-destination]')?.textContent).toBe('');
+        expect(button(host, 'button[data-add-rice]').disabled).toBe(false);
+        expect(host.textContent).not.toContain('PUBLIC_RECIPES.SHOPPING_SUCCESS');
+    });
 });
 
 describe('Shopping bulk append when returning to a previous list', () => {

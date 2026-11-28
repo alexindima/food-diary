@@ -9,8 +9,10 @@ import {
     type ElementRef,
     inject,
     Injector,
+    input,
     PLATFORM_ID,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 
@@ -74,6 +76,8 @@ export class FdTourHostComponent {
     private presentedTarget: Element | null = null;
     private cleanupPopoverReveal: (() => void) | null = null;
     private focusBeforeTour: HTMLElement | null = null;
+    /** The application path without its query or fragment. Changing it dismisses the tour without completing it. */
+    public readonly pageKey = input<string>();
     protected readonly useTopLayer =
         isPlatformBrowser(this.platformId) && typeof this.document.createElement('div').showPopover === 'function';
     protected readonly tour = inject(FdTourService);
@@ -121,6 +125,21 @@ export class FdTourHostComponent {
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }
+
+        let previousPage: string | undefined;
+        effect(() => {
+            const page = this.pageKey();
+            const firstPage = previousPage === undefined && page !== undefined;
+            const changedPage = previousPage !== undefined && page !== previousPage;
+            previousPage = page;
+            untracked(() => {
+                if (changedPage) {
+                    this.tour.close();
+                } else if (firstPage) {
+                    this.tour.reconcileInitialPage(page);
+                }
+            });
+        });
 
         effect(() => {
             const snapshot = this.tour.snapshot();

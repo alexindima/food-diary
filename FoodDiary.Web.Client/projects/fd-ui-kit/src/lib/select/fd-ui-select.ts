@@ -2,6 +2,7 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import {
     afterNextRender,
+    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -48,6 +49,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     protected readonly isEqual = Object.is;
     private readonly controlWrapRef = viewChild.required<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
+    private renderedOptions: ReadonlyArray<FdUiSelectOption<T>> = [];
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
     public readonly appearance = input<'field' | 'text'>('field');
@@ -77,6 +79,11 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public readonly focus = injectFdUiControlFocus();
 
     public constructor() {
+        afterRenderEffect({
+            read: () => {
+                this.renderedOptions = this.options();
+            },
+        });
         effect(() => {
             const options = this.options();
             if (this.isOpen()) {
@@ -216,7 +223,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
             return;
         }
 
-        const options = this.options();
+        const options = this.renderedOptions;
         if (options.length === 0 && event.key !== 'Escape') {
             return;
         }
@@ -227,7 +234,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         }
     }
 
-    private handleListboxNavigationKey(event: KeyboardEvent, options: Array<FdUiSelectOption<T>>): boolean {
+    private handleListboxNavigationKey(event: KeyboardEvent, options: ReadonlyArray<FdUiSelectOption<T>>): boolean {
         const actions: Partial<Record<string, () => void>> = {
             ArrowDown: () => {
                 this.activeIndex.update(activeIndex => (activeIndex + NEXT_OPTION_OFFSET + options.length) % options.length);
@@ -264,10 +271,11 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         return true;
     }
 
-    private selectActiveOption(options: Array<FdUiSelectOption<T>>): void {
+    private selectActiveOption(options: ReadonlyArray<FdUiSelectOption<T>>): void {
         const index = this.activeIndex();
-        if (index >= FIRST_OPTION_INDEX && index < options.length) {
-            this.onOptionSelect(options[index]);
+        const option = index === NO_ACTIVE_OPTION_INDEX ? undefined : options.at(index);
+        if (option !== undefined && this.options().some(current => this.isEqual(option.value, current.value))) {
+            this.onOptionSelect(option);
         }
     }
 

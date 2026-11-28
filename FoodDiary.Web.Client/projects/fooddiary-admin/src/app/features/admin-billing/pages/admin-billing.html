@@ -1,5 +1,4 @@
 <div class="admin-billing fd-grid fd-gap-md">
-    <p role="alert" [hidden]="!billing.revenueFailed()">{{ 'ADMIN_BILLING.SUMMARY_ERROR' | translate }}</p>
     <div class="admin-billing__header fd-row fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="loadPeriod()"> Refresh </fd-ui-button>
     </div>
@@ -93,6 +92,11 @@
                     }
                 </div>
             }
+        </section>
+    } @else if (billing.revenueFailed()) {
+        <section class="admin-billing__revenue fd-grid fd-gap-sm" aria-labelledby="billing-revenue-error-title">
+            <h2 id="billing-revenue-error-title">{{ 'ADMIN_BILLING.REVENUE.TITLE' | translate }}</h2>
+            <fd-admin-load-error (retry)="billing.retryRevenue()" />
         </section>
     }
 

@@ -13,7 +13,8 @@
         <p>Loading templates...</p>
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="loadTemplates()" />
-    } @else {
+    }
+    @if (showTemplates()) {
         <div class="templates-table-scroll" role="region" tabindex="0" [attr.aria-label]="'ADMIN_NAV.TEMPLATES' | translate">
             <table class="templates-table">
                 <thead>

@@ -1740,7 +1740,7 @@
       "role": "Component",
       "selector": "fd-tour-host",
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "line": 66
+      "line": 68
     },
     {
       "name": "FdTourLocalStorage",
@@ -1768,7 +1768,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.service.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "FdUiAccentSurfaceComponent",
@@ -2223,7 +2223,7 @@
       "role": "Component",
       "selector": "fd-ui-select",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "FdUiSidebarItemComponent",
@@ -2314,7 +2314,7 @@
       "role": "Component",
       "selector": "fd-ui-week-picker",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.ts",
-      "line": 20
+      "line": 36
     },
     {
       "name": "WebmcpError",
@@ -5072,7 +5072,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan.facade.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MealPlanDetailPageComponent",
@@ -6570,7 +6570,7 @@
       "role": "Component",
       "selector": "fd-shopping-list-items-panel",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
-      "line": 46
+      "line": 59
     },
     {
       "name": "ShoppingListManageControlsComponent",

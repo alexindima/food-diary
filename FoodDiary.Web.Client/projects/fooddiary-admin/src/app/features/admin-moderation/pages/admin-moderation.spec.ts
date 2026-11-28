@@ -125,7 +125,7 @@ describe('AdminModerationComponent filters', () => {
         const fixture = await renderAsync('?period=custom&from=2026-08-04&to=2026-08-01');
         expect(getReports).not.toHaveBeenCalled();
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
-        expect(element(fixture).textContent).toContain('ADMIN_COMMON.EMPTY');
+        expect(element(fixture).querySelector('.reports-table, .summary, fd-ui-pagination')).toBeNull();
     });
 
     it('replaces an obsolete request error with period validation when the URL becomes invalid', async () => {
@@ -143,7 +143,7 @@ describe('AdminModerationComponent filters', () => {
         expect(getReports).toHaveBeenCalledOnce();
         expect(element(fixture).querySelector('fd-admin-load-error')).toBeNull();
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
-        expect(element(fixture).textContent).toContain('ADMIN_COMMON.EMPTY');
+        expect(element(fixture).querySelector('.reports-table, .summary, fd-ui-pagination')).toBeNull();
     });
 });
 

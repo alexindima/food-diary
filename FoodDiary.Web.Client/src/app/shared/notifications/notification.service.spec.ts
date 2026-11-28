@@ -406,6 +406,51 @@ function notificationForSession(title: string): NotificationItem {
     };
 }
 
+describe('NotificationService read acknowledgement ordering', () => {
+    it.each(['one', 'all'] as const)('keeps a confirmed mark-%s-read over pending count and feed responses', action => {
+        const first = notificationForSession('Opened notification');
+        const second = { ...notificationForSession('Another notification'), id: entityId<'notification'>('n2') };
+        const unread = [first, second];
+        const unreadResponse = unread.map(item => ({ ...item, type: 'info' }));
+        service.ensureNotificationsLoaded();
+        TestBed.tick();
+        httpMock.expectOne(baseUrl).flush(unreadResponse);
+        service.updateCount(unread.length);
+
+        service.fetchUnreadCount({ force: true });
+        service.refreshNotifications();
+        TestBed.tick();
+        const staleCount = httpMock.expectOne(`${baseUrl}/unread-count`);
+        const staleFeed = httpMock.expectOne(baseUrl);
+
+        const write = action === 'one' ? service.markAsRead(first.id) : service.markAllRead();
+        write.subscribe();
+        httpMock.expectOne(`${baseUrl}/${action === 'one' ? `${first.id}/read` : 'read-all'}`).flush(null);
+
+        // Try delivering the older replies before Angular starts the replacement requests.
+        if (!staleCount.cancelled) {
+            staleCount.flush({ count: unread.length });
+        }
+        if (!staleFeed.cancelled) {
+            staleFeed.flush(unreadResponse);
+        }
+        const remaining = action === 'one' ? 1 : 0;
+        const acknowledged = [
+            { ...first, isRead: true },
+            { ...second, isRead: action === 'all' },
+        ];
+        expect(service.unreadCount()).toBe(remaining);
+        expect(service.notifications()).toEqual(acknowledged);
+
+        TestBed.tick();
+        const newest = { ...notificationForSession('New notification'), id: entityId<'notification'>('n3') };
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: remaining + 1 });
+        httpMock.expectOne(baseUrl).flush([newest, ...acknowledged].map(item => ({ ...item, type: 'info' })));
+        expect(service.unreadCount()).toBe(remaining + 1);
+        expect(service.notifications()).toEqual([newest, ...acknowledged]);
+    });
+});
+
 describe('NotificationService read state', () => {
     it('should mark notification as read and update local state', () => {
         service.notifications.set([
@@ -490,6 +535,106 @@ describe('NotificationService read state', () => {
 
         expect(service.unreadCount()).toBe(0);
         expect(service.notifications().every(x => x.isRead)).toBe(true);
+    });
+});
+
+describe('NotificationService server counts during read acknowledgement', () => {
+    it.each(['SignalR', 'HTTP'] as const)('reconciles the %s count without decrementing it twice', channel => {
+        const opened = notificationForSession('Opened');
+        const other = { ...notificationForSession('Unread'), id: entityId<'notification'>('n2') };
+        service.notifications.set([opened, other]);
+        service.updateCount(2);
+
+        service.markAsRead(opened.id).subscribe();
+        const write = httpMock.expectOne(`${baseUrl}/${opened.id}/read`);
+        if (channel === 'SignalR') {
+            service.updateCount(1);
+        } else {
+            service.fetchUnreadCount({ force: true });
+            TestBed.tick();
+            httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        }
+        write.flush(null);
+
+        expect(service.unreadCount()).toBe(1);
+        expect(service.notifications()).toEqual([{ ...opened, isRead: true }, other]);
+        TestBed.tick();
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        expect(service.unreadCount()).toBe(1);
+    });
+});
+
+describe('NotificationService new notifications during a bulk read', () => {
+    it.each([
+        { incomingCount: 1, source: 'a count update and a refreshed feed' },
+        { incomingCount: undefined, source: 'a refreshed feed alone' },
+    ])('keeps the new unread notification after $source arrives before the write response', ({ incomingCount }) => {
+        const original = notificationForSession('Previous notification');
+        const other = { ...original, id: entityId<'notification'>('n2'), title: 'Another previous notification' };
+        const newest = { ...original, id: entityId<'notification'>('n3'), title: 'Just arrived' };
+        const previous = [original, other];
+        service.notifications.set(previous);
+        service.updateCount(previous.length);
+
+        service.markAllRead().subscribe();
+        const write = httpMock.expectOne(`${baseUrl}/read-all`);
+        if (incomingCount !== undefined) {
+            service.updateCount(incomingCount);
+        }
+        service.notifyNotificationsChanged();
+        TestBed.tick();
+        const refreshed = [newest, ...previous.map(item => ({ ...item, isRead: true }))];
+        const response = refreshed.map(item => ({ ...item, type: 'info' }));
+        httpMock.expectOne(baseUrl).flush(response);
+        write.flush(null);
+
+        expect(service.unreadCount()).toBe(incomingCount ?? previous.length);
+        expect(service.notifications()).toEqual(refreshed);
+
+        TestBed.tick();
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        httpMock.expectOne(baseUrl).flush(response);
+        expect(service.unreadCount()).toBe(1);
+        expect(service.notifications()).toEqual(refreshed);
+    });
+
+    it('reconciles only the updated count if the feed stayed unchanged', () => {
+        const original = notificationForSession('Previous notification');
+        service.notifications.set([original]);
+        service.updateCount(1);
+
+        service.markAllRead().subscribe();
+        const write = httpMock.expectOne(`${baseUrl}/read-all`);
+        service.updateCount(1);
+        write.flush(null);
+
+        expect(service.unreadCount()).toBe(1);
+        expect(service.notifications()).toEqual([{ ...original, isRead: true }]);
+        TestBed.tick();
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        httpMock.expectNone(baseUrl);
+    });
+
+    it('reconciles the badge if only a feed request is pending when the write succeeds', () => {
+        const original = notificationForSession('Previous notification');
+        const newest = { ...original, id: entityId<'notification'>('n2'), title: 'Just arrived' };
+        service.notifications.set([original]);
+        service.updateCount(1);
+        service.refreshNotifications();
+        TestBed.tick();
+        const staleFeed = httpMock.expectOne(baseUrl);
+
+        service.markAllRead().subscribe();
+        httpMock.expectOne(`${baseUrl}/read-all`).flush(null);
+        staleFeed.flush([{ ...original, type: 'info' }]);
+        expect(service.notifications()).toEqual([{ ...original, isRead: true }]);
+
+        TestBed.tick();
+        const refreshed = [newest, { ...original, isRead: true }];
+        httpMock.expectOne(baseUrl).flush(refreshed.map(item => ({ ...item, type: 'info' })));
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        expect(service.notifications()).toEqual(refreshed);
+        expect(service.unreadCount()).toBe(1);
     });
 });
 

@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -50,6 +51,8 @@ describe('Tour target preparation lifecycle', () => {
     it('cleans up a failed reveal and advances to the next available step', async () => {
         const cleanup = vi.fn();
         registry.register({ canReveal: selector => selector === '#deferred-target', reveal: () => cleanup });
+        fixture.componentRef.setInput('pageKey', '/editor');
+        TestBed.inject(Location).go('/editor');
         start();
         expect(service.preparing()).toBe(true);
         await settleAsync();
@@ -89,6 +92,39 @@ describe('Tour target preparation lifecycle', () => {
 });
 
 describe('Responsive target replacement', () => {
+    it('binds a replacement target when the page-owned host first mounts', async () => {
+        TestBed.configureTestingModule({ imports: [FdTourHostComponent] });
+        const fixture = TestBed.createComponent(FdTourHostComponent);
+        fixture.componentRef.setInput('pageKey', '/editor');
+        TestBed.inject(Location).go('/editor');
+        const service = TestBed.inject(FdTourService);
+        const original = document.createElement('button');
+        original.id = 'responsive-original';
+        const replacement = document.createElement('button');
+        replacement.id = 'responsive-fallback';
+        document.body.append(original);
+        try {
+            const definition = {
+                id: 'responsive-before-host',
+                version: 1,
+                steps: [{ id: 'action', target: '#responsive-original, #responsive-fallback', title: 'Action' }],
+            };
+            expect(service.start(definition)).toBe(true);
+            expect(service.target()).toBe(original);
+            original.replaceWith(replacement);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(service.activeTour()).toBe(definition);
+            expect(service.target()).toBe(replacement);
+        } finally {
+            service.close();
+            fixture.destroy();
+            original.remove();
+            replacement.remove();
+        }
+    });
+
     it('retains the step while a responsive view replaces its target', async () => {
         TestBed.configureTestingModule({ imports: [FdTourHostComponent] });
         const fixture = TestBed.createComponent(FdTourHostComponent);

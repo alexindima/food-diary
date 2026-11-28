@@ -35,7 +35,7 @@ function clickButton(root: HTMLElement, caption: string): void {
 
 it('pages filtered templates through the lazy route and preserves the list after cancelling either dialog', async () => {
     const getAll = vi.fn<AdminEmailTemplatesFacade['getAll']>().mockReturnValue(of(available));
-    const afterClosed = vi.fn<() => Observable<boolean>>().mockReturnValue(of(false));
+    const afterClosed = vi.fn<() => Observable<undefined>>().mockReturnValue(of(undefined));
     TestBed.configureTestingModule({
         providers: [
             provideRouter(

@@ -99,12 +99,16 @@ export class FastingFacade {
             ),
     });
     private readonly requestedHistory = signal<FastingHistoryQuery | undefined>(undefined);
+    private historyFirstPage: FastingOverview['history'] | undefined;
     private readonly historyResource = rxResource({
         params: this.requestedHistory,
         stream: ({ params }) =>
             this.fastingService.getHistory(params).pipe(
                 tap({
                     next: history => {
+                        if (this.requestedHistory() !== params) {
+                            return;
+                        }
                         this.history.update(current => {
                             const sessionsById = new Map(current.map(session => [session.id, session]));
                             for (const session of history.data) {
@@ -116,7 +120,9 @@ export class FastingFacade {
                         this.historyTotalPages.set(history.totalPages);
                     },
                     error: () => {
-                        this.historyError.set('FASTING.REQUEST_ERROR');
+                        if (this.requestedHistory() === params) {
+                            this.historyError.set('FASTING.REQUEST_ERROR');
+                        }
                     },
                 }),
             ),
@@ -535,12 +541,9 @@ export class FastingFacade {
     }
 
     private applyOverview(overview: FastingOverview): void {
-        this.historyError.set(null);
         this.currentSession.set(overview.currentSession);
         this.stats.set(overview.stats);
-        this.history.set(overview.history.data);
-        this.historyPage.set(overview.history.page);
-        this.historyTotalPages.set(overview.history.totalPages);
+        this.applyHistoryOverview(overview.history);
         this.insightsData.set(overview.insights);
         this.syncCheckInFromSession(overview.currentSession);
 
@@ -550,6 +553,32 @@ export class FastingFacade {
         }
 
         this.stopTimer();
+    }
+
+    private applyHistoryOverview(firstPage: FastingOverview['history']): void {
+        const previous = this.historyFirstPage;
+        this.historyFirstPage = firstPage;
+        this.requestedHistory.set(undefined);
+        this.historyResource.set(undefined);
+        this.historyError.set(null);
+
+        const sameFirstPage =
+            previous?.page === firstPage.page &&
+            previous.limit === firstPage.limit &&
+            previous.totalItems === firstPage.totalItems &&
+            previous.totalPages === firstPage.totalPages &&
+            previous.data.length === firstPage.data.length &&
+            previous.data.every((row, index) => row.id === firstPage.data[index].id);
+
+        if (sameFirstPage && this.historyPage() > firstPage.page) {
+            const firstPageIds = new Set(firstPage.data.map(row => row.id));
+            this.history.update(rows => [...firstPage.data, ...rows.filter(row => !firstPageIds.has(row.id))]);
+            return;
+        }
+
+        this.history.set(firstPage.data);
+        this.historyPage.set(firstPage.page);
+        this.historyTotalPages.set(firstPage.totalPages);
     }
 
     private applyCurrentSessionUpdate(session: FastingSession): void {

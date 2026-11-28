@@ -2000,6 +2000,55 @@ describe('Fasting history pagination during a concurrent history change', () => 
     });
 });
 
+describe('Fasting overview refresh while browsing history', () => {
+    it.each([
+        { transition: 'keeps the already loaded next page for the same dataset', newDataset: false },
+        { transition: 'cancels an older pending next page when the dataset changes', newDataset: true },
+    ])('$transition', async ({ newDataset }) => {
+        const active = makeSession();
+        const initial = makeOverview(active, [active]);
+        initial.history = { ...initial.history, totalPages: FINAL_HISTORY_PAGE, totalItems: 2 };
+        const ended = { ...active, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        const { harness, api } = await renderFastingAsync(active, initial);
+        const refreshing = new Subject<FastingOverview>();
+        const nextPage = new Subject<FastingOverview['history']>();
+        const older = archivedFastingSessions('older', 1);
+        api.end.mockReturnValueOnce(of(ended));
+        api.getOverviewStrict.mockReturnValueOnce(refreshing);
+        api.getHistory.mockReturnValueOnce(nextPage);
+
+        confirmFastingEnd(harness);
+        expect(refreshing.observed).toBe(true);
+        const history = openFastingHistory(harness);
+        getButton(history, 'FASTING.LOAD_MORE_HISTORY').click();
+        redraw(harness);
+        expect(nextPage.observed).toBe(true);
+
+        if (!newDataset) {
+            nextPage.next({ ...initial.history, page: FINAL_HISTORY_PAGE, data: older });
+            nextPage.complete();
+            redraw(harness);
+            expect(history.querySelectorAll(FASTING_HISTORY_ROW)).toHaveLength(2);
+        }
+
+        const updatedHistory = { ...initial.history, data: newDataset ? archivedFastingSessions('changed', 1) : [ended] };
+        refreshing.next({ ...initial, currentSession: null, history: updatedHistory });
+        refreshing.complete();
+        redraw(harness);
+
+        expect(nextPage.observed).toBe(false);
+        expect(history.querySelectorAll(FASTING_HISTORY_ROW)).toHaveLength(newDataset ? 1 : 2);
+        expect(history.textContent.includes('FASTING.LOAD_MORE_HISTORY')).toBe(newDataset);
+        if (newDataset) {
+            api.getHistory.mockReturnValueOnce(of({ ...updatedHistory, page: FINAL_HISTORY_PAGE, data: older }));
+            getButton(history, 'FASTING.LOAD_MORE_HISTORY').click();
+            redraw(harness);
+            expect(api.getHistory.mock.calls.map(([query]) => query.page)).toEqual([FINAL_HISTORY_PAGE, FINAL_HISTORY_PAGE]);
+            expect(history.querySelectorAll(FASTING_HISTORY_ROW)).toHaveLength(2);
+        }
+    });
+});
+
 describe('Fasting history dialogs when leaving the route', () => {
     it.each([
         { selector: FASTING_HISTORY_DIALOG, open: openFastingHistory },

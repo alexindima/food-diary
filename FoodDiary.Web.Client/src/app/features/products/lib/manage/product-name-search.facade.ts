@@ -1,9 +1,9 @@
-import { inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { computed, inject, Injectable, linkedSignal, type Signal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, map, of, switchMap, timer } from 'rxjs';
 
 import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
-import type { ProductSearchSuggestion } from '../../../../shared/models/product.data';
+import type { Product, ProductSearchSuggestion } from '../../../../shared/models/product.data';
 import { ProductService } from '../../api/product.service';
 import type { ProductNameAutocompleteOption } from '../../components/manage/product-manage-lib/product-name-search.types';
 import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } from '../product-manage.constants';
@@ -12,7 +12,12 @@ import { PRODUCT_NAME_SEARCH_MIN_LENGTH, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT } 
 export class ProductNameSearchFacade {
     private readonly productService = inject(ProductService);
     private readonly nameSearchDebounceMs = inject(NAME_SEARCH_DEBOUNCE_MS_TOKEN);
-    private readonly request = signal<{ query: string } | undefined>(undefined);
+    private readonly editorProduct = signal<Signal<Product | null> | undefined>(undefined);
+    private readonly owner = computed(() => this.editorProduct()?.());
+    private readonly request = linkedSignal({
+        source: this.owner,
+        computation: (): { query: string } | undefined => undefined,
+    });
     private readonly suggestions = rxResource({
         params: this.request,
         stream: ({ params }) =>
@@ -23,10 +28,17 @@ export class ProductNameSearchFacade {
             ),
         defaultValue: [],
     });
-    private readonly displayedOptions = linkedSignal(() => this.suggestions.value());
+    private readonly displayedOptions = linkedSignal({
+        source: () => ({ owner: this.owner(), options: this.suggestions.value() }),
+        computation: ({ options }) => options,
+    });
 
     public readonly options = this.displayedOptions.asReadonly();
     public readonly isLoading = this.suggestions.isLoading;
+
+    public bindProduct(product: Signal<Product | null>): void {
+        this.editorProduct.set(product);
+    }
 
     public search(query: string): void {
         const trimmedQuery = query.trim();

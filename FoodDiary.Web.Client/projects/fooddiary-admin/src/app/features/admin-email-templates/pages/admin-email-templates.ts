@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -39,6 +39,7 @@ export class AdminEmailTemplatesComponent {
 
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly requestVersion = signal(0);
     private readonly templatesResource = rxResource({
         params: this.requestVersion,
@@ -46,17 +47,15 @@ export class AdminEmailTemplatesComponent {
         defaultValue: [],
     });
 
-    protected readonly templates = linkedSignal({
+    private readonly cachedTemplates = linkedSignal({
         source: this.templatesResource.snapshot,
-        computation: (snapshot, previous): AdminEmailTemplate[] => {
-            if (snapshot.status === 'error') {
-                return [];
-            }
-            return snapshot.status === 'loading' ? (previous?.value ?? snapshot.value) : snapshot.value;
-        },
-    }).asReadonly();
+        computation: (snapshot, previous): AdminEmailTemplate[] =>
+            snapshot.status === 'resolved' ? snapshot.value : (previous?.value ?? []),
+    });
+    protected readonly templates = this.cachedTemplates.asReadonly();
     protected readonly isLoading = this.templatesResource.isLoading;
     protected readonly loadFailed = computed(() => this.templatesResource.error() !== undefined);
+    protected readonly showTemplates = computed(() => this.templates().length > 0 || (!this.isLoading() && !this.loadFailed()));
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -111,18 +110,7 @@ export class AdminEmailTemplatesComponent {
     }
 
     protected openEdit(template: AdminEmailTemplate): void {
-        this.dialogService
-            .open(AdminEmailTemplateEditDialogComponent, {
-                preset: 'fullscreen',
-                panelClass: 'fd-admin-email-template-dialog',
-                data: template,
-            })
-            .afterClosed()
-            .subscribe(updated => {
-                if (updated === true) {
-                    this.loadTemplates();
-                }
-            });
+        this.openEditor(template);
     }
 
     protected openCreate(): void {
@@ -139,17 +127,26 @@ export class AdminEmailTemplatesComponent {
             isNew: true,
         };
 
+        this.openEditor(dialogData);
+    }
+
+    private openEditor(data: AdminEmailTemplate): void {
         this.dialogService
-            .open(AdminEmailTemplateEditDialogComponent, {
+            .open<AdminEmailTemplateEditDialogComponent, AdminEmailTemplate, AdminEmailTemplate>(AdminEmailTemplateEditDialogComponent, {
                 preset: 'fullscreen',
                 panelClass: 'fd-admin-email-template-dialog',
-                data: dialogData,
+                data,
             })
             .afterClosed()
-            .subscribe(updated => {
-                if (updated === true) {
-                    this.loadTemplates();
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(saved => {
+                if (saved === undefined) {
+                    return;
                 }
+                this.cachedTemplates.update(items =>
+                    items.some(item => item.id === saved.id) ? items.map(item => (item.id === saved.id ? saved : item)) : [...items, saved],
+                );
+                this.loadTemplates();
             });
     }
 }

@@ -50,7 +50,7 @@ type TestEmailFormModel = {
 })
 export class AdminEmailTemplateEditDialogComponent {
     protected readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
-    private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
+    private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, AdminEmailTemplate>>(FdUiDialogRef);
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
 
     protected readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
@@ -84,7 +84,7 @@ export class AdminEmailTemplateEditDialogComponent {
         const locale = value.locale.trim();
 
         try {
-            await firstValueFrom(
+            const saved = await firstValueFrom(
                 this.templatesFacade.upsert(key, locale, {
                     subject: value.subject,
                     htmlBody: value.htmlBody,
@@ -93,7 +93,7 @@ export class AdminEmailTemplateEditDialogComponent {
                 }),
             );
             this.isSaving.set(false);
-            this.dialogRef.close(true);
+            this.dialogRef.close(saved);
         } catch {
             this.saveFailed.set(true);
             this.isSaving.set(false);
@@ -127,7 +127,7 @@ export class AdminEmailTemplateEditDialogComponent {
 
     protected onCancel(): void {
         if (!this.isSaving()) {
-            this.dialogRef.close(false);
+            this.dialogRef.close();
         }
     }
 

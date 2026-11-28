@@ -3,7 +3,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminCatalogService } from '../api/admin-catalog.service';
-import type { CatalogProduct, CatalogRecipe } from '../models/catalog-transfer';
+import type { CatalogProduct, CatalogRecipe, CatalogResult } from '../models/catalog-transfer';
 import { AdminCatalogFacade } from './admin-catalog.facade';
 
 const firstId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
@@ -133,4 +133,33 @@ describe('AdminCatalogFacade transfer recovery', () => {
         await facade.importAsync();
         expect(api.importItem).not.toHaveBeenCalled();
     });
+});
+
+it('cancels sibling previews on failure and keeps replacement progress independent', async () => {
+    const failed = new Subject<CatalogResult>();
+    const oldSibling = new Subject<CatalogResult>();
+    const replacement = new Subject<CatalogResult>();
+    api.preview.mockReturnValueOnce(failed).mockReturnValueOnce(oldSibling).mockReturnValueOnce(replacement);
+    const original = facade.previewFileAsync(file([recipe(firstId), recipe(secondId)]));
+    await vi.waitFor(() => {
+        expect(api.preview).toHaveBeenCalledTimes(2);
+    });
+    failed.error(new Error('Offline'));
+    await original;
+    expect(facade.error()).toBe('ADMIN_CATALOG_TRANSFER.PREVIEW_FAILED');
+
+    const current = facade.previewFileAsync(file([recipe(firstId)]));
+    await vi.waitFor(() => {
+        expect(api.preview).toHaveBeenLastCalledWith('recipes', recipe(firstId));
+    });
+    expect(oldSibling.observed).toBe(false);
+    oldSibling.next({ id: secondId, status: 'ready', errors: [] });
+    expect(facade.completed()).toBe(0);
+    replacement.next({ id: firstId, status: 'ready', errors: [] });
+    replacement.complete();
+    await current;
+
+    expect(facade.completed()).toBe(1);
+    expect(facade.total()).toBe(1);
+    expect(facade.report()).toEqual([expect.objectContaining({ id: firstId })]);
 });

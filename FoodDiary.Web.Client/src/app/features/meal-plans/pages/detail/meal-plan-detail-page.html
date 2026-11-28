@@ -20,6 +20,13 @@
     <fd-page-body>
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
+        } @else if (facade.hasDetailLoadError()) {
+            <div class="fd-stack fd-align-center fd-gap-sm">
+                <p role="alert">{{ 'ERRORS.LOAD_FAILED_MESSAGE' | translate }}</p>
+                <fd-ui-button variant="secondary" fill="outline" (click)="facade.retryPlan()">
+                    {{ 'MEAL_PLANS.RETRY' | translate }}
+                </fd-ui-button>
+            </div>
         } @else if (selectedPlanView(); as plan) {
             <fd-meal-plan-detail-header
                 data-tour-id="meal-plan-detail-header"

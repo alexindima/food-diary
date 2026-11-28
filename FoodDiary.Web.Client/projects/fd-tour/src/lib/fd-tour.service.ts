@@ -1,4 +1,4 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, Location } from '@angular/common';
 import { afterNextRender, computed, DestroyRef, effect, inject, Injector, PLATFORM_ID, Service, signal, untracked } from '@angular/core';
 
 import type { FdTourDefinition, FdTourSnapshot, FdTourStartOptions, FdTourStep } from './fd-tour.types';
@@ -9,6 +9,7 @@ import { FdTourTargetRegistry, type FdTourTargetResolver } from './fd-tour-targe
 type ActiveTour = {
     tour: FdTourDefinition;
     steps: readonly FdTourStep[];
+    pagePath: string;
 };
 
 @Service()
@@ -79,8 +80,9 @@ export class FdTourService {
             return false;
         }
 
+        const path = Location.stripTrailingSlash(this.injector.get(Location).path().split(/[?#]/, 1)[0]);
         this.releaseTarget();
-        this.activeTourState.set({ tour, steps });
+        this.activeTourState.set({ tour, steps, pagePath: path.length === 0 ? '/' : path });
         this.activeStepIndexState.set(0);
         this.prepareCurrentTarget();
         return true;
@@ -144,6 +146,19 @@ export class FdTourService {
 
     private hasTarget(step: FdTourStep): boolean {
         return this.findTarget(step) !== null || this.registry.find(step.target) !== undefined;
+    }
+
+    /** Reconcile a tour that started before its page-owned host mounted. */
+    public reconcileInitialPage(pagePath: string): void {
+        const activeTour = this.activeTourState();
+        if (activeTour === null) {
+            return;
+        }
+        if (activeTour.pagePath !== pagePath) {
+            this.close();
+        } else if (this.target()?.isConnected === false) {
+            this.refreshTarget();
+        }
     }
 
     /** Re-evaluate responsive conditions after a viewport or container change. */

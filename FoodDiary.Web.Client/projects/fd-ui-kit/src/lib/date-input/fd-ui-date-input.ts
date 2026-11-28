@@ -48,6 +48,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     private readonly locale = inject(LOCALE_ID);
     private readonly document = inject(DOCUMENT);
     private readonly injector = inject(Injector);
+    private pickerTrigger: HTMLButtonElement | null = null;
 
     private readonly translateService = inject(TranslateService, { optional: true });
     protected readonly language = toSignal(this.translateService?.onLangChange.pipe(map(event => event.lang)) ?? of(this.locale), {
@@ -157,6 +158,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public reset(): void {
         this.setManualInputInvalid(false);
         this.displayMonth.set(this.internalValue() ?? new Date());
+        this.pickerTrigger = null;
         this.isOpen.set(false);
         this.isFocused.set(false);
         this.touched.set(false);
@@ -192,7 +194,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         this.touch.emit();
     }
 
-    protected clearValue(): void {
+    protected clearValue(button: HTMLButtonElement | null = null): void {
         if (this.disabled()) {
             return;
         }
@@ -201,13 +203,19 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         this.touched.set(true);
         this.touch.emit();
         this.closeDatePicker();
+        if (button !== null && this.document.activeElement === button && !this.disabled()) {
+            this.focus();
+        }
     }
 
-    protected openDatePicker(): void {
+    protected openDatePicker(trigger: HTMLButtonElement | null = null): void {
         if (this.disabled()) {
             return;
         }
 
+        if (!this.isOpen()) {
+            this.pickerTrigger = trigger;
+        }
         this.displayMonth.set(this.internalValue() ?? new Date());
         this.isOpen.set(true);
         this.isFocused.set(true);
@@ -218,13 +226,20 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             return;
         }
 
-        const restoreFocus = this.document.getElementById(`${this.id()}-dialog`)?.contains(this.document.activeElement) === true;
+        const activeElement = this.document.activeElement;
+        const restoreFocus = this.document.getElementById(`${this.id()}-dialog`)?.contains(activeElement) === true;
+        const trigger = this.pickerTrigger;
+        this.pickerTrigger = null;
         this.isOpen.set(false);
         this.isFocused.set(false);
         this.touched.set(true);
         this.touch.emit();
-        if (restoreFocus && !this.disabled()) {
-            this.host.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
+        if (restoreFocus && !this.disabled() && this.document.activeElement === activeElement) {
+            if (trigger?.isConnected === true && !trigger.disabled) {
+                trigger.focus();
+            } else {
+                this.focus();
+            }
         }
     }
 

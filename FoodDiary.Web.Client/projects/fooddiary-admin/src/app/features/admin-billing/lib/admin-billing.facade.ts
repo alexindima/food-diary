@@ -234,6 +234,13 @@ export class AdminBillingFacade {
         }
     }
 
+    public retryRevenue(): void {
+        const request = this.requestedLoad();
+        if (this.revenueFailed() && request?.revenueFilters !== undefined && this.ownsRequest(request)) {
+            this.revenueResource.reload();
+        }
+    }
+
     private ownsRequest(request: BillingRequest): boolean {
         // The router commits its snapshot before updating the page inputs.
         return this.requestedLoad() === request && this.activeTab() === request.tab && this.queryKey() === request.queryKey;

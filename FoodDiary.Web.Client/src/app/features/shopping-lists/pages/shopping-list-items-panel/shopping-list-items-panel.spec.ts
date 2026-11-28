@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form, required } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -11,6 +11,7 @@ import type { ShoppingListItem } from '../../../../shared/models/shopping-list.d
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel';
 
+const CHECKED_SETTLE_MS = 300;
 const CHECKED_ITEM: ShoppingListItem = {
     id: entityId<'shopping-list-item'>('item-1'),
     shoppingListId: entityId<'shopping-list'>('list-1'),
@@ -160,3 +161,86 @@ describe('ShoppingListItemsPanelComponent localization', () => {
         expect(element.querySelector('.shopping-list__item-quantity')?.textContent).toBe('2.5 l');
     });
 });
+
+describe('ShoppingListItemsPanelComponent focus after moving an item', () => {
+    it.each([true, false])('focuses the same item when its purchased state becomes %s', async checked => {
+        const { fixture, component } = await setupItemsPanelAsync([{ ...CHECKED_ITEM, isChecked: !checked }]);
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        component.itemCheckedChange.subscribe(event => {
+            fixture.componentRef.setInput('items', [{ ...CHECKED_ITEM, isChecked: event.checked }]);
+        });
+        const source = checkboxIn(checked ? '.shopping-list__items' : '.shopping-list__purchased', host);
+        source.focus();
+        source.click();
+        fixture.detectChanges();
+        vi.advanceTimersByTime(CHECKED_SETTLE_MS);
+        fixture.detectChanges();
+
+        const destination = checkboxIn(checked ? '.shopping-list__purchased' : '.shopping-list__items', host);
+        expect(source.isConnected).toBe(false);
+        expect(destination.checked).toBe(checked);
+        expect(document.activeElement).toBe(destination);
+    });
+
+    it('leaves focus where the user moved it before the checked item settles', async () => {
+        const { fixture, component } = await setupItemsPanelAsync([{ ...CHECKED_ITEM, isChecked: false }]);
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        component.itemCheckedChange.subscribe(() => {
+            fixture.componentRef.setInput('items', [CHECKED_ITEM]);
+        });
+        const source = checkboxIn('.shopping-list__items', host);
+        source.focus();
+        source.click();
+        fixture.detectChanges();
+        const outside = host.querySelector<HTMLInputElement>('.shopping-list__quick-add-input input');
+        outside?.focus();
+        vi.advanceTimersByTime(CHECKED_SETTLE_MS);
+        fixture.detectChanges();
+
+        expect(source.isConnected).toBe(false);
+        expect(document.activeElement).toBe(outside);
+    });
+});
+
+it('focuses the purchased toggle when the moved checkbox is in a collapsed group', async () => {
+    const pending = { ...CHECKED_ITEM, id: entityId<'shopping-list-item'>('pending'), isChecked: false };
+    const { fixture, component } = await setupItemsPanelAsync([pending, CHECKED_ITEM]);
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    onTestFinished(() => {
+        vi.useRealTimers();
+    });
+    const host = fixture.nativeElement as HTMLElement;
+    const toggle = host.querySelector<HTMLButtonElement>('.shopping-list__purchased-toggle button');
+    toggle?.click();
+    fixture.detectChanges();
+    component.itemCheckedChange.subscribe(() => {
+        fixture.componentRef.setInput('items', [{ ...pending, isChecked: true }, CHECKED_ITEM]);
+    });
+
+    const source = checkboxIn('.shopping-list__items', host);
+    source.focus();
+    source.click();
+    fixture.detectChanges();
+    vi.advanceTimersByTime(CHECKED_SETTLE_MS);
+    fixture.detectChanges();
+
+    expect(source.isConnected).toBe(false);
+    expect(toggle?.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(toggle);
+});
+
+function checkboxIn(selector: string, host: HTMLElement): HTMLInputElement {
+    const checkbox = host.querySelector<HTMLInputElement>(`${selector} input[type="checkbox"]`);
+    if (checkbox === null) {
+        throw new Error(`Expected a checkbox in ${selector}`);
+    }
+    return checkbox;
+}

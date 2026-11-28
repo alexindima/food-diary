@@ -336,6 +336,7 @@ Multi-line input.
 Dropdown select based on the design-system menu/overlay primitives.
 The open listbox receives keyboard focus, uses `ariaLabel` or `label` as its accessible name, and exposes the active option through `aria-activedescendant` as keyboard navigation moves it.
 Selecting an option with Enter, Space, or a pointer closes the menu and returns focus to the trigger so keyboard navigation can continue.
+If options update before they render, keyboard activation applies to the displayed option while it remains available.
 Tab and Shift+Tab dismiss the open menu without changing the value and continue to the next or previous control in the normal tab order.
 
 Long option lists scroll within a bounded menu. Opening the menu and navigating with arrows, Home, or End keeps the active option visible.
@@ -396,11 +397,11 @@ Inline calendar primitive for custom date pickers and date popovers.
 
 Date input (value as `YYYY-MM-DD`).
 
-Providing `clearAriaLabel` enables an optional clear button that emits `null`; pass a localized accessible name.
+Provide a localized `clearAriaLabel` to enable the optional clear button. It emits `null` and returns focus to the field when the button held focus.
 
 Escape closes an open calendar without dismissing its enclosing dialog, including when focus remains on the calendar button. Once the calendar is closed, Escape remains available to the enclosing dialog.
 
-Closing the calendar restores focus to the date field when focus was inside the calendar, including after date selection and Escape.
+After date selection or Escape, focus returns from inside the calendar to the control that opened it. The date field is the fallback for programmatic opening. Closing preserves focus that already moved outside the calendar.
 
 The calendar popup is a named modal dialog. It uses `pickerAriaLabel`, then `label`, then the localized “Choose date” fallback. Opening it focuses the active calendar day; Tab stays inside the popup until selection, Escape or a backdrop click closes it.
 
@@ -467,6 +468,7 @@ Compact date trigger with overlay calendar. The optional `locale: string | null`
 #### `fd-ui-week-picker`
 
 Week navigation control with previous/next actions and an overlay calendar that selects complete week rows.
+Opening the calendar moves focus to the active week. Escape or selection closes the dialog and returns focus to its launcher when focus was inside the calendar.
 
 **Inputs / model**
 

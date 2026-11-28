@@ -1,4 +1,4 @@
-import { type HttpRequest, provideHttpClient } from '@angular/common/http';
+import { type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
@@ -83,6 +83,59 @@ describe('Meal Plan direct detail requests', () => {
         expect(router.url.split('?')[0]).toBe('/meal-plans');
         expect(router.parseUrl(router.url).queryParams).toEqual(QUERY);
         expect(earlyCatalogue.map(request => request.request.urlWithParams)).toEqual([]);
+    });
+});
+
+describe('Meal Plan detail recovery', () => {
+    it('retries a temporary detail failure without leaving the selected plan URL', async () => {
+        const http = configureMealPlanRoute();
+        const url = `/meal-plans/${PLAN_ID}?${new URLSearchParams(QUERY).toString()}`;
+        const harness = await RouterTestingHarness.create(url);
+        const detail = { method: 'GET', url: `${API_PATH}/${PLAN_ID}` };
+        http.expectOne(detail).flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        flushLocaleAssets(http);
+
+        const retry = await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.textContent).toContain('ERRORS.LOAD_FAILED_MESSAGE');
+            const button = harness.routeNativeElement?.querySelector<HTMLButtonElement>(
+                '.meal-plan-detail [role="alert"] + fd-ui-button button',
+            );
+            if (button === null || button === undefined) {
+                throw new Error('Expected the rendered plan retry action');
+            }
+            return button;
+        });
+        retry.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            http.expectOne(detail).flush(DETAIL);
+        });
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.querySelector('.meal-plan-detail__title')?.textContent).toBe(PLAN_NAME);
+        });
+        expect(TestBed.inject(Router).url).toBe(url);
+        http.expectNone(isCatalogueRequest);
+    });
+
+    it('keeps the unavailable state and Back action for a missing plan', async () => {
+        const http = configureMealPlanRoute();
+        const harness = await RouterTestingHarness.create(`/meal-plans/${PLAN_ID}`);
+        http.expectOne({ method: 'GET', url: `${API_PATH}/${PLAN_ID}` }).flush(null, {
+            status: HttpStatusCode.NotFound,
+            statusText: 'Not Found',
+        });
+        flushLocaleAssets(http);
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.textContent).toContain('MEAL_PLANS.DETAIL_UNAVAILABLE');
+        });
+        expect(harness.routeNativeElement?.querySelector('button[aria-label="MEAL_PLANS.BACK"]')).not.toBeNull();
+        expect(harness.routeNativeElement?.textContent).not.toContain('MEAL_PLANS.RETRY');
+        http.expectNone(isCatalogueRequest);
     });
 });
 

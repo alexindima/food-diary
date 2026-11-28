@@ -201,7 +201,7 @@ describe('Email template revision restoration', () => {
                 textBody: revision.textBody,
                 isActive: false,
             });
-            expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+            expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(TEMPLATE);
         } else {
             expect(service.upsert).not.toHaveBeenCalled();
             expect(dialogRef.close).not.toHaveBeenCalled();
@@ -255,13 +255,13 @@ describe('AdminEmailTemplateEditDialogComponent preview', () => {
 });
 
 describe('AdminEmailTemplateEditDialogComponent saving', () => {
-    it('should close false on cancel', async () => {
+    it('closes without a saved template on cancel', async () => {
         const { fixture, dialogRef } = await setupEmailTemplateDialogAsync();
         emailButton(fixture.nativeElement as HTMLElement, 'Cancel').click();
-        expect(dialogRef.close).toHaveBeenCalledWith(false);
+        expect(dialogRef.close).toHaveBeenCalledWith();
     });
 
-    it('should save and close true on success', async () => {
+    it('passes the saved template back to the list', async () => {
         const { fixture, dialogRef, service } = await setupEmailTemplateDialogAsync();
         const root = fixture.nativeElement as HTMLElement;
         setEmailField(root, 'Subject', 'Updated subject');
@@ -276,7 +276,7 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
             isActive: true,
         });
         await vi.waitFor(() => {
-            expect(dialogRef.close).toHaveBeenCalledWith(true);
+            expect(dialogRef.close).toHaveBeenCalledWith(TEMPLATE);
         });
     });
 
@@ -304,7 +304,7 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         expect(dialogRef.close).not.toHaveBeenCalled();
         pending.next(TEMPLATE);
         await fixture.whenStable();
-        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(TEMPLATE);
     });
 
     it('shows a save error, preserves the draft and allows retry', async () => {
@@ -323,7 +323,7 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         emailButton(root, 'Save').click();
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(dialogRef.close).toHaveBeenCalledWith(true);
+        expect(dialogRef.close).toHaveBeenCalledWith(TEMPLATE);
         expect(root.querySelector('[role="alert"]')).toBeNull();
         expect(service.upsert).toHaveBeenLastCalledWith('email_verification', 'en', expect.objectContaining({ subject: 'Unsaved draft' }));
     });
@@ -409,7 +409,7 @@ describe('AdminEmailTemplateEditDialogComponent pending saves', () => {
         expect(emailField(element, 'Subject').value).toBe('Pending subject');
         save.click();
         await vi.waitFor(() => {
-            expect(dialogRef.close).toHaveBeenCalledWith(true);
+            expect(dialogRef.close).toHaveBeenCalledWith(TEMPLATE);
         });
         expect(service.upsert).toHaveBeenCalledTimes(2);
         expect(service.upsert).toHaveBeenLastCalledWith(

@@ -94,15 +94,11 @@ export class PublicRecipeCatalogComponent {
             sortBy: this.normalizeSort(this.sortBy()),
             language: this.catalogLanguage(this.language(), fallbackLanguage),
         };
+        const queryFilters = this.resolveQueryFilters(filters);
         return {
             filters,
-            query: {
-                ...filters,
-                page: readPaginationPage(page),
-                maxTotalTime: this.positiveNumber(filters.maxTotalTime) ?? undefined,
-                language: filters.language === '' ? undefined : filters.language,
-            },
-            filterKey: JSON.stringify(filters),
+            query: { ...queryFilters, page: readPaginationPage(page) },
+            filterKey: JSON.stringify(queryFilters),
             invalidPage: hasInvalidPaginationPage(page),
         };
     });
@@ -127,7 +123,7 @@ export class PublicRecipeCatalogComponent {
         toObservable(this.filters)
             .pipe(skip(1), debounceTime(this.searchDebounceMs), takeUntilDestroyed())
             .subscribe(filters => {
-                if (JSON.stringify(filters) !== this.catalogRequest().filterKey) {
+                if (JSON.stringify(this.resolveQueryFilters(filters)) !== this.catalogRequest().filterKey) {
                     this.changePage(0);
                 }
             });
@@ -146,7 +142,7 @@ export class PublicRecipeCatalogComponent {
     }
 
     private isCurrentRequest(request: CatalogRequest): boolean {
-        return this.catalogRequest() === request && request.filterKey === JSON.stringify(this.filters());
+        return this.catalogRequest() === request && request.filterKey === JSON.stringify(this.resolveQueryFilters(this.filters()));
     }
 
     protected changePage(index: number): void {
@@ -154,15 +150,15 @@ export class PublicRecipeCatalogComponent {
     }
 
     private async writePageAsync(page: number, replaceUrl = false): Promise<boolean> {
-        const filters = this.filters();
+        const filters = this.resolveQueryFilters(this.filters());
         return this.router.navigate([], {
             relativeTo: this.route,
             queryParams: {
-                search: filters.search.trim().length > 0 ? filters.search.trim() : null,
-                category: filters.category.trim().length > 0 ? filters.category.trim() : null,
-                maxTotalTime: this.positiveNumber(filters.maxTotalTime),
+                search: filters.search.length > 0 ? filters.search : null,
+                category: filters.category.length > 0 ? filters.category : null,
+                maxTotalTime: filters.maxTotalTime ?? null,
                 sortBy: filters.sortBy === 'newest' ? null : filters.sortBy,
-                language: filters.language === '' ? 'all' : filters.language,
+                language: filters.language ?? 'all',
                 page: page > 1 ? page : null,
             },
             replaceUrl,
@@ -187,6 +183,16 @@ export class PublicRecipeCatalogComponent {
             language: normalizeRecipeLanguage(this.appLanguage()),
         }));
         this.changePage(0);
+    }
+
+    private resolveQueryFilters(filters: CatalogFilters): Omit<PublicRecipeFilters, 'page'> {
+        return {
+            search: filters.search.trim(),
+            category: filters.category.trim(),
+            maxTotalTime: this.positiveNumber(filters.maxTotalTime) ?? undefined,
+            sortBy: filters.sortBy,
+            language: filters.language === '' ? undefined : filters.language,
+        };
     }
 
     private catalogLanguage(value: string | undefined, fallback: string): string {

@@ -14,8 +14,14 @@
         <fd-ui-button
             type="button"
             variant="secondary"
-            [disabled]="filteredItems().length === 0"
-            [disabledReason]="filteredItems().length === 0 ? 'No lessons to export.' : null"
+            [disabled]="!canExport()"
+            [disabledReason]="
+                isLoading()
+                    ? ('ADMIN_COMMON.LOADING' | translate)
+                    : loadFailed()
+                      ? ('ADMIN_COMMON.LOAD_ERROR' | translate)
+                      : 'No lessons to export.'
+            "
             (click)="exportLessons()"
             >Export JSON</fd-ui-button
         >

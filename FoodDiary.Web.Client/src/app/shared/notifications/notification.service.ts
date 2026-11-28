@@ -69,6 +69,7 @@ export class NotificationService {
     public readonly notificationsRequested = signal(false);
     public readonly notificationsChangedVersion = signal(0);
     private readonly unreadCountLoaded = signal(false);
+    private unreadCountRevision = 0;
     private notificationsReloadRequested = false;
     private sessionOwner = this.readSessionOwner();
     private sessionVersion = 0;
@@ -87,9 +88,7 @@ export class NotificationService {
                     map(value => requireSdkFields(value, ['count'])),
                     tap(response => {
                         if (!abortSignal.aborted && this.isCurrentSession(params.session) && this.unreadCountRequest() === params) {
-                            this.unreadCount.set(response.count);
-                            this.unreadCountLoaded.set(true);
-                            this.readStateChanged.next();
+                            this.setServerUnreadCount(response.count);
                         }
                     }),
                 ),
@@ -192,32 +191,44 @@ export class NotificationService {
 
     public markAsRead(notificationId: NotificationId): Observable<void> {
         const session = this.synchronizeSession();
+        const countRevision = this.unreadCountRevision;
         return this.sdk.client.putNotificationsByNotificationIdRead({ version: this.sdk.version, notificationId }).pipe(
             tap(() => {
                 if (!this.isCurrentSession(session)) {
                     return;
                 }
+                const serverCountUpdated = this.unreadCountRevision !== countRevision;
                 const notification = this.notifications().find(item => item.id === notificationId);
-                if (notification?.isRead === false) {
+                if (!serverCountUpdated && notification?.isRead === false) {
                     this.unreadCount.update(count => Math.max(0, count - 1));
                 }
 
                 this.notifications.update(items => items.map(item => (item.id === notificationId ? { ...item, isRead: true } : item)));
-                this.readStateChanged.next();
+                this.acknowledgeReadState({ refreshCount: serverCountUpdated });
             }),
         );
     }
 
     public markAllRead(): Observable<void> {
         const session = this.synchronizeSession();
+        const countRevision = this.unreadCountRevision;
+        const originalFeed = this.notifications();
+        const originalIds = new Set(originalFeed.map(item => item.id));
         return this.sdk.client.putNotificationsReadAll({ version: this.sdk.version }).pipe(
             tap(() => {
                 if (!this.isCurrentSession(session)) {
                     return;
                 }
-                this.unreadCount.set(0);
-                this.notifications.update(items => items.map(item => ({ ...item, isRead: true })));
-                this.readStateChanged.next();
+                const feedUpdated = this.notifications() !== originalFeed;
+                const stateUpdated = feedUpdated || this.unreadCountRevision !== countRevision;
+                if (!stateUpdated) {
+                    this.unreadCount.set(0);
+                }
+                // Notifications that appeared during the request may have arrived after the server marked the old ones read.
+                this.notifications.update(items =>
+                    items.map(item => (originalIds.has(item.id) && !item.isRead ? { ...item, isRead: true } : item)),
+                );
+                this.acknowledgeReadState({ refreshCount: stateUpdated || this.notificationsLoading(), refreshFeed: feedUpdated });
             }),
         );
     }
@@ -303,9 +314,7 @@ export class NotificationService {
         if (this.sessionOwner === null) {
             return;
         }
-        this.unreadCount.set(count);
-        this.unreadCountLoaded.set(true);
-        this.readStateChanged.next();
+        this.setServerUnreadCount(count);
     }
 
     public notifyNotificationsChanged(options: { supersedePending?: boolean } = {}): void {
@@ -316,6 +325,25 @@ export class NotificationService {
         this.notificationsChangedVersion.update(version => version + 1);
         this.readStateChanged.next();
         this.refreshNotifications(options);
+    }
+
+    private setServerUnreadCount(count: number): void {
+        this.unreadCountRevision++;
+        this.unreadCount.set(count);
+        this.unreadCountLoaded.set(true);
+        this.readStateChanged.next();
+    }
+
+    private acknowledgeReadState({ refreshCount, refreshFeed }: { refreshCount: boolean; refreshFeed?: boolean }): void {
+        // Reads started before the successful write may still contain the previous unread state.
+        // A count received during the write may already include it, so reconcile from the server.
+        if (refreshCount || untracked(this.unreadCountResource.isLoading)) {
+            this.fetchUnreadCount({ force: true, supersedePending: true });
+        }
+        if (refreshFeed === true || this.notificationsLoading()) {
+            this.refreshNotifications({ supersedePending: true });
+        }
+        this.readStateChanged.next();
     }
 
     private loadNotifications(): void {
@@ -355,6 +383,7 @@ export class NotificationService {
         this.notificationsResource.set(undefined);
         this.unreadCount.set(0);
         this.unreadCountLoaded.set(false);
+        this.unreadCountRevision = 0;
         this.notifications.set([]);
         this.notificationsLoading.set(false);
         this.notificationsLoaded.set(false);

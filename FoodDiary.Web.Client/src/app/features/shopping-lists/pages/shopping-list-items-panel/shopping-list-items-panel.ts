@@ -1,5 +1,18 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    ElementRef,
+    inject,
+    Injector,
+    input,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -49,6 +62,11 @@ export class ShoppingListItemsPanelComponent {
     protected readonly noteLimit = SHOPPING_ITEM_NOTE_LIMIT;
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly addItemInput = viewChild.required<FdUiInputComponent>('addItemInput');
+    private readonly purchasedToggle = viewChild<FdUiButtonComponent>('purchasedToggle');
     private readonly activeLang = signal(this.translateService.getCurrentLang());
     protected readonly purchasedOpen = signal(true);
     private readonly settlingIds = signal<ReadonlySet<ShoppingListItemId>>(new Set());
@@ -92,12 +110,40 @@ export class ShoppingListItemsPanelComponent {
         if (checked) {
             this.settlingIds.update(ids => new Set([...ids, itemId]));
             const timer = setTimeout(() => {
+                this.focusMovedItem(itemId);
                 this.settlingIds.update(ids => new Set([...ids].filter(id => id !== itemId)));
                 this.settleTimers.delete(timer);
             }, CHECKED_SETTLE_MS);
             this.settleTimers.add(timer);
+        } else {
+            this.focusMovedItem(itemId);
         }
         this.itemCheckedChange.emit({ itemId, checked });
+    }
+
+    private focusMovedItem(itemId: ShoppingListItemId): void {
+        const focused = this.document.activeElement;
+        const host = this.host.nativeElement;
+        if (
+            !(focused instanceof HTMLInputElement) ||
+            !host.contains(focused) ||
+            focused.closest('fd-ui-checkbox')?.getAttribute('data-item-id') !== itemId
+        ) {
+            return;
+        }
+
+        afterNextRender(
+            () => {
+                if (focused.isConnected || this.document.activeElement !== this.document.body) {
+                    return;
+                }
+                const checkbox = [...host.querySelectorAll('fd-ui-checkbox[data-item-id]')]
+                    .find(item => item.getAttribute('data-item-id') === itemId)
+                    ?.querySelector<HTMLInputElement>('input[type="checkbox"]:not(:disabled)');
+                (checkbox ?? this.purchasedToggle() ?? this.addItemInput()).focus();
+            },
+            { injector: this.injector },
+        );
     }
 
     protected toggleDetails(): void {

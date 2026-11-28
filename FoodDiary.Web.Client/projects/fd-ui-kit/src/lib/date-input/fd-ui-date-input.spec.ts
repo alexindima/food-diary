@@ -110,19 +110,26 @@ describe('FdUiDateInputComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('clears an optional date and emits null', () => {
+    it('clears an optional date once and returns focus to the field', () => {
         fixture.componentRef.setInput('value', MARCH_DATE_STRING);
         fixture.componentRef.setInput('clearAriaLabel', 'Clear date');
         fixture.detectChanges();
         const changed = vi.fn();
+        const touched = vi.fn();
         component.value.subscribe(changed);
-        requireButtonElement('[aria-label="Clear date"]').click();
+        component.touch.subscribe(touched);
+        const clear = requireButtonElement('[aria-label="Clear date"]');
+        clear.focus();
+        expect(document.activeElement).toBe(clear);
+        clear.click();
         fixture.detectChanges();
         expect(component.value()).toBeNull();
         expect(component.touched()).toBe(true);
-        expect(changed).toHaveBeenCalledWith(null);
+        expect(changed).toHaveBeenCalledExactlyOnceWith(null);
+        expect(touched).toHaveBeenCalledOnce();
         expect(requireInputElement('input').value).toBe('');
         expect(host().querySelector('[aria-label="Clear date"]')).toBeNull();
+        expect(document.activeElement).toBe(requireInputElement('input'));
     });
 
     registerLabelTests();
@@ -131,6 +138,7 @@ describe('FdUiDateInputComponent', () => {
     registerValueAccessorTests();
     registerStateTests();
     registerCalendarFocusTests();
+    registerCalendarTriggerFocusTests();
     registerInteractionTests();
     registerRenderedInputTests();
     registerAttachmentTests();
@@ -691,6 +699,63 @@ function registerCalendarFocusTests(): void {
     });
 }
 
+function registerCalendarTriggerFocusTests(): void {
+    describe('calendar launcher focus', () => {
+        it.each(['escape', 'selection'])('returns focus to the calendar button after %s', action => {
+            fixture.componentRef.setInput('allowManualInput', true);
+            fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+            fixture.detectChanges();
+            const launcher = requireButtonElement('button[aria-haspopup="dialog"]');
+            launcher.focus();
+            launcher.click();
+            fixture.detectChanges();
+
+            const day = document.querySelector<HTMLButtonElement>(`[data-date="${MARCH_DATE_STRING}"]`);
+            if (day === null) {
+                throw new Error('Expected the selected calendar day');
+            }
+            day.focus();
+            expect(document.activeElement).toBe(day);
+            if (action === 'escape') {
+                day.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+            } else {
+                day.click();
+            }
+            fixture.detectChanges();
+
+            expect(launcher.getAttribute('aria-expanded')).toBe('false');
+            expect(document.activeElement).toBe(launcher);
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+        });
+
+        it('closes the picker on disable without focusing either disabled trigger', () => {
+            const calendar = requireButtonElement('button[aria-haspopup="dialog"]');
+            calendar.focus();
+            calendar.click();
+            fixture.detectChanges();
+            const day = document.querySelector<HTMLButtonElement>('[role="gridcell"][tabindex="0"]');
+            if (day === null) {
+                throw new Error('Expected a focusable calendar day');
+            }
+            day.focus();
+            expect(document.activeElement).toBe(day);
+            const calendarFocus = vi.spyOn(calendar, 'focus');
+            const field = requireInputElement('input');
+            const fieldFocus = vi.spyOn(field, 'focus');
+
+            fixture.componentRef.setInput('disabled', true);
+            fixture.detectChanges();
+
+            expect(component['disabled']()).toBe(true);
+            expect(component['isOpen']()).toBe(false);
+            expect(calendar.disabled).toBe(true);
+            expect(field.disabled).toBe(true);
+            expect(calendarFocus).not.toHaveBeenCalled();
+            expect(fieldFocus).not.toHaveBeenCalled();
+        });
+    });
+}
+
 function registerInteractionTests(): void {
     describe('interaction', () => {
         it.each(['input', '.fd-ui-date-input__suffix'])('keeps the enclosing dialog open when escaping the calendar from %s', selector => {
@@ -773,16 +838,6 @@ function registerInteractionTests(): void {
             component['onDisplayMonthChange'](null);
 
             expect(component['displayMonth']()).toBe(initialMonth);
-        });
-
-        it('should close date picker when disabled while open', () => {
-            component['openDatePicker']();
-
-            fixture.componentRef.setInput('disabled', true);
-            fixture.detectChanges();
-
-            expect(component['disabled']()).toBe(true);
-            expect(component['isOpen']()).toBe(false);
         });
     });
 }

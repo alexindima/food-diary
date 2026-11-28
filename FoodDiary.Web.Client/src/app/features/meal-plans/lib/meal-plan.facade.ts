@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, type Observable, of, Subject, takeUntil } from 'rxjs';
@@ -37,6 +38,10 @@ export class MealPlanFacade {
         this.selectedPlanResource.hasValue() ? (this.selectedPlanResource.value() ?? null) : null,
     );
     public readonly isDetailLoading = computed(() => this.selectedPlanResource.isLoading());
+    public readonly hasDetailLoadError = computed(() => {
+        const error = this.selectedPlanResource.error();
+        return error !== undefined && !(error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.NotFound));
+    });
 
     public loadPlan(id: MealPlanId | null): void {
         if (id !== this.selectedPlanId()) {
@@ -44,6 +49,10 @@ export class MealPlanFacade {
             this.actionErrorKey.set(null);
         }
         this.selectedPlanId.set(id);
+    }
+
+    public retryPlan(): void {
+        this.selectedPlanResource.reload();
     }
 
     public addMealToDiary(meal: MealPlanMeal): void {

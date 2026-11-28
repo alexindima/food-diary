@@ -2,6 +2,7 @@
     <form method="post" class="shopping-list__add-form" [formRoot]="itemForm()" (submit)="onItemFormSubmit($event)">
         <div class="shopping-list__quick-add-row">
             <fd-ui-input
+                #addItemInput
                 class="shopping-list__quick-add-input"
                 floatLabel="always"
                 enterKeyHint="done"
@@ -94,6 +95,7 @@
             </p>
         } @else {
             <fd-ui-button
+                #purchasedToggle
                 class="shopping-list__purchased-toggle"
                 variant="ghost"
                 fill="text"
@@ -114,7 +116,7 @@
     </ng-template>
     <ng-template #itemRow let-item>
         <div class="shopping-list__item-body">
-            <fd-ui-checkbox [checked]="item.isChecked" (checkedChange)="toggleChecked(item.id, $event)">
+            <fd-ui-checkbox [attr.data-item-id]="item.id" [checked]="item.isChecked" (checkedChange)="toggleChecked(item.id, $event)">
                 <span class="shopping-list__item-name">{{ item.name }}</span>
             </fd-ui-checkbox>
             <div class="shopping-list__item-meta" [hidden]="!item.detail">{{ item.detail }}</div>

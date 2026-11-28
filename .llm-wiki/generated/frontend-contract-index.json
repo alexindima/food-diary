@@ -3,11 +3,11 @@
   "summary": {
     "components": 521,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1901,
-    "outputs": 577,
+    "inputs": 1902,
+    "outputs": 576,
     "apiCalls": 343,
     "templatesWithTranslations": 380,
-    "translationKeys": 2350,
+    "translationKeys": 2349,
     "consumerEdges": 1382,
     "consumedComponents": 334,
     "unconsumedComponents": 186
@@ -789,12 +789,7 @@
           "required": true
         }
       ],
-      "outputs": [
-        {
-          "name": "changed",
-          "type": ""
-        }
-      ],
+      "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts"
     },
     {
@@ -5582,7 +5577,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "pageKey",
+          "type": "string",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.spec.ts"
     },
@@ -22596,7 +22597,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/unread-count",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 79,
+      "line": 80,
       "publicMethod": null,
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22608,7 +22609,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 101,
+      "line": 100,
       "publicMethod": null,
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22632,7 +22633,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-all",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 213,
+      "line": 217,
       "publicMethod": "markAllRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22644,7 +22645,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/test/schedule",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 226,
+      "line": 237,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22656,7 +22657,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-status",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 232,
+      "line": 243,
       "publicMethod": "getReadNotificationIds",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22668,7 +22669,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 253,
+      "line": 264,
       "publicMethod": "getNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22680,7 +22681,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 257,
+      "line": 268,
       "publicMethod": "updateNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22692,7 +22693,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscriptions",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 263,
+      "line": 274,
       "publicMethod": "getWebPushSubscriptions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22704,7 +22705,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/config",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 269,
+      "line": 280,
       "publicMethod": "getWebPushConfiguration",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22716,7 +22717,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 275,
+      "line": 286,
       "publicMethod": "upsertWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -22728,7 +22729,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 282,
+      "line": 293,
       "publicMethod": "removeWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -23467,7 +23468,6 @@
         "ADMIN_BILLING.REVENUE.TAX",
         "ADMIN_BILLING.REVENUE.TITLE",
         "ADMIN_BILLING.SCHEDULED_CANCELLATIONS",
-        "ADMIN_BILLING.SUMMARY_ERROR",
         "ADMIN_NAV.BILLING"
       ]
     },
@@ -23655,6 +23655,8 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
       "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_COMMON.LOAD_ERROR",
         "ADMIN_LESSONS.ACTIONS",
         "ADMIN_LESSONS.COMPLETED",
         "ADMIN_LESSONS.PUBLICATION_TITLE",
@@ -25521,10 +25523,12 @@
       "feature": "meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
       "keys": [
+        "ERRORS.LOAD_FAILED_MESSAGE",
         "MEAL_PLANS.BACK",
         "MEAL_PLANS.DETAIL_TOUR.START_TOUR",
         "MEAL_PLANS.DETAIL_UNAVAILABLE",
         "MEAL_PLANS.DIARY_HINT",
+        "MEAL_PLANS.RETRY",
         "MEAL_PLANS.TITLE"
       ]
     },
@@ -28666,7 +28670,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": [
         "retry"
@@ -30115,9 +30119,7 @@
       "inputsUsed": [
         "advice"
       ],
-      "outputsHandled": [
-        "changed"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "DashboardAdviceBlockComponent",
@@ -31456,7 +31458,9 @@
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "pageKey"
+      ],
       "outputsHandled": []
     },
     {
@@ -31684,6 +31688,9 @@
       "occurrences": 4,
       "inputsUsed": [
         "appearance",
+        "ariaControls",
+        "ariaExpanded",
+        "ariaHasPopup",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -33940,7 +33947,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meal-plans",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "appearance",
         "ariaLabel",

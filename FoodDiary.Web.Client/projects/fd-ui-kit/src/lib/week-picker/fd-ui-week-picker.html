@@ -11,6 +11,7 @@
     />
 
     <fd-ui-button
+        #trigger
         #origin="cdkOverlayOrigin"
         cdkOverlayOrigin
         class="fd-ui-week-picker__trigger"
@@ -19,8 +20,11 @@
         variant="secondary"
         fill="outline"
         icon="calendar_today"
+        ariaHasPopup="dialog"
         [fullWidth]="true"
         [ariaLabel]="openCalendarAriaLabel()"
+        [ariaExpanded]="isOpen()"
+        [ariaControls]="isOpen() ? panelId : null"
         (click)="open()"
     >
         <span class="fd-ui-week-picker__trigger-copy">
@@ -57,9 +61,19 @@
     ]"
     (backdropClick)="close()"
     (detach)="close()"
+    (attach)="focusCalendar()"
     (overlayKeydown)="onOverlayKeydown($event)"
 >
-    <section class="fd-ui-week-picker__panel" [attr.aria-label]="panelTitle()">
+    <section
+        #panel
+        cdkTrapFocus
+        class="fd-ui-week-picker__panel"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        [id]="panelId"
+        [attr.aria-label]="panelTitle()"
+    >
         <h2 class="fd-ui-week-picker__panel-title">{{ panelTitle() }}</h2>
         <fd-ui-calendar
             appearance="embedded"

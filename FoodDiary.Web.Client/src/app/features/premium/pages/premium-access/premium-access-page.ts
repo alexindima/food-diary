@@ -288,25 +288,30 @@ export class PremiumAccessPageComponent {
     }
 
     private async initializePageAsync(): Promise<void> {
-        await this.handleCheckoutReturnStateAsync();
+        const confirmedOverview = await this.handleCheckoutReturnStateAsync();
         if (!this.isPageActive()) {
             return;
         }
-        await this.loadOverviewAsync();
+        if (confirmedOverview === null) {
+            await this.loadOverviewAsync();
+        } else if (this.errorMessage() === null && this.showPlans()) {
+            this.loadPlanPrices(confirmedOverview);
+        }
         await this.handlePaddleTransactionCheckoutAsync();
     }
 
-    private async handleCheckoutReturnStateAsync(): Promise<void> {
+    private async handleCheckoutReturnStateAsync(): Promise<BillingOverview | null> {
         const checkoutState = this.route.snapshot.queryParamMap.get('checkout');
         if (checkoutState === null || checkoutState.length === 0) {
-            return;
+            return null;
         }
 
+        let confirmedOverview: BillingOverview | null = null;
         if (checkoutState === 'success') {
             this.checkoutReturnState.set('success');
-            await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
+            confirmedOverview = await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
             if (!this.isPageActive()) {
-                return;
+                return null;
             }
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE'));
         } else if (checkoutState === 'canceled') {
@@ -314,15 +319,14 @@ export class PremiumAccessPageComponent {
             this.toastService.info(this.translateService.instant('PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE'));
         }
 
-        if (!this.isBrowser) {
-            return;
+        if (this.isBrowser) {
+            await this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: {},
+                replaceUrl: true,
+            });
         }
-
-        await this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: {},
-            replaceUrl: true,
-        });
+        return confirmedOverview;
     }
 
     private async loadOverviewAsync(): Promise<boolean> {
@@ -382,17 +386,17 @@ export class PremiumAccessPageComponent {
         return !this.destroyRef.destroyed;
     }
 
-    private async refreshTokenWhenPremiumEntitlementVisibleAsync(): Promise<void> {
+    private async refreshTokenWhenPremiumEntitlementVisibleAsync(): Promise<BillingOverview | null> {
         try {
             for (let attempt = 0; attempt < PremiumAccessPageComponent.CheckoutActivationPollAttempts && this.isPageActive(); attempt++) {
                 const overview = await this.readBillingResponseAsync(this.billingService.getOverview());
                 if (!this.isPageActive()) {
-                    return;
+                    return null;
                 }
                 if (overview.isPremium) {
                     this.applyBillingChange(overview);
-                    await firstValueFrom(this.authService.refreshSession());
-                    return;
+                    await this.refreshAccountAccessAsync(this.overviewRevision);
+                    return overview;
                 }
                 this.overview.set(overview);
 
@@ -405,6 +409,7 @@ export class PremiumAccessPageComponent {
         if (this.isPageActive()) {
             await firstValueFrom(this.authService.refreshSession());
         }
+        return null;
     }
 
     private async delayCheckoutActivationPollAsync(): Promise<void> {

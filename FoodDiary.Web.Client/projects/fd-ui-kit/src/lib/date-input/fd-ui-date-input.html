@@ -35,16 +35,18 @@
             />
             @if (clearAriaLabel() && internalValue() !== null) {
                 <button
+                    #clearButton
                     type="button"
                     class="fd-ui-date-input__suffix"
                     [disabled]="disabled()"
                     [attr.aria-label]="clearAriaLabel()"
-                    (click)="clearValue()"
+                    (click)="clearValue(clearButton)"
                 >
                     <fd-ui-icon name="close" />
                 </button>
             }
             <button
+                #pickerButton
                 type="button"
                 class="fd-ui-date-input__suffix"
                 aria-haspopup="dialog"
@@ -52,7 +54,7 @@
                 [attr.aria-label]="pickerAccessibleName()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
-                (click)="openDatePicker()"
+                (click)="openDatePicker(pickerButton)"
             >
                 <fd-ui-icon name="calendar_today" />
             </button>

@@ -417,10 +417,65 @@ async function readLessonFileAsync(value: Blob | MediaSource | undefined): Promi
     return JSON.parse(json) as unknown;
 }
 
+async function verifyExportAfterDeletionAsync(): Promise<void> {
+    const remaining = { ...LESSON, id: adminId<'lesson'>('remaining'), title: 'Remaining lesson' };
+    const reload = new Subject<AdminLesson[]>();
+    const getAll = vi
+        .fn<AdminLessonsFacade['getAll']>()
+        .mockReturnValueOnce(of([LESSON, remaining]))
+        .mockReturnValueOnce(reload);
+    const remove = vi.fn<AdminLessonsFacade['delete']>().mockReturnValue(of(undefined));
+    await TestBed.configureTestingModule({
+        imports: [AdminLessonsComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: AdminLessonsFacade, useValue: { getAll, delete: remove } },
+            {
+                provide: FdUiDialogService,
+                useValue: {
+                    open: (): { afterClosed: () => Observable<boolean> } => ({ afterClosed: (): Observable<boolean> => of(true) }),
+                },
+            },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminLessonsComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const host = fixture.nativeElement as HTMLElement;
+    const button = host.querySelector<HTMLButtonElement>('header fd-ui-button:first-of-type button');
+    if (button === null) {
+        throw new Error('Missing lesson export button');
+    }
+    const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:lesson-export');
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    expect(button.disabled).toBe(false);
+
+    host.querySelector<HTMLButtonElement>('tbody tr fd-ui-button:last-child button')?.click();
+    fixture.detectChanges();
+    expect(remove).toHaveBeenCalledExactlyOnceWith(LESSON.id);
+    expect(host.textContent).toContain('Loading lessons...');
+    expect(button.disabled).toBe(true);
+    button.click();
+    expect(create).not.toHaveBeenCalled();
+
+    reload.next([remaining]);
+    reload.complete();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(button.disabled).toBe(false);
+    button.click();
+    const file = await readLessonFileAsync(create.mock.calls[0]?.[0]);
+    expect(file).toEqual({ version: 1, lessons: [expect.objectContaining({ title: remaining.title })] });
+}
+
 describe('AdminLessonsComponent filtered JSON export', () => {
     afterEach(() => {
         vi.restoreAllMocks();
     });
+
+    it('blocks export until the list has refreshed after a confirmed deletion', verifyExportAfterDeletionAsync);
 
     it('keeps filtering and paging local and exports all matching lessons', async () => {
         const matching = Array.from({ length: 21 }, (_, index) => ({

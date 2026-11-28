@@ -690,3 +690,22 @@ describe('FdUiSelectComponent delayed keyboard interactions', () => {
         expect(document.activeElement).toBe(control);
     });
 });
+
+it.each([true, false])('owns keyboard activation by the visible option when it is still available=%s', async staysAvailable => {
+    const { fixture, requireElement, component } = await setupSelectAsync();
+    fixture.componentRef.setInput('options', TEST_OPTIONS);
+    fixture.detectChanges();
+    requireElement('.fd-ui-select__control').click();
+    fixture.detectChanges();
+    const menu = document.querySelector<HTMLElement>('[role="listbox"]');
+    if (menu === null) {
+        throw new Error('Expected an open listbox');
+    }
+    const activeId = menu.getAttribute('aria-activedescendant');
+    expect(document.getElementById(activeId ?? '')?.textContent).toContain(TEST_OPTIONS[0].label);
+    const queuedOptions = staysAvailable ? [TEST_OPTIONS[1], TEST_OPTIONS[0]] : [TEST_OPTIONS[1]];
+    fixture.componentRef.setInput('options', queuedOptions);
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    expect(component.value()).toBe(staysAvailable ? TEST_OPTIONS[0].value : null);
+});

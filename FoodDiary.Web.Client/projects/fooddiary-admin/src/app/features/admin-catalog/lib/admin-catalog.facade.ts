@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom, from, mergeMap, type Observable, toArray } from 'rxjs';
+import { firstValueFrom, from, map, mergeMap, type Observable, tap, toArray } from 'rxjs';
 
 import { AdminCatalogService } from '../api/admin-catalog.service';
 import { catalogProductReference, decodeCatalogIngredientSource } from '../models/catalog-ingredient-source';
@@ -77,12 +77,18 @@ export class AdminCatalogFacade {
             this.total.set(items.length);
             const rows = await firstValueFrom(
                 from(items).pipe(
-                    mergeMap(async ({ kind, item }) => {
-                        const result = await firstValueFrom(this.preview(kind, item).pipe(takeUntilDestroyed(this.destroyRef)));
-                        this.completed.update(value => value + 1);
-                        return { ...result, kind, name: item.name };
-                    }, PREVIEW_CONCURRENCY),
+                    mergeMap(
+                        ({ kind, item }) =>
+                            this.preview(kind, item).pipe(
+                                tap(() => {
+                                    this.completed.update(value => value + 1);
+                                }),
+                                map(result => ({ ...result, kind, name: item.name })),
+                            ),
+                        PREVIEW_CONCURRENCY,
+                    ),
                     toArray(),
+                    takeUntilDestroyed(this.destroyRef),
                 ),
             );
             this.file = file;

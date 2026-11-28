@@ -33,7 +33,7 @@
     <div class="fd-grid fd-gap-md" [hidden]="!showAdvices()">
         <p>{{ 'ADMIN_DAILY_ADVICES.TOTAL' | translate: { count: advices().length } }}</p>
         @for (advice of pageItems(); track advice.id) {
-            <fd-admin-daily-advice-group-card [advice]="advice" (changed)="loadAdvices()" />
+            <fd-admin-daily-advice-group-card [advice]="advice" />
         } @empty {
             <p>{{ 'ADMIN_DAILY_ADVICES.EMPTY' | translate }}</p>
         }

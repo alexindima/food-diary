@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -40,6 +40,16 @@ async function renderGroupsAsync(groups: AdviceWireGroup[]): Promise<void> {
 async function expectGroupReloadAsync(groups: AdviceWireGroup[]): Promise<void> {
     fixture.detectChanges();
     http.expectOne(request => request.method === 'GET' && request.url === `${baseUrl}/groups`).flush(groups);
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
+async function failGroupReloadAsync(): Promise<void> {
+    fixture.detectChanges();
+    http.expectOne(request => request.method === 'GET' && request.url === `${baseUrl}/groups`).flush(null, {
+        status: HttpStatusCode.ServiceUnavailable,
+        statusText: 'Service Unavailable',
+    });
     await fixture.whenStable();
     fixture.detectChanges();
 }
@@ -192,6 +202,53 @@ it('removes a confirmed pair only after the delete request succeeds and refreshe
 
     expect(root.textContent).not.toContain('Advice to delete');
     expect(root.textContent).toContain('ADMIN_DAILY_ADVICES.EMPTY');
+});
+
+it('keeps the acknowledged advice edit when the list refresh fails', async () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+    const original = { id, en: 'Previous content', ru: 'Предыдущий совет', weight: 1 };
+    fixture.destroy();
+    await renderGroupsAsync([original]);
+    button('EDIT').click();
+    fixture.detectChanges();
+    fillAdviceControl(root.querySelectorAll<HTMLTextAreaElement>('form textarea')[1], 'Submitted advice');
+    fixture.detectChanges();
+    button('SAVE').click();
+    await fixture.whenStable();
+
+    http.expectOne({ method: 'PUT', url: `${baseUrl}/groups/${id}` }).flush({
+        ...original,
+        en: 'Acknowledged advice',
+        tag: 'confirmed',
+    });
+    await waitForAsyncTasksAsync();
+    await failGroupReloadAsync();
+
+    expect(root.querySelector('fd-admin-load-error')).not.toBeNull();
+    expect(root.querySelector('[lang="en"]')?.textContent).toBe('Acknowledged advice');
+    expect(root.textContent).toContain('confirmed');
+});
+
+it('keeps a confirmed deletion out of the visible list when the refresh fails', async () => {
+    const id = '22222222-2222-4222-8222-222222222222';
+    fixture.destroy();
+    await renderGroupsAsync([
+        { id, en: 'Advice to delete', ru: 'Удаляемый совет', weight: 1 },
+        { id: 'remaining-advice', en: 'Remaining advice', ru: 'Оставшийся совет', weight: 1 },
+    ]);
+    button('DELETE').click();
+    fixture.detectChanges();
+    button('DELETE_BOTH').click();
+    http.expectOne({ method: 'DELETE', url: `${baseUrl}/groups/${id}` }).flush(null, {
+        status: HttpStatusCode.NoContent,
+        statusText: 'No Content',
+    });
+    await failGroupReloadAsync();
+
+    expect(root.querySelector('fd-admin-load-error')).not.toBeNull();
+    expect(root.textContent).not.toContain('Advice to delete');
+    expect(root.textContent).toContain('Remaining advice');
+    expect(root.querySelectorAll('fd-admin-daily-advice-group-card')).toHaveLength(1);
 });
 
 it('does not send a daily advice import after the document leaves while reading the file', async () => {

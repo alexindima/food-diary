@@ -28,7 +28,7 @@ const PORTAL_URL = 'https://portal.example/session';
 const ASYNC_SETTLE_TURNS = 8;
 const CHECKOUT_POLL_DELAY_MS = 1500;
 const CHECKOUT_POLL_ATTEMPTS = 6;
-const DELAYED_ACTIVATION_OVERVIEW_READS = 3;
+const DELAYED_ACTIVATION_OVERVIEW_READS = 2;
 const DEFAULT_PADDLE_CLIENT_TOKEN = environment.paddleClientToken;
 
 type BillingServiceMock = {
@@ -457,7 +457,7 @@ describe('PremiumAccessPageComponent checkout return', () => {
         });
     });
 
-    it('keeps premium overview from checkout polling when follow-up overview reload fails', async () => {
+    it('uses the confirmed checkout overview without requesting it again', async () => {
         queryParams = { checkout: 'success' };
         const premiumOverview = { ...createOverview(), isPremium: true, subscriptionStatus: 'active' };
         billingService.getOverview
@@ -467,9 +467,29 @@ describe('PremiumAccessPageComponent checkout return', () => {
         await settleAsync();
 
         expect(authService.refreshSession).toHaveBeenCalled();
+        expect(billingService.getOverview).toHaveBeenCalledOnce();
         expect(component['overview']()).toEqual(premiumOverview);
-        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_GENERIC');
+        expect(component['errorMessage']()).toBeNull();
         expect(component['isLoading']()).toBe(false);
+    });
+
+    it('keeps the confirmed overview and exposes a retry when account access refresh fails', async () => {
+        queryParams = { checkout: 'success' };
+        const premiumOverview = { ...createOverview(), isPremium: true, subscriptionStatus: 'active' };
+        billingService.getOverview.mockReturnValue(of(premiumOverview));
+        authService.refreshSession.mockReturnValueOnce(of(false));
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(billingService.getOverview).toHaveBeenCalledOnce();
+        expect(component['overview']()).toEqual(premiumOverview);
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_ACCESS_REFRESH');
+
+        await component['retryAfterErrorAsync']();
+
+        expect(billingService.getOverview).toHaveBeenCalledTimes(2);
+        expect(authService.refreshSession).toHaveBeenCalledTimes(2);
+        expect(component['errorMessage']()).toBeNull();
     });
 });
 

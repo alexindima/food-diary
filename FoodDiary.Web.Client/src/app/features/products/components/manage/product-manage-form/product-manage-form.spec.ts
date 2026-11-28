@@ -1564,6 +1564,38 @@ describe('Product editor USDA lookup from a piece product', () => {
     });
 });
 
+describe('Product editor name suggestion ownership', () => {
+    it('cancels the previous product suggestions when reusing the form for another product', async () => {
+        stubScrollIntoView();
+        const editor = await setupComponentAsync();
+        const oldSearch = new Subject<ProductSearchSuggestion[]>();
+        editor.searchSuggestions.mockReturnValueOnce(oldSearch);
+        editor.fixture.componentRef.setInput('product', PRODUCT);
+        editor.fixture.detectChanges();
+        const name = requiredProductInput(editor.el, 'fd-ui-autocomplete input');
+        name.focus();
+        enterProductValue(name, 'Old product query');
+        await vi.waitFor(() => {
+            editor.fixture.detectChanges();
+            expect(oldSearch.observed).toBe(true);
+        });
+
+        editor.fixture.componentRef.setInput('product', SECOND_PRODUCT);
+        editor.fixture.detectChanges();
+        expect(oldSearch.observed).toBe(false);
+        oldSearch.next([USDA_SUGGESTION]);
+        oldSearch.complete();
+        editor.fixture.detectChanges();
+
+        expect(name.value).toBe(SECOND_PRODUCT.name);
+        expect(document.querySelector('button[role="option"] .fd-ui-autocomplete__option-label')).toBeNull();
+        const newDetail = createUsdaFoodDetail(SECOND_USDA_FDC_ID, 'Fresh USDA detail');
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(of(newDetail));
+        await chooseProductSuggestionAsync(editor, SECOND_USDA_SUGGESTION);
+        expect(name.value).toBe(newDetail.description);
+    });
+});
+
 describe('Product editor refresh while USDA lookup is pending', () => {
     it.each([
         ['opening another product', SECOND_PRODUCT],

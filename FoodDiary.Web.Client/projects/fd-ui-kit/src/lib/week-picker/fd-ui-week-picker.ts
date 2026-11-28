@@ -1,5 +1,20 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, computed, inject, input, LOCALE_ID, model, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    type ElementRef,
+    inject,
+    Injector,
+    input,
+    LOCALE_ID,
+    model,
+    signal,
+    viewChild,
+} from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
@@ -9,16 +24,21 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon';
 const WEEK_LAST_DAY_OFFSET = 6;
 const PREVIOUS_WEEK_OFFSET = -7;
 const NEXT_WEEK_OFFSET = 7;
+let nextId = 0;
 
 @Component({
     selector: 'fd-ui-week-picker',
-    imports: [CdkOverlayOrigin, CdkConnectedOverlay, FdUiButtonComponent, FdUiCalendarComponent, FdUiIconComponent],
+    imports: [CdkOverlayOrigin, CdkConnectedOverlay, CdkTrapFocus, FdUiButtonComponent, FdUiCalendarComponent, FdUiIconComponent],
     templateUrl: './fd-ui-week-picker.html',
     styleUrl: './fd-ui-week-picker.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiWeekPickerComponent {
     private readonly defaultLocale = inject(LOCALE_ID);
+    private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
+    private readonly trigger = viewChild.required<FdUiButtonComponent>('trigger');
+    private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
     public readonly value = model<Date>(fdUiStartOfLocalWeek(new Date()));
     public readonly min = input<Date | null>(null);
@@ -32,6 +52,7 @@ export class FdUiWeekPickerComponent {
     public readonly locale = input<string | null>(null);
 
     protected readonly isOpen = signal(false);
+    protected readonly panelId = `fd-ui-week-picker-${nextId++}`;
     protected readonly displayMonth = signal<Date>(this.value());
     protected readonly currentWeek = fdUiStartOfLocalWeek(new Date());
     protected readonly rangeLabel = computed(() => this.formatRange(this.normalizedValue()));
@@ -48,7 +69,28 @@ export class FdUiWeekPickerComponent {
     }
 
     protected close(): void {
+        if (!this.isOpen()) {
+            return;
+        }
+
+        const restoreFocus = this.panel()?.nativeElement.contains(this.document.activeElement) === true;
         this.isOpen.set(false);
+        if (restoreFocus) {
+            this.trigger().focus();
+        }
+    }
+
+    protected focusCalendar(): void {
+        const activeAtAttach = this.document.activeElement;
+        afterNextRender(
+            () => {
+                if (this.isOpen() && this.document.activeElement === activeAtAttach) {
+                    const panel = this.panel()?.nativeElement;
+                    (panel?.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]:not(:disabled)') ?? panel)?.focus();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     protected selectPreviousWeek(): void {
@@ -78,8 +120,9 @@ export class FdUiWeekPickerComponent {
     }
 
     protected onOverlayKeydown(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && this.isOpen()) {
             event.preventDefault();
+            event.stopPropagation();
             this.close();
         }
     }

@@ -40,7 +40,7 @@
         <p>{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="loadReports()" />
-    } @else {
+    } @else if (validPeriod()) {
         <div class="summary">{{ 'ADMIN_MODERATION.TOTAL' | translate }} {{ totalItems() }}</div>
 
         <table class="reports-table" aria-label="Moderation reports" tabindex="0">

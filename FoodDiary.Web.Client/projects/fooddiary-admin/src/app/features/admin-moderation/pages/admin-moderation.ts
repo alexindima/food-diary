@@ -111,6 +111,7 @@ export class AdminModerationComponent {
         () => this.reportsResource.isLoading() || (this.reportsResource.hasValue() && this.result() === null),
     );
     protected readonly loadFailed = computed(() => this.reportsResource.error() !== undefined);
+    protected readonly validPeriod = computed(() => this.request() !== undefined);
     protected readonly statusFilter = linkedSignal(() => this.appliedFilters().status);
     protected readonly draftTargetType = linkedSignal(() => this.appliedFilters().targetType);
     protected readonly draftReporterId = linkedSignal(() => this.appliedFilters().reporterId);

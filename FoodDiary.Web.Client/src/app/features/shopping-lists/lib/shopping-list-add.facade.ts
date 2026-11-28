@@ -2,7 +2,7 @@ import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Observable, Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
@@ -24,6 +24,7 @@ export class ShoppingListAddFacade {
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sessionEvents = inject(SessionEventsService);
+    private readonly scopeChanged = new Subject<void>();
     private scope = '';
     private scopeRevision = 0;
     private name = '';
@@ -139,7 +140,7 @@ export class ShoppingListAddFacade {
             : (this.target() ?? this.chooseTargetAsync(scopeRevision, item));
     }
     private async appendAsync(scopeRevision: number, id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList | null> {
-        const list = await firstValueFrom(this.api.getById(id));
+        const list = await this.readForScopeAsync(this.api.getById(id));
         if (!this.isCurrent(scopeRevision)) {
             return null;
         }
@@ -155,7 +156,10 @@ export class ShoppingListAddFacade {
         );
     }
     private async chooseTargetAsync(scopeRevision: number, item?: ShoppingListItemDto, count?: number): Promise<ShoppingListTarget | null> {
-        const lists = await firstValueFrom(this.api.getSelectionPage());
+        const lists = await this.readForScopeAsync(this.api.getSelectionPage());
+        if (!this.isCurrent(scopeRevision)) {
+            return null;
+        }
         const { ShoppingListPickerComponent } = await import('../dialogs/shopping-list-picker/shopping-list-picker');
         if (!this.isCurrent(scopeRevision)) {
             return null;
@@ -185,6 +189,9 @@ export class ShoppingListAddFacade {
             }
         }
     }
+    private async readForScopeAsync<T>(response: Observable<T>): Promise<T> {
+        return firstValueFrom(response.pipe(takeUntil(this.scopeChanged), takeUntilDestroyed(this.destroyRef)));
+    }
     private async authenticateAsync(): Promise<void> {
         if (!this.auth.isAuthenticated()) {
             const ref = await this.authDialog.openAsync({ mode: 'login', returnUrl: this.router.url, destroyRef: this.destroyRef });
@@ -199,6 +206,7 @@ export class ShoppingListAddFacade {
 
     private replaceScope(): void {
         this.scopeRevision += 1;
+        this.scopeChanged.next();
         this.reset();
         this.busy.set(false);
     }

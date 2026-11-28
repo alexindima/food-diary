@@ -93,6 +93,7 @@ export class AdminLessonsComponent {
             }),
         ),
     );
+    protected readonly canExport = computed(() => !this.isLoading() && !this.loadFailed() && this.filteredItems().length > 0);
     protected readonly pageSize = 20;
     protected readonly requestedPage = computed(() => adminPage(this.page() ?? null) - 1);
     protected readonly pageIndex = computed(() =>
@@ -204,6 +205,9 @@ export class AdminLessonsComponent {
     }
 
     protected exportLessons(): void {
+        if (!this.canExport()) {
+            return;
+        }
         const payload: AdminLessonsImportRequest = {
             version: 1,
             lessons: this.filteredItems().map(lesson => this.toImportLesson(lesson)),

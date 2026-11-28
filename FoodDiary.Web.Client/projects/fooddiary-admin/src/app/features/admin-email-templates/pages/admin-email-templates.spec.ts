@@ -37,7 +37,7 @@ describe('AdminEmailTemplatesComponent', () => {
 
         templatesService.getAll.mockReturnValue(of(templates));
         dialogService.open.mockReturnValue({
-            afterClosed: () => of(false),
+            afterClosed: () => of(undefined),
         });
 
         await TestBed.configureTestingModule({
@@ -68,13 +68,13 @@ describe('AdminEmailTemplatesComponent', () => {
     });
 
     it('should reload templates after successful edit dialog close', () => {
-        const close$ = new Subject<boolean>();
+        const close$ = new Subject<AdminEmailTemplate>();
         dialogService.open.mockReturnValue({
             afterClosed: () => close$.asObservable(),
         });
 
         component['openEdit'](templates[0]);
-        close$.next(true);
+        close$.next(templates[0]);
         close$.complete();
         fixture.detectChanges();
 
@@ -83,13 +83,13 @@ describe('AdminEmailTemplatesComponent', () => {
     });
 
     it('should open create dialog and reload after success', () => {
-        const close$ = new Subject<boolean>();
+        const close$ = new Subject<AdminEmailTemplate>();
         dialogService.open.mockReturnValue({
             afterClosed: () => close$.asObservable(),
         });
 
         component['openCreate']();
-        close$.next(true);
+        close$.next(templates[0]);
         close$.complete();
         fixture.detectChanges();
 
@@ -103,18 +103,18 @@ describe('AdminEmailTemplatesComponent', () => {
 
 describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
     const getAll = vi.fn<AdminEmailTemplatesService['getAll']>();
-    const closed = vi.fn<() => Observable<boolean>>();
+    const closed = vi.fn<() => Observable<AdminEmailTemplate | undefined>>();
 
     beforeEach(async () => {
         vi.resetAllMocks();
-        closed.mockReturnValue(of(false));
+        closed.mockReturnValue(of(undefined));
         await configureRenderedTemplatesAsync(getAll, closed);
     });
 
     it('keeps the newly created template visible when the original load later fails', async () => {
         const oldRequest = new Subject<AdminEmailTemplate[]>();
         const created = { ...templates[0], subject: 'New verification message' };
-        const saved = new Subject<boolean>();
+        const saved = new Subject<AdminEmailTemplate>();
         getAll.mockReturnValueOnce(oldRequest).mockReturnValueOnce(of([created]));
         closed.mockReturnValueOnce(saved);
         const fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
@@ -127,7 +127,7 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
             throw new Error('Missing create template button');
         }
         createButton.click();
-        saved.next(true);
+        saved.next(created);
         saved.complete();
         await fixture.whenStable();
         fixture.detectChanges();
@@ -161,6 +161,40 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
     });
 });
 
+it.each(['created', 'edited'] as const)('keeps a %s template and the known rows if refresh fails', async action => {
+    const other = { ...templates[0], id: adminId<'email-template'>('other'), key: 'welcome', subject: 'Welcome' };
+    const saved = { ...templates[0], subject: 'Confirmed by server' };
+    const initial = action === 'created' ? [other] : [templates[0], other];
+    const getAll = vi
+        .fn<AdminEmailTemplatesService['getAll']>()
+        .mockReturnValueOnce(of(initial))
+        .mockReturnValueOnce(throwError(() => new Error('Offline')))
+        .mockReturnValueOnce(of([saved, other]));
+    await configureRenderedTemplatesAsync(getAll, () => of(saved));
+    const fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const selector = action === 'created' ? 'header button' : 'tbody button';
+    element.querySelector<HTMLButtonElement>(selector)?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const retry = element.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+    expect(retry).not.toBeNull();
+    expect(getAll).toHaveBeenCalledTimes(2);
+    const rows = Array.from(element.querySelectorAll('tbody tr'), row => row.textContent);
+    expect(rows).toHaveLength(2);
+    expect(rows.join(' ')).toContain(other.subject);
+    expect(rows.join(' ')).toContain(saved.subject);
+    expect(rows.join(' ')).not.toContain(templates[0].subject);
+    retry?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(element.querySelector('fd-admin-load-error')).toBeNull();
+    expect(element.querySelector('tbody')?.textContent).toContain(saved.subject);
+});
+
 it('filters locally and clamps the last page after a reload removes records', async () => {
     const matchingTemplates = Array.from({ length: 21 }, (_, index) => ({
         ...templates[0],
@@ -172,7 +206,7 @@ it('filters locally and clamps the last page after a reload removes records', as
         .fn<AdminEmailTemplatesService['getAll']>()
         .mockReturnValueOnce(of([...matchingTemplates, other]))
         .mockReturnValueOnce(of(templates));
-    await configureRenderedTemplatesAsync(getAll, () => of(true));
+    await configureRenderedTemplatesAsync(getAll, () => of(matchingTemplates[20]));
     const harness = await RouterTestingHarness.create('/email-templates?page=2');
     await harness.fixture.whenStable();
     harness.detectChanges();
@@ -198,7 +232,7 @@ it('filters locally and clamps the last page after a reload removes records', as
 
 async function configureRenderedTemplatesAsync(
     getAll: AdminEmailTemplatesService['getAll'],
-    closed: () => Observable<boolean>,
+    closed: () => Observable<AdminEmailTemplate | undefined>,
 ): Promise<void> {
     await TestBed.configureTestingModule({
         imports: [AdminEmailTemplatesComponent],

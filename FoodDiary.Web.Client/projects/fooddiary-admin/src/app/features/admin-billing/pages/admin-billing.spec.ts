@@ -9,7 +9,12 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminBillingService } from '../api/admin-billing.service';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
-import type { AdminBillingPayment, AdminBillingSubscription, AdminBillingWebhookEvent } from '../models/admin-billing.models';
+import type {
+    AdminBillingPayment,
+    AdminBillingRevenueSummary,
+    AdminBillingSubscription,
+    AdminBillingWebhookEvent,
+} from '../models/admin-billing.models';
 import { AdminBillingComponent } from './admin-billing';
 
 const PAGE_SIZE = 20;
@@ -450,18 +455,46 @@ describe('Billing record and revenue failures', () => {
         expect(host.querySelector('fd-admin-load-error')).toBeNull();
         expect(host.querySelector('.admin-billing__summary')).not.toBeNull();
     });
+});
 
-    it('keeps payment rows visible when revenue loading fails independently', async () => {
-        const { billingApi, fixture } = await setupBillingAsync();
-        billingApi.getRevenueSummary.mockReturnValueOnce(throwError(() => new Error('revenue unavailable')));
-        await TestBed.inject(Router).navigateByUrl('/?tab=payments');
-        await fixture.whenStable();
-        fixture.detectChanges();
-        const host = fixture.nativeElement as HTMLElement;
-        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('ADMIN_BILLING.SUMMARY_ERROR');
-        expect(host.querySelector('[aria-label="Billing payments"]')?.textContent).toContain('buyer@example.com');
-        expect(host.querySelector('#billing-revenue-title')).toBeNull();
-    });
+it('retries revenue using the committed period without refreshing the visible records or applying drafts', async () => {
+    const { billingApi, billing, fixture } = await setupBillingAsync();
+    const recovery = new Subject<AdminBillingRevenueSummary>();
+    billingApi.getRevenueSummary.mockReturnValueOnce(throwError(() => new Error('revenue unavailable'))).mockReturnValueOnce(recovery);
+    const router = TestBed.inject(Router);
+    const url = '/?tab=payments&period=custom&from=2026-04-30&to=2026-04-30&search=applied';
+    await router.navigateByUrl(url);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const records = host.querySelector('[aria-label="Billing payments"]');
+    const retry = host.querySelector<HTMLButtonElement>(
+        'section[aria-labelledby="billing-revenue-error-title"] fd-admin-load-error button',
+    );
+    expect(records?.textContent).toContain('buyer@example.com');
+    expect(host.querySelector('#billing-revenue-title')).toBeNull();
+    expect(retry).not.toBeNull();
+    billing.search.set('unapplied search');
+    billing.fromDate.set('2026-01-01');
+    retry?.click();
+    fixture.detectChanges();
+
+    const request = { fromUtc: '2026-04-30T00:00:00Z', toUtc: '2026-05-01T00:00:00Z' };
+    expect(billingApi.getRevenueSummary.mock.calls.slice(1)).toEqual([[request], [request]]);
+    expect(billingApi.getPayments).toHaveBeenCalledOnce();
+    expect(host.querySelector('[aria-label="Billing payments"]')).toBe(records);
+    recovery.next({ ...request, currencies: [] });
+    recovery.complete();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(host.querySelector('#billing-revenue-title')).not.toBeNull();
+    expect(host.querySelector('fd-admin-load-error')).toBeNull();
+    expect(host.querySelector('[aria-label="Billing payments"]')).toBe(records);
+    expect(router.url).toBe(url);
+    expect(billing.search()).toBe('unapplied search');
+    expect(billing.fromDate()).toBe('2026-01-01');
 });
 
 describe('Webhook receipt details', () => {

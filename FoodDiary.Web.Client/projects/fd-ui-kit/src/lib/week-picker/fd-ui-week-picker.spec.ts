@@ -155,3 +155,50 @@ describe('FdUiWeekPickerComponent overlay month and current week', () => {
         expect(fixture.componentInstance.value()).toEqual(pastWeek);
     });
 });
+
+describe('FdUiWeekPickerComponent launcher focus', () => {
+    it.each(['Escape', 'selection', 'outside focus'])('opens a named dialog and preserves focus ownership on %s', async action => {
+        await TestBed.configureTestingModule({ providers: [provideTranslateTesting()] }).compileComponents();
+        const fixture = TestBed.createComponent(FdUiWeekPickerComponent);
+        fixture.componentRef.setInput('value', new Date('2026-07-06T00:00:00'));
+        fixture.componentRef.setInput('max', new Date('2026-08-10T00:00:00'));
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const launcher = host.querySelector<HTMLButtonElement>('button[aria-label="Choose a week"]');
+        const outside = host.querySelector<HTMLButtonElement>('button[aria-label="Previous week"]');
+        if (launcher === null || outside === null) {
+            throw new Error('Expected the week picker controls');
+        }
+        expect(launcher.getAttribute('aria-expanded')).toBe('false');
+        launcher.focus();
+        launcher.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const panel = TestBed.inject(OverlayContainer).getContainerElement().querySelector<HTMLElement>('[role="dialog"]');
+        if (panel === null) {
+            throw new Error('Expected a week picker dialog');
+        }
+        const cell = panel.querySelector<HTMLButtonElement>('[data-date="2026-07-06"][tabindex="0"]');
+        if (cell === null) {
+            throw new Error('Expected the active week');
+        }
+        expect(panel.getAttribute('aria-label')).toBe('Choose a week');
+        expect(launcher.getAttribute('aria-expanded')).toBe('true');
+        expect(launcher.getAttribute('aria-controls')).toBe(panel.id);
+        expect(document.activeElement).toBe(cell);
+
+        if (action === 'selection') {
+            cell.click();
+        } else {
+            if (action === 'outside focus') {
+                outside.focus();
+            }
+            cell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        }
+        fixture.detectChanges();
+        expect(launcher.getAttribute('aria-expanded')).toBe('false');
+        expect(panel.isConnected).toBe(false);
+        expect(document.activeElement).toBe(action === 'outside focus' ? outside : launcher);
+    });
+});

@@ -18,6 +18,7 @@ import { PublicRecipeCatalogComponent } from './public-catalog';
 const facade = { query: vi.fn<PublicRecipesFacade['query']>(), getCategories: vi.fn().mockReturnValue(of([])) };
 const CATALOG_PAGES = 3;
 const CATALOG_ITEMS = 41;
+const CATALOG_FILTER_WAIT_MS = 400;
 beforeEach(() => {
     facade.query
         .mockReset()
@@ -143,6 +144,38 @@ it('does not let a pending stale page or error overwrite a new filter draft', as
     expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
     expect(input.value).toBe('new draft');
 });
+
+it('renders a pending result when the search draft changes only in trailing whitespace', async () => {
+    const pending = new Subject<PageOf<PublicRecipe>>();
+    facade.query.mockReturnValueOnce(pending);
+    const url = '/explore?search=Soup&language=en';
+    const harness = await RouterTestingHarness.create(url);
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate');
+    const input = harness.routeNativeElement?.querySelector<HTMLInputElement>('.catalog-filters input');
+    if (input === null || input === undefined) {
+        throw new Error('Catalog search input was not rendered');
+    }
+
+    vi.useFakeTimers();
+    try {
+        input.value = 'Soup ';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        pending.next({ data: [publicRecipeFixture()], page: 1, limit: 20, totalPages: CATALOG_PAGES, totalItems: CATALOG_ITEMS });
+        pending.complete();
+        await vi.advanceTimersByTimeAsync(CATALOG_FILTER_WAIT_MS);
+        harness.detectChanges();
+
+        expect(router.url).toBe(url);
+        expect(facade.query).toHaveBeenCalledOnce();
+        expect(harness.routeNativeElement?.querySelector('.catalog-grid')?.textContent).toContain('Soup');
+        expect(navigate).not.toHaveBeenCalled();
+    } finally {
+        vi.useRealTimers();
+    }
+});
+
 it('cancels a pending bookmarked page when another URL is applied', async () => {
     const pending = new Subject<PageOf<PublicRecipe>>();
     facade.query.mockReturnValueOnce(pending);
