@@ -33,31 +33,34 @@ const scenarios: AdminAiPromptScenario[] = (['vision', 'text-parse', 'nutrition'
     })),
 );
 
-describe('AdminAiPromptsPageComponent', () => {
-    const api = { getScenarios: vi.fn(), preview: vi.fn(), test: vi.fn(), save: vi.fn() };
-    const discard = vi.fn<() => Observable<boolean>>();
-    beforeEach(async () => {
-        vi.clearAllMocks();
-        discard.mockReset().mockReturnValue(of(false));
-        api.getScenarios.mockReturnValue(of(scenarios));
-        api.preview.mockReturnValue(of({ text: 'Resolved text' }));
-        await TestBed.configureTestingModule({
-            imports: [AdminAiPromptsPageComponent],
-            providers: [
-                provideRouter([]),
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                ...provideTranslateTesting(),
-                { provide: AdminAiPromptsService, useValue: api },
-                {
-                    provide: FdUiDialogService,
-                    useValue: {
-                        open: (): { afterClosed: typeof discard } => ({ afterClosed: discard }),
-                    },
+const promptPageApi = { getScenarios: vi.fn(), preview: vi.fn(), test: vi.fn(), save: vi.fn() };
+const confirmDiscard = vi.fn<() => Observable<boolean>>();
+
+async function setupPromptPageAsync(): Promise<void> {
+    vi.clearAllMocks();
+    confirmDiscard.mockReset().mockReturnValue(of(false));
+    promptPageApi.getScenarios.mockReturnValue(of(scenarios));
+    promptPageApi.preview.mockReturnValue(of({ text: 'Resolved text' }));
+    await TestBed.configureTestingModule({
+        imports: [AdminAiPromptsPageComponent],
+        providers: [
+            provideRouter([]),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            ...provideTranslateTesting(),
+            { provide: AdminAiPromptsService, useValue: promptPageApi },
+            {
+                provide: FdUiDialogService,
+                useValue: {
+                    open: (): { afterClosed: typeof confirmDiscard } => ({ afterClosed: confirmDiscard }),
                 },
-            ],
-        }).compileComponents();
-    });
+            },
+        ],
+    }).compileComponents();
+}
+
+describe('AdminAiPromptsPageComponent', () => {
+    beforeEach(setupPromptPageAsync);
 
     it('shows supported scenarios even without saved templates and requires a preview before applying', async () => {
         const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
@@ -74,8 +77,8 @@ describe('AdminAiPromptsPageComponent', () => {
         await workbench['inspectAsync'](false);
         fixture.detectChanges();
         expect(page['canApply']()).toBe(true);
-        expect(api.save).not.toHaveBeenCalled();
-        expect(api.test).not.toHaveBeenCalled();
+        expect(promptPageApi.save).not.toHaveBeenCalled();
+        expect(promptPageApi.test).not.toHaveBeenCalled();
         page['formModel'].update(value => ({ ...value, promptText: 'A different draft' }));
         fixture.detectChanges();
         expect(page['canApply']()).toBe(false);
@@ -101,20 +104,37 @@ describe('AdminAiPromptsPageComponent', () => {
         fixture.detectChanges();
         expect(draft.value).toBe('Unsaved prompt');
         expect(root.querySelector('nav button[aria-pressed="true"]')?.textContent).toContain('ADMIN_PROMPTS.SCENARIOS_vision');
-        discard.mockReturnValueOnce(of(true));
+        confirmDiscard.mockReturnValueOnce(of(true));
         expect(chooseRussianLocale(fixture).textContent).toContain('Русский');
         expect(root.querySelector('form textarea')).toBeNull();
-        expect(api.save).not.toHaveBeenCalled();
+        expect(promptPageApi.save).not.toHaveBeenCalled();
     });
 
     it('shows a load error and supports retry', () => {
-        api.getScenarios.mockReturnValueOnce(throwError(() => new Error('offline')));
+        promptPageApi.getScenarios.mockReturnValueOnce(throwError(() => new Error('offline')));
         const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-admin-load-error')).not.toBeNull();
         fixture.componentInstance['load']();
         fixture.detectChanges();
         expect(fixture.componentInstance['selected']()?.key).toBe('vision');
+    });
+
+    it('keeps a superseded prompt result out of the editor before the new request starts', () => {
+        const previous = new Subject<AdminAiPromptScenario[]>();
+        const current = scenarios.map(item => ({ ...item, promptText: 'Current published prompt' }));
+        promptPageApi.getScenarios.mockReturnValueOnce(previous).mockReturnValueOnce(of(current));
+        const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
+        fixture.detectChanges();
+        expect(previous.observed).toBe(true);
+
+        fixture.componentInstance['load']();
+        previous.next(scenarios);
+        expect(fixture.componentInstance['items']()).toEqual([]);
+        fixture.detectChanges();
+
+        expect(previous.observed).toBe(false);
+        expect((fixture.nativeElement as HTMLElement).querySelector('.prompt-current pre')?.textContent).toBe('Current published prompt');
     });
 });
 

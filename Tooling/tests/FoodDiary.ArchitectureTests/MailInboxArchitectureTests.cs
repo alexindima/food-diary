@@ -89,6 +89,7 @@ public sealed class MailInboxArchitectureTests {
             ],
             ["Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"] = [],
             ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"] = [
+                "DnsClient", // Resolves DKIM TXT records for DMARC report verification.
                 "MailKit",
                 "Npgsql",
                 "Npgsql.OpenTelemetry",

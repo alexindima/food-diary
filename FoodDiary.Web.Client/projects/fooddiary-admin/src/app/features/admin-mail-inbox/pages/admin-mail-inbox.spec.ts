@@ -195,6 +195,17 @@ describe('admin inbox recipient preferences', () => {
             expect.objectContaining({ recipient: 'support@fooddiary.club', excludeRecipients: undefined }),
         );
 
+        requireNamedButton(element, 'ADMIN_MAIL_INBOX.MAIN_INBOX').click();
+        await renderInboxAsync(harness);
+        expect(router.parseUrl(router.url).queryParamMap.has('recipient')).toBe(false);
+        await harness.navigateByUrl(`${INBOX}?category=all`);
+        await renderInboxAsync(harness);
+        expect(getMessagePage).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ excludeRecipients: ['support@fooddiary.club'] }),
+        );
+
         await harness.navigateByUrl(`${INBOX}?id=report-1`);
         await renderInboxAsync(harness);
         expect(getMessagePage).toHaveBeenLastCalledWith(
@@ -239,6 +250,7 @@ describe('admin inbox requests', () => {
         });
         expect(previous.observed).toBe(true);
         expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ unread: false }));
+        expect(attach.mock.lastCall?.[0].read()).toMatchObject({ loading: true, items: [], totalItems: 0 });
         await harness.navigateByUrl(`${INBOX}?category=dmarc-report&search=Current&fromAddress=sender@example.test`);
         expect(previous.observed).toBe(false);
         filtered.next({
@@ -390,6 +402,7 @@ describe('admin inbox navigation', () => {
         for (const [label, categoryFilter] of [
             ['ADMIN_MAIL_INBOX.MAIL', 'general'],
             ['ADMIN_MAIL_INBOX.ALL', ''],
+            ['ADMIN_MAIL_INBOX.DEFAULT_CATEGORY', ''],
         ]) {
             trigger?.click();
             await renderInboxAsync(harness);
@@ -399,6 +412,7 @@ describe('admin inbox navigation', () => {
             await renderInboxAsync(harness);
             expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ category: categoryFilter }));
         }
+        expect(router.parseUrl(router.url).queryParamMap.has('category')).toBe(false);
     });
 
     it('restores a bookmarked page that no longer exists, then resets it when choosing the read count', async () => {
@@ -444,4 +458,27 @@ describe('admin inbox screen state', () => {
         await harness.navigateByUrl('/exit');
         expect(detach).toHaveBeenCalledOnce();
     });
+});
+
+it('reports no cached rows after a list error and reconciles a previously opened message', async () => {
+    const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(vi.fn());
+    const restored = { ...currentMail, readAtUtc: currentMail.receivedAtUtc };
+    const getMessagePage = vi
+        .fn<AdminMailInboxFacade['getMessagePage']>()
+        .mockReturnValueOnce(of({ items: [currentMail], totalItems: 1 }))
+        .mockReturnValueOnce(throwError(() => new Error('Offline')))
+        .mockReturnValueOnce(of({ items: [restored], totalItems: 1 }));
+    const { element, harness, open } = await setupInboxAsync(INBOX, getMessagePage, { attach });
+    const screen = attach.mock.lastCall?.[0];
+    element.querySelector<HTMLTableRowElement>('tbody tr')?.click();
+    const opened = open.mock.lastCall?.[1].data;
+    expect(opened?.id).toBe(currentMail.id);
+
+    requireNamedButton(element, 'Refresh').click();
+    await renderInboxAsync(harness);
+    expect(screen?.read()).toMatchObject({ error: true, loading: false, items: [], totalItems: 0 });
+
+    opened?.onRead?.(currentMail.id, currentMail.receivedAtUtc);
+    await renderInboxAsync(harness);
+    expect(screen?.read()).toMatchObject({ error: false, items: [{ id: currentMail.id, readAtUtc: restored.readAtUtc }] });
 });

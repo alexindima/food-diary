@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -112,6 +112,25 @@ describe('Product list route query ownership', () => {
 });
 
 describe('Product list route query equivalence', () => {
+    it('emits the initial URL query before route inputs bind', async () => {
+        TestBed.configureTestingModule({ providers: [ProductListRouteStateFacade] });
+        const harness = await RouterTestingHarness.create();
+        await harness.navigateByUrl('/products?search=tea', ListRoute);
+        const state = TestBed.inject(ProductListRouteStateFacade);
+        const onChange = vi.fn();
+        const subscription = state.changes.subscribe(onChange);
+
+        TestBed.tick();
+        expect(onChange).toHaveBeenCalledExactlyOnceWith({ ...DEFAULT_QUERY, search: 'tea' });
+
+        const bound = { ...DEFAULT_QUERY, search: 'coffee' };
+        state.bind(signal(bound));
+        TestBed.tick();
+        expect(onChange).toHaveBeenCalledTimes(2);
+        expect(onChange).toHaveBeenLastCalledWith(bound);
+        subscription.unsubscribe();
+    });
+
     it('skips navigation when the requested query is canonically equivalent to the committed query', async () => {
         const harness = await RouterTestingHarness.create();
         const page = await harness.navigateByUrl('/products?search=tea&page=2&types=Fruit,Meat&campaign=qa', ListRoute);

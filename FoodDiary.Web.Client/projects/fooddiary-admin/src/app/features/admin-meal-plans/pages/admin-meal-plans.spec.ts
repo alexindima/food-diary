@@ -129,6 +129,7 @@ describe('Meal plan list and editor lifecycle', () => {
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('[role="status"]:not([hidden])')?.textContent).toContain('ADMIN_MEAL_PLANS.LOADING');
         expect(host.querySelector('article')).toBeNull();
+        expect(fixture.componentInstance['plans']()).toEqual([]);
 
         pending.error(new Error('list unavailable'));
         await settlePlansAsync();

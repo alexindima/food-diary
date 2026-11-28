@@ -15,11 +15,12 @@ export class AdminDailyAdvicesFacade {
     private readonly advicesResource = rxResource({
         params: this.reloadVersion,
         stream: () => this.api.getAll(),
+        defaultValue: [],
     });
     private readonly cachedAdvices = linkedSignal({
         source: this.advicesResource.snapshot,
         computation: (snapshot, previous): AdminDailyAdvice[] =>
-            snapshot.status === 'resolved' ? (snapshot.value ?? []) : (previous?.value ?? []),
+            snapshot.status === 'resolved' ? snapshot.value : (previous?.value ?? []),
     });
     public readonly advices = this.cachedAdvices.asReadonly();
     public readonly loading = this.advicesResource.isLoading;

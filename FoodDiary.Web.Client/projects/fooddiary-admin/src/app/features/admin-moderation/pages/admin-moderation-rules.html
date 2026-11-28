@@ -1,11 +1,12 @@
 <div class="admin-moderation-rules">
     <fd-admin-moderation-navigation active="/moderation/rules" />
 
+    @let state = editor();
     @if (loading()) {
         <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="load()" />
-    } @else if (policy(); as current) {
+    } @else if (state.policy; as current) {
         <section>
             <h2>{{ 'ADMIN_RECIPE_MODERATION.ACTIVE_RULES' | translate }}</h2>
             <p>
@@ -19,14 +20,14 @@
                 <fd-admin-recipe-moderation-rule-categories
                     [legend]="'ADMIN_RECIPE_MODERATION.TEXT_REVIEW' | translate"
                     [options]="textCategoryOptions"
-                    [selected]="textCategories()"
+                    [selected]="state.draft.textReviewCategories"
                     [disabled]="saving()"
                     (categoryChange)="setCategory('text', $event.category, $event.selected)"
                 />
                 <fd-admin-recipe-moderation-rule-categories
                     [legend]="'ADMIN_RECIPE_MODERATION.IMAGE_REVIEW' | translate"
                     [options]="imageCategoryOptions"
-                    [selected]="imageCategories()"
+                    [selected]="state.draft.imageReviewCategories"
                     [disabled]="saving()"
                     (categoryChange)="setCategory('image', $event.category, $event.selected)"
                 />
@@ -39,7 +40,7 @@
                     [minimum]="0"
                     [maximum]="100"
                     [step]="1"
-                    [value]="samplePercent()"
+                    [value]="state.draft.mistralSamplePercent"
                     [disabled]="saving()"
                     (valueChange)="setSamplePercent($event)"
                 />

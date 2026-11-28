@@ -12,7 +12,11 @@ import { AdminModerationNavigationComponent } from '../components/admin-moderati
 import { AdminRecipeModerationRuleCategoriesComponent } from '../components/admin-recipe-moderation-rule-categories';
 import { AdminRecipeModerationRuleHistoryComponent } from '../components/admin-recipe-moderation-rule-history';
 import { AdminRecipeModerationFacade } from '../lib/admin-recipe-moderation.facade';
-import type { AdminRecipeModerationPolicy, RecipeModerationPolicyId } from '../models/admin-recipe-moderation.data';
+import type {
+    AdminRecipeModerationPolicy,
+    AdminRecipeModerationRules,
+    RecipeModerationPolicyId,
+} from '../models/admin-recipe-moderation.data';
 
 const COMMON_CATEGORIES = [
     { value: 'self-harm', label: 'ADMIN_RECIPE_MODERATION.CATEGORIES.SELF_HARM' },
@@ -35,6 +39,8 @@ const TEXT_CATEGORIES = [
 ] as const;
 
 const MAX_SAMPLE_PERCENT = 100;
+type RulesDraft = Omit<AdminRecipeModerationRules, 'mistralSamplePercent'> & { mistralSamplePercent: number | null };
+const EMPTY_DRAFT: RulesDraft = { textReviewCategories: [], imageReviewCategories: [], mistralSamplePercent: null };
 
 @Component({
     selector: 'fd-admin-moderation-rules',
@@ -64,48 +70,55 @@ export class AdminModerationRulesComponent {
     protected readonly categoryLabels: Record<string, string> = Object.fromEntries(
         TEXT_CATEGORIES.map(option => [option.value, option.label]),
     );
-    protected readonly policy = computed(() => (this.policyResource.hasValue() ? this.policyResource.value() : null));
-    protected readonly textCategories = linkedSignal(() => this.policy()?.active.rules.textReviewCategories ?? []);
-    protected readonly imageCategories = linkedSignal(() => this.policy()?.active.rules.imageReviewCategories ?? []);
-    protected readonly samplePercent = linkedSignal(() => this.policy()?.active.rules.mistralSamplePercent ?? null);
+    private readonly policy = computed(() => (this.policyResource.hasValue() ? this.policyResource.value() : null));
+    protected readonly editor = linkedSignal(() => {
+        const policy = this.policy();
+        return { policy, draft: policy?.active.rules ?? EMPTY_DRAFT };
+    });
     protected readonly loading = this.policyResource.isLoading;
     protected readonly loadFailed = computed(() => this.policyResource.error() !== undefined);
     protected readonly saving = signal(false);
     protected readonly updateFailed = signal(false);
     protected readonly updated = signal(false);
     protected readonly validSample = computed(() => {
-        const amount = this.samplePercent();
+        const amount = this.editor().draft.mistralSamplePercent;
         return amount !== null && Number.isInteger(amount) && amount >= 0 && amount <= MAX_SAMPLE_PERCENT;
     });
 
-    protected readonly validRules = computed(
-        () => this.validSample() && this.textCategories().length > 0 && this.imageCategories().length > 0,
-    );
+    protected readonly validRules = computed(() => {
+        const { draft } = this.editor();
+        return this.validSample() && draft.textReviewCategories.length > 0 && draft.imageReviewCategories.length > 0;
+    });
 
     protected load(): void {
         this.policyResource.reload();
     }
 
     protected setCategory(kind: 'text' | 'image', category: string, selected: boolean): void {
-        const values = kind === 'text' ? this.textCategories : this.imageCategories;
-        values.update(items => (selected ? [...items, category] : items.filter(item => item !== category)));
+        const field = kind === 'text' ? 'textReviewCategories' : 'imageReviewCategories';
+        this.editor.update(editor => {
+            const items = editor.draft[field];
+            const next = selected ? [...items, category] : items.filter(item => item !== category);
+            return { ...editor, draft: { ...editor.draft, [field]: next } };
+        });
         this.updated.set(false);
     }
 
     protected setSamplePercent(value: FdUiInputValue): void {
-        this.samplePercent.set(value === null || value === '' ? null : Number(value));
+        const mistralSamplePercent = value === null || value === '' ? null : Number(value);
+        this.editor.update(editor => ({ ...editor, draft: { ...editor.draft, mistralSamplePercent } }));
         this.updated.set(false);
     }
 
     protected publish(): void {
-        const samplePercent = this.samplePercent();
+        const { textReviewCategories, imageReviewCategories, mistralSamplePercent: samplePercent } = this.editor().draft;
         if (samplePercent === null || this.saving() || !this.validRules()) {
             return;
         }
         this.save(
             this.moderation.publishPolicy({
-                textReviewCategories: this.textCategories(),
-                imageReviewCategories: this.imageCategories(),
+                textReviewCategories,
+                imageReviewCategories,
                 mistralSamplePercent: samplePercent,
             }),
         );

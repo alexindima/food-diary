@@ -497,6 +497,38 @@ it('retries revenue using the committed period without refreshing the visible re
     expect(billing.fromDate()).toBe('2026-01-01');
 });
 
+it('keeps the neighbouring billing summaries empty while records load or the period is invalid', async () => {
+    const api = createBillingServiceMock();
+    const records = new Subject<SubscriptionsPage>();
+    const revenue = new Subject<AdminBillingRevenueSummary>();
+    api.getSubscriptions.mockReturnValue(records);
+    api.getRevenueSummary.mockReturnValue(revenue);
+    const { billing, fixture } = await setupBillingAsync(api);
+    expect(billing.revenueSummary()).toBeNull();
+    expect(billing.cancellations()).toEqual([]);
+    expect(billing.cancellationReasons()).toEqual([]);
+    expect(billing.cancellationFeedbackCount()).toBe(0);
+    expect(billing.webhookEvents()).toEqual([]);
+    expect(billing.totalPages()).toBe(1);
+    billing.retryRevenue();
+
+    records.next({ ...subscriptionsPage, items: [], totalPages: 0, totalItems: 0 });
+    records.complete();
+    revenue.next({ fromUtc: '2026-04-01T00:00:00Z', toUtc: '2026-05-01T00:00:00Z', currencies: [] });
+    revenue.complete();
+    await fixture.whenStable();
+    expect(billing.totalPages()).toBe(1);
+    expect(billing.totalItems()).toBe(0);
+
+    await TestBed.inject(Router).navigateByUrl('/?period=custom&from=2026-04-30&to=2026-04-01');
+    await fixture.whenStable();
+    billing.retryRecords();
+    billing.retryRevenue();
+    fixture.detectChanges();
+    expect(api.getSubscriptions).toHaveBeenCalledOnce();
+    expect(api.getRevenueSummary).toHaveBeenCalledOnce();
+});
+
 describe('Webhook receipt details', () => {
     it('prefers receipt time for an unprocessed retry and falls back to creation time on legacy records', async () => {
         const api = createBillingServiceMock();

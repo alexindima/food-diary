@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { getDebugNode } from '@angular/core';
+import { afterNextRender, getDebugNode } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,6 +12,7 @@ const AUGUST_INDEX = 7;
 const CURRENT_WEEK_DAY = 10;
 const PREVIOUS_WEEK_DAY = 3;
 const NEXT_WEEK_DAY = 17;
+const PAST_WEEK = new Date('2026-07-06T00:00:00');
 
 describe('FdUiWeekPickerComponent', () => {
     let fixture: ComponentFixture<FdUiWeekPickerComponent>;
@@ -74,32 +75,35 @@ describe('FdUiWeekPickerComponent', () => {
     });
 });
 
+function openCalendar(fixture: ComponentFixture<FdUiWeekPickerComponent>): HTMLElement {
+    const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="Choose a week"]');
+    trigger?.click();
+    fixture.detectChanges();
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    const panel = overlay.querySelector<HTMLElement>('.fd-ui-week-picker__panel');
+    if (panel === null) {
+        throw new Error('Expected a rendered week picker panel');
+    }
+    return panel;
+}
+
+async function setupPastWeekAsync(): Promise<ComponentFixture<FdUiWeekPickerComponent>> {
+    await TestBed.configureTestingModule({ providers: [provideTranslateTesting()] }).compileComponents();
+    const fixture = TestBed.createComponent(FdUiWeekPickerComponent);
+    fixture.componentRef.setInput('value', PAST_WEEK);
+    fixture.componentRef.setInput('max', new Date('2026-08-10T00:00:00'));
+    fixture.detectChanges();
+    return fixture;
+}
+
 describe('FdUiWeekPickerComponent overlay month and current week', () => {
     let fixture: ComponentFixture<FdUiWeekPickerComponent>;
-    const pastWeek = new Date('2026-07-06T00:00:00');
-
     beforeEach(async () => {
-        await TestBed.configureTestingModule({ providers: [provideTranslateTesting()] }).compileComponents();
-        fixture = TestBed.createComponent(FdUiWeekPickerComponent);
-        fixture.componentRef.setInput('value', pastWeek);
-        fixture.componentRef.setInput('max', new Date('2026-08-10T00:00:00'));
-        fixture.detectChanges();
+        fixture = await setupPastWeekAsync();
     });
 
-    function open(): HTMLElement {
-        const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="Choose a week"]');
-        trigger?.click();
-        fixture.detectChanges();
-        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
-        const panel = overlay.querySelector<HTMLElement>('.fd-ui-week-picker__panel');
-        if (panel === null) {
-            throw new Error('Expected a rendered week picker panel');
-        }
-        return panel;
-    }
-
     it('moves across months without selecting a week and closes with Escape after an unrelated key', () => {
-        const panel = open();
+        const panel = openCalendar(fixture);
         panel.querySelector<HTMLButtonElement>('button[aria-label="CALENDAR.NEXT_MONTH"]')?.click();
         fixture.detectChanges();
         expect(panel.querySelector('.fd-ui-calendar__title')?.textContent.trim()).toBe('August 2026');
@@ -115,12 +119,12 @@ describe('FdUiWeekPickerComponent overlay month and current week', () => {
 
         expect(panel.isConnected).toBe(false);
         expect(escape.defaultPrevented).toBe(true);
-        expect(fixture.componentInstance.value()).toEqual(pastWeek);
+        expect(fixture.componentInstance.value()).toEqual(PAST_WEEK);
     });
 
     it('returns to the current week from inside the calendar and emits a Monday', () => {
         const additional = TestBed.createComponent(FdUiWeekPickerComponent);
-        additional.componentRef.setInput('value', pastWeek);
+        additional.componentRef.setInput('value', PAST_WEEK);
         additional.detectChanges();
         const host = additional.nativeElement as HTMLElement;
         const changed = vi.fn();
@@ -140,7 +144,7 @@ describe('FdUiWeekPickerComponent overlay month and current week', () => {
     });
 
     it('keeps the week selection and calendar open when the embedded model is reset', () => {
-        const panel = open();
+        const panel = openCalendar(fixture);
         const renderedCalendar = panel.querySelector('fd-ui-calendar');
         if (renderedCalendar === null) {
             throw new Error('Expected an embedded calendar');
@@ -152,7 +156,41 @@ describe('FdUiWeekPickerComponent overlay month and current week', () => {
         fixture.detectChanges();
 
         expect(panel.isConnected).toBe(true);
-        expect(fixture.componentInstance.value()).toEqual(pastWeek);
+        expect(fixture.componentInstance.value()).toEqual(PAST_WEEK);
+    });
+});
+
+describe('FdUiWeekPickerComponent focus during calendar attachment', () => {
+    it('focuses the dialog when the selected week is outside the allowed range', async () => {
+        const fixture = await setupPastWeekAsync();
+        fixture.componentRef.setInput('min', new Date('2026-08-03T00:00:00'));
+        fixture.detectChanges();
+
+        const panel = openCalendar(fixture);
+
+        expect(panel.querySelector('[role="gridcell"][tabindex="0"]:disabled')).not.toBeNull();
+        expect(document.activeElement).toBe(panel);
+        expect(fixture.componentInstance.value()).toEqual(PAST_WEEK);
+    });
+
+    it('preserves a focus move made by the host during calendar attachment', async () => {
+        const fixture = await setupPastWeekAsync();
+        const outside = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="Previous week"]');
+        if (outside === null) {
+            throw new Error('Expected a focusable week navigation button');
+        }
+        TestBed.runInInjectionContext(() =>
+            afterNextRender({
+                write: () => {
+                    outside.focus();
+                },
+            }),
+        );
+
+        const panel = openCalendar(fixture);
+
+        expect(panel.isConnected).toBe(true);
+        expect(document.activeElement).toBe(outside);
     });
 });
 

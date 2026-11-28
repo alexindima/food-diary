@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationStart, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, tap, throwError } from 'rxjs';
 import { beforeEach, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -156,6 +157,63 @@ it('returns an old log deep link to the log tab even without a source query para
     );
     const fixture = await RouterTestingHarness.create('/bugs/legacy-log');
     expect(fixture.routeNativeElement?.querySelector('a[href^="/bugs"]')?.getAttribute('href')).toBe('/bugs?source=logs');
+});
+
+it('keeps the requested log source when a report deep link has no matching row', async () => {
+    const fixture = await RouterTestingHarness.create('/bugs/missing-report?source=logs');
+
+    expect(getPage).toHaveBeenCalledExactlyOnceWith({ page: 1, limit: 25, id: 'missing-report' });
+    expect(fixture.routeNativeElement?.querySelector('fd-ui-tabs button[aria-pressed="true"]')?.textContent).toContain(
+        'ADMIN_BUGS.TAB_LOGS',
+    );
+    expect(fixture.routeNativeElement?.querySelector('a[href="/bugs?source=logs"]')).not.toBeNull();
+});
+
+it('waits for a detail ID before requesting a specific report', () => {
+    const route = TestBed.inject(ActivatedRoute);
+    vi.spyOn(route, 'routeConfig', 'get').mockReturnValue({ path: ':id' });
+    const fixture = TestBed.createComponent(AdminBugsPageComponent);
+    fixture.detectChanges();
+
+    expect(getPage).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ page: 1, source: 'email' }));
+    expect(getPage.mock.calls[0]?.[0]).not.toHaveProperty('id');
+
+    fixture.componentRef.setInput('id', 'bound-report');
+    fixture.detectChanges();
+    expect(getPage).toHaveBeenLastCalledWith({ page: 1, limit: 25, id: 'bound-report' });
+});
+
+it('ignores a queued pagination event while navigation to another page is active', async () => {
+    const totalItems = 51;
+    const queuedPageIndex = 2;
+    getPage.mockReturnValue(of({ items: [], totalItems, isConfigured: true, latestAudit: null }));
+    const fixture = await RouterTestingHarness.create('/bugs');
+    const router = TestBed.inject(Router);
+    const next = [...(fixture.routeNativeElement?.querySelectorAll<HTMLButtonElement>('fd-ui-pagination button') ?? [])].find(
+        button => button.textContent.trim() === 'PAGINATION.NEXT',
+    );
+    const pager = fixture.routeDebugElement?.query(By.css('fd-ui-pagination'));
+    if (next === undefined || pager === undefined) {
+        throw new Error('Missing the next page action in the bug journal');
+    }
+    const duringNavigation = firstValueFrom(
+        router.events.pipe(
+            filter(event => event instanceof NavigationStart),
+            tap(() => {
+                expect(router.currentNavigation()).not.toBeNull();
+                pager.triggerEventHandler('pageIndexChange', queuedPageIndex);
+            }),
+        ),
+    );
+
+    next.click();
+    await duringNavigation;
+    await fixture.fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(router.url).toBe('/bugs?page=2');
+    expect(getPage).toHaveBeenCalledTimes(2);
+    expect(getPage).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
 });
 
 it('retries a failed journal with applied filters and displays the returned report', async () => {

@@ -16,8 +16,7 @@ type LayoutCandidate = {
 };
 
 type SearchState = {
-    assignments: readonly LayoutCandidate[];
-    occupiedSlots: ReadonlySet<number>;
+    slotIndices: readonly number[];
     cost: number;
 };
 
@@ -93,24 +92,27 @@ export function optimizeAiPhotoAnnotationLayout(
     const ordered = annotations
         .map((annotation, index) => ({ annotation, index }))
         .sort((left, right) => compareByConstraint(left.annotation, right.annotation));
-    let beam: SearchState[] = [{ assignments: [], occupiedSlots: new Set(), cost: 0 }];
+    const candidates = ordered.map(({ annotation }) =>
+        slots.map(slot => createCandidate(annotation, slot, annotations, allowCardsOutsidePhoto)),
+    );
+    let beam: SearchState[] = [{ slotIndices: [], cost: 0 }];
 
-    for (const { annotation } of ordered) {
-        const candidates = slots.map(slot => createCandidate(annotation, slot, annotations, allowCardsOutsidePhoto));
+    for (const [depth, options] of candidates.entries()) {
+        // Each beam state reuses the same candidate pairs at this depth.
+        const previousOptions = candidates.slice(0, depth);
+        const costsBySlot = options.map(candidate =>
+            previousOptions.map(previous => previous.map(other => calculatePairCost(candidate, other))),
+        );
         const next: SearchState[] = [];
         for (const state of beam) {
-            for (const [slotIndex, candidate] of candidates.entries()) {
-                if (state.occupiedSlots.has(slotIndex)) {
+            for (const [slotIndex, candidate] of options.entries()) {
+                if (state.slotIndices.includes(slotIndex)) {
                     continue;
                 }
 
-                const pairCost = calculatePairCost(candidate, state.assignments);
-                const assignments = [...state.assignments, candidate];
-                const occupiedSlots = new Set(state.occupiedSlots);
-                occupiedSlots.add(slotIndex);
+                const pairCost = calculateStatePairCost(state.slotIndices, costsBySlot[slotIndex]);
                 next.push({
-                    assignments,
-                    occupiedSlots,
+                    slotIndices: [...state.slotIndices, slotIndex],
                     cost: state.cost + candidate.baseCost + pairCost,
                 });
             }
@@ -127,11 +129,19 @@ export function optimizeAiPhotoAnnotationLayout(
     }
 
     const positioned = [...annotations];
-    best.assignments.forEach((candidate, order) => {
+    best.slotIndices.forEach((slotIndex, order) => {
         const { annotation, index } = ordered[order];
-        positioned[index] = positionAnnotation(annotation, candidate);
+        positioned[index] = positionAnnotation(annotation, candidates[order][slotIndex]);
     });
     return positioned;
+}
+
+function calculateStatePairCost(slotIndices: readonly number[], costs: ReadonlyArray<readonly number[]>): number {
+    let total = 0;
+    for (let index = 0; index < slotIndices.length; index++) {
+        total += costs[index][slotIndices[index]];
+    }
+    return total;
 }
 
 function positionAnnotation(annotation: AiPhotoAnnotation, candidate: LayoutCandidate): AiPhotoAnnotation {
@@ -314,21 +324,19 @@ function createCandidate(
     };
 }
 
-function calculatePairCost(candidate: LayoutCandidate, assignments: readonly LayoutCandidate[]): number {
+function calculatePairCost(candidate: LayoutCandidate, existing: LayoutCandidate): number {
     let cost = 0;
-    for (const existing of assignments) {
-        if (rectsOverlap(candidate.card, existing.card)) {
-            cost += WEIGHT_CARD_OVERLAP;
-        }
-        if (segmentsIntersect(candidate.connector[0], candidate.connector[1], existing.connector[0], existing.connector[1])) {
-            cost += WEIGHT_CONNECTOR_CROSSING;
-        }
-        if (segmentIntersectsRect(candidate.connector[0], candidate.connector[1], existing.card)) {
-            cost += WEIGHT_CONNECTOR_CARD_INTERSECTION;
-        }
-        if (segmentIntersectsRect(existing.connector[0], existing.connector[1], candidate.card)) {
-            cost += WEIGHT_CONNECTOR_CARD_INTERSECTION;
-        }
+    if (rectsOverlap(candidate.card, existing.card)) {
+        cost += WEIGHT_CARD_OVERLAP;
+    }
+    if (segmentsIntersect(candidate.connector[0], candidate.connector[1], existing.connector[0], existing.connector[1])) {
+        cost += WEIGHT_CONNECTOR_CROSSING;
+    }
+    if (segmentIntersectsRect(candidate.connector[0], candidate.connector[1], existing.card)) {
+        cost += WEIGHT_CONNECTOR_CARD_INTERSECTION;
+    }
+    if (segmentIntersectsRect(existing.connector[0], existing.connector[1], candidate.card)) {
+        cost += WEIGHT_CONNECTOR_CARD_INTERSECTION;
     }
 
     return cost;

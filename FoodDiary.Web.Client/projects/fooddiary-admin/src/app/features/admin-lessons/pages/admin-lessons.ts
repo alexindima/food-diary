@@ -54,6 +54,7 @@ export class AdminLessonsComponent {
     private readonly lessonsResource = rxResource({
         params: this.reloadVersion,
         stream: () => this.lessonsFacade.getAll(),
+        defaultValue: [],
     });
 
     protected readonly lessons = linkedSignal({
@@ -62,7 +63,7 @@ export class AdminLessonsComponent {
             if (snapshot.status === 'loading') {
                 return previous?.value ?? [];
             }
-            return snapshot.status === 'resolved' ? (snapshot.value ?? []) : [];
+            return snapshot.status === 'resolved' ? snapshot.value : [];
         },
     }).asReadonly();
     protected readonly isLoading = this.lessonsResource.isLoading;
@@ -111,7 +112,7 @@ export class AdminLessonsComponent {
 
     public constructor() {
         effect(() => {
-            if (this.lessonsResource.hasValue()) {
+            if (!this.isLoading() && !this.loadFailed()) {
                 restoreAdminPage(this.router, this.route, this.pageIndex() + 1, {
                     totalItems: this.filteredItems().length,
                     pageSize: this.pageSize,

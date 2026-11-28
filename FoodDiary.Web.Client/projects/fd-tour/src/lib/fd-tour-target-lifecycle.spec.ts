@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdTourService } from './fd-tour.service';
 import { FdTourHostComponent } from './fd-tour-host';
+import { FD_TOUR_STORAGE } from './fd-tour-storage';
 import { FdTourTargetRegistry } from './fd-tour-target-registry';
 
 describe('Tour target preparation lifecycle', () => {
@@ -88,6 +89,70 @@ describe('Tour target preparation lifecycle', () => {
         expect(service.activeTour()?.id).toBe('replacement');
         expect(service.target()?.id).toBe('ready-target');
         expect(cleanup).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Page-owned tours', () => {
+    const definition = {
+        id: 'page-owned-editor-tour',
+        version: 1,
+        steps: [{ id: 'editor', target: '#page-owned-target', title: 'Editor help' }],
+    };
+    let fixture: ReturnType<typeof TestBed.createComponent<FdTourHostComponent>>;
+    let service: FdTourService;
+    let location: Location;
+    let target: HTMLButtonElement;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [FdTourHostComponent] });
+        fixture = TestBed.createComponent(FdTourHostComponent);
+        service = TestBed.inject(FdTourService);
+        location = TestBed.inject(Location);
+        location.go('/editor', 'filter=liked');
+        target = document.createElement('button');
+        target.id = 'page-owned-target';
+        document.body.append(target);
+    });
+
+    afterEach(() => {
+        service.close();
+        fixture.destroy();
+        target.remove();
+    });
+
+    it('starts from an idle host and dismisses on page change without recording completion', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        fixture.componentRef.setInput('pageKey', '/editor');
+        fixture.detectChanges();
+        expect(host.querySelector('[role="dialog"]')).toBeNull();
+
+        expect(service.start(definition)).toBe(true);
+        fixture.detectChanges();
+        expect(host.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe('Editor help');
+
+        location.go('/overview');
+        fixture.componentRef.setInput('pageKey', '/overview');
+        fixture.detectChanges();
+        expect(host.querySelector('[role="dialog"]')).toBeNull();
+        expect(service.snapshot()).toBeNull();
+        expect(TestBed.inject(FD_TOUR_STORAGE).isCompleted(definition.id, definition.version)).toBe(false);
+    });
+
+    it('discards a tour started on another page before its host mounts even if the target selector still matches', () => {
+        expect(service.start(definition)).toBe(true);
+        expect(service.target()).toBe(target);
+        location.go('/overview');
+        const previousTarget = target;
+        target = document.createElement('button');
+        target.id = previousTarget.id;
+        previousTarget.replaceWith(target);
+
+        fixture.componentRef.setInput('pageKey', '/overview');
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="dialog"]')).toBeNull();
+        expect(service.snapshot()).toBeNull();
+        expect(service.target()).toBeNull();
     });
 });
 

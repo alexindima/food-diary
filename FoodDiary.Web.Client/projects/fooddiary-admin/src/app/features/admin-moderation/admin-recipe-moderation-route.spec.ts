@@ -105,6 +105,26 @@ describe('Reading the recipe moderation queue', () => {
     });
 });
 
+it('ignores obsolete page bounds when the queue has already been refreshed', async () => {
+    const { harness, http, view } = await renderQueueAsync();
+    queueRequest(http).flush(page([APPLE], PAGE_SIZE + 1));
+    await settleQueueAsync(harness);
+    const next = required(view.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child'));
+    next.click();
+    harness.detectChanges();
+    const obsolete = queueRequest(http, SECOND_PAGE);
+
+    button(view, 'ADMIN_RECIPE_MODERATION.REFRESH').click();
+    expect(obsolete.cancelled).toBe(false);
+    obsolete.flush({ ...page([]), page: SECOND_PAGE });
+    harness.detectChanges();
+
+    queueRequest(http, SECOND_PAGE).flush({ ...page([BEAN], PAGE_SIZE + 1), page: SECOND_PAGE });
+    await settleQueueAsync(harness);
+    expect(view.querySelector('tbody')?.textContent).toContain('Bean soup');
+    expect(view.querySelector('fd-ui-pagination [aria-current="page"]')?.textContent.trim()).toBe(String(SECOND_PAGE));
+});
+
 it('keeps a replacement detail read when a still-rendered Retry belongs to the failed revision', async () => {
     const { harness, http, view } = await renderQueueAsync();
     await showRowsAsync(harness, http);

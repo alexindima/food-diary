@@ -259,6 +259,22 @@ describe('FdUiEmojiPickerComponent disabled and empty options', () => {
 });
 
 describe('FdUiEmojiPickerComponent dynamic tab stops', () => {
+    it('ignores an arrow from a removed option while its old button is still focused', () => {
+        const harness = createHarness('high');
+        const removed = radio(harness, 'High energy');
+        removed.focus();
+        harness.fixture.componentRef.setInput('options', OPTIONS.slice(0, -1));
+        expect(document.activeElement).toBe(removed);
+
+        pressKey(harness, removed, 'ArrowRight');
+
+        expect(removed.isConnected).toBe(false);
+        expect(radio(harness, 'Low energy').tabIndex).toBe(0);
+        expect(harness.component.selectedValue()).toBe('high');
+        expect(harness.changed).not.toHaveBeenCalled();
+        expect(harness.selected).not.toHaveBeenCalled();
+    });
+
     it('restores an enabled tab stop after the selected option is removed without silently selecting a replacement', () => {
         const harness = createHarness('steady');
         harness.fixture.componentRef.setInput(

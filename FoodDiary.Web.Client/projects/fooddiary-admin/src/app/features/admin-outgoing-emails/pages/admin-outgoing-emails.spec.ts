@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { filter, of, Subject, take } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, take, tap } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -310,6 +310,41 @@ describe('outgoing mail route state', () => {
 });
 
 describe('outgoing mail applied filters', () => {
+    it('publishes an empty loading and failure state and ignores a retry from the superseded URL', async () => {
+        const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(vi.fn());
+        const initial = new Subject<OutgoingEmailPage>();
+        const getPage = vi
+            .fn<AdminOutgoingEmailsFacade['getPage']>()
+            .mockReturnValueOnce(initial)
+            .mockReturnValue(of({ items: [MAIL], totalItems: 1 }));
+        const { harness, element, router } = await setupOutboxAsync(OUTBOX, getPage, { attach, waitForResult: false });
+        const screen = attach.mock.lastCall?.[0];
+        expect(initial.observed).toBe(true);
+        expect(screen?.read()).toMatchObject({ loading: true, error: false, items: [], totalItems: 0 });
+
+        initial.error(new Error('Unavailable'));
+        await renderOutboxAsync(harness);
+        expect(screen?.read()).toMatchObject({ loading: false, error: true, items: [], totalItems: 0 });
+        const retry = requireOutboxButton(element, 'ADMIN_COMMON.RETRY');
+        const destination = `${OUTBOX}?status=sent`;
+        const staleRetry = firstValueFrom(
+            router.events.pipe(
+                filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === destination),
+                tap(() => {
+                    retry.click();
+                }),
+            ),
+        );
+        await router.navigateByUrl(destination);
+        await staleRetry;
+        await renderOutboxAsync(harness);
+
+        expect(getPage).toHaveBeenCalledTimes(2);
+        expect(getPage).toHaveBeenLastCalledWith(1, '', 'sent', expect.anything());
+        expect(element.querySelector('[role="alert"]')).toBeNull();
+        expect(screen?.read()).toMatchObject({ loading: false, items: [{ id: MAIL.id }], totalItems: 1 });
+    });
+
     it('reports visible rows without their bodies and refreshes the same canonical URL after filtering', async () => {
         const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(vi.fn());
         const getPage = vi

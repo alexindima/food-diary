@@ -7994,11 +7994,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.ts",
-      "nonBlankLines": 89,
-      "decisionPoints": 7,
+      "nonBlankLines": 90,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.28
+      "structuralRiskScore": 10.8
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.ts",
@@ -8218,11 +8218,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
-      "nonBlankLines": 282,
+      "nonBlankLines": 283,
       "decisionPoints": 34,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 56.64
+      "structuralRiskScore": 56.66
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
@@ -8530,19 +8530,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.ts",
-      "nonBlankLines": 124,
-      "decisionPoints": 13,
+      "nonBlankLines": 137,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.98
+      "structuralRiskScore": 19.24
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.ts",
-      "nonBlankLines": 170,
-      "decisionPoints": 21,
+      "nonBlankLines": 174,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.9
+      "structuralRiskScore": 31.98
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.ts",
@@ -10530,11 +10530,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-annotation-layout.ts",
-      "nonBlankLines": 410,
+      "nonBlankLines": 417,
       "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.7
+      "structuralRiskScore": 75.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-lib/ai-photo-result.types.ts",

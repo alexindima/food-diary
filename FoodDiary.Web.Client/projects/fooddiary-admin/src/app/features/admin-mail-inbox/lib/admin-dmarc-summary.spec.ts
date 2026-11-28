@@ -9,6 +9,17 @@ const selectedPeriod = {
     endExclusiveUtc: adminUtcInstant('2026-11-25T00:00:00Z'),
 };
 
+it('rejects an unordered UTC window without producing a summary', () => {
+    expect(() =>
+        summarizeAdminDmarcReports([], { startUtc: selectedPeriod.endExclusiveUtc, endExclusiveUtc: selectedPeriod.startUtc }),
+    ).toThrow(RangeError);
+});
+
+it('excludes reports that are missing an ID from verified totals', () => {
+    const summary = summarizeAdminDmarcReports([verifiedReport({ reportId: null }), verifiedReport()], selectedPeriod);
+    expect(summary).toMatchObject({ countedReports: 1, invalidReports: 1, duplicateReports: 0, totals: { messages: 1 } });
+});
+
 function verifiedReport(overrides: Partial<AdminMailInboxDmarcReport> = {}): AdminDmarcSourcedReport {
     return {
         provenance: 'verified',

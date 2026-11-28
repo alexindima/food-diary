@@ -40,8 +40,8 @@
         <p>{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="loadReports()" />
-    } @else if (validPeriod()) {
-        <div class="summary">{{ 'ADMIN_MODERATION.TOTAL' | translate }} {{ totalItems() }}</div>
+    } @else if (reportPage(); as reports) {
+        <div class="summary">{{ 'ADMIN_MODERATION.TOTAL' | translate }} {{ reports.totalItems }}</div>
 
         <table class="reports-table" aria-label="Moderation reports" tabindex="0">
             <thead>
@@ -55,7 +55,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (report of reportItems(); track report.id) {
+                @for (report of reports.items; track report.id) {
                     <tr>
                         <td><fd-admin-moderation-context [report]="report" /></td>
                         <td class="reason-cell">{{ report.reason }}</td>
@@ -86,7 +86,7 @@
         </table>
 
         <fd-ui-pagination
-            [length]="totalItems()"
+            [length]="reports.totalItems"
             [pageSize]="limit"
             [pageIndex]="pageNumber() - 1"
             (pageIndexChange)="goToPage($event + 1)"

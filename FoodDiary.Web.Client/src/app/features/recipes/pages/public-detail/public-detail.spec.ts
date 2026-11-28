@@ -536,7 +536,7 @@ describe('Shopping lookup across a reused public recipe page', () => {
         http.verify();
     });
 
-    it('keeps the replacement recipe actionable while the previous shopping lookup stays pending', async () => {
+    it('cancels the previous shopping lookup and keeps the replacement recipe actionable', async () => {
         const harness = await RouterTestingHarness.create('/explore/recipe');
         const http = TestBed.inject(HttpTestingController);
         for (const translation of http.match(request => request.url.startsWith('./assets/i18n/'))) {
@@ -555,20 +555,15 @@ describe('Shopping lookup across a reused public recipe page', () => {
             await harness.navigateByUrl('/explore/other-recipe');
             expect(harness.routeNativeElement).toBe(firstPage);
             expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Salad');
+            expect(previousLookup.cancelled).toBe(true);
+            pending.delete(previousLookup);
             const next = shoppingAction(harness, 'add');
-            expect(next.disabled, 'A held lookup must not disable shopping for Salad').toBe(false);
+            expect(next.disabled).toBe(false);
             next.click();
             await waitForAsyncTasksAsync();
             const nextLookup = holdShoppingLookup(http, pending);
             harness.detectChanges();
             expect(next.disabled).toBe(true);
-
-            previousLookup.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Fixture old lookup failure' });
-            pending.delete(previousLookup);
-            await vi.dynamicImportSettled();
-            await waitForAsyncTasksAsync();
-            harness.detectChanges();
-            expect(next.disabled, 'The previous response must not unlock the current request').toBe(true);
             expect(harness.routeNativeElement?.querySelector('.shopping-message')?.textContent.trim()).toBe('');
             expect(document.querySelector('fd-shopping-list-picker')).toBeNull();
 

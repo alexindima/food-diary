@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2961,
+    "typescriptFiles": 2962,
     "symbols": 890,
     "routes": 117,
     "features": 46,
-    "specs": 972,
+    "specs": 973,
     "localeFiles": 5,
     "roles": {
       "Component": 511,
@@ -315,6 +315,7 @@
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-dmarc-summary.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-mail-inbox-preferences.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-feedback.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.spec.ts"
       ]
@@ -2930,7 +2931,7 @@
       "role": "Component",
       "selector": "fd-admin-moderation-rules",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.ts",
-      "line": 56
+      "line": 62
     },
     {
       "name": "AdminModerationComponent",

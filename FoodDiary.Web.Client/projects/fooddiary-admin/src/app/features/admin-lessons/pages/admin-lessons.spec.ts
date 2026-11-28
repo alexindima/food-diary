@@ -424,7 +424,8 @@ async function verifyExportAfterDeletionAsync(): Promise<void> {
         .fn<AdminLessonsFacade['getAll']>()
         .mockReturnValueOnce(of([LESSON, remaining]))
         .mockReturnValueOnce(reload);
-    const remove = vi.fn<AdminLessonsFacade['delete']>().mockReturnValue(of(undefined));
+    const deletion = new Subject<void>();
+    const remove = vi.fn<AdminLessonsFacade['delete']>().mockReturnValue(deletion);
     await TestBed.configureTestingModule({
         imports: [AdminLessonsComponent],
         providers: [
@@ -453,8 +454,13 @@ async function verifyExportAfterDeletionAsync(): Promise<void> {
     expect(button.disabled).toBe(false);
 
     host.querySelector<HTMLButtonElement>('tbody tr fd-ui-button:last-child button')?.click();
-    fixture.detectChanges();
     expect(remove).toHaveBeenCalledExactlyOnceWith(LESSON.id);
+    deletion.next();
+    deletion.complete();
+    // A queued click can arrive before the DOM reflects the new loading state.
+    button.click();
+    expect(create).not.toHaveBeenCalled();
+    fixture.detectChanges();
     expect(host.textContent).toContain('Loading lessons...');
     expect(button.disabled).toBe(true);
     button.click();

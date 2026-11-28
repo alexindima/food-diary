@@ -10,7 +10,7 @@ import { adminId, adminUtcInstant } from '../../shared/models/semantics/admin-me
 import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminUsersRoutes } from './admin-users.routes';
 import { AdminUsersService } from './api/admin-users.service';
-import type { PagedResponse } from './models/admin-user.models';
+import type { AdminUser, PagedResponse } from './models/admin-user.models';
 
 const PAGE_SIZE = 20;
 const FIRST_PAGE = 1;
@@ -180,6 +180,43 @@ describe.each(historyRoutes)('Protected history route $path', ({ path, filters, 
         expect(harness.routeNativeElement?.querySelector('.summary')?.textContent.trim()).toMatch(/: 0$/u);
         expect(request).toHaveBeenCalledTimes(RECOVERY_REQUESTS);
     });
+});
+
+it('keeps the last published accounts while a replacement request is pending', async () => {
+    const account: AdminUser = {
+        id: adminId<'user'>('retained-account'),
+        email: 'retained@example.test',
+        isActive: true,
+        isEmailConfirmed: true,
+        roles: ['User'],
+        createdOnUtc: adminUtcInstant('2026-01-01T12:00:00Z'),
+    };
+    const initial = new Subject<PagedResponse<AdminUser>>();
+    const replacement = new Subject<PagedResponse<AdminUser>>();
+    getUsers.mockReturnValueOnce(initial).mockReturnValueOnce(replacement);
+    const harness = await RouterTestingHarness.create('/users');
+    const screen = attachScreen.mock.lastCall?.[0];
+    if (screen?.setFiltersAsync === undefined) {
+        throw new Error('Expected the registered Users screen actions.');
+    }
+
+    await vi.waitFor(() => {
+        expect(initial.observed).toBe(true);
+    });
+    expect(screen.read()).toMatchObject({ loading: true, totalItems: 0, items: [] });
+    initial.next({ ...EMPTY_PAGE, items: [account], totalItems: 1 });
+    initial.complete();
+    await harness.fixture.whenStable();
+    expect(screen.read()).toMatchObject({ loading: false, totalItems: 1, items: [{ id: account.id }] });
+
+    await screen.setFiltersAsync({ search: 'next' });
+    await vi.waitFor(() => {
+        expect(replacement.observed).toBe(true);
+    });
+    expect(screen.read()).toMatchObject({ loading: true, totalItems: 1, items: [{ id: account.id }] });
+    replacement.error(new Error('Accounts temporarily unavailable'));
+    await harness.fixture.whenStable();
+    expect(screen.read()).toMatchObject({ loading: false, error: true, totalItems: 0, items: [] });
 });
 
 it('publishes the visible account list and allows opening only an account on the current page', async () => {

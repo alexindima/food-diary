@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting, type TestRequest } fro
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { FdUiDialogService } from 'fd-ui-kit';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
@@ -11,6 +12,7 @@ import type { AdminMailInboxMessageDetailsHttpResponse } from '../../shared/api/
 import type { AdminMailInboxMessageSummaryHttpResponse } from '../../shared/api/sdk/generated/model/admin-mail-inbox-message-summary-http-response';
 import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminDmarcRoutes } from './admin-mail-inbox.routes';
+import { AdminMailMessageDialogComponent } from './dialogs/admin-mail-message-dialog';
 
 const PATH = '/mail-dmarc';
 const API = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages`;
@@ -30,7 +32,9 @@ describe('DMARC attachment failure and retry', () => {
         expect(element.textContent).toContain('ADMIN_DMARC.LOAD_ERROR');
         expect(element.textContent).toContain('192.0.2.1');
 
-        retryButton(element).click();
+        const retry = retryButton(element);
+        retry.click();
+        retry.click();
         harness.detectChanges();
         expect(retryButton(element).disabled).toBe(true);
         expect(element.textContent).toContain('stable@example.test');
@@ -85,12 +89,63 @@ it('shows incomplete coverage without a retry when the message returned without 
     http.verify();
 });
 
+it('keeps unverified and failed attachments with missing sender data available as original email', async () => {
+    const { harness, http, element, open } = await openDmarcAsync();
+    const unverified = { ...STABLE_REPORT, fromAddress: null, subject: 'Unverified original' };
+    const failed = { ...FAILED_REPORT, fromAddress: null };
+    const from = flushList(http, [unverified, failed]);
+    const detail = verifiedDetail(unverified, from, '192.0.2.1');
+    requestReport(http, unverified).flush({ ...detail, dmarcReport: { ...detail.dmarcReport, isSourceVerified: false } });
+    failReport(requestReport(http, failed));
+    await renderDmarcAsync(harness);
+
+    const rows = [...element.querySelectorAll('fd-admin-dmarc-reports tbody tr')];
+    expect(rows[0]?.textContent).toContain('ADMIN_DMARC.UNVERIFIED');
+    expect(rows[1]?.textContent).toContain('ADMIN_DMARC.LOAD_ERROR');
+    for (const row of rows) {
+        expect(row.querySelector('th')?.textContent.trim()).toBe('—');
+    }
+    rows[0]?.querySelector('button')?.click();
+    expect(open).toHaveBeenCalledExactlyOnceWith(
+        AdminMailMessageDialogComponent,
+        expect.objectContaining({ data: { id: unverified.id, subject: unverified.subject } }),
+    );
+    http.verify();
+});
+
+it('retries an initial list failure and switches the report window from the rendered control', async () => {
+    const { harness, http, element, router } = await openDmarcAsync();
+    failReport(http.expectOne(request => request.url === `${API}/page` && request.method === 'GET'));
+    await renderDmarcAsync(harness);
+    expect(element.querySelector('[role="alert"]')).not.toBeNull();
+    element.querySelector<HTMLButtonElement>('fd-admin-load-error button')?.click();
+    harness.detectChanges();
+    const previousStart = flushList(http, []);
+    await renderDmarcAsync(harness);
+
+    expect(element.querySelector('[role="alert"]')).toBeNull();
+    const week = [...element.querySelectorAll<HTMLButtonElement>('fd-ui-segmented-toggle button')].find(
+        button => button.textContent.trim() === 'ADMIN_DMARC.PERIOD_7',
+    );
+    expect(week).toBeDefined();
+    week?.click();
+    await vi.waitFor(() => {
+        expect(router.url).toBe(`${PATH}?period=7`);
+    });
+    harness.detectChanges();
+    expect(Date.parse(flushList(http, []))).toBeGreaterThan(Date.parse(previousStart));
+    await renderDmarcAsync(harness);
+    http.verify();
+});
+
 async function openDmarcAsync(): Promise<{
     harness: RouterTestingHarness;
     http: HttpTestingController;
     element: HTMLElement;
     router: Router;
+    open: ReturnType<typeof vi.fn>;
 }> {
+    const open = vi.fn();
     TestBed.configureTestingModule({
         providers: [
             provideRouter(
@@ -100,6 +155,7 @@ async function openDmarcAsync(): Promise<{
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
+            { provide: FdUiDialogService, useValue: { open } },
             {
                 provide: AdminAuthService,
                 useValue: {
@@ -115,7 +171,13 @@ async function openDmarcAsync(): Promise<{
     if (harness.routeNativeElement === null) {
         throw new Error('Expected the DMARC route');
     }
-    return { harness, http: TestBed.inject(HttpTestingController), element: harness.routeNativeElement, router: TestBed.inject(Router) };
+    return {
+        harness,
+        http: TestBed.inject(HttpTestingController),
+        element: harness.routeNativeElement,
+        router: TestBed.inject(Router),
+        open,
+    };
 }
 
 async function renderDmarcAsync(harness: RouterTestingHarness): Promise<void> {

@@ -378,8 +378,10 @@ function registerManualInputValidationTests(): void {
             expect(invalid).toHaveBeenLastCalledWith(false);
         });
 
-        it('resets an invalid DOM draft when the model value has not changed', () => {
+        it.each([MARCH_DATE_STRING, null])('resets an invalid DOM draft back to the unchanged model value %s', modelValue => {
             const input = prepareManualDateInput();
+            fixture.componentRef.setInput('value', modelValue);
+            fixture.detectChanges();
             input.value = '2027-01-01';
             input.dispatchEvent(new Event('input'));
             fixture.detectChanges();
@@ -389,7 +391,7 @@ function registerManualInputValidationTests(): void {
             component.reset();
             fixture.detectChanges();
 
-            expect(input.value).toBe(MARCH_DATE_STRING);
+            expect(input.value).toBe(modelValue ?? '');
             expect(input.getAttribute('aria-invalid')).toBeNull();
             expect(invalid).toHaveBeenLastCalledWith(false);
             expect(component.touched()).toBe(false);
@@ -701,13 +703,18 @@ function registerCalendarFocusTests(): void {
 
 function registerCalendarTriggerFocusTests(): void {
     describe('calendar launcher focus', () => {
-        it.each(['escape', 'selection'])('returns focus to the calendar button after %s', action => {
+        it.each(['escape', 'selection', 'repeated open request'])('returns focus to the calendar button after %s', action => {
             fixture.componentRef.setInput('allowManualInput', true);
             fixture.componentRef.setInput('value', MARCH_DATE_STRING);
             fixture.detectChanges();
             const launcher = requireButtonElement('button[aria-haspopup="dialog"]');
             launcher.focus();
             launcher.click();
+            if (action === 'repeated open request') {
+                requireInputElement('input').dispatchEvent(
+                    new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }),
+                );
+            }
             fixture.detectChanges();
 
             const day = document.querySelector<HTMLButtonElement>(`[data-date="${MARCH_DATE_STRING}"]`);
@@ -716,10 +723,10 @@ function registerCalendarTriggerFocusTests(): void {
             }
             day.focus();
             expect(document.activeElement).toBe(day);
-            if (action === 'escape') {
-                day.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
-            } else {
+            if (action === 'selection') {
                 day.click();
+            } else {
+                day.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
             }
             fixture.detectChanges();
 

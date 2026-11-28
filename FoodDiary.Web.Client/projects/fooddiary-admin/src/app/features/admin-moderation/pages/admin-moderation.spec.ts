@@ -248,6 +248,24 @@ describe('AdminModerationComponent report actions', () => {
 });
 
 describe('AdminModerationComponent report decisions', () => {
+    it('ignores a still-rendered Next click after a confirmed decision starts refreshing the reports', async () => {
+        const fixture = await renderAsync('?reporterId=reporter-1');
+        const next = button(fixture, 'PAGINATION.NEXT');
+        expect(next.disabled).toBe(false);
+        button(fixture, 'ADMIN_MODERATION.REVIEW').click();
+        getReports.mockReturnValueOnce(of(reportPage([])));
+
+        closed.next({ confirmed: true });
+        expect(next.isConnected).toBe(true);
+        next.click();
+        await settleAsync(fixture);
+
+        expect(getReports).toHaveBeenCalledTimes(2);
+        expect(getReports).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'Pending', { targetType: '', reporterId: 'reporter-1', targetId: '' });
+        expect(TestBed.inject(Router).url).toBe('/?reporterId=reporter-1');
+        expect(element(fixture).querySelector('tbody')?.textContent).toContain('ADMIN_COMMON.EMPTY');
+    });
+
     it.each(['review', 'dismiss'] as const)(
         'passes %s and the selected report to the dialog, refreshing the applied filters only after confirmation',
         async action => {

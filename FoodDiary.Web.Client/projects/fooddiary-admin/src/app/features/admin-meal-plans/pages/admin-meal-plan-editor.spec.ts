@@ -116,6 +116,8 @@ describe('AdminMealPlanEditorComponent', () => {
         expect(earlier.observed).toBe(true);
         component['recipeSearch'].set('new search');
         component['searchRecipes']();
+        earlier.next([{ id: adminId<'recipe'>('stale-before-load'), name: 'Earlier recipe', servings: 1 }]);
+        expect(component['recipeOptions']()).toEqual([{ value: 'recipe-id', label: 'Rice' }]);
         fixture.detectChanges();
         expect(earlier.observed).toBe(false);
         latest.next([{ id: adminId<'recipe'>('latest-id'), name: 'Latest recipe', servings: 1 }]);

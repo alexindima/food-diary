@@ -135,6 +135,13 @@ afterEach(() => {
 });
 
 describe('Admin sign-in navigation defaults', () => {
+    it('takes a restored administrator to the dashboard when no return route is supplied', async () => {
+        const { navigateByUrl, auth } = await createPageAsync({ confirm: [], returnUrl: [], restoredAccount: ACCOUNT });
+
+        expect(auth.restoreSessionAsync).toHaveBeenCalledOnce();
+        expect(navigateByUrl).toHaveBeenCalledExactlyOnceWith('/', { replaceUrl: true });
+    });
+
     it('uses English for Google before a language is active', async () => {
         environment.googleClientId = 'test-google-client';
         const { fixture, renderGoogle } = await createPageAsync({ locale: null });

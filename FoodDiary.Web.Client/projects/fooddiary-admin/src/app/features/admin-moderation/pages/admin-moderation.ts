@@ -111,21 +111,24 @@ export class AdminModerationComponent {
         () => this.reportsResource.isLoading() || (this.reportsResource.hasValue() && this.result() === null),
     );
     protected readonly loadFailed = computed(() => this.reportsResource.error() !== undefined);
-    protected readonly validPeriod = computed(() => this.request() !== undefined);
     protected readonly statusFilter = linkedSignal(() => this.appliedFilters().status);
     protected readonly draftTargetType = linkedSignal(() => this.appliedFilters().targetType);
     protected readonly draftReporterId = linkedSignal(() => this.appliedFilters().reporterId);
     protected readonly draftTargetId = linkedSignal(() => this.appliedFilters().targetId);
-    protected readonly reportItems = computed<AdminContentReportViewModel[]>(() =>
-        (this.result()?.items ?? []).map(report => ({
-            ...report,
-            targetIdShort: `${report.targetId.slice(0, TARGET_ID_PREVIEW_LENGTH)}...`,
-            createdText: this.formatDateLabel(report.createdAtUtc),
-            reviewedText: this.formatDateLabel(report.reviewedAtUtc),
-        })),
-    );
-    protected readonly totalPages = computed(() => this.result()?.totalPages ?? 1);
-    protected readonly totalItems = computed(() => this.result()?.totalItems ?? 0);
+    protected readonly reportPage = computed(() => {
+        const result = this.result();
+        return result === null
+            ? null
+            : {
+                  ...result,
+                  items: result.items.map((report): AdminContentReportViewModel => ({
+                      ...report,
+                      targetIdShort: `${report.targetId.slice(0, TARGET_ID_PREVIEW_LENGTH)}...`,
+                      createdText: this.formatDateLabel(report.createdAtUtc),
+                      reviewedText: this.formatDateLabel(report.reviewedAtUtc),
+                  })),
+              };
+    });
     protected readonly pageNumber = computed(() => this.appliedFilters().page);
     protected readonly limit = ADMIN_MODERATION_PAGE_SIZE;
 
@@ -148,7 +151,8 @@ export class AdminModerationComponent {
     }
 
     protected goToPage(page: number): void {
-        if (page < 1 || page > this.totalPages() || this.isLoading() || this.router.currentNavigation() !== null) {
+        const result = this.result();
+        if (result === null || page < 1 || page > result.totalPages || this.isLoading() || this.router.currentNavigation() !== null) {
             return;
         }
 

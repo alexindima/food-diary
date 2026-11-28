@@ -1,3 +1,4 @@
+import { afterNextRender } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -688,6 +689,37 @@ describe('FdUiSelectComponent delayed keyboard interactions', () => {
         expect(changed).toHaveBeenCalledExactlyOnceWith('apple');
         expect(document.querySelector('[role="listbox"]')).toBeNull();
         expect(document.activeElement).toBe(control);
+    });
+
+    it('keeps the listbox open when Enter follows removal of its last option', async () => {
+        const { fixture, requireElement, component } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS.slice(0, 1));
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        control.click();
+        fixture.detectChanges();
+        const menu = document.querySelector<HTMLElement>('[role="listbox"]');
+        if (menu === null) {
+            throw new Error('Expected an open listbox');
+        }
+        expect(menu.getAttribute('aria-activedescendant')).toBe(`${control.id}-option-0`);
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+
+        fixture.componentRef.setInput('options', []);
+        const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+        TestBed.runInInjectionContext(() =>
+            afterNextRender({
+                write: () => menu.dispatchEvent(enter),
+            }),
+        );
+        fixture.detectChanges();
+
+        expect(enter.defaultPrevented).toBe(true);
+        expect(menu.hasAttribute('aria-activedescendant')).toBe(false);
+        expect(menu.isConnected).toBe(true);
+        expect(document.activeElement).toBe(menu);
+        expect(changed).not.toHaveBeenCalled();
     });
 });
 

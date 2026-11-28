@@ -132,11 +132,56 @@ describe('FdUiSegmentedToggleComponent keyboard navigation', () => {
         expect(radioButtons().map(button => button.getAttribute('aria-checked'))).toEqual(['false', 'false']);
         expect(changed).not.toHaveBeenCalled();
     });
+
+    it('leaves Tab to the browser without selecting another radio', () => {
+        const [day] = radioButtons();
+        day.focus();
+        expect(pressKey(day, 'Tab').defaultPrevented).toBe(false);
+        expect(document.activeElement).toBe(day);
+        expect(day.getAttribute('aria-checked')).toBe('true');
+    });
+
+    it('ignores navigation from the focused option if an update has removed it before rendering', () => {
+        const changed = vi.fn<(value: string) => void>();
+        component.selectedValue.subscribe(changed);
+        const [day] = radioButtons();
+        day.focus();
+        fixture.componentRef.setInput('options', testOptions.slice(1));
+
+        expect(pressKey(day, 'ArrowRight').defaultPrevented).toBe(false);
+        fixture.detectChanges();
+
+        expect(day.isConnected).toBe(false);
+        expect(radioButtons()[0].tabIndex).toBe(0);
+        expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('waits to select a newly added option until its radio can receive focus', () => {
+        const changed = vi.fn<(value: string) => void>();
+        component.selectedValue.subscribe(changed);
+        const [day] = radioButtons();
+        day.focus();
+        fixture.componentRef.setInput('options', [testOptions[0], { value: 'year', label: 'Year' }]);
+
+        expect(pressKey(day, 'ArrowRight').defaultPrevented).toBe(false);
+        expect(document.activeElement).toBe(day);
+        expect(changed).not.toHaveBeenCalled();
+        fixture.detectChanges();
+
+        pressArrow(day, 'ArrowRight');
+        expect(document.activeElement).toBe(radioButtons()[1]);
+        expect(changed).toHaveBeenCalledExactlyOnceWith('year');
+    });
 });
 
-function pressArrow(button: HTMLButtonElement, key: string): void {
+function pressKey(button: HTMLButtonElement, key: string): KeyboardEvent {
     const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
     button.dispatchEvent(event);
+    return event;
+}
+
+function pressArrow(button: HTMLButtonElement, key: string): void {
+    const event = pressKey(button, key);
     fixture.detectChanges();
     expect(event.defaultPrevented).toBe(true);
 }

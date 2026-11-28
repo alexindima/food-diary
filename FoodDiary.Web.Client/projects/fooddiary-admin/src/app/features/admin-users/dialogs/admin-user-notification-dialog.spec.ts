@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef } from 'fd-ui-kit';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -11,8 +12,9 @@ let fixture: ComponentFixture<AdminUserNotificationDialogComponent>;
 let component: AdminUserNotificationDialogComponent;
 let users: { scheduleTestNotification: ReturnType<typeof vi.fn> };
 let dialog: { close: ReturnType<typeof vi.fn> };
+const DEFAULT_USER = { id: 'selected-user', email: 'notification-test@example.com' };
 
-beforeEach(async () => {
+async function setupAsync(user: { id: string; email?: string; username?: string } = DEFAULT_USER): Promise<void> {
     users = { scheduleTestNotification: vi.fn().mockReturnValue(of(undefined)) };
     dialog = { close: vi.fn() };
     await TestBed.configureTestingModule({
@@ -21,13 +23,13 @@ beforeEach(async () => {
             provideTranslateTesting(),
             { provide: AdminUsersService, useValue: users },
             { provide: FdUiDialogRef, useValue: dialog },
-            { provide: FD_UI_DIALOG_DATA, useValue: { id: 'selected-user', email: 'notification-test@example.com' } },
+            { provide: FD_UI_DIALOG_DATA, useValue: user },
         ],
     }).compileComponents();
     fixture = TestBed.createComponent(AdminUserNotificationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-});
+}
 
 async function submitAsync(): Promise<void> {
     const element = fixture.nativeElement as HTMLElement;
@@ -36,6 +38,8 @@ async function submitAsync(): Promise<void> {
 }
 
 describe('AdminUserNotificationDialogComponent', () => {
+    beforeEach(async () => setupAsync());
+
     it('submits the selected type and delay to the selected user and shows success', async () => {
         component['formModel'].set({ type: 'EatingWindowStarted', delaySeconds: 30 });
         fixture.detectChanges();
@@ -78,4 +82,17 @@ describe('AdminUserNotificationDialogComponent', () => {
         await component['submitAsync']();
         expect(users.scheduleTestNotification).toHaveBeenCalledTimes(1);
     });
+});
+
+it.each([
+    { user: { id: 'selected-user', username: 'SelectedUsername' }, recipient: 'SelectedUsername' },
+    { user: { id: 'selected-user' }, recipient: 'selected-user' },
+])('identifies the notification recipient as $recipient when email is unavailable', async ({ user, recipient }) => {
+    await setupAsync(user);
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { ADMIN_NOTIFICATION: { RECIPIENT: 'Notify {{ recipient }}' } });
+    await firstValueFrom(translate.use('en'));
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.textContent).toContain(`Notify ${recipient}`);
 });
