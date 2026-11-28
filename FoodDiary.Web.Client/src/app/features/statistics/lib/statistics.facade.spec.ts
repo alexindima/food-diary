@@ -9,7 +9,7 @@ import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { StatisticsService } from '../api/statistics.service';
-import type { AggregatedStatistics, StatisticsSummary } from '../models/statistics.data';
+import type { AggregatedStatistics, StatisticsMeasurements, StatisticsSummary } from '../models/statistics.data';
 import { StatisticsFacade } from './statistics.facade';
 
 const FIRST_TOTAL_CALORIES = 1800;
@@ -21,7 +21,10 @@ const DEFAULT_WEIGHT_AVERAGE = 75.3;
 const DEFAULT_WAIST_AVERAGE = 82.1;
 
 let facade: StatisticsFacade;
-let statisticsService: { getSummary: ReturnType<typeof vi.fn> };
+let statisticsService: {
+    getSummary: ReturnType<typeof vi.fn<StatisticsService['getSummary']>>;
+    getBodyMeasurements: ReturnType<typeof vi.fn<StatisticsService['getBodyMeasurements']>>;
+};
 let userService: { user: ReturnType<typeof signal<{ height: number } | null>> };
 let exportService: { exportDiary: ReturnType<typeof vi.fn> };
 let currentLanguage: string;
@@ -35,7 +38,8 @@ let translateService: {
 
 beforeEach(() => {
     statisticsService = {
-        getSummary: vi.fn().mockReturnValue(of(createStatisticsSummary(FIRST_TOTAL_CALORIES))),
+        getSummary: vi.fn<StatisticsService['getSummary']>().mockReturnValue(of(createStatisticsSummary(FIRST_TOTAL_CALORIES))),
+        getBodyMeasurements: vi.fn<StatisticsService['getBodyMeasurements']>().mockReturnValue(of(createStatisticsMeasurements())),
     };
     userService = {
         user: signal({ height: USER_HEIGHT_CM }),
@@ -136,7 +140,7 @@ describe('StatisticsFacade loading', () => {
 });
 
 describe('StatisticsFacade stale requests', () => {
-    it('cancels the stale combined summary request after the range changes', () => {
+    it('cancels the stale summary request after the range changes', async () => {
         const requests = setupStaleRangeRequests();
 
         facade.initialize();
@@ -150,6 +154,9 @@ describe('StatisticsFacade stale requests', () => {
         completeStaleRangeRequests(requests);
 
         expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
+        await vi.waitFor(() => {
+            expect(facade.hasBodyData()).toBe(true);
+        });
         expect(facade.dashboardCardsView().body.weight).toMatchObject({ current: SECOND_WEIGHT_AVERAGE, measurementCount: 1 });
         expect(facade.dashboardCardsView().body.waist).toMatchObject({ current: SECOND_WAIST_AVERAGE, measurementCount: 1 });
         expect(facade.weightSummaryPoints()).toEqual([
@@ -263,9 +270,10 @@ describe('StatisticsFacade errors', () => {
 });
 
 describe('StatisticsFacade chart projections', () => {
-    it('starts without measurements and keeps a waist-only report available after the first request', () => {
+    it('starts without measurements and keeps a waist-only report available after the first request', async () => {
         const summary$ = new Subject<StatisticsSummary>();
         statisticsService.getSummary.mockReturnValueOnce(summary$);
+        statisticsService.getBodyMeasurements.mockReturnValueOnce(of(createStatisticsMeasurements(null, DEFAULT_WAIST_AVERAGE)));
         TestBed.tick();
 
         expect(statisticsService.getSummary).not.toHaveBeenCalled();
@@ -288,19 +296,20 @@ describe('StatisticsFacade chart projections', () => {
             ...createStatisticsSummary(FIRST_TOTAL_CALORIES),
             nutrition: [],
             weight: [],
-            weightMeasurements: { first: null, last: null, count: 0 },
         });
         summary$.complete();
 
         expect(facade.hasStatisticsResponse()).toBe(true);
         expect(facade.hasStatisticsData()).toBe(false);
-        expect(facade.hasBodyData()).toBe(true);
+        await vi.waitFor(() => {
+            expect(facade.hasBodyData()).toBe(true);
+        });
         expect(facade.dashboardCardsView().days).toEqual([]);
         expect(facade.dashboardCardsView().body.weight.points).toEqual([]);
         expect(facade.dashboardCardsView().body.waist.points).toMatchObject([{ value: DEFAULT_WAIST_AVERAGE }]);
     });
 
-    it('relabels annual nutrition and body charts for a language change without refreshing the report', () => {
+    it('relabels annual nutrition and body charts for a language change without refreshing the report', async () => {
         const summary = createStatisticsSummary(FIRST_TOTAL_CALORIES);
         const date = new Date('2026-04-15T12:00:00Z');
         summary.nutrition = summary.nutrition.map(bucket => ({ ...bucket, dateFrom: date, dateTo: date }));
@@ -314,7 +323,9 @@ describe('StatisticsFacade chart projections', () => {
 
         expect(facade.hasStatisticsData()).toBe(true);
         expect(facade.dashboardCardsView().days).toMatchObject([{ label: 'Apr', calories: FIRST_TOTAL_CALORIES }]);
-        expect(facade.dashboardCardsView().body.weight.points).toEqual([{ label: 'Apr', value: DEFAULT_WEIGHT_AVERAGE }]);
+        await vi.waitFor(() => {
+            expect(facade.dashboardCardsView().body.weight.points).toEqual([{ label: 'Apr', value: DEFAULT_WEIGHT_AVERAGE }]);
+        });
 
         currentLanguage = 'ru';
         languageChanges.next({ lang: currentLanguage });
@@ -399,8 +410,16 @@ function createStatisticsSummary(
         nutrition: createStatisticsResponse(totalCalories),
         weight: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageWeightKg }],
         waist: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageCircumferenceCm }],
-        weightMeasurements: { first: averageWeightKg, last: averageWeightKg, count: 1 },
-        waistMeasurements: { first: averageCircumferenceCm, last: averageCircumferenceCm, count: 1 },
+    };
+}
+
+function createStatisticsMeasurements(
+    weight: number | null = DEFAULT_WEIGHT_AVERAGE,
+    waist = DEFAULT_WAIST_AVERAGE,
+): StatisticsMeasurements {
+    return {
+        weightMeasurements: { first: weight, last: weight, count: weight === null ? 0 : 1 },
+        waistMeasurements: { first: waist, last: waist, count: 1 },
     };
 }
 
@@ -415,6 +434,9 @@ function setupStaleRangeRequests(): StaleRangeRequests {
         secondSummary$: new Subject<StatisticsSummary>(),
     };
     statisticsService.getSummary.mockReturnValueOnce(requests.firstSummary$).mockReturnValueOnce(requests.secondSummary$);
+    statisticsService.getBodyMeasurements
+        .mockReturnValueOnce(of(createStatisticsMeasurements()))
+        .mockReturnValueOnce(of(createStatisticsMeasurements(SECOND_WEIGHT_AVERAGE, SECOND_WAIST_AVERAGE)));
 
     return requests;
 }

@@ -296,9 +296,10 @@ it('preserves text inside legacy wrappers, named anchors and relative links', as
 });
 
 describe('mail message loading', () => {
-    it('shows a loading status and reports a failed load without marking the message read', async () => {
+    it('retries failed message details before attempting to mark the message read', async () => {
         const details = new Subject<AdminMailInboxMessageDetails>();
-        const markMessageRead = vi.fn();
+        const getMessage = vi.fn().mockReturnValueOnce(details).mockReturnValue(of(message));
+        const markMessageRead = vi.fn().mockReturnValue(of(undefined));
         const onRead = vi.fn();
         TestBed.configureTestingModule({
             imports: [AdminMailMessageDialogComponent],
@@ -306,7 +307,7 @@ describe('mail message loading', () => {
                 provideRouter([]),
                 provideTranslateTesting(),
                 { provide: FD_UI_DIALOG_DATA, useValue: { id: message.id, onRead } },
-                { provide: AdminMailInboxFacade, useValue: { getMessage: vi.fn().mockReturnValue(details), markMessageRead } },
+                { provide: AdminMailInboxFacade, useValue: { getMessage, markMessageRead } },
             ],
         });
         const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
@@ -317,8 +318,16 @@ describe('mail message loading', () => {
         details.error(new Error('Details unavailable'));
         await settleDetailsAsync(fixture);
         expect(element.querySelector('[role="status"]')).toBeNull();
-        expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LOAD_ERROR');
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
         expect(markMessageRead).not.toHaveBeenCalled();
         expect(onRead).not.toHaveBeenCalled();
+
+        element.querySelector<HTMLButtonElement>('fd-admin-load-error button')?.click();
+        await settleDetailsAsync(fixture);
+
+        expect(getMessage.mock.calls).toEqual([[message.id], [message.id]]);
+        expect(element.querySelector('.mail-body')?.textContent).toContain('QA message');
+        expect(markMessageRead).toHaveBeenCalledExactlyOnceWith(message.id);
+        expect(onRead).toHaveBeenCalledExactlyOnceWith(message.id, expect.any(String));
     });
 });

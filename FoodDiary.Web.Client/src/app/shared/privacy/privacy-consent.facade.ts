@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FdUiDialogRef, FdUiDialogService } from 'fd-ui-kit';
 import { concatMap, firstValueFrom, map } from 'rxjs';
@@ -28,7 +28,10 @@ export class PrivacyConsentFacade {
     public readonly state = signal<UserPrivacyState | null>(null);
     public readonly busy = signal(false);
     public readonly failed = signal(false);
-    public readonly needsReload = signal(false);
+    public readonly needsReload = computed(() => {
+        const state = this.state();
+        return state !== null && state.noticeVersion !== PRIVACY_NOTICE_VERSION;
+    });
     private sessionVersion = 0;
     private healthReview: Promise<boolean> | null = null;
     private healthDialog: FdUiDialogRef<HealthConsentDialogComponent, boolean> | null = null;
@@ -85,7 +88,6 @@ export class PrivacyConsentFacade {
         this.state.set(null);
         this.failed.set(false);
         this.busy.set(false);
-        this.needsReload.set(false);
         this.marketing.accountSyncFailed.set(false);
     }
 
@@ -105,7 +107,6 @@ export class PrivacyConsentFacade {
         const state = await firstValueFrom(this.users.getPrivacy());
         if (session === this.sessionVersion) {
             this.state.set(state);
-            this.needsReload.set(state.noticeVersion !== PRIVACY_NOTICE_VERSION);
         }
         return state;
     }

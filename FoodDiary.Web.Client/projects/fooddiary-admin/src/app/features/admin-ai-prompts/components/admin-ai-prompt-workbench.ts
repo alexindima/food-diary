@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
@@ -25,24 +25,16 @@ export class AdminAiPromptWorkbenchComponent {
     public readonly verified = output<string>();
     private readonly api = inject(AdminAiPromptsFacade);
     private readonly destroyRef = inject(DestroyRef);
-    protected readonly text = signal('');
-    protected readonly foodName = signal('');
+    private readonly context = computed(() => ({ key: this.scenarioKey(), locale: this.locale() }));
+    protected readonly text = linkedSignal({ source: this.context, computation: () => '' });
+    protected readonly foodName = linkedSignal({ source: this.context, computation: () => '' });
     protected readonly amount = signal(DEFAULT_SAMPLE_AMOUNT);
     protected readonly unit = signal('g');
-    protected readonly imageAssetId = signal<string | undefined>(undefined);
-    protected readonly imageName = signal('');
+    protected readonly imageAssetId = linkedSignal({ source: this.context, computation: (): string | undefined => undefined });
+    protected readonly imageName = linkedSignal({ source: this.context, computation: () => '' });
     protected readonly uploading = signal(false);
     protected readonly busy = signal(false);
-    protected readonly errorKey = signal('');
-    protected readonly preview = signal('');
-    protected readonly result = signal('');
-    private readonly context = computed(() => ({ key: this.scenarioKey(), locale: this.locale() }));
-    private readonly verifiedDraft = signal<AdminAiPromptDraft | null>(null);
-    protected readonly requiresImage = computed(() => this.scenarioKey() === 'vision' || this.scenarioKey() === 'product-label');
-    protected readonly canTest = computed(
-        () => this.verifiedDraft() === this.draft() && (!this.requiresImage() || Boolean(this.imageAssetId())),
-    );
-    protected readonly draft = computed<AdminAiPromptDraft>(() => ({
+    private readonly draft = computed<AdminAiPromptDraft>(() => ({
         ...this.context(),
         promptText: this.promptText(),
         text: this.text(),
@@ -51,25 +43,12 @@ export class AdminAiPromptWorkbenchComponent {
         amount: this.amount(),
         unit: this.unit(),
     }));
-
-    public constructor() {
-        effect(() => {
-            this.context();
-            untracked(() => {
-                this.text.set('');
-                this.foodName.set('');
-                this.imageAssetId.set(undefined);
-                this.imageName.set('');
-            });
-        });
-        effect(() => {
-            this.draft();
-            this.preview.set('');
-            this.result.set('');
-            this.verifiedDraft.set(null);
-            this.errorKey.set('');
-        });
-    }
+    private readonly checkedPreview = linkedSignal({ source: this.draft, computation: (): string | null => null });
+    protected readonly preview = computed(() => this.checkedPreview() ?? '');
+    protected readonly result = linkedSignal({ source: this.draft, computation: () => '' });
+    protected readonly errorKey = linkedSignal({ source: this.draft, computation: () => '' });
+    protected readonly requiresImage = computed(() => this.scenarioKey() === 'vision' || this.scenarioKey() === 'product-label');
+    protected readonly canTest = computed(() => this.checkedPreview() !== null && (!this.requiresImage() || Boolean(this.imageAssetId())));
 
     protected async inspectAsync(run: boolean): Promise<void> {
         if (this.busy() || (run && !this.canTest())) {
@@ -88,8 +67,7 @@ export class AdminAiPromptWorkbenchComponent {
             if (run) {
                 this.result.set(response.text);
             } else {
-                this.preview.set(response.text);
-                this.verifiedDraft.set(draft);
+                this.checkedPreview.set(response.text);
                 this.verified.emit(draft.promptText);
             }
         } catch (error: unknown) {

@@ -10,7 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -97,7 +97,7 @@ export class AdminModerationComponent {
         stream: ({ params }) =>
             this.moderationFacade.getReports(params.page, this.limit, params.status, params.filters).pipe(
                 map(response => {
-                    if (this.request() !== params) {
+                    if (this.request() !== params || !adminRouteInputsMatch(this.route, this.query())) {
                         return null;
                     }
                     return restoreAdminPage(this.router, this.route, params.page, { totalItems: response.totalItems, pageSize: this.limit })

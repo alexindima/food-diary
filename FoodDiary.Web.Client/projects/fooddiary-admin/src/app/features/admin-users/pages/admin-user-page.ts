@@ -4,7 +4,7 @@ import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-int
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCardComponent, FdUiDialogService } from 'fd-ui-kit';
-import { forkJoin, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -51,23 +51,21 @@ export class AdminUserPageComponent {
     private readonly userResource = rxResource({ params: this.userRequest, stream: ({ params }) => this.users.getUser(params.id) });
     protected readonly user = computed(() => (this.userResource.hasValue() ? this.userResource.value() : null));
     protected readonly failed = computed(() => this.userResource.error() !== undefined);
-    private readonly activityResource = rxResource({
-        params: () => {
-            const user = this.user();
-            return user === null ? undefined : { id: user.id, owner: this.userRequest() };
-        },
-        stream: ({ params }) =>
-            forkJoin({
-                loginEvents: this.users.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: params.id }),
-                roleAuditEvents: this.users.getUserRoleAudit(params.id),
-            }),
+    private readonly activityRequest = computed(() => {
+        const user = this.user();
+        return user === null ? undefined : { id: user.id, owner: this.userRequest() };
     });
-    private readonly activity = computed(() => (this.activityResource.hasValue() ? this.activityResource.value() : null));
+    protected readonly loginEventsResource = rxResource({
+        params: this.activityRequest,
+        stream: ({ params }) => this.users.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: params.id }),
+    });
+    protected readonly roleAuditResource = rxResource({
+        params: this.activityRequest,
+        stream: ({ params }) => this.users.getUserRoleAudit(params.id),
+    });
     private readonly translate = inject(TranslateService);
-    protected readonly activityLoading = computed(() => this.userResource.isLoading() || this.activityResource.isLoading());
-    protected readonly activityFailed = computed(() => this.activityResource.error() !== undefined);
-    protected readonly loginEvents = computed(() => this.activity()?.loginEvents.items ?? []);
-    protected readonly roleAuditEvents = computed(() => this.activity()?.roleAuditEvents ?? []);
+    protected readonly loginEvents = computed(() => (this.loginEventsResource.hasValue() ? this.loginEventsResource.value().items : []));
+    protected readonly roleAuditEvents = computed(() => (this.roleAuditResource.hasValue() ? this.roleAuditResource.value() : []));
     private readonly passwordChangeLabel = toSignal(this.translate.stream('ADMIN_USER.PASSWORD_CHANGE_REQUIRED'), { initialValue: '' });
     private readonly lastActiveLabel = toSignal(this.translate.stream('ADMIN_USER.LAST_ACTIVE'), { initialValue: '' });
     private readonly unknownActivityLabel = toSignal(this.translate.stream('ADMIN_USER.ACTIVITY_UNKNOWN'), { initialValue: '' });

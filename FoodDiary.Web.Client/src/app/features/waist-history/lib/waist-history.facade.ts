@@ -51,10 +51,11 @@ type WaistCustomRangeFormModel = {
 type SummaryRead = {
     filters: WaistEntrySummaryFilters;
     summaryVersion: number;
-    updateRollingMonth: boolean;
+    rollingMonthVersion: number | null;
 };
 
 type PageRead = SummaryRead & { pageVersion: number };
+type RollingMonthRead = { filters: WaistEntrySummaryFilters; version: number };
 
 @Injectable()
 export class WaistHistoryFacade {
@@ -73,21 +74,23 @@ export class WaistHistoryFacade {
     private lastLoadedRangeKey: string | null = null;
     private pageRequestVersion = 0;
     private summaryRequestVersion = 0;
+    private rollingMonthRequestVersion = 0;
+    private appliedRollingMonthVersion = 0;
     private readonly requestedPage = signal<PageRead | undefined>(undefined);
     private readonly requestedSummary = signal<SummaryRead | undefined>(undefined);
     private readonly selectedSummary = rxResource({
         params: this.requestedSummary,
         stream: ({ params }) => this.readSummary(params),
     });
-    private readonly requestedRollingMonth = signal<WaistEntrySummaryFilters | undefined>(undefined);
+    private readonly requestedRollingMonth = signal<RollingMonthRead | undefined>(undefined);
     private readonly rollingMonthSummary = rxResource({
         params: this.requestedRollingMonth,
         stream: ({ params }) =>
-            this.waistEntriesService.getSummary(params).pipe(
+            this.waistEntriesService.getSummary(params.filters).pipe(
                 tap({
                     next: points => {
                         if (this.requestedRollingMonth() === params) {
-                            this.rollingMonthSummaryPoints.set(points);
+                            this.applyRollingMonth(params.version, points);
                         }
                     },
                     error: () => {
@@ -450,12 +453,9 @@ export class WaistHistoryFacade {
         this.lastLoadedRangeKey = rangeKey;
         const pageRequestVersion = ++this.pageRequestVersion;
         const summaryRequestVersion = ++this.summaryRequestVersion;
-        const updateRollingMonth = this.selectedRange() === 'month';
+        const rollingMonthVersion = this.selectedRange() === 'month' ? this.beginRollingMonthRead() : null;
         this.requestedSummary.set(undefined);
         this.selectedSummary.set(undefined);
-        if (updateRollingMonth) {
-            this.cancelRollingMonthSummary();
-        }
         this.pageLoadError.set(false);
         this.summaryLoadError.set(false);
         this.isLoading.set(true);
@@ -464,7 +464,7 @@ export class WaistHistoryFacade {
             filters: summaryParams,
             pageVersion: pageRequestVersion,
             summaryVersion: summaryRequestVersion,
-            updateRollingMonth,
+            rollingMonthVersion,
         });
     }
 
@@ -472,7 +472,7 @@ export class WaistHistoryFacade {
         filters,
         pageVersion: pageRequestVersion,
         summaryVersion: summaryRequestVersion,
-        updateRollingMonth,
+        rollingMonthVersion,
     }: PageRead): ReturnType<WaistEntriesService['getPageSummary']> {
         return this.waistEntriesService.getPageSummary({ ...filters, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT }).pipe(
             tap({
@@ -486,9 +486,7 @@ export class WaistHistoryFacade {
                     if (summaryRequestVersion === this.summaryRequestVersion) {
                         this.summaryPoints.set(page.summary);
                     }
-                    if (updateRollingMonth) {
-                        this.rollingMonthSummaryPoints.set(page.summary);
-                    }
+                    this.applyRollingMonth(rollingMonthVersion, page.summary);
                     this.userHeightCm.set(page.heightCm);
                     this.waistGoal.set(page.goal);
                     this.waistGoalHistory.set(page.goalHistory);
@@ -525,18 +523,16 @@ export class WaistHistoryFacade {
 
     private loadSummary(filters: WaistEntrySummaryFilters, updateRollingMonth = false): void {
         const summaryRequestVersion = ++this.summaryRequestVersion;
-        if (updateRollingMonth) {
-            this.cancelRollingMonthSummary();
-        }
+        const rollingMonthVersion = updateRollingMonth ? this.beginRollingMonthRead() : null;
         this.summaryLoadError.set(false);
         this.isSummaryLoading.set(true);
-        this.requestedSummary.set({ filters, summaryVersion: summaryRequestVersion, updateRollingMonth });
+        this.requestedSummary.set({ filters, summaryVersion: summaryRequestVersion, rollingMonthVersion });
     }
 
     private readSummary({
         filters,
         summaryVersion: summaryRequestVersion,
-        updateRollingMonth,
+        rollingMonthVersion,
     }: SummaryRead): ReturnType<WaistEntriesService['getSummary']> {
         return this.waistEntriesService.getSummary(filters).pipe(
             tap({
@@ -545,9 +541,7 @@ export class WaistHistoryFacade {
                         return;
                     }
                     this.summaryPoints.set(points);
-                    if (updateRollingMonth) {
-                        this.rollingMonthSummaryPoints.set(points);
-                    }
+                    this.applyRollingMonth(rollingMonthVersion, points);
                 },
                 error: () => {
                     if (summaryRequestVersion !== this.summaryRequestVersion) {
@@ -571,12 +565,20 @@ export class WaistHistoryFacade {
         }
 
         const { summaryParams } = buildWaistHistoryFiltersForRange('month', null);
-        this.requestedRollingMonth.set(summaryParams);
+        this.requestedRollingMonth.set({ filters: summaryParams, version: ++this.rollingMonthRequestVersion });
     }
 
-    private cancelRollingMonthSummary(): void {
+    private beginRollingMonthRead(): number {
         this.requestedRollingMonth.set(undefined);
         this.rollingMonthSummary.set(undefined);
+        return ++this.rollingMonthRequestVersion;
+    }
+
+    private applyRollingMonth(version: number | null, points: WaistEntrySummaryPoint[]): void {
+        if (version !== null && version > this.appliedRollingMonthVersion) {
+            this.appliedRollingMonthVersion = version;
+            this.rollingMonthSummaryPoints.set(points);
+        }
     }
 
     private buildPayload(): CreateWaistEntryPayload | null {

@@ -9,7 +9,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { ADMIN_DATE_TEXT_LENGTH, adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -66,18 +66,26 @@ export class AdminAcquisitionComponent {
     private readonly acquisitionFacade = inject(AdminAcquisitionFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    private readonly queryInputs = computed(() => ({
+        page: this.page(),
+        search: this.search(),
+        eventType: this.eventType(),
+        channel: this.channel(),
+        period: this.period(),
+        from: this.from(),
+        to: this.to(),
+    }));
     private readonly appliedQuery = computed(() => {
-        const eventType = this.eventType() ?? 'all';
-        const channel = this.channel() ?? 'all';
+        const { page, search, eventType = 'all', channel = 'all', period, from, to } = this.queryInputs();
         const filters: AcquisitionEventFilters = {
-            search: this.search() ?? '',
+            search: search ?? '',
             eventType: this.isEventFilter(eventType) ? eventType : 'all',
             channel: this.isChannelFilter(channel) ? channel : 'all',
         };
         return {
-            page: adminPage(this.page() ?? null),
+            page: adminPage(page ?? null),
             filters,
-            periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+            periodParams: convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }),
         };
     });
     protected readonly eventPageSize = 50;
@@ -87,7 +95,7 @@ export class AdminAcquisitionComponent {
         stream: ({ params }) =>
             this.acquisitionFacade.getRange(params).pipe(
                 map(report => {
-                    if (this.requestedReport() !== params) {
+                    if (this.requestedReport() !== params || !adminRouteInputsMatch(this.route, this.queryInputs())) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {

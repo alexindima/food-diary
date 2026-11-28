@@ -2,7 +2,7 @@ import { formatDate } from '@angular/common';
 import { computed, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, map, type Observable, throwError } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminExclusiveDatePeriod, type AdminPeriod } from '../../../shared/period/admin-period';
@@ -57,8 +57,7 @@ export class AdminBillingFacade {
         stream: ({ params }) =>
             this.loadRecords(params).pipe(
                 map(records => {
-                    // The router commits its snapshot before updating the page inputs.
-                    if (this.requestedLoad() !== params || this.activeTab() !== params.tab || this.queryKey() !== params.queryKey) {
+                    if (!this.ownsRequest(params)) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
@@ -67,11 +66,6 @@ export class AdminBillingFacade {
                     });
                     return correctingPage ? null : records;
                 }),
-                catchError((error: unknown) =>
-                    throwError(() =>
-                        error instanceof Error && error.message.length > 0 ? error : new Error('Failed to load billing records.'),
-                    ),
-                ),
             ),
     });
     private readonly revenueResource = rxResource({
@@ -144,7 +138,7 @@ export class AdminBillingFacade {
     public readonly isLoading = computed(
         () => this.recordsResource.isLoading() || (this.recordsResource.hasValue() && this.records() === null),
     );
-    public readonly errorMessage = computed(() => this.recordsResource.error()?.message ?? null);
+    public readonly recordsFailed = computed(() => this.recordsResource.error() !== undefined);
     public readonly provider = signal('');
     public readonly status = signal('');
     public readonly kind = signal('');
@@ -231,6 +225,18 @@ export class AdminBillingFacade {
             filters: this.buildFilters(tab),
             revenueFilters: tab === 'cancellations' ? undefined : this.revenueFilters(),
         });
+    }
+
+    public retryRecords(): void {
+        const request = this.requestedLoad();
+        if (request !== undefined && this.ownsRequest(request)) {
+            this.recordsResource.reload();
+        }
+    }
+
+    private ownsRequest(request: BillingRequest): boolean {
+        // The router commits its snapshot before updating the page inputs.
+        return this.requestedLoad() === request && this.activeTab() === request.tab && this.queryKey() === request.queryKey;
     }
 
     private queryKey(): string {

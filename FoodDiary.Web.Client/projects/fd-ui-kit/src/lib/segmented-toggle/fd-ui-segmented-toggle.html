@@ -1,12 +1,16 @@
 <div role="radiogroup" [class]="containerClass()" [attr.aria-label]="ariaLabel() || null">
     @for (option of optionViewModels(); track option.value) {
         <button
+            #optionButton
             type="button"
             class="fd-ui-segmented-toggle__item"
             role="radio"
-            [class.is-active]="option.value === selectedValue()"
-            [attr.aria-checked]="option.value === selectedValue()"
+            [value]="option.value"
+            [class.is-active]="option.selected"
+            [attr.aria-checked]="option.selected"
+            [tabIndex]="option.tabIndex"
             (click)="select(option.value)"
+            (keydown)="onKeydown(option.value, $event)"
         >
             {{ option.labelText }}
         </button>

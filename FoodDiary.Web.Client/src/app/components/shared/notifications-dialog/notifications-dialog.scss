@@ -4,6 +4,10 @@
     min-height: 18rem;
 }
 
+.notifications-dialog__load-error {
+    margin-block-end: var(--fd-space-sm);
+}
+
 .notifications-dialog__state {
     min-height: 16rem;
     text-align: center;

@@ -7,7 +7,7 @@ import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiS
 import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -56,24 +56,37 @@ export class AdminBugsPageComponent {
     private readonly translate = inject(TranslateService);
     private readonly languageChange = toSignal(this.translate.onLangChange, { initialValue: null });
     private readonly detailRoute = this.route.routeConfig?.path === ':id';
-    private readonly appliedQuery = computed(() => ({
-        id: this.detailRoute ? (this.id() ?? null) : null,
-        page: adminPage(this.page() ?? null),
-        source: this.source() === 'logs' ? 'logs' : 'email',
-        filters: { search: this.search() ?? '', status: this.status() ?? '' },
-        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    private readonly queryInputs = computed(() => ({
+        page: this.page(),
+        source: this.source(),
+        search: this.search(),
+        status: this.status(),
+        period: this.period(),
+        from: this.from(),
+        to: this.to(),
     }));
+    private readonly appliedQuery = computed(() => {
+        const { page, source, search, status, period, from, to } = this.queryInputs();
+        return {
+            id: this.detailRoute ? (this.id() ?? null) : null,
+            page: adminPage(page ?? null),
+            source: source === 'logs' ? 'logs' : 'email',
+            filters: { search: search ?? '', status: status ?? '' },
+            periodParams: convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }),
+        };
+    });
     private readonly requestedPage = linkedSignal(() => this.buildRequest());
     private readonly reportResource = rxResource({
         params: this.requestedPage,
         stream: ({ params }) =>
             this.api.getPage(params).pipe(
                 map(result => {
-                    if (this.requestedPage() !== params) {
+                    const isListRequest = params.id === undefined;
+                    if (this.requestedPage() !== params || (isListRequest && !adminRouteInputsMatch(this.route, this.queryInputs()))) {
                         return null;
                     }
                     const correctingPage =
-                        params.id === undefined &&
+                        isListRequest &&
                         restoreAdminPage(this.router, this.route, params.page, { totalItems: result.totalItems, pageSize: PAGE_SIZE });
                     return correctingPage ? null : result;
                 }),

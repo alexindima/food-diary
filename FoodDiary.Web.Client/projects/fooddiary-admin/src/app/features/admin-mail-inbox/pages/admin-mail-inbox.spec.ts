@@ -1,10 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { type Observable, of, Subject, throwError } from 'rxjs';
+import { filter, type Observable, of, Subject, take, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
@@ -299,6 +299,9 @@ describe('admin inbox request recovery', () => {
         const { element, harness, router } = await setupInboxAsync(`${INBOX}?period=custom&from=2026-10-07&to=2026-10-06`, getMessagePage);
         requireNamedButton(element, 'Refresh').click();
         expect(getMessagePage).not.toHaveBeenCalled();
+        expect(element.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
+        expect(element.textContent).not.toContain('No inbound messages found.');
+        expect(element.querySelector('fd-ui-pagination')).toBeNull();
 
         await harness.navigateByUrl(`${INBOX}?fromAddress=sender@example.test&category=general`);
         await renderInboxAsync(harness);
@@ -322,6 +325,34 @@ describe('admin inbox request recovery', () => {
         expect(router.parseUrl(router.url).queryParamMap.get('fromAddress')).toBe('sender@example.test');
         expect(sender.value).toBe('draft@example.test');
     });
+});
+
+it.each(['/mail-inbox', '/feedback'])('keeps %s filters and page when an obsolete response arrives at NavigationEnd', async path => {
+    const pending = new Subject<AdminMailInboxMessagePage>();
+    const getMessagePage = vi
+        .fn<AdminMailInboxFacade['getMessagePage']>()
+        .mockReturnValueOnce(pending)
+        .mockReturnValue(of({ items: [currentMail], totalItems: INBOX_TOTAL }));
+    const { harness, router } = await setupInboxAsync(`${path}?page=2&search=previous`, getMessagePage, { waitForPage: false });
+    const restored = `${path}?search=restored`;
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ items: [], totalItems: INBOX_TOTAL });
+            pending.complete();
+        });
+
+    await router.navigateByUrl(restored);
+    await renderInboxAsync(harness);
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restored);
+    expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ search: 'restored' }));
 });
 
 describe('admin inbox navigation', () => {

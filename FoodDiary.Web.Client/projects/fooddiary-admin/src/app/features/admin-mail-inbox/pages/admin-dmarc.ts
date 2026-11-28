@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe, PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -8,7 +8,7 @@ import { FdUiCardComponent, FdUiSegmentedToggleComponent, type FdUiSegmentedTogg
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { firstAdminQueryValue } from '../../../shared/period/admin-query';
 import { AdminDmarcReportsComponent } from '../components/admin-dmarc-reports';
-import { type AdminDmarcPeriod, loadAdminDmarcView } from '../lib/admin-dmarc-loader';
+import { type AdminDmarcPeriod, type AdminDmarcView, loadAdminDmarcView, retryAdminDmarcAttachments } from '../lib/admin-dmarc-loader';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 
 @Component({
@@ -38,10 +38,20 @@ export class AdminDmarcComponent {
         { value: '7', labelKey: 'ADMIN_DMARC.PERIOD_7' },
         { value: '30', labelKey: 'ADMIN_DMARC.PERIOD_30' },
     ];
-    protected readonly reportResource = rxResource({
-        params: this.selectedPeriod,
-        stream: ({ params }) => loadAdminDmarcView(this.facade, params),
+    private readonly request = linkedSignal<{ period: AdminDmarcPeriod; retryView?: AdminDmarcView }>(() => ({
+        period: this.selectedPeriod(),
+    }));
+    private readonly reportResource = rxResource({
+        params: this.request,
+        stream: ({ params }) =>
+            params.retryView === undefined
+                ? loadAdminDmarcView(this.facade, params.period)
+                : retryAdminDmarcAttachments(this.facade, params.retryView),
     });
+    protected readonly loading = this.reportResource.isLoading;
+    protected readonly report = computed(() =>
+        this.reportResource.hasValue() ? this.reportResource.value() : (this.request().retryView ?? null),
+    );
 
     protected selectPeriod(period: AdminDmarcPeriod): void {
         void this.router.navigate([], { relativeTo: this.route, queryParams: { period } });
@@ -49,5 +59,12 @@ export class AdminDmarcComponent {
 
     protected retry(): void {
         this.reportResource.reload();
+    }
+
+    protected retryAttachments(): void {
+        const report = this.report();
+        if (report?.hasLoadErrors === true && !this.loading()) {
+            this.request.set({ period: this.selectedPeriod(), retryView: report });
+        }
     }
 }

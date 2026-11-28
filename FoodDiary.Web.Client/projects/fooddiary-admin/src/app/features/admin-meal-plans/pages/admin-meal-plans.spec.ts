@@ -173,6 +173,13 @@ describe('Meal plan list and editor lifecycle', () => {
         expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
         expect(host.querySelector('article h2')?.textContent).toBe('Saved server plan');
         expect(host.querySelector('[role="status"]:not([hidden])')?.textContent).toContain('ADMIN_MEAL_PLANS.SAVED');
+
+        host.querySelector<HTMLButtonElement>(editSelector)?.click();
+        await settlePlansAsync();
+        expect(host.querySelector('[role="status"]:not([hidden])')).toBeNull();
+        clickMealPlanAction(host, 'CANCEL');
+        fixture.detectChanges();
+        expect(host.querySelector('[role="status"]:not([hidden])')).toBeNull();
     });
 });
 

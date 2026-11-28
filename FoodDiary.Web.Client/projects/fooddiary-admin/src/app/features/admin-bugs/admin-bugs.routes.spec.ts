@@ -1,10 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, of } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, take } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../src/testing/dom-testing';
@@ -13,7 +13,7 @@ import { adminId, adminUtcInstant } from '../../shared/models/semantics/admin-me
 import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminBugsRoutes } from './admin-bugs.routes';
 import { AdminBugsService } from './api/admin-bugs.service';
-import type { AdminBugReport } from './models/admin-bug-report';
+import type { AdminBugReport, AdminBugReportPage } from './models/admin-bug-report';
 
 const REPORT_COUNT = 51;
 const FINAL_PAGE = 3;
@@ -76,6 +76,33 @@ async function updateViewAsync(harness: RouterTestingHarness): Promise<void> {
     await harness.fixture.whenStable();
     harness.detectChanges();
 }
+
+it('keeps the new bug journal filters and page when a previous result arrives during navigation', async () => {
+    const getPage = configureRoute();
+    const pending = new Subject<AdminBugReportPage>();
+    getPage.mockReturnValueOnce(pending);
+    const harness = await RouterTestingHarness.create('/bugs?source=logs&page=2&search=previous');
+    const router = TestBed.inject(Router);
+    const restored = '/bugs?source=logs&search=restored';
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ items: [latest], totalItems: REPORT_COUNT, isConfigured: true, latestAudit: null });
+            pending.complete();
+        });
+
+    await router.navigateByUrl(restored);
+    await updateViewAsync(harness);
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restored);
+    expect(getPage).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, source: 'logs', search: 'restored' }));
+});
 
 describe('Admin bug journal route', () => {
     it('treats a query ID on the list URL as an unrelated parameter', async () => {

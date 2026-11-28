@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, inject, input, model, viewChildren } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,6 +26,7 @@ export type FdUiSegmentedToggleSize = 'compact' | 'sm' | 'md';
 export class FdUiSegmentedToggleComponent<Value extends string = string> {
     private readonly translate = inject(TranslateService);
     private readonly languageChange = toSignal(this.translate.onLangChange);
+    private readonly optionButtons = viewChildren<ElementRef<HTMLButtonElement>>('optionButton');
 
     public readonly options = input<Array<FdUiSegmentedToggleOption<Value>>>([]);
     public readonly selectedValue = model.required<Value>();
@@ -39,9 +40,13 @@ export class FdUiSegmentedToggleComponent<Value extends string = string> {
     public readonly wrapOnNarrow = input(false);
     protected readonly optionViewModels = computed(() => {
         this.languageChange();
-        return this.options().map(option => ({
+        const options = this.options();
+        const selectedIndex = options.findIndex(option => option.value === this.selectedValue());
+        return options.map((option, index) => ({
             ...option,
             labelText: option.label ?? (option.labelKey !== undefined ? this.translate.instant(option.labelKey) : ''),
+            selected: index === selectedIndex,
+            tabIndex: index === Math.max(0, selectedIndex) ? 0 : -1,
         }));
     });
 
@@ -72,5 +77,37 @@ export class FdUiSegmentedToggleComponent<Value extends string = string> {
         }
 
         this.selectedValue.set(value);
+    }
+
+    protected onKeydown(value: Value, event: KeyboardEvent): void {
+        let offset: 1 | -1;
+        switch (event.key) {
+            case 'ArrowRight':
+            case 'ArrowDown': {
+                offset = 1;
+                break;
+            }
+            case 'ArrowLeft':
+            case 'ArrowUp': {
+                offset = -1;
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+
+        const options = this.options();
+        const index = options.findIndex(option => option.value === value);
+        if (index === -1) {
+            return;
+        }
+        const next = options[(index + offset + options.length) % options.length];
+        const button = this.optionButtons().find(option => option.nativeElement.value === next.value)?.nativeElement;
+        if (button !== undefined) {
+            event.preventDefault();
+            button.focus();
+            this.select(next.value);
+        }
     }
 }

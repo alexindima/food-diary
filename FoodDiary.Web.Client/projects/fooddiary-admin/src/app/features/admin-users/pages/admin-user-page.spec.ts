@@ -243,34 +243,68 @@ describe('AdminUserPageComponent', () => {
         expect(usersService.getUser).toHaveBeenCalledWith(baseUser.id);
         expect(usersService.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id });
         expect(usersService.getUserRoleAudit).toHaveBeenCalledWith(baseUser.id);
-        expect(component['activityLoading']()).toBe(false);
+        expect(host(fixture).querySelector('[role="status"]')).toBeNull();
         expect(component['failed']()).toBe(false);
         expect(host(fixture).textContent).toContain(baseUser.email);
         expect(host(fixture).textContent).toContain('Role history');
     });
 
-    it('keeps details visible when activity loading fails', async () => {
-        const { component, fixture } = await createContextAsync(usersService => {
-            usersService.getLoginEvents.mockReturnValueOnce(throwError(() => new Error('activity failed')));
-        });
-
-        expect(component['activityLoading']()).toBe(false);
-        expect(component['failed']()).toBe(false);
-        expect(component['activityFailed']()).toBe(true);
-        expect(detailField(fixture, 'Email')).toBe(baseUser.email);
-        expect(component['loginEvents']()).toEqual([]);
-        expect(component['roleAuditEvents']()).toEqual([]);
-    });
-
     it('shows an error when user details fail to load', async () => {
-        const { component, fixture } = await createContextAsync(usersService => {
-            usersService.getUser.mockReturnValueOnce(throwError(() => new Error('details failed')));
+        const { component, fixture, usersService } = await createContextAsync(service => {
+            service.getUser.mockReturnValueOnce(throwError(() => new Error('details failed')));
         });
 
-        expect(component['activityLoading']()).toBe(false);
         expect(component['failed']()).toBe(true);
         expect(host(fixture).querySelector('fd-admin-load-error')).not.toBeNull();
+        expect(usersService.getLoginEvents).not.toHaveBeenCalled();
+        expect(usersService.getUserRoleAudit).not.toHaveBeenCalled();
     });
+});
+
+describe('Admin account activity preview failures', () => {
+    it.each([
+        {
+            request: 'getLoginEvents',
+            sibling: 'getUserRoleAudit',
+            title: 'Last logins',
+            siblingTitle: 'Role history',
+            content: roleAuditEvent.roleName,
+            recovered: loginEvent.authProvider,
+        },
+        {
+            request: 'getUserRoleAudit',
+            sibling: 'getLoginEvents',
+            title: 'Role history',
+            siblingTitle: 'Last logins',
+            content: loginEvent.authProvider,
+            recovered: roleAuditEvent.roleName,
+        },
+    ] as const)(
+        'retries only $request when the other activity section succeeds',
+        async ({ request, sibling, title, siblingTitle, content, recovered }) => {
+            const { fixture, usersService } = await createContextAsync(service => {
+                service[request].mockReturnValueOnce(throwError(() => new Error('activity unavailable')));
+            });
+            const sections = [...host(fixture).querySelectorAll('section')];
+            const failedSection = sections.find(section => section.querySelector('h3')?.textContent === title);
+            const siblingSection = sections.find(section => section.querySelector('h3')?.textContent === siblingTitle);
+            const failedRequest = usersService[request].mock.lastCall;
+
+            expect(detailField(fixture, 'Email')).toBe(baseUser.email);
+            expect(failedSection?.querySelector('[role="alert"]')?.textContent ?? '').toContain('ADMIN_COMMON.LOAD_ERROR');
+            expect(siblingSection?.textContent).toContain(content);
+            expect(siblingSection?.querySelector('fd-admin-load-error')).toBeNull();
+            failedSection?.querySelector<HTMLButtonElement>('fd-admin-load-error button')?.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(usersService[request].mock.calls).toEqual([failedRequest, failedRequest]);
+            expect(usersService[sibling]).toHaveBeenCalledOnce();
+            expect(usersService.getUser).toHaveBeenCalledOnce();
+            expect(failedSection?.textContent).toContain(recovered);
+            expect(failedSection?.querySelector('fd-admin-load-error')).toBeNull();
+        },
+    );
 });
 
 describe('AdminUserPageComponent actions and navigation', () => {
@@ -339,7 +373,8 @@ describe('AdminUserPageComponent account ownership', () => {
         await vi.waitFor(() => {
             expect(pendingLogins.observed).toBe(true);
         });
-        expect(component['activityLoading']()).toBe(true);
+        expect(host(fixture).querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
+        expect(host(fixture).querySelector('.admin-user-details__audit-list')?.textContent).toContain(roleAuditEvent.roleName);
         const nextUser = { ...baseUser, id: 'user-2', email: 'second@example.com' };
         usersService.getUser.mockReturnValueOnce(of(nextUser));
         usersService.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
@@ -441,6 +476,9 @@ describe('Admin account detail action results', () => {
         fixture.detectChanges();
         expect(host(fixture).querySelector('h1')?.textContent).toBe('updated@example.test');
         expect(usersService.getUser).toHaveBeenLastCalledWith(baseUser.id);
+        const loginRequest = [1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id }];
+        expect(usersService.getLoginEvents.mock.calls).toEqual([loginRequest, loginRequest]);
+        expect(usersService.getUserRoleAudit.mock.calls).toEqual([[baseUser.id], [baseUser.id]]);
     });
 
     it('does not open dialogs or show Premium grant controls for a deleted account', async () => {

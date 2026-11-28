@@ -54,7 +54,7 @@
                     [starsPrice]="overview()?.telegramStarsPrice ?? null"
                     [checkoutBlocked]="trialLoading()"
                     [preferTrial]="overviewViewModel().showStartTrial && overviewViewModel().isFreePlan"
-                    (retryPrices)="reloadOverviewAsync()"
+                    (retryPrices)="retryPricesAsync()"
                     (checkout)="startCheckoutFromViewAsync($event)"
                     (readTerms)="support.expanded.set(true)"
                 />

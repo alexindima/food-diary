@@ -20,7 +20,7 @@
     "src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html": 6,
     "src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html": 8,
     "src/app/features/recommendations/pages/recommendations-page/recommendations-page.html": 11,
-    "src/app/features/statistics/pages/statistics.html": 8,
+    "src/app/features/statistics/pages/statistics.html": 6,
     "src/app/features/waist-history/pages/waist-history-page/waist-history-page.html": 6,
     "src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html": 11,
     "src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.html": 6,

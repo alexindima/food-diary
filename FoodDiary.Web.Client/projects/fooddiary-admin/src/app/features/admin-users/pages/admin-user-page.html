@@ -64,14 +64,31 @@
         <fd-admin-user-premium-grant [userId]="account.id" />
     }
     <fd-ui-card>
-        <fd-admin-user-details-body
-            [sections]="detail.sections"
-            [loginEvents]="loginEvents()"
-            [roleAuditEvents]="roleAuditEvents()"
-            [activityLoading]="activityLoading()"
-            [activityFailed]="activityFailed()"
-            (retry)="reload()"
-        />
+        <div class="fd-grid fd-gap-lg">
+            @for (section of detail.sections; track section.title) {
+                <section class="admin-user-details__section fd-grid fd-gap-sm">
+                    <h3>{{ section.title }}</h3>
+                    <dl class="admin-user-details__grid fd-grid fd-gap-sm">
+                        @for (field of section.fields; track field.label) {
+                            <div>
+                                <dt>{{ field.label }}</dt>
+                                <dd>{{ field.value }}</dd>
+                            </div>
+                        }
+                    </dl>
+                </section>
+            }
+            <fd-admin-user-details-body
+                [loginEvents]="loginEvents()"
+                [roleAuditEvents]="roleAuditEvents()"
+                [loginEventsLoading]="loginEventsResource.isLoading()"
+                [loginEventsFailed]="loginEventsResource.error() !== undefined"
+                [roleAuditLoading]="roleAuditResource.isLoading()"
+                [roleAuditFailed]="roleAuditResource.error() !== undefined"
+                (retryLoginEvents)="loginEventsResource.reload()"
+                (retryRoleAudit)="roleAuditResource.reload()"
+            />
+        </div>
     </fd-ui-card>
 } @else {
     <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>

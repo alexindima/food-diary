@@ -1,13 +1,12 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
-import { tap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
-import type { CatalogPlan, CatalogPlanSummary } from '../models/admin-meal-plan.data';
+import type { CatalogPlanSummary } from '../models/admin-meal-plan.data';
 import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 
 @Component({
@@ -26,26 +25,18 @@ export class AdminMealPlansComponent {
     private readonly detailRequest = signal<{ id: CatalogPlanSummary['id'] } | undefined>(undefined);
     private readonly detailResource = rxResource({
         params: this.detailRequest,
-        stream: ({ params }) =>
-            this.api.get(params.id).pipe(
-                tap(detail => {
-                    if (this.detailRequest() === params) {
-                        this.selected.set(detail);
-                        this.editing.set(true);
-                        this.saved.set(false);
-                    }
-                }),
-            ),
+        stream: ({ params }) => this.api.get(params.id),
     });
+    private readonly creating = signal(false);
     protected readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value() : []));
     protected readonly loading = computed(() => this.plansResource.isLoading() || this.detailResource.isLoading());
     protected readonly loadFailed = computed(() => this.plansResource.error() !== undefined);
-    protected readonly editing = signal(false);
+    protected readonly selected = computed(() => (this.detailResource.hasValue() ? this.detailResource.value() : null));
+    protected readonly editing = computed(() => this.creating() || this.selected() !== null);
     protected readonly error = computed(() =>
         this.detailResource.error() === undefined ? null : String(this.translate.instant('ADMIN_MEAL_PLANS.LOAD_ERROR')),
     );
-    protected readonly saved = signal(false);
-    protected readonly selected = signal<CatalogPlan | null>(null);
+    protected readonly saved = linkedSignal({ source: this.selected, computation: () => false });
 
     protected load(): void {
         this.listVersion.update(version => version + 1);
@@ -53,9 +44,8 @@ export class AdminMealPlansComponent {
 
     protected create(): void {
         this.detailRequest.set(undefined);
-        this.selected.set(null);
         this.saved.set(false);
-        this.editing.set(true);
+        this.creating.set(true);
     }
 
     protected edit(plan: CatalogPlanSummary): void {
@@ -64,14 +54,11 @@ export class AdminMealPlansComponent {
 
     protected cancel(): void {
         this.detailRequest.set(undefined);
-        this.selected.set(null);
-        this.editing.set(false);
+        this.creating.set(false);
     }
 
     protected onSaved(): void {
-        this.detailRequest.set(undefined);
-        this.selected.set(null);
-        this.editing.set(false);
+        this.cancel();
         this.saved.set(true);
         this.load();
     }

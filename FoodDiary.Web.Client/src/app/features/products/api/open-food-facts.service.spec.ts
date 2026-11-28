@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
@@ -78,15 +78,12 @@ describe('Open Food Facts failures and barcode lookup', () => {
         httpMock.expectOne(`${BASE_URL}/products/00123`).flush({}, { status: 503, statusText: 'Unavailable' });
         expect(received).toBeNull();
     });
-    it('returns an empty search result on failure and honors explicit limit', () => {
-        let received: unknown;
-        service.search('milk', 2).subscribe(value => {
-            received = value;
-        });
+    it('propagates search failure and honors the explicit limit', async () => {
+        const search = firstValueFrom(service.search('milk', 2));
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/products`);
         expect(req.request.params.get('limit')).toBe('2');
-        req.flush({}, { status: 503, statusText: 'Unavailable' });
-        expect(received).toEqual([]);
+        req.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        await expect(search).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable });
     });
 });
 
@@ -115,6 +112,6 @@ describe('Open Food Facts persisted catalog fields', () => {
         const pending = firstValueFrom(service.search('sparkling water'));
         httpMock.expectOne(req => req.url === `${BASE_URL}/products`).flush([product, { name: 'Unidentified water' }]);
 
-        await expect(pending).resolves.toEqual([]);
+        await expect(pending).rejects.toThrow('API response is missing required field: barcode.');
     });
 });

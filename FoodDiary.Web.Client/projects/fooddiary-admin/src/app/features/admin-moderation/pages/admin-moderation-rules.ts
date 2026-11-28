@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
-import { type Observable, tap } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminModerationNavigationComponent } from '../components/admin-moderation-navigation';
@@ -57,22 +57,17 @@ export class AdminModerationRulesComponent {
     private readonly moderation = inject(AdminRecipeModerationFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly policyResource = rxResource({
-        stream: () =>
-            this.moderation.getPolicy().pipe(
-                tap(policy => {
-                    this.applyPolicy(policy);
-                }),
-            ),
+        stream: () => this.moderation.getPolicy(),
     });
     protected readonly textCategoryOptions = TEXT_CATEGORIES;
     protected readonly imageCategoryOptions = COMMON_CATEGORIES;
     protected readonly categoryLabels: Record<string, string> = Object.fromEntries(
         TEXT_CATEGORIES.map(option => [option.value, option.label]),
     );
-    protected readonly policy = signal<AdminRecipeModerationPolicy | null>(null);
-    protected readonly textCategories = signal<string[]>([]);
-    protected readonly imageCategories = signal<string[]>([]);
-    protected readonly samplePercent = signal<number | null>(null);
+    protected readonly policy = computed(() => (this.policyResource.hasValue() ? this.policyResource.value() : null));
+    protected readonly textCategories = linkedSignal(() => this.policy()?.active.rules.textReviewCategories ?? []);
+    protected readonly imageCategories = linkedSignal(() => this.policy()?.active.rules.imageReviewCategories ?? []);
+    protected readonly samplePercent = linkedSignal(() => this.policy()?.active.rules.mistralSamplePercent ?? null);
     protected readonly loading = this.policyResource.isLoading;
     protected readonly loadFailed = computed(() => this.policyResource.error() !== undefined);
     protected readonly saving = signal(false);
@@ -128,7 +123,7 @@ export class AdminModerationRulesComponent {
         this.updateFailed.set(false);
         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: policy => {
-                this.applyPolicy(policy);
+                this.policyResource.set(policy);
                 this.updated.set(true);
                 this.saving.set(false);
             },
@@ -137,12 +132,5 @@ export class AdminModerationRulesComponent {
                 this.saving.set(false);
             },
         });
-    }
-
-    private applyPolicy(policy: AdminRecipeModerationPolicy): void {
-        this.policy.set(policy);
-        this.textCategories.set(policy.active.rules.textReviewCategories);
-        this.imageCategories.set(policy.active.rules.imageReviewCategories);
-        this.samplePercent.set(policy.active.rules.mistralSamplePercent);
     }
 }

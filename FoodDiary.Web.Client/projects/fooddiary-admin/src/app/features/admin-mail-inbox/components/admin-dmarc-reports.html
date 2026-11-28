@@ -1,6 +1,11 @@
 <div class="fd-row fd-wrap fd-align-center fd-justify-between fd-gap-sm">
     <h3 class="fd-ui-title-sm" id="admin-dmarc-reports">{{ 'ADMIN_DMARC.REPORTS' | translate }}</h3>
     <a routerLink="/mail-inbox" [queryParams]="{ recipient: reportMailbox }">{{ 'ADMIN_DMARC.ALL_REPORT_EMAILS' | translate }}</a>
+    @if (data().hasLoadErrors) {
+        <fd-ui-button type="button" variant="secondary" [loading]="retrying()" (click)="retryAttachments.emit()">
+            {{ 'ADMIN_COMMON.RETRY' | translate }}
+        </fd-ui-button>
+    }
 </div>
 @let reportList = data();
 @if (reportList.reports.length > 0) {

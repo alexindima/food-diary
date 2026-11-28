@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { signal } from '@angular/core';
+import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -80,6 +80,7 @@ type MealManageFacadeMock = {
 type MealManageFormSetup = {
     component: MealManageFormComponent;
     fixture: ComponentFixture<MealManageFormComponent>;
+    privacyNeedsReload: WritableSignal<boolean>;
     openDialog: ReturnType<typeof vi.fn>;
     mealManageFacade: MealManageFacadeMock;
     navigationService: {
@@ -204,12 +205,12 @@ describe('MealManageFormComponent health consent', () => {
         { failed: true, reload: false, message: 'PRIVACY_CHOICES.ERROR' },
         { failed: true, reload: true, message: 'PRIVACY_CHOICES.RELOAD' },
     ])('preserves the draft when consent is unavailable, failed=$failed reload=$reload', async ({ failed, reload, message }) => {
-        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade, privacyNeedsReload } = await setupComponentAsync();
         setValidManualMeal(component);
         const privacy = TestBed.inject(PrivacyConsentFacade);
         vi.spyOn(privacy, 'ensureHealthConsentAsync').mockResolvedValue(false);
         privacy.failed.set(failed);
-        privacy.needsReload.set(reload);
+        privacyNeedsReload.set(reload);
         fixture.detectChanges();
 
         const host = fixture.nativeElement as HTMLElement;
@@ -720,6 +721,7 @@ async function setupComponentAsync(
     launch?: { openManualItem?: boolean; initialMealType?: MealTypeOption; picker: Subject<MealItemFormValues | null> },
 ): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
+    const privacyNeedsReload = signal(false);
     const openDialog = vi.fn().mockReturnValue({ afterClosed: () => launch?.picker ?? of(true) });
     const navigationService = {
         navigateToMealListAsync: vi.fn().mockResolvedValue(true),
@@ -737,7 +739,7 @@ async function setupComponentAsync(
                 useValue: {
                     ensureHealthConsentAsync: vi.fn().mockResolvedValue(true),
                     failed: signal(false),
-                    needsReload: signal(false),
+                    needsReload: privacyNeedsReload,
                     state: signal<ReturnType<PrivacyConsentFacade['state']>>(null),
                 },
             },
@@ -761,6 +763,7 @@ async function setupComponentAsync(
     return {
         component: fixture.componentInstance,
         fixture,
+        privacyNeedsReload,
         openDialog,
         mealManageFacade,
         navigationService,
@@ -1540,9 +1543,9 @@ describe('Meal editor launch and item picker', () => {
 
 describe('Meal editor displayed feedback', () => {
     it.each([false, true])('preserves the form when the server requires renewed consent, reload=%s', async needsReload => {
-        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade, privacyNeedsReload } = await setupComponentAsync();
         setValidManualMeal(component);
-        TestBed.inject(PrivacyConsentFacade).needsReload.set(needsReload);
+        privacyNeedsReload.set(needsReload);
         mealManageFacade.submitMealAsync.mockRejectedValueOnce(
             new HttpErrorResponse({ status: 403, error: { error: 'Privacy.HealthConsentRequired' } }),
         );

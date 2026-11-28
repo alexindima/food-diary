@@ -6,7 +6,7 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -46,12 +46,24 @@ export class AdminImpersonationSessionsPageComponent {
     private readonly usersService = inject(AdminUsersFacade);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly appliedQuery = computed(() => ({
-        page: adminPage(this.page() ?? null),
-        search: this.search() ?? '',
-        filters: { actorId: this.actorId() ?? '', targetId: this.targetId() ?? '' },
-        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    private readonly queryInputs = computed(() => ({
+        page: this.page(),
+        search: this.search(),
+        actorId: this.actorId(),
+        targetId: this.targetId(),
+        period: this.period(),
+        from: this.from(),
+        to: this.to(),
     }));
+    private readonly appliedQuery = computed(() => {
+        const { page, search, actorId, targetId, period, from, to } = this.queryInputs();
+        return {
+            page: adminPage(page ?? null),
+            search: search ?? '',
+            filters: { actorId: actorId ?? '', targetId: targetId ?? '' },
+            periodParams: convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }),
+        };
+    });
     private readonly sessionsRequest = linkedSignal(() => this.buildRequest());
     private readonly sessionsResource = rxResource({
         params: this.sessionsRequest,
@@ -60,7 +72,7 @@ export class AdminImpersonationSessionsPageComponent {
                 .getImpersonationSessions(params.page, ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE, params.search, params.filters)
                 .pipe(
                     map(response => {
-                        if (this.sessionsRequest() !== params) {
+                        if (this.sessionsRequest() !== params || !adminRouteInputsMatch(this.route, this.queryInputs())) {
                             return null;
                         }
                         const correctingPage = restoreAdminPage(this.router, this.route, params.page, {

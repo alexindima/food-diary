@@ -194,7 +194,7 @@ describe('AdminBillingComponent loading', () => {
 
         expect(billing.subscriptions()).toEqual([]);
         expect(billing.totalItems()).toBe(0);
-        expect(billing.errorMessage()).toBe('network');
+        expect(billing.recordsFailed()).toBe(true);
         expect(billing.isLoading()).toBe(false);
     });
 
@@ -420,10 +420,10 @@ describe('Billing record and revenue failures', () => {
         ['payments', 'getPayments', 'No payments found.'],
         ['webhook-events', 'getWebhookEvents', 'No webhook events found.'],
         ['cancellations', 'getCancellations', 'ADMIN_BILLING.CANCELLATIONS.EMPTY'],
-    ] as const)('clears stale %s rows and uses a readable fallback after an opaque failure', async (tab, request, empty) => {
-        const { billingApi, fixture } = await setupBillingAsync();
+    ] as const)('retries the failed %s list without refreshing revenue or using unapplied filters', async (tab, request, empty) => {
+        const { billingApi, billing, fixture } = await setupBillingAsync();
         const router = TestBed.inject(Router);
-        await router.navigateByUrl(`/?tab=${tab}`);
+        await router.navigateByUrl(`/?tab=${tab}&search=applied`);
         await fixture.whenStable();
         billingApi[request].mockReturnValueOnce(throwError(() => ({ status: 503 })));
         const host = fixture.nativeElement as HTMLElement;
@@ -433,9 +433,22 @@ describe('Billing record and revenue failures', () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('Failed to load billing records.');
-        expect(host.textContent).toContain(empty);
-        expect(host.textContent).toContain('Total records: 0');
+        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
+        expect(host.textContent).not.toContain(empty);
+        expect(host.querySelector('.admin-billing__summary')).toBeNull();
+        const failedRequest = billingApi[request].mock.lastCall;
+        const revenueRequests = billingApi.getRevenueSummary.mock.calls.length;
+        const recordsRequests = billingApi[request].mock.calls.length;
+        billing.search.set('draft');
+        host.querySelector<HTMLButtonElement>('fd-admin-load-error button')?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(billingApi[request].mock.calls).toHaveLength(recordsRequests + 1);
+        expect(billingApi[request].mock.lastCall).toEqual(failedRequest);
+        expect(billingApi.getRevenueSummary.mock.calls).toHaveLength(revenueRequests);
+        expect(host.querySelector('fd-admin-load-error')).toBeNull();
+        expect(host.querySelector('.admin-billing__summary')).not.toBeNull();
     });
 
     it('keeps payment rows visible when revenue loading fails independently', async () => {

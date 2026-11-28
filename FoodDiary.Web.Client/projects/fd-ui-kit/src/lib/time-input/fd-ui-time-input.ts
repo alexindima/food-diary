@@ -80,7 +80,7 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
             }
 
             this.centerOption(this.hourOptionElements()[this.selectedHour()]);
-            const minuteIndex = Math.round(this.selectedMinute() / MINUTES_STEP);
+            const minuteIndex = Math.min(Math.round(this.selectedMinute() / MINUTES_STEP), this.minutes.length - 1);
             this.centerOption(this.minuteOptionElements()[minuteIndex]);
         });
     }

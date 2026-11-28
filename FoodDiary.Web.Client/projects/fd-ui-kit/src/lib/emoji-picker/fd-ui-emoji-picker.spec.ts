@@ -144,16 +144,35 @@ describe('FdUiEmojiPickerComponent arrow navigation', () => {
     });
 
     it.each([
-        { key: 'ArrowLeft', label: 'Low energy', value: 'low' },
-        { key: 'ArrowRight', label: 'High energy', value: 'high' },
-    ])('keeps focus and selection at the available boundary for $key', ({ key, label, value }) => {
-        const harness = createHarness(value);
-        const selected = radio(harness, label);
-        selected.focus();
-        expect(pressKey(harness, selected, key).defaultPrevented).toBe(true);
+        { key: 'ArrowLeft', from: 'Low energy', initial: 'low', to: 'High energy', value: 'high' },
+        { key: 'ArrowUp', from: 'Low energy', initial: 'low', to: 'High energy', value: 'high' },
+        { key: 'ArrowRight', from: 'High energy', initial: 'high', to: 'Low energy', value: 'low' },
+        { key: 'ArrowDown', from: 'High energy', initial: 'high', to: 'Low energy', value: 'low' },
+    ])('wraps focus and selection at the boundary for $key, skipping disabled edge options', ({ key, from, initial, to, value }) => {
+        const harness = createHarness(initial, EDGE_DISABLED_OPTIONS);
+        const start = radio(harness, from);
+        start.focus();
+        expect(pressKey(harness, start, key).defaultPrevented).toBe(true);
+        const selected = radio(harness, to);
         expect(document.activeElement).toBe(selected);
         expect(harness.component.selectedValue()).toBe(value);
+        expect(harness.changed).toHaveBeenCalledExactlyOnceWith(value);
+        expect(harness.selected).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ value }));
+        expect(harness.changed).toHaveBeenCalledBefore(harness.selected);
+        expectSelection(harness, selected);
+    });
+
+    it('keeps the only enabled option focused and emits nothing when an arrow wraps to it', () => {
+        const harness = createHarness(
+            'steady',
+            EDGE_DISABLED_OPTIONS.map(option => ({ ...option, disabled: option.value !== 'steady' })),
+        );
+        const selected = radio(harness, 'Steady');
+        selected.focus();
+        expect(pressKey(harness, selected, 'ArrowRight').defaultPrevented).toBe(true);
+        expect(document.activeElement).toBe(selected);
         expect(harness.changed).not.toHaveBeenCalled();
+        expect(harness.selected).not.toHaveBeenCalled();
         expectSelection(harness, selected);
     });
 });

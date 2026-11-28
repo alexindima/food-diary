@@ -226,7 +226,6 @@ describe('Shopping route list creation', () => {
         const created = makeList('first', 'New list');
         api.create.mockReturnValueOnce(creation);
         api.getPage.mockReturnValueOnce(of([summary(created)]));
-        api.getById.mockReturnValueOnce(of(created));
         api.update.mockReturnValueOnce(of({ ...created, name: 'Weekly market', revision: SAVED_REVISION }));
         const host = page(harness);
         expect(host.textContent).toContain('SHOPPING_LIST.NO_LISTS_TITLE');
@@ -263,7 +262,6 @@ describe('Shopping route list creation', () => {
         const pageRefresh = new Subject<ShoppingListSummary[]>();
         api.create.mockReturnValueOnce(of(created));
         api.getPage.mockReturnValueOnce(pageRefresh);
-        api.getById.mockReturnValueOnce(of(created));
         const host = page(harness);
 
         nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON').click();
@@ -276,7 +274,7 @@ describe('Shopping route list creation', () => {
         pageRefresh.complete();
         harness.detectChanges();
 
-        expect(api.getById).toHaveBeenCalledExactlyOnceWith(created.id);
+        expect(api.getById).not.toHaveBeenCalled();
         const selectedTab = requiredElement(host, '.shopping-list__list-tab--active button');
         expect(selectedTab.getAttribute('aria-current')).toBe('true');
         expect(selectedTab.textContent).toContain(created.name);
@@ -1073,7 +1071,7 @@ describe('Shopping list creation with a full first page', () => {
         api.getPage
             .mockReturnValueOnce(of([summary(created), ...overview.lists.items.slice(0, -1)]))
             .mockReturnValueOnce(of([displaced, summary(older)]));
-        api.getById.mockReturnValueOnce(of(created)).mockReturnValueOnce(of(older));
+        api.getById.mockReturnValueOnce(of(older));
         const host = page(harness);
 
         nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON').click();
@@ -1083,7 +1081,7 @@ describe('Shopping list creation with a full first page', () => {
         );
         harness.detectChanges();
         expect(api.getPage).toHaveBeenCalledOnce();
-        expect(api.getById).toHaveBeenCalledExactlyOnceWith(created.id);
+        expect(api.getById).not.toHaveBeenCalled();
         expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(created.name);
 
         const dialog = openMobilePicker(harness);
@@ -1113,7 +1111,7 @@ describe('Shopping list creation with a full first page', () => {
         const selected = nativeButton(tabs, older.name);
         expect(selected.getAttribute('aria-current')).toBe('true');
         expect(selected.querySelector('.shopping-list__tab-count')?.textContent).toBe('✓');
-        expect(api.getById.mock.calls).toEqual([[created.id], [older.id]]);
+        expect(api.getById).toHaveBeenCalledExactlyOnceWith(older.id);
         expect(api.update).not.toHaveBeenCalled();
         expect(toastError).not.toHaveBeenCalled();
     });
@@ -1161,7 +1159,6 @@ describe('Shopping directory totals after creating another list', () => {
             expect(groceryTab().querySelector('.shopping-list__tab-count')?.textContent).toBe(initiallyChecked ? '✓' : '1');
 
             api.create.mockReturnValueOnce(of(created));
-            api.getById.mockReturnValueOnce(of(created));
             api.getPage.mockReturnValueOnce(
                 of([
                     summary(created),
@@ -1178,7 +1175,7 @@ describe('Shopping directory totals after creating another list', () => {
 
             expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(created.name);
             expect(groceryTab().querySelector('.shopping-list__tab-count')?.textContent).toBe(tabCount);
-            expect(api.getById).toHaveBeenCalledExactlyOnceWith(created.id);
+            expect(api.getById).not.toHaveBeenCalled();
 
             const picker = openMobilePicker(harness);
             expect(nativeButton(picker, TRAVEL.name).querySelector('.list-browser__status')?.textContent).toBe('…');
@@ -1311,7 +1308,6 @@ describe('Shopping mobile list browser', () => {
         const result = new Subject<ShoppingListSummary[]>();
         const created = makeList('camping', 'Camping Supplies');
         api.getPage.mockReturnValueOnce(result).mockReturnValueOnce(of([summary(created)]));
-        api.getById.mockReturnValueOnce(of(created));
         api.create.mockReturnValueOnce(of(created));
         const dialog = openMobilePicker(harness);
         inputText(requiredInput(dialog, 'input[aria-label="SHOPPING_LIST.SEARCH_LISTS"]'), '  Camping Supplies  ');
@@ -1329,6 +1325,7 @@ describe('Shopping mobile list browser', () => {
         nativeButton(dialog, 'SHOPPING_LIST.CREATE_NAMED_LIST').click();
         harness.detectChanges();
         expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: 'Camping Supplies' });
+        expect(api.getById).not.toHaveBeenCalled();
         expect(requiredElement(page(harness), '.shopping-list__summary-title').textContent).toBe('Camping Supplies');
         expect(page(harness).querySelector('.shopping-list__list-card-rename-input')).toBeNull();
     });

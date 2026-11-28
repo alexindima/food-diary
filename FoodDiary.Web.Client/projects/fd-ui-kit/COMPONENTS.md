@@ -417,6 +417,8 @@ The calendar popup is a named modal dialog. It uses `pickerAriaLabel`, then `lab
 
 Time input (`HH:mm`) with a 24-hour picker. Enter, Space or Arrow Down opens the named dialog and focuses the selected hour. Tab moves through the hour and minute buttons inside the dialog; Enter or Space selects a button. Selecting a minute or pressing Escape closes the picker and restores focus to its trigger. The labelled button groups expose the selected values through `aria-pressed`.
 
+The minute list scrolls to the closest available minute. The model retains its exact minute until a minute is selected.
+
 **Inputs**
 
 - `label?: string`
@@ -769,6 +771,8 @@ Segmented toggle control.
 
 Supply `FdUiSegmentedToggleOption<Value>[]` with a string literal union to carry that union through the selected value and selection event.
 
+Tab reaches the selected option, or the first option when no value matches. Arrow keys move focus and selection through the group and wrap at both ends.
+
 `compact` with `fullWidth` uses caption text and tighter horizontal spacing for dense chart metric rows. Choices share the available width and can wrap their labels when text is enlarged.
 
 #### `fd-ui-chip-select`
@@ -809,6 +813,8 @@ Compact emoji-based single-choice picker.
 - `showDescriptions?: boolean`
 
 `Value` is inferred from the option values and selected model. It can be numeric, textual, or their union.
+
+Arrow keys move focus and selection, skip disabled options, and wrap at both ends. Home and End select the first and last enabled options.
 
 **Outputs**
 

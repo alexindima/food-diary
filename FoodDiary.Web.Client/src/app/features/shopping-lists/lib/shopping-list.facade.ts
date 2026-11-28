@@ -583,14 +583,10 @@ export class ShoppingListFacade {
         if (selected !== null && !lists.some(entry => entry.id === selected.id)) {
             this.upsertListSummary(selected);
         }
-        // Refresh the directory without replacing items that are waiting to be saved.
-        if (this.saveQueue.hasPending()) {
+        if (selected !== null || this.saveQueue.hasPending()) {
             return;
         }
-        const currentSelection = this.selectedListId();
-        const selectedId =
-            currentSelection !== null && this.lists().some(list => list.id === currentSelection) ? currentSelection : lists[0].id;
-        this.loadListById(entityId<'shopping-list'>(selectedId));
+        this.loadListById(lists[0].id);
     }
 
     private replaceDirectorySummaries(summaries: ShoppingListSummary[]): void {

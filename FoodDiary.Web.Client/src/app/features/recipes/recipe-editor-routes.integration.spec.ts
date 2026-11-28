@@ -33,7 +33,6 @@ import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
 import { BrowserClipboardService } from '../../shared/platform/browser-clipboard.service';
 import { ViewportService } from '../../shared/platform/viewport.service';
-import { ProductPublicationService } from '../products/contracts/product-publication';
 import { RecipeService } from './api/recipe.service';
 import routes from './recipe.routes';
 
@@ -1145,7 +1144,7 @@ it('keeps a public recipe draft when ingredient visibility cannot be checked and
     http.verify();
 });
 
-it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after going back from a published recipe edit', async visibility => {
+it('cancels the ingredient lookup when leaving a published recipe edit', async () => {
     const { stored, publicFood } = publicationRecipeFixture();
     const published: Recipe = {
         ...stored,
@@ -1159,7 +1158,6 @@ it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after goin
     updateRecipe.mockReturnValueOnce(of(published));
     const dialogs = TestBed.inject(FdUiDialogService);
     const open = vi.spyOn(dialogs, 'open');
-    const visibilityRead = vi.spyOn(TestBed.inject(ProductPublicationService), 'loadAsync');
     const http = TestBed.inject(HttpTestingController);
     const router = TestBed.inject(Router);
     router.setUpLocationChangeListener();
@@ -1178,11 +1176,7 @@ it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after goin
     await goBackToRecipeAddAsync(harness, router);
     expect(recipeName(harness).value).toBe('');
 
-    lookup.flush({ ...publicFood, visibility });
-    await expect(visibilityRead.mock.results[0]?.value).resolves.toEqual([expect.objectContaining({ id: publicFood.id, visibility })]);
-    await waitForAsyncTasksAsync();
-    await harness.fixture.whenStable();
-    harness.detectChanges();
+    expect(lookup.cancelled).toBe(true);
 
     expect(document.querySelector(PUBLICATION_DIALOG)).toBeNull();
     expect(open).not.toHaveBeenCalled();
@@ -1192,7 +1186,7 @@ it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after goin
     http.verify();
 });
 
-it('keeps the reused recipe editor free of a publication error from before Back', async () => {
+it('unlocks the reused recipe editor when Back cancels the previous ingredient lookup', async () => {
     const { stored, publicFood } = publicationRecipeFixture();
     const published: Recipe = {
         ...stored,
@@ -1205,7 +1199,6 @@ it('keeps the reused recipe editor free of a publication error from before Back'
     const earlier = { ...confirmedRecipe(), id: entityId<'recipe'>('recipe-before-publication'), name: 'Vegetable soup' };
     const earlierUrl = `/recipes/${earlier.id}/edit`;
     readRecipe.mockImplementation(id => of(id === earlier.id ? earlier : published));
-    const visibilityRead = vi.spyOn(TestBed.inject(ProductPublicationService), 'loadAsync');
     const http = TestBed.inject(HttpTestingController);
     const router = TestBed.inject(Router);
     router.setUpLocationChangeListener();
@@ -1228,11 +1221,11 @@ it('keeps the reused recipe editor free of a publication error from before Back'
     expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
     expect(recipeName(harness).value).toBe(earlier.name);
 
-    lookup.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
-    await expect(visibilityRead.mock.results[0]?.value).rejects.toThrow('Cannot verify ingredient visibility');
-    await waitForAsyncTasksAsync();
-    await harness.fixture.whenStable();
-    harness.detectChanges();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(lookup.cancelled).toBe(true);
+        expect(editor?.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+    });
 
     expect(router.url).toBe(earlierUrl);
     expect(recipeName(harness).value).toBe(earlier.name);

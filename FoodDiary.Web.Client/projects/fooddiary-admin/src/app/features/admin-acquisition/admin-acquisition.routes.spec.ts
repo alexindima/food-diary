@@ -1,10 +1,10 @@
 import type { ProviderToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiInputComponent, FdUiLineChartComponent, FdUiSelectComponent } from 'fd-ui-kit';
-import { of } from 'rxjs';
+import { filter, of, Subject, take } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
@@ -158,11 +158,45 @@ it('removes the comparison charts when a refreshed report is unavailable', () =>
     expect(host.textContent.trim()).toBe('');
 });
 
+it('keeps acquisition filters and page when an obsolete response arrives at NavigationEnd', async () => {
+    const pending = new Subject<MarketingAttributionRange>();
+    const eventTotal = 51;
+    const getRange = vi
+        .fn<AdminAcquisitionFacade['getRange']>()
+        .mockImplementation(params => of({ ...createRange(summary, params), eventTotal }))
+        .mockReturnValueOnce(pending);
+    const harness = await openAcquisitionRouteAsync(getRange, '/acquisition?page=2&search=previous', false);
+    const router = TestBed.inject(Router);
+    const restored = '/acquisition?search=restored';
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ ...createRange(summary, {}), eventTotal });
+            pending.complete();
+        });
+
+    await router.navigateByUrl(restored);
+    await harness.fixture.whenStable();
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restored);
+    expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, search: 'restored' }));
+});
+
 function boundControl<T>(harness: RouterTestingHarness, selector: string, token: ProviderToken<T>): T {
     return harness.fixture.debugElement.query(By.css(selector)).injector.get(token);
 }
 
-async function openAcquisitionRouteAsync(getRange: ReturnType<typeof vi.fn>, url: string): Promise<RouterTestingHarness> {
+async function openAcquisitionRouteAsync(
+    getRange: ReturnType<typeof vi.fn>,
+    url: string,
+    waitForReport = true,
+): Promise<RouterTestingHarness> {
     TestBed.configureTestingModule({
         providers: [
             provideRouter(
@@ -183,7 +217,9 @@ async function openAcquisitionRouteAsync(getRange: ReturnType<typeof vi.fn>, url
         ],
     });
     const harness = await RouterTestingHarness.create(url);
-    await harness.fixture.whenStable();
+    if (waitForReport) {
+        await harness.fixture.whenStable();
+    }
     return harness;
 }
 

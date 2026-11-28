@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -1539,6 +1539,47 @@ describe('Creating a product from the catalog', () => {
 });
 
 describe('Catalog external suggestions', () => {
+    it('keeps the same external query mounted while the catalog changes page', async () => {
+        const { products, lookup } = configureCatalog();
+        const suggestion = { barcode: SCANNED_BARCODE, name: 'Oat flakes' };
+        lookup.mockReturnValue(of([suggestion]));
+        products.queryOverview.mockReturnValueOnce(
+            of({ allProducts: page([CATALOG_ITEM], 1, LAST_AVAILABLE_PAGE), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }),
+        );
+        products.query.mockReturnValueOnce(of(page([COFFEE_ITEM], LAST_AVAILABLE_PAGE, LAST_AVAILABLE_PAGE)));
+        const harness = await RouterTestingHarness.create('/products?search=oat');
+        await waitForCatalogAsync(harness, suggestion.name);
+
+        await harness.navigateByUrl(`/products?search=oat&page=${LAST_AVAILABLE_PAGE}`);
+        await waitForCatalogAsync(harness, COFFEE_ITEM.name);
+
+        expect(lookup).toHaveBeenCalledOnce();
+        expect(catalogRoot(harness).textContent).toContain(suggestion.name);
+    });
+
+    it('retries a failed external search without reloading the product catalog', async () => {
+        const { products, lookup } = configureCatalog();
+        const suggestion = { barcode: SCANNED_BARCODE, name: 'Oat flakes' };
+        lookup
+            .mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })))
+            .mockReturnValueOnce(of([suggestion]));
+        const harness = await RouterTestingHarness.create('/products?search=oat');
+        await waitForCatalogAsync(harness, CATALOG_ITEM.name);
+        const host = catalogRoot(harness);
+        const alert = host.querySelector('fd-product-list-off-section [role="alert"]');
+        expect(alert).not.toBeNull();
+        expect(alert?.textContent).toContain('ERRORS.LOAD_FAILED_MESSAGE');
+
+        button(host, 'fd-product-list-off-section [role="alert"] button').click();
+        await waitForCatalogAsync(harness, suggestion.name);
+
+        expect(host.querySelector('fd-product-list-off-section [role="alert"]')).toBeNull();
+        expect(lookup.mock.calls.map(([search]) => search)).toEqual(['oat', 'oat']);
+        expect(products.queryOverview).toHaveBeenCalledOnce();
+        expect(products.query).not.toHaveBeenCalled();
+        expect(host.textContent).toContain(CATALOG_ITEM.name);
+    });
+
     it('passes the selected Open Food Facts result to the normal create-product route', async () => {
         const { lookup, navigateToAdd } = configureCatalog();
         const suggestion = { barcode: '5000112637922', name: 'Oat flakes', brand: 'Example', caloriesPer100G: 380 };

@@ -20,7 +20,9 @@ export type AdminDmarcView = {
     summary: AdminDmarcSummary;
     reports: DmarcReportMessage[];
     totalReports: number;
+    periodBounds: AdminDmarcSummaryWindow;
     incomplete: boolean;
+    hasLoadErrors: boolean;
     hasDuplicateOrConflictingReports: boolean;
 };
 
@@ -51,6 +53,14 @@ export function loadAdminDmarcView(facade: AdminMailInboxFacade, period: AdminDm
         );
 }
 
+export function retryAdminDmarcAttachments(facade: AdminMailInboxFacade, view: AdminDmarcView): Observable<AdminDmarcView> {
+    return from(view.reports).pipe(
+        mergeMap(row => (row.status === 'load-error' ? loadDmarcReport(facade, row.message) : of(row)), 1),
+        toArray(),
+        map(reports => buildView(reports, view.totalReports, view.periodBounds)),
+    );
+}
+
 function buildView(reports: DmarcReportMessage[], totalReports: number, periodBounds: AdminDmarcSummaryWindow): AdminDmarcView {
     const summary = summarizeAdminDmarcReports(
         reports.flatMap(item =>
@@ -60,12 +70,16 @@ function buildView(reports: DmarcReportMessage[], totalReports: number, periodBo
         ),
         periodBounds,
     );
-    const unavailableReports = reports.some(item => item.status === 'unavailable' || item.status === 'load-error');
+    const hasLoadErrors = reports.some(item => item.status === 'load-error');
+    const unavailableReports = reports.some(item => item.status === 'unavailable');
     return {
         reports,
         summary,
         totalReports,
-        incomplete: unavailableReports || reports.length < totalReports || summary.invalidReports + summary.invalidRecords > 0,
+        periodBounds,
+        incomplete:
+            hasLoadErrors || unavailableReports || reports.length < totalReports || summary.invalidReports + summary.invalidRecords > 0,
+        hasLoadErrors,
         hasDuplicateOrConflictingReports: summary.duplicateReports + summary.conflictingReports > 0,
     };
 }

@@ -1,8 +1,8 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, tap } from 'rxjs';
+import { finalize, map, tap } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -15,7 +15,12 @@ import type { ExportFormat } from '../../../shared/models/export.models';
 import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
-import type { MappedStatistics, StatisticsBodyMeasurements } from '../models/statistics.data';
+import type {
+    GetStatisticsSummaryDto,
+    MappedStatistics,
+    StatisticsBodyMeasurements,
+    StatisticsMeasurements,
+} from '../models/statistics.data';
 import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 import {
     buildBodyChartPoints,
@@ -34,6 +39,10 @@ import { mapStatistics } from './statistics-statistics.mapper';
 
 const MAX_STATISTICS_PERIOD_DAYS = 366;
 const CALENDAR_DATE_PREFIX_LENGTH = 10;
+const EMPTY_MEASUREMENTS: StatisticsBodyMeasurements = { first: null, last: null, count: 0 };
+
+type StatisticsRequest = { id: number; range: DateRange; mode: StatisticsRange; query: GetStatisticsSummaryDto };
+type LoadedMeasurements = { id: number; values: StatisticsMeasurements };
 
 @Injectable()
 export class StatisticsFacade {
@@ -50,18 +59,34 @@ export class StatisticsFacade {
         calendar: Intl.DateTimeFormat;
     } | null = null;
     private lastLoadedRangeKey: string | null = null;
-    public readonly appliedRange = signal<DateRange | null>(null);
     private readonly statisticsRequest = new RequestStateController<
         {
+            id: number;
+            range: DateRange;
+            mode: StatisticsRange;
             statistics: MappedStatistics;
             weight: WeightEntrySummaryPoint[];
             waist: WaistEntrySummaryPoint[];
-            weightMeasurements: StatisticsBodyMeasurements;
-            waistMeasurements: StatisticsBodyMeasurements;
         },
         'STATISTICS.LOAD_ERROR'
     >();
-    private readonly requestedStatistics = signal<{ range: DateRange; id: number } | undefined>(undefined);
+    private readonly requestedStatistics = signal<StatisticsRequest | undefined>(undefined);
+    private readonly measurementsResource = rxResource({
+        params: this.requestedStatistics,
+        stream: ({ params }) => this.statisticsService.getBodyMeasurements(params.query).pipe(map(values => ({ id: params.id, values }))),
+    });
+    private readonly lastMatchedMeasurements = linkedSignal({
+        source: () => ({
+            reportId: this.statisticsRequest.data()?.id,
+            measurements: this.measurementsResource.hasValue() ? this.measurementsResource.value() : null,
+        }),
+        computation: ({ reportId, measurements }, previous): LoadedMeasurements | null =>
+            measurements !== null && measurements.id === reportId ? measurements : (previous?.value ?? null),
+    });
+    private readonly bodyMeasurements = computed(() => {
+        const matched = this.lastMatchedMeasurements();
+        return matched !== null && matched.id === this.statisticsRequest.data()?.id ? matched.values : null;
+    });
     private readonly initialized = signal(false);
     private readonly currentLocale = signal(this.resolveCurrentLocale());
 
@@ -72,15 +97,20 @@ export class StatisticsFacade {
 
     public readonly isLoading = this.statisticsRequest.isLoading;
     public readonly requestProvenance = this.statisticsRequest.provenance;
-    public readonly isBodyLoading = this.statisticsRequest.isLoading;
+    public readonly appliedRange = computed(() => this.statisticsRequest.data()?.range ?? null);
+    public readonly isBodyLoading = computed(() => this.isLoading() || this.measurementsResource.isLoading());
     public readonly hasStatisticsResponse = this.statisticsRequest.hasData;
     public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
-    public readonly hasBodyLoadError = this.hasLoadError;
+    public readonly hasBodyLoadError = computed(() => this.measurementsResource.error() !== undefined);
     public readonly exportingFormat = signal<ExportFormat | null>(null);
     public readonly exportError = signal(false);
     public readonly chartStatisticsData = computed(() => this.statisticsRequest.data()?.statistics ?? null);
-    public readonly weightSummaryPoints = computed(() => this.statisticsRequest.data()?.weight ?? []);
-    public readonly waistSummaryPoints = computed(() => this.statisticsRequest.data()?.waist ?? []);
+    public readonly weightSummaryPoints = computed(() =>
+        this.bodyMeasurements() === null ? [] : (this.statisticsRequest.data()?.weight ?? []),
+    );
+    public readonly waistSummaryPoints = computed(() =>
+        this.bodyMeasurements() === null ? [] : (this.statisticsRequest.data()?.waist ?? []),
+    );
     public readonly userProfile = this.userService.user;
 
     public readonly currentRange = computed<DateRange>(() => {
@@ -91,6 +121,8 @@ export class StatisticsFacade {
     public readonly periodValidationError = computed(() =>
         getDateRangeDayCount(this.currentRange()) > MAX_STATISTICS_PERIOD_DAYS ? 'STATISTICS.PERIOD_TOO_LONG' : null,
     );
+    private readonly displayedRange = computed(() => this.appliedRange() ?? this.currentRange());
+    private readonly displayedRangeMode = computed(() => this.statisticsRequest.data()?.mode ?? this.selectedRange());
     public readonly hasReportError = computed(() => this.hasLoadError() || this.periodValidationError() !== null);
     public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
     public readonly hasBodyData = computed(() => {
@@ -103,8 +135,8 @@ export class StatisticsFacade {
         buildStatisticsDashboardCardsView({
             statistics: this.chartStatisticsData(),
             user: this.userProfile(),
-            weightMeasurements: this.statisticsRequest.data()?.weightMeasurements ?? { first: null, last: null, count: 0 },
-            waistMeasurements: this.statisticsRequest.data()?.waistMeasurements ?? { first: null, last: null, count: 0 },
+            weightMeasurements: this.bodyMeasurements()?.weightMeasurements ?? EMPTY_MEASUREMENTS,
+            waistMeasurements: this.bodyMeasurements()?.waistMeasurements ?? EMPTY_MEASUREMENTS,
             weightPoints: buildBodyChartPoints(
                 this.weightSummaryPoints(),
                 point => point.averageWeightKg,
@@ -116,10 +148,10 @@ export class StatisticsFacade {
                 date => this.formatSummaryLabel(date),
             ),
             quantizationDays: getQuantizationDays(
-                normalizeStartOfDay(this.currentRange().start),
-                normalizeEndOfDay(this.currentRange().end),
+                normalizeStartOfDay(this.displayedRange().start),
+                normalizeEndOfDay(this.displayedRange().end),
             ),
-            periodDays: getDateRangeDayCount(this.currentRange()),
+            periodDays: getDateRangeDayCount(this.displayedRange()),
             formatDate: date => this.formatDateLabel(date),
         }),
     );
@@ -127,32 +159,24 @@ export class StatisticsFacade {
     public constructor() {
         rxResource({
             params: this.requestedStatistics,
-            stream: ({ params: { range, id } }) =>
-                this.statisticsService
-                    .getSummary(
-                        buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone),
-                        developmentRequestContext(this.statisticsRequest.bindRequest(id)),
-                    )
-                    .pipe(
-                        tap({
-                            next: data => {
-                                if (
-                                    this.statisticsRequest.succeed(id, {
-                                        statistics: mapStatistics(data.nutrition),
-                                        weight: data.weight,
-                                        waist: data.waist,
-                                        weightMeasurements: data.weightMeasurements,
-                                        waistMeasurements: data.waistMeasurements,
-                                    })
-                                ) {
-                                    this.appliedRange.set(range);
-                                }
-                            },
-                            error: () => {
-                                this.statisticsRequest.fail(id, 'STATISTICS.LOAD_ERROR');
-                            },
-                        }),
-                    ),
+            stream: ({ params: { range, mode, query, id } }) =>
+                this.statisticsService.getSummary(query, developmentRequestContext(this.statisticsRequest.bindRequest(id))).pipe(
+                    tap({
+                        next: data => {
+                            this.statisticsRequest.succeed(id, {
+                                id,
+                                range,
+                                mode,
+                                statistics: mapStatistics(data.nutrition),
+                                weight: data.weight,
+                                waist: data.waist,
+                            });
+                        },
+                        error: () => {
+                            this.statisticsRequest.fail(id, 'STATISTICS.LOAD_ERROR');
+                        },
+                    }),
+                ),
         });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.dateLabelFormatterCache = null;
@@ -213,6 +237,10 @@ export class StatisticsFacade {
         this.loadAllData();
     }
 
+    public retryBody(): void {
+        this.measurementsResource.reload();
+    }
+
     public exportDiary(format: ExportFormat): void {
         if (this.exportingFormat() !== null || this.periodValidationError() !== null) {
             return;
@@ -258,7 +286,12 @@ export class StatisticsFacade {
         }
 
         this.lastLoadedRangeKey = rangeKey;
-        this.requestedStatistics.set({ range, id: this.statisticsRequest.begin() });
+        this.requestedStatistics.set({
+            range,
+            mode: this.selectedRange(),
+            query: buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone),
+            id: this.statisticsRequest.begin(),
+        });
     }
 
     private initializeCustomRange(): void {
@@ -274,12 +307,12 @@ export class StatisticsFacade {
     private formatDateLabel(date: Date, basis: 'local' | 'calendar' = 'local'): string {
         const label = this.getDateLabelFormatter(basis).format(date);
 
-        return this.selectedRange() === 'year' ? capitalizeFirstLetter(label) : label;
+        return this.displayedRangeMode() === 'year' ? capitalizeFirstLetter(label) : label;
     }
 
     private getDateLabelFormatter(basis: 'local' | 'calendar'): Intl.DateTimeFormat {
         const locale = this.currentLocale();
-        const range = this.selectedRange();
+        const range = this.displayedRangeMode();
         if (this.dateLabelFormatterCache?.locale !== locale || this.dateLabelFormatterCache.range !== range) {
             const options: Intl.DateTimeFormatOptions = range === 'year' ? { month: 'short' } : { month: 'short', day: 'numeric' };
             this.dateLabelFormatterCache = {

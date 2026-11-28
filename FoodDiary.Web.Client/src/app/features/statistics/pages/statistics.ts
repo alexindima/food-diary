@@ -120,6 +120,10 @@ export class StatisticsComponent {
         this.facade.reload();
     }
 
+    protected retryBody(): void {
+        this.facade.retryBody();
+    }
+
     protected startStatisticsTour(force = true): void {
         this.tourService.start(this.localizedTour.build(STATISTICS_TOUR), { force });
     }

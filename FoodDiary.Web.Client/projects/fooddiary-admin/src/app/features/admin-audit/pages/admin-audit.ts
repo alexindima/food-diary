@@ -8,7 +8,7 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { map } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -52,24 +52,38 @@ export class AdminAuditPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly api = inject(AdminAuditFacade);
-    private readonly appliedQuery = computed(() => ({
-        page: adminPage(this.page() ?? null),
-        filters: {
-            actorUserId: this.actorUserId() ?? '',
-            subjectClientUserId: this.subjectClientUserId() ?? '',
-            action: this.action() ?? '',
-            targetType: this.targetType() ?? '',
-            targetId: this.targetId() ?? '',
-        },
-        periodParams: convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }),
+    private readonly queryInputs = computed(() => ({
+        page: this.page(),
+        actorUserId: this.actorUserId(),
+        subjectClientUserId: this.subjectClientUserId(),
+        action: this.action(),
+        targetType: this.targetType(),
+        targetId: this.targetId(),
+        period: this.period(),
+        from: this.from(),
+        to: this.to(),
     }));
+    private readonly appliedQuery = computed(() => {
+        const { page, actorUserId, subjectClientUserId, action, targetType, targetId, period, from, to } = this.queryInputs();
+        return {
+            page: adminPage(page ?? null),
+            filters: {
+                actorUserId: actorUserId ?? '',
+                subjectClientUserId: subjectClientUserId ?? '',
+                action: action ?? '',
+                targetType: targetType ?? '',
+                targetId: targetId ?? '',
+            },
+            periodParams: convertToParamMap({ period: period ?? null, from: from ?? null, to: to ?? null }),
+        };
+    });
     private readonly requestedPage = linkedSignal(() => this.buildRequest());
     private readonly pageResource = rxResource({
         params: this.requestedPage,
         stream: ({ params }) =>
             this.api.getPage(params).pipe(
                 map(result => {
-                    if (this.requestedPage() !== params) {
+                    if (this.requestedPage() !== params || !adminRouteInputsMatch(this.route, this.queryInputs())) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {

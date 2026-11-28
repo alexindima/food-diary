@@ -1,6 +1,7 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA, FdUiDialogRef, FdUiDialogService } from 'fd-ui-kit';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -24,7 +25,10 @@ const product: PublicProduct = {
     alcohol: 0,
 };
 
-async function setupAsync(data: PublicProduct): Promise<{
+async function setupAsync(
+    data: PublicProduct,
+    getById: PublicProductDetailsFacade['getById'] = () => of(data),
+): Promise<{
     fixture: ComponentFixture<PublicProductPreviewComponent>;
     dialogs: { open: ReturnType<typeof vi.fn> };
     element: HTMLElement;
@@ -37,10 +41,12 @@ async function setupAsync(data: PublicProduct): Promise<{
             { provide: FD_UI_DIALOG_DATA, useValue: data.id },
             { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
             { provide: FdUiDialogService, useValue: dialogs },
-            { provide: PublicProductDetailsFacade, useValue: { getById: vi.fn().mockReturnValue(of(data)) } },
+            { provide: PublicProductDetailsFacade, useValue: { getById } },
         ],
     }).compileComponents();
     const fixture = TestBed.createComponent(PublicProductPreviewComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
     return { fixture, dialogs, element: fixture.nativeElement as HTMLElement };
 }
@@ -81,4 +87,22 @@ describe('PublicProductPreviewComponent', () => {
         expect(config.data.collageImages.map(image => image.url)).toEqual(['cover.webp', 'back.webp', 'side.webp']);
         expect(element.querySelector('.description')?.textContent).toBe('Crunchy oats');
     });
+});
+
+it('retries the same public product after a temporary failure', async () => {
+    const getById = vi
+        .fn<PublicProductDetailsFacade['getById']>()
+        .mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })))
+        .mockReturnValue(of(product));
+    const { element, fixture } = await setupAsync(product, getById);
+
+    expect(element.querySelector('[role="status"]')?.textContent ?? '').not.toContain('PUBLIC_RECIPES.PRODUCT_UNAVAILABLE');
+    expect(element.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+    element.querySelector<HTMLButtonElement>('fd-error-state button')?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(getById.mock.calls).toEqual([[product.id], [product.id]]);
+    expect(element.querySelector('fd-error-state')).toBeNull();
+    expect(element.querySelector('.product-details h2')?.textContent).toBe(product.name);
 });

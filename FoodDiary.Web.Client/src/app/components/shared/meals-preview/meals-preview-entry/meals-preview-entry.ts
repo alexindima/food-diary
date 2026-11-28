@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
@@ -34,15 +34,10 @@ export class MealsPreviewEntryComponent {
     protected readonly panelId = `meal-preview-input-${nextPanelId++}`;
     protected readonly canExpand = computed(() => this.showAiButtons() && (this.entry().slot ?? null) !== null);
     protected readonly isExpanded = computed(() => this.canExpand() && this.expandedAiSlot() === this.entry().slot);
-    protected readonly hasOpened = signal(false);
-
-    public constructor() {
-        effect(() => {
-            if (this.isExpanded()) {
-                this.hasOpened.set(true);
-            }
-        });
-    }
+    protected readonly hasOpened = linkedSignal({
+        source: this.isExpanded,
+        computation: (expanded, previous): boolean => expanded || previous?.value === true,
+    });
 
     protected activate(): void {
         if (this.isAiMealSaving()) {

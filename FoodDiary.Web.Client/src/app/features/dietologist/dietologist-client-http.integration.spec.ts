@@ -485,6 +485,7 @@ function unavailable(request: TestRequest): void {
 async function openDashboardAsync(): Promise<RouterTestingHarness> {
     const harness = await RouterTestingHarness.create(CLIENT_URL);
     firstPage(CLIENTS_API).flush([CLIENT]);
+    harness.detectChanges();
     flushDashboard();
     requestFor('GET', `${CLIENT_API}/goals`).flush({ id: CLIENT.userId, dailyCalorieTarget: 2100 });
     firstPage(RECOMMENDATIONS_API).flush([]);

@@ -73,7 +73,7 @@
                 <p>Loading messages...</p>
             } @else if (loadFailed()) {
                 <p role="alert">{{ 'ADMIN_MAIL_INBOX.LIST_LOAD_ERROR' | translate }}</p>
-            } @else {
+            } @else if (pageResult()) {
                 <table class="mail-table">
                     <thead>
                         <tr>

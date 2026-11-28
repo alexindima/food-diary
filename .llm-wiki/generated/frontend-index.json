@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2959,
+    "typescriptFiles": 2961,
     "symbols": 890,
     "routes": 117,
     "features": 46,
-    "specs": 970,
+    "specs": 972,
     "localeFiles": 5,
     "roles": {
       "Component": 511,
@@ -311,6 +311,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-dmarc.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-dmarc-summary.spec.ts",
@@ -2572,7 +2573,7 @@
       "role": "Component",
       "selector": "fd-admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-      "line": 35
+      "line": 37
     },
     {
       "name": "AdminBugsService",
@@ -2789,7 +2790,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-message-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
-      "line": 34
+      "line": 43
     },
     {
       "name": "AdminMailInboxPreferences",
@@ -2845,7 +2846,7 @@
       "role": "Component",
       "selector": "fd-admin-meal-plans",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.ts",
-      "line": 21
+      "line": 20
     },
     {
       "name": "AdminModerationService",
@@ -3041,7 +3042,7 @@
       "role": "Component",
       "selector": "fd-admin-user-details-body",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AdminUserPremiumGrantComponent",
@@ -3643,7 +3644,7 @@
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 81
+      "line": 82
     },
     {
       "name": "MarketingConsentComponent",
@@ -3720,7 +3721,7 @@
       "role": "Component",
       "selector": "fd-notifications-dialog",
       "path": "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog.ts",
-      "line": 31
+      "line": 33
     },
     {
       "name": "NutrientBadgesComponent",
@@ -4553,7 +4554,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 167
+      "line": 168
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -5589,7 +5590,7 @@
       "role": "Component",
       "selector": "fd-product-list-off-section",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-off-section/product-list-off-section.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "ProductListPaginationComponent",
@@ -5680,7 +5681,7 @@
       "role": "Component",
       "selector": "fd-public-product-preview",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/public-product-preview/public-product-preview.ts",
-      "line": 24
+      "line": 33
     },
     {
       "name": "ProductDetailFacade",
@@ -6590,7 +6591,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 24
+      "line": 25
     },
     {
       "name": "StatisticsBodyTrendCardComponent",
@@ -6632,7 +6633,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics.facade.ts",
-      "line": 39
+      "line": 48
     },
     {
       "name": "StatisticsComponent",
@@ -6751,7 +6752,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "WaistHistoryPageComponent",
@@ -6919,7 +6920,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
-      "line": 60
+      "line": 61
     },
     {
       "name": "WeightHistoryPageComponent",
@@ -7409,7 +7410,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 57
+      "line": 60
     },
     {
       "name": "AuthCookieSessionService",

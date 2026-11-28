@@ -1106,6 +1106,7 @@ describe('ClientDashboardComponent meal page transitions', () => {
         const pending = new Subject<DietologistDashboardSnapshot>();
         dietologistService.getClientDashboard.mockReturnValueOnce(pending);
         component['showPreviousPeriod']();
+        fixture.detectChanges();
         expect(component['readDevelopmentContext']()).toMatchObject({ meals: { loading: true, available: false, items: [], total: null } });
         pending.next(next(['new-period-meal']));
         pending.complete();
@@ -1151,14 +1152,15 @@ describe('ClientDashboardComponent period refresh cancellation', () => {
         component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-22' });
 
         const refreshing = component['applyDateFilterAsync']();
+        fixture.detectChanges();
         expect(component['detailsLoading']()).toBe(true);
         expect(pending.observed).toBe(true);
+        expect(component['dashboard']()).toBe(dashboard);
 
         fixture.destroy();
 
         await expect(refreshing).resolves.toBeUndefined();
         expect(pending.observed).toBe(false);
-        expect(component['dashboard']()).toBe(dashboard);
     });
 });
 
@@ -1250,8 +1252,13 @@ describe('ClientDashboardComponent initial dashboard races', () => {
     });
 });
 
-describe('ClientDashboardComponent writes during initial loading', () => {
-    it.each([false, true])('preserves local writes and loaded history, including duplicate IDs: %s', async duplicate => {
+describe('ClientDashboardComponent merges early and late section reads', () => {
+    it.each([
+        { duplicate: false, late: false },
+        { duplicate: true, late: false },
+        { duplicate: false, late: true },
+        { duplicate: true, late: true },
+    ])('preserves writes and history with duplicate=$duplicate and late=$late', async ({ duplicate, late }) => {
         const initialRequest = new Subject<Record<string, unknown>>();
         const createdTask: ClientTask = {
             id: entityId<'client-task'>('new-task'),
@@ -1285,9 +1292,9 @@ describe('ClientDashboardComponent writes during initial loading', () => {
             readAtUtc: null,
         };
         dietologistService.getClientDashboard.mockReturnValueOnce(initialRequest);
-        dietologistService.getTasksForClient.mockReturnValueOnce(
-            of([{ ...createdTask, id: entityId<'client-task'>('old-task') }, ...(duplicate ? [createdTask] : [])]),
-        );
+        const tasks = [{ ...createdTask, id: entityId<'client-task'>('old-task') }, ...(duplicate ? [createdTask] : [])];
+        const taskRequest = new Subject<ClientTask[]>();
+        dietologistService.getTasksForClient.mockReturnValueOnce(late ? taskRequest : of(tasks));
         dietologistService.getRecommendationsForClient.mockReturnValueOnce(
             of([{ ...recommendation, id: entityId<'recommendation'>('old-rec') }, ...(duplicate ? [recommendation] : [])]),
         );
@@ -1305,8 +1312,13 @@ describe('ClientDashboardComponent writes during initial loading', () => {
         component['createRecommendationTemplate']();
         await component['submitRecommendationAsync']();
 
+        if (late) {
+            taskRequest.next(tasks);
+            taskRequest.complete();
+        }
         initialRequest.next(createDashboardSnapshot());
         initialRequest.complete();
+        await fixture.whenStable();
 
         expect(component['tasks']()).toEqual([cancelledTask, expect.objectContaining({ id: 'old-task' })]);
         expect(component['recommendations']()).toEqual([recommendation, expect.objectContaining({ id: 'old-rec' })]);
@@ -1331,6 +1343,7 @@ function createPendingInitialDashboardRequests(): {
     expect(initialRequest.observed).toBe(true);
     component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-22' });
     const reload = component['applyDateFilterAsync']();
+    fixture.detectChanges();
     expect(initialRequest.observed).toBe(false);
     expect(component['goals']()?.dailyCalorieTarget).toBe(EXPECTED_DAILY_CALORIE_TARGET);
     return { initialRequest, periodRequest, latestSnapshot: { ...createDashboardSnapshot(), date: '2026-05-22T00:00:00Z' }, reload };
@@ -1443,6 +1456,7 @@ function registerDateValidationTests(): void {
         component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-23' });
         fixture.detectChanges();
         component['applyDateFilter']();
+        fixture.detectChanges();
 
         expect(component['dateFilterForm']().invalid()).toBe(false);
         expect(component['dateFilterRangeInvalid']()).toBe(false);
@@ -1461,6 +1475,7 @@ function registerDateValidationTests(): void {
 
         expect(component['dateFilterForm']().invalid()).toBe(false);
         component['applyDateFilter']();
+        fixture.detectChanges();
 
         expect(component['selectedDateFrom']()).toBe(dateFrom);
         expect(component['selectedDateTo']()).toBe(dateTo);
@@ -1492,6 +1507,7 @@ function registerActionTests(): void {
 
         component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
         component['applyDateFilter']();
+        fixture.detectChanges();
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
         expect(getLastDashboardPeriod()).toEqual(
@@ -1823,8 +1839,10 @@ async function verifyLatestDashboardResponseWinsAsync(): Promise<void> {
 
     component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
     component['applyDateFilter']();
+    fixture.detectChanges();
     expect(olderRequest.observed).toBe(true);
     component['showPreviousPeriod']();
+    fixture.detectChanges();
     expect(olderRequest.observed).toBe(false);
 
     const latestSnapshot = { ...createDashboardSnapshot(), date: '2026-05-16T00:00:00Z' };

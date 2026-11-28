@@ -9,6 +9,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { take } from 'rxjs';
 
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { type AdminId, type AdminUtcInstant, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails } from '../models/admin-mail-inbox.data';
@@ -26,7 +27,15 @@ export type AdminMailMessageDialogData = {
 };
 @Component({
     selector: 'fd-admin-mail-message-dialog',
-    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent, FdUiSegmentedToggleComponent],
+    imports: [
+        CommonModule,
+        RouterLink,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiSegmentedToggleComponent,
+        AdminLoadErrorComponent,
+    ],
     templateUrl: './admin-mail-message-dialog.html',
     styleUrl: './admin-mail-message-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,6 +93,10 @@ export class AdminMailMessageDialogComponent {
 
     protected setBodyMode(mode: string): void {
         this.selectedBodyMode.set(mode);
+    }
+
+    protected retryDetails(): void {
+        this.messageResource.reload();
     }
 
     private formatRecipients(recipients: string[]): string {

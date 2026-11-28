@@ -95,6 +95,40 @@ describe('AdminAiPromptWorkbenchComponent rendered interactions', () => {
     });
 });
 
+it('keeps the sample text while editing the prompt and resets it when the locale changes', async () => {
+    const { fixture, root } = await renderVisionWorkbenchAsync();
+    fixture.componentRef.setInput('scenarioKey', 'text-parse');
+    fixture.detectChanges();
+    const text = root.querySelector('textarea');
+    if (text === null) {
+        throw new Error('Missing workbench sample text area');
+    }
+    text.value = 'an apple';
+    text.dispatchEvent(new Event('input', { bubbles: true }));
+    workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(false);
+
+    fixture.componentRef.setInput('promptText', 'New {{userText}}');
+    fixture.detectChanges();
+    expect(text.value).toBe('an apple');
+    expect(root.querySelector('pre')).toBeNull();
+    expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(true);
+
+    visionApi.preview.mockReturnValueOnce(of({ text: '' }));
+    workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(visionApi.preview).toHaveBeenLastCalledWith(expect.objectContaining({ text: 'an apple', promptText: 'New {{userText}}' }));
+    expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(false);
+
+    fixture.componentRef.setInput('locale', 'ru');
+    fixture.detectChanges();
+    expect(text.value).toBe('');
+    expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(true);
+});
+
 describe('Workbench file handling', () => {
     it('ignores cancellation, rejects incompatible files, and previews only the finished upload', async () => {
         const { fixture, root } = await renderVisionWorkbenchAsync();

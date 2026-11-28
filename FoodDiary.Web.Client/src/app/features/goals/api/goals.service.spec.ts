@@ -79,7 +79,7 @@ describe('GoalsService', () => {
         expect(errorSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should update goals', () => {
+    it('updates goals and refreshes profile separately from a pending pre-save read', () => {
         const request: UpdateGoalsRequest = {
             dailyCalorieTarget: 2500,
             proteinTarget: 180,
@@ -90,6 +90,10 @@ describe('GoalsService', () => {
             calorieCyclingEnabled: false,
         };
 
+        const users = TestBed.inject(UserService);
+        users.getInfoSilently().subscribe();
+        const userInfoUrl = `${environment.apiUrls.users}/info`;
+        const preSaveProfile = httpMock.expectOne({ method: 'GET', url: userInfoUrl });
         service.updateGoals(request).subscribe(result => {
             expect(result).toEqual(mockResponse);
         });
@@ -98,10 +102,11 @@ describe('GoalsService', () => {
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(request);
         req.flush(mockResponse);
-        const profile = httpMock.expectOne(`${environment.apiUrls.users}/info`);
+        const profile = httpMock.expectOne({ method: 'GET', url: userInfoUrl });
         profile.flush({ ...MOCK_USER, dailyCalorieTarget: 2500, calories: 2500 });
-        expect(TestBed.inject(UserService).user()?.dailyCalorieTarget).toBe(UPDATED_CALORIE_TARGET);
-        expect(TestBed.inject(UserService).user()?.calories).toBe(UPDATED_CALORIE_TARGET);
+        preSaveProfile.flush(MOCK_USER);
+        expect(users.user()?.dailyCalorieTarget).toBe(UPDATED_CALORIE_TARGET);
+        expect(users.user()?.calories).toBe(UPDATED_CALORIE_TARGET);
     });
 
     it('should return null on updateGoals error', () => {

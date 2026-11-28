@@ -13,7 +13,7 @@ import { map } from 'rxjs';
 
 import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -134,7 +134,7 @@ export class AdminMailInboxComponent {
         stream: ({ params }) =>
             this.mailInboxFacade.getMessagePage(params.page, this.pageSize, params.filters).pipe(
                 map(response => {
-                    if (this.requestedPage() !== params) {
+                    if (this.requestedPage() !== params || !adminRouteInputsMatch(this.route, this.appliedQuery())) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
@@ -145,7 +145,7 @@ export class AdminMailInboxComponent {
                 }),
             ),
     });
-    private readonly pageResult = computed(() => (this.pageResource.hasValue() ? this.pageResource.value() : null));
+    protected readonly pageResult = computed(() => (this.pageResource.hasValue() ? this.pageResource.value() : null));
     protected readonly isLoading = computed(
         () => this.pageResource.isLoading() || (this.pageResource.hasValue() && this.pageResource.value() === null),
     );

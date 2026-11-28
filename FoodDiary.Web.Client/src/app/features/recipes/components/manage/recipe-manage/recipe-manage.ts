@@ -20,7 +20,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { filter, takeUntil } from 'rxjs';
+import { endWith, filter, takeUntil } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
@@ -490,10 +490,15 @@ export class RecipeManageComponent implements UnsavedEditor {
         const formVersion = JSON.stringify(this.prepareRecipeDto());
         const isCurrent = (): boolean =>
             !this.destroyRef.destroyed && this.recipe() === recipe && formVersion === JSON.stringify(this.prepareRecipeDto());
+        const cancelLookup = this.recipeChanges.pipe(
+            filter(() => this.recipe() !== recipe),
+            // The recipe observable completes when the editor is destroyed.
+            endWith(null),
+        );
 
         this.checkingPublication.set(true);
         try {
-            const prepared = await this.recipeManageFacade.preparePublicationAsync(recipeData, isCurrent);
+            const prepared = await this.recipeManageFacade.preparePublicationAsync(recipeData, isCurrent, cancelLookup);
             if (prepared !== null && isCurrent()) {
                 this.savePreparedRecipe(prepared);
             }

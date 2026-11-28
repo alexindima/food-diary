@@ -267,6 +267,7 @@ it('opens the public product from an ingredient and dismisses an unavailable pre
         fiber: 10,
         alcohol: 0,
     });
+    await fixture.whenStable();
     TestBed.tick();
     expect(preview()?.querySelector('.product-details h2')?.textContent).toBe('Rolled oats');
     expect(preview()?.querySelector('.calories dd')?.textContent).toContain('375');
@@ -277,8 +278,10 @@ it('opens the public product from an ingredient and dismisses an unavailable pre
         status: HttpStatusCode.NotFound,
         statusText: 'Not Found',
     });
+    await fixture.whenStable();
     TestBed.tick();
     expect(preview()?.querySelector('[role="status"]')?.textContent).toContain('PUBLIC_RECIPES.PRODUCT_UNAVAILABLE');
+    expect(preview()?.querySelector('fd-error-state')).toBeNull();
     await closePreviewAsync();
     expect(TestBed.inject(Router).url).toBe(originalUrl);
     expect(link.isConnected).toBe(true);

@@ -506,6 +506,51 @@ describe('Premium renewal plan focus', () => {
     });
 });
 
+describe('Premium price preview retry', () => {
+    it('retries only Paddle prices if the billing configuration is available', async () => {
+        const available = overview({ paddleMonthlyPriceId: 'fixture-monthly', paddleYearlyPriceId: 'fixture-yearly' });
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(available));
+        const preview = vi
+            .fn<PaddleCheckoutService['previewPlanPricesAsync']>()
+            .mockRejectedValueOnce(new Error('Price provider unavailable'))
+            .mockResolvedValueOnce({
+                monthly: { formattedTotal: PRICED_MONTHLY, currencyCode: 'USD' },
+                yearly: { formattedTotal: PRICED_YEARLY, currencyCode: 'USD' },
+            });
+        TestBed.overrideProvider(PaddleCheckoutService, { useValue: { previewPlanPricesAsync: preview } });
+        const { harness } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        expect(root.querySelector(PLANS)?.textContent).toContain('PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE');
+
+        nativeButton(root, 'PREMIUM_PAGE.PLANS.PRICE_RETRY').click();
+        await redrawAsync(harness);
+
+        expect(readOverview).toHaveBeenCalledOnce();
+        expect(preview.mock.calls).toEqual([preview.mock.calls[0], preview.mock.calls[0]]);
+        expect(root.querySelector(PLANS)?.textContent).toContain(PRICED_MONTHLY);
+        expect(root.querySelector(PLANS)?.textContent).toContain(PRICED_YEARLY);
+    });
+
+    it('refreshes billing configuration when prices were unavailable because a price ID was missing', async () => {
+        const missing = overview({ paddleMonthlyPriceId: null, paddleYearlyPriceId: 'fixture-yearly' });
+        const available = { ...missing, paddleMonthlyPriceId: 'fixture-monthly' };
+        const readOverview = vi
+            .fn<PremiumBillingService['getOverview']>()
+            .mockReturnValueOnce(of(missing))
+            .mockReturnValueOnce(of(available));
+        const { harness, previewPrices } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        expect(previewPrices).not.toHaveBeenCalled();
+
+        nativeButton(root, 'PREMIUM_PAGE.PLANS.PRICE_RETRY').click();
+        await redrawAsync(harness);
+
+        expect(readOverview).toHaveBeenCalledTimes(2);
+        expect(previewPrices).toHaveBeenCalledOnce();
+        expect(root.querySelector(PLANS)?.textContent).toContain(PRICED_MONTHLY);
+    });
+});
+
 describe('Premium trial and price recovery', () => {
     it.each([
         { response: 'an older free account snapshot', status: HttpStatusCode.Ok },

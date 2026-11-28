@@ -80,11 +80,7 @@
                 <div class="statistics__nutrition-group" [hidden]="newCards.overview.trackedDays === 0 && !isLoading()">
                     <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
                         <fd-statistics-overview-card [data]="newCards.overview" />
-                        @if (isLoading()) {
-                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
-                                {{ 'STATISTICS.LOADING' | translate }}
-                            </div>
-                        }
+                        <ng-container *ngTemplateOutlet="cardLoading; context: { $implicit: isLoading() }" />
                     </div>
                     <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
                         <fd-statistics-nutrition-trend-card
@@ -95,40 +91,32 @@
                             [insights]="newCards.insights"
                             (selectedTabChange)="changeNutritionTab($event)"
                         />
-                        @if (isLoading()) {
-                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
-                                {{ 'STATISTICS.LOADING' | translate }}
-                            </div>
-                        }
+                        <ng-container *ngTemplateOutlet="cardLoading; context: { $implicit: isLoading() }" />
                     </div>
                 </div>
-                <div
-                    class="statistics__card-shell"
-                    [hidden]="!hasBodyData() && !isBodyLoading() && !hasBodyLoadError()"
-                    [attr.aria-busy]="isBodyLoading()"
-                >
-                    <fd-statistics-body-trend-card [data]="newCards.body" />
-                    @if (isBodyLoading()) {
-                        <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
-                    }
-                </div>
+                @if (hasBodyLoadError()) {
+                    <fd-error-state titleKey="STATISTICS.DASHBOARD.BODY.TITLE" (retry)="retryBody()" />
+                } @else {
+                    @let awaitingMeasurements = isBodyLoading() && !hasBodyData();
+                    <div class="statistics__card-shell" [hidden]="!hasBodyData() && !isBodyLoading()" [attr.aria-busy]="isBodyLoading()">
+                        <div [hidden]="awaitingMeasurements">
+                            <fd-statistics-body-trend-card [data]="newCards.body" />
+                        </div>
+                        @if (awaitingMeasurements) {
+                            <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
+                        }
+                        <ng-container *ngTemplateOutlet="cardLoading; context: { $implicit: isBodyLoading() }" />
+                    </div>
+                }
                 <div class="statistics__nutrition-group" [hidden]="newCards.overview.trackedDays === 0 && !isLoading()">
                     <div class="statistics__new-cards-bottom">
                         <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
                             <fd-statistics-meal-structure-card [data]="newCards.mealStructure" />
-                            @if (isLoading()) {
-                                <div class="statistics__card-loading fd-ui-body-sm" role="status">
-                                    {{ 'STATISTICS.LOADING' | translate }}
-                                </div>
-                            }
+                            <ng-container *ngTemplateOutlet="cardLoading; context: { $implicit: isLoading() }" />
                         </div>
                         <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
                             <fd-statistics-diet-stability-card [data]="newCards.stability" />
-                            @if (isLoading()) {
-                                <div class="statistics__card-loading fd-ui-body-sm" role="status">
-                                    {{ 'STATISTICS.LOADING' | translate }}
-                                </div>
-                            }
+                            <ng-container *ngTemplateOutlet="cardLoading; context: { $implicit: isLoading() }" />
                         </div>
                     </div>
                 </div>
@@ -136,3 +124,9 @@
         }
     </fd-page-body>
 </div>
+
+<ng-template #cardLoading let-loading>
+    @if (loading) {
+        <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+    }
+</ng-template>

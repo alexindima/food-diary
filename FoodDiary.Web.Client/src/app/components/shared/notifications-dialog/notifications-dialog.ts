@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -6,6 +6,7 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { filter } from 'rxjs';
 
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
@@ -20,6 +21,7 @@ import { NotificationsDialogListComponent } from './notifications-dialog-list/no
         TranslatePipe,
         FdUiButtonComponent,
         FdUiIconComponent,
+        FdUiInlineAlertComponent,
         FdUiDialogFooterDirective,
         FdUiDialogComponent,
         NotificationsDialogListComponent,
@@ -35,12 +37,13 @@ export class NotificationsDialogComponent {
     private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
     private readonly languageChange = toSignal(this.translateService.onLangChange);
+    private readonly feed = viewChild<ElementRef<HTMLElement>>('feed');
     private navigationRevision = 0;
 
     protected readonly notifications = this.notificationService.notifications;
-    protected readonly isLoading = computed(
-        () => this.notificationService.notificationsLoading() && !this.notificationService.notificationsLoaded(),
-    );
+    protected readonly isFetching = this.notificationService.notificationsLoading;
+    protected readonly isLoading = computed(() => this.isFetching() && !this.notificationService.notificationsLoaded());
+    protected readonly loadFailed = this.notificationService.hasNotificationsLoadError;
     protected readonly isMarkingAllRead = signal(false);
     protected readonly markAllReadError = signal(false);
     protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));
@@ -59,6 +62,11 @@ export class NotificationsDialogComponent {
                 this.navigationRevision++;
             });
         this.notificationService.ensureNotificationsLoaded();
+    }
+
+    protected retryLoad(): void {
+        this.feed()?.nativeElement.focus();
+        this.notificationService.refreshNotifications();
     }
 
     protected openNotification(notification: NotificationItem): void {

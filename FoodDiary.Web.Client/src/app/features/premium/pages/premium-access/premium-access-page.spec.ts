@@ -200,7 +200,7 @@ describe('PremiumAccessPageComponent entitlement recovery', () => {
         await settleAsync();
         expect(authService.refreshSession).toHaveBeenCalledTimes(1);
         expect(authService.isPremium()).toBe(true);
-        await component['reloadOverviewAsync']();
+        await component['retryAfterErrorAsync']();
         expect(authService.refreshSession).toHaveBeenCalledTimes(1);
         expect(component['errorMessage']()).toBeNull();
     });
@@ -239,7 +239,7 @@ describe('PremiumAccessPageComponent entitlement recovery', () => {
             authService.isPremium.set(true);
             return of(true);
         });
-        await component['reloadOverviewAsync']();
+        await component['retryAfterErrorAsync']();
         expect(component['errorMessage']()).toBeNull();
         expect(authService.isPremium()).toBe(true);
     });

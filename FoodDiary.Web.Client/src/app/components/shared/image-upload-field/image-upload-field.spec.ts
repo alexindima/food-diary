@@ -110,6 +110,28 @@ describe('ImageUploadFieldComponent control value', () => {
         expect(component['selection']()).toEqual(imageSelection('https://example.com/image.jpg', 'asset-1'));
         expect(component.disabled()).toBe(true);
     });
+
+    it('clears the rendered preview when the external value becomes null without deleting an asset or emitting a user change', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const changed = vi.fn<(selection: ImageSelection | null) => void>();
+        component.imageChanged.subscribe(changed);
+        component.value.subscribe(changed);
+        fixture.componentRef.setInput('deleteOnClear', true);
+        const saved = imageSelection('https://example.test/reset-photo.png', 'reset-asset');
+        fixture.componentRef.setInput('value', saved);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(saved.url);
+
+        fixture.componentRef.setInput('value', null);
+        fixture.detectChanges();
+
+        expect(host.querySelector('img.image-upload-field__preview')).toBeNull();
+        expect(component.value()).toBeNull();
+        expect(component.touched()).toBe(false);
+        expect(changed).not.toHaveBeenCalled();
+        expect(imageUploadService.deleteAsset).not.toHaveBeenCalled();
+    });
 });
 
 describe('ImageUploadFieldComponent stored initial selection', () => {
@@ -132,6 +154,27 @@ describe('ImageUploadFieldComponent stored initial selection', () => {
         }
         expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src') ?? null).toBe(restored.url);
         expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+
+    it('restores the configured fallback silently when the parent clears its explicit value', async () => {
+        const { component, fixture } = await setupImageUploadFieldAsync();
+        const changed = vi.fn<(selection: ImageSelection | null) => void>();
+        component.imageChanged.subscribe(changed);
+        const restored = imageSelection('https://example.test/restored-photo.png', null);
+        fixture.componentRef.setInput('initialSelection', restored);
+        fixture.detectChanges();
+        expect(changed).toHaveBeenCalledExactlyOnceWith(restored);
+        changed.mockClear();
+
+        fixture.componentRef.setInput('value', imageSelection(null, null));
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('img.image-upload-field__preview')).toBeNull();
+
+        fixture.componentRef.setInput('value', null);
+        fixture.detectChanges();
+        expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(restored.url);
+        expect(changed).not.toHaveBeenCalled();
     });
 });
 

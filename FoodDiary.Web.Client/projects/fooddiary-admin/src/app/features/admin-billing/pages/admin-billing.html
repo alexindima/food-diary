@@ -98,9 +98,9 @@
 
     @if (billing.isLoading()) {
         <p>Loading billing records...</p>
+    } @else if (billing.recordsFailed()) {
+        <fd-admin-load-error (retry)="billing.retryRecords()" />
     } @else {
-        <p class="admin-billing__error" role="alert" [hidden]="billing.errorMessage() === null">{{ billing.errorMessage() }}</p>
-
         <div class="admin-billing__summary fd-ui-action-text">Total records: {{ billing.totalItems() }}</div>
 
         <fd-admin-billing-records />

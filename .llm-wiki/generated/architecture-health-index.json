@@ -2065,9 +2065,19 @@
           "name": "data",
           "type": "AdminDmarcView",
           "required": true
+        },
+        {
+          "name": "retrying",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "retryAttachments",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {

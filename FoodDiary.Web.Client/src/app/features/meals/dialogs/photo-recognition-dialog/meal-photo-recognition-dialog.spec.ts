@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { HttpStatusCode } from '@angular/common/http';
-import { signal } from '@angular/core';
+import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -295,9 +295,12 @@ describe('Meal AI edit invalid quantity', () => {
     });
 });
 
-async function setupComponentAsync(
-    data: Record<string, unknown> | null = null,
-): Promise<{ component: MealPhotoRecognitionDialogComponent; fixture: ComponentFixture<MealPhotoRecognitionDialogComponent> }> {
+async function setupComponentAsync(data: Record<string, unknown> | null = null): Promise<{
+    component: MealPhotoRecognitionDialogComponent;
+    fixture: ComponentFixture<MealPhotoRecognitionDialogComponent>;
+    privacyNeedsReload: WritableSignal<boolean>;
+}> {
+    const privacyNeedsReload = signal(false);
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [MealPhotoRecognitionDialogComponent],
@@ -309,7 +312,7 @@ async function setupComponentAsync(
                     useValue: {
                         ensureHealthConsentAsync: vi.fn().mockResolvedValue(true),
                         failed: signal(false),
-                        needsReload: signal(false),
+                        needsReload: privacyNeedsReload,
                     },
                 },
                 { provide: FdUiDialogRef, useValue: dialogRef },
@@ -324,6 +327,7 @@ async function setupComponentAsync(
     return {
         component: fixture.componentInstance,
         fixture,
+        privacyNeedsReload,
     };
 }
 
@@ -483,11 +487,11 @@ describe('Meal photo consent and loading through uploaded selections', () => {
         { failed: true, reload: false, message: 'PRIVACY_CHOICES.ERROR' },
         { failed: true, reload: true, message: 'PRIVACY_CHOICES.RELOAD' },
     ])('blocks analysis when consent is unavailable, failed=$failed reload=$reload', async ({ failed, reload, message }) => {
-        const { fixture } = await setupComponentAsync();
+        const { fixture, privacyNeedsReload } = await setupComponentAsync();
         const privacy = TestBed.inject(PrivacyConsentFacade);
         vi.spyOn(privacy, 'ensureHealthConsentAsync').mockResolvedValue(false);
         privacy.failed.set(failed);
-        privacy.needsReload.set(reload);
+        privacyNeedsReload.set(reload);
         const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
 
         upload.imageChanged.emit(imageSelection(null, 'meal-photo'));

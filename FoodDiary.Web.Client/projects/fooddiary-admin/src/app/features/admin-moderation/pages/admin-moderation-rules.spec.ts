@@ -162,11 +162,13 @@ describe('Publishing and restoring Admin recipe moderation rules', () => {
         publish.click();
         const retried = http.expectOne({ method: 'PUT', url: POLICY_API });
         expect(retried.request.body).toEqual(rules);
-        retried.flush(publishedPolicy(rules));
+        const acknowledgedRules = { ...rules, mistralSamplePercent: 10 };
+        retried.flush(publishedPolicy(acknowledgedRules));
         fixture.detectChanges();
         expectPublished(fixture);
+        expect(sample(fixture).value).toBe(String(acknowledgedRules.mistralSamplePercent));
         expect(host(fixture).textContent).not.toContain('ADMIN_RECIPE_MODERATION.MISTRAL_UNAVAILABLE');
-        changeSample(fixture, '10');
+        changeSample(fixture, '20');
         expect(host(fixture).querySelector('[role="status"]')).toBeNull();
     });
 

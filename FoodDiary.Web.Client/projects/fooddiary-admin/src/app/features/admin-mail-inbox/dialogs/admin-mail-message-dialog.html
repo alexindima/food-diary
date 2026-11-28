@@ -149,7 +149,7 @@
                 ></article>
             }
         } @else {
-            <p role="alert">{{ 'ADMIN_MAIL_INBOX.LOAD_ERROR' | translate }}</p>
+            <fd-admin-load-error (retry)="retryDetails()" />
         }
     </section>
 </fd-ui-dialog>

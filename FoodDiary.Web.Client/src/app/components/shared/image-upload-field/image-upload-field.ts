@@ -14,6 +14,7 @@ import {
     model,
     output,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -127,7 +128,11 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
-    protected readonly selection = signal<ImageSelection>(imageSelection(null, null));
+    private readonly restoredSelection = computed(() => {
+        const initial = this.initialSelection();
+        return initial !== null && (initial.url !== null || initial.assetId !== null) ? imageSelection(initial.url, initial.assetId) : null;
+    });
+    protected readonly selection = computed(() => this.value() ?? this.restoredSelection() ?? imageSelection(null, null));
     private readonly imagePreviews = injectImagePreviews(computed(() => [{ ...this.selection(), requiresOwner: this.keepPrivate() }]));
     protected readonly previewUrl = computed(() => this.imagePreviews.urls()[0] ?? null);
     protected readonly hasSelection = computed(
@@ -180,17 +185,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         });
         this.observeCropSurface();
         effect(() => {
-            const value = this.value();
-            if (value !== null) {
-                this.selection.set(value);
-                return;
-            }
-
-            const initial = this.initialSelection();
-            if (this.hasInitialSelection(initial)) {
-                const selection = imageSelection(initial.url ?? null, initial.assetId ?? null);
-                this.selection.set(selection);
-                this.imageChanged.emit(selection);
+            const restored = this.restoredSelection();
+            // A parent value reset can show the fallback without publishing a user change.
+            if (restored !== null && untracked(this.value) === null) {
+                this.imageChanged.emit(restored);
             }
         });
         effect(() => {
@@ -202,10 +200,6 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             this.handledClearRequest = request;
             this.clearImage();
         });
-    }
-
-    private hasInitialSelection(initial: ImageSelection | null): initial is ImageSelection {
-        return initial !== null && (initial.url !== null || initial.assetId !== null);
     }
 
     protected onFileSelected(fileInput: HTMLInputElement): void {
@@ -341,7 +335,6 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.cancelUpload();
         const assetId = this.selection().assetId;
         const selection: ImageSelection = imageSelection(null, null);
-        this.selection.set(selection);
         this.error.set(null);
         this.value.set(selection);
         this.touched.set(true);
@@ -675,7 +668,6 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     private applyUploadedSelection(selection: ImageSelection): void {
         this.clearPreparationPreview();
-        this.selection.set(selection);
         this.value.set(selection);
         this.touched.set(true);
         this.imageChanged.emit(selection);

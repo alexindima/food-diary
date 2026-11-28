@@ -95,6 +95,7 @@ async function setupSidebarAsync(
         notifications: signal<NotificationItem[]>([]),
         notificationsLoading: signal(false),
         notificationsLoaded: signal(true),
+        hasNotificationsLoadError: signal(false),
         markAsRead: vi.fn<NotificationService['markAsRead']>(),
         markAllRead: vi.fn<NotificationService['markAllRead']>(),
     };

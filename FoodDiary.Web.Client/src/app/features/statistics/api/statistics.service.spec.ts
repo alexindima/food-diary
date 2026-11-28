@@ -77,27 +77,28 @@ describe('StatisticsService', () => {
 });
 
 describe('StatisticsService summaries', () => {
-    it('queries chart buckets and exact calendar measurements together', () => {
+    it('queries chart buckets with local instants and exact measurements with calendar dates', () => {
         const dateFrom = new Date('2026-05-01T00:00:00.000Z');
         const dateTo = new Date('2026-05-07T23:59:59.999Z');
         const response = { nutrition: RESPONSE, weight: [], waist: [] };
 
-        service
-            .getSummary({
-                dateFrom,
-                dateTo,
-                quantizationDays: QUANTIZATION_DAYS,
-                bodyDateFrom: '2026-05-01',
-                bodyDateTo: '2026-05-07',
-                timeZoneId: 'Asia/Tbilisi',
-            })
-            .subscribe(result => {
-                expect(result).toEqual({
-                    ...response,
-                    weightMeasurements: { first: 80, last: 79, count: 2 },
-                    waistMeasurements: { first: 90, last: 90, count: 1 },
-                });
+        const params = {
+            dateFrom,
+            dateTo,
+            quantizationDays: QUANTIZATION_DAYS,
+            bodyDateFrom: '2026-05-01',
+            bodyDateTo: '2026-05-07',
+            timeZoneId: 'Asia/Tbilisi',
+        };
+        service.getSummary(params).subscribe(result => {
+            expect(result).toEqual(response);
+        });
+        service.getBodyMeasurements(params).subscribe(result => {
+            expect(result).toEqual({
+                weightMeasurements: { first: 80, last: 79, count: 2 },
+                waistMeasurements: { first: 90, last: 90, count: 1 },
             });
+        });
 
         const req = httpMock.expectOne(request => request.url === SUMMARY_URL);
         expect(req.request.method).toBe('GET');
@@ -120,22 +121,17 @@ describe('StatisticsService summaries', () => {
         waist.flush([{ circumferenceCm: 90 }]);
     });
 
-    it('fails the complete result when an exact measurement read fails', () => {
-        let emitted = false;
-        let failed = false;
-        service.getSummary({ dateFrom: '2026-05-01', dateTo: '2026-05-07' }).subscribe({
-            next: () => {
-                emitted = true;
-            },
-            error: () => {
-                failed = true;
-            },
-        });
-        httpMock.expectOne(request => request.url === SUMMARY_URL).flush({ nutrition: [], weight: [], waist: [] });
+    it('keeps the summary available when an exact measurement read fails', async () => {
+        const params = { dateFrom: '2026-05-01', dateTo: '2026-05-07' };
+        const summary = firstValueFrom(service.getSummary(params));
+        const measurements = firstValueFrom(service.getBodyMeasurements(params));
+        const failed = expect(measurements).rejects.toMatchObject({ status: 500 });
+        const response = { nutrition: [], weight: [], waist: [] };
+        httpMock.expectOne(request => request.url === SUMMARY_URL).flush(response);
         httpMock.expectOne(request => request.url === environment.apiUrls.weights).flush([]);
         httpMock.expectOne(request => request.url === environment.apiUrls.waists).flush({}, { status: 500, statusText: 'Error' });
-        expect(emitted).toBe(false);
-        expect(failed).toBe(true);
+        await expect(summary).resolves.toEqual(response);
+        await failed;
     });
 });
 
@@ -143,7 +139,8 @@ describe('StatisticsService without reference measurements', () => {
     it('keeps nutrition data and reports no reference measurements for a period without body entries', async () => {
         const dateFrom = '2026-05-01T00:00:00.000Z';
         const dateTo = '2026-05-07T23:59:59.999Z';
-        const pending = firstValueFrom(service.getSummary({ dateFrom, dateTo }));
+        const summary = firstValueFrom(service.getSummary({ dateFrom, dateTo }));
+        const measurements = firstValueFrom(service.getBodyMeasurements({ dateFrom, dateTo }));
         const response = { nutrition: RESPONSE, weight: [], waist: [] };
         const charts = httpMock.expectOne(request => request.url === SUMMARY_URL && request.method === 'GET');
         expect(charts.request.params.get('dateFrom')).toBe(dateFrom);
@@ -158,8 +155,8 @@ describe('StatisticsService without reference measurements', () => {
             request.flush([]);
         }
 
-        await expect(pending).resolves.toEqual({
-            ...response,
+        await expect(summary).resolves.toEqual(response);
+        await expect(measurements).resolves.toEqual({
             weightMeasurements: { first: null, last: null, count: 0 },
             waistMeasurements: { first: null, last: null, count: 0 },
         });

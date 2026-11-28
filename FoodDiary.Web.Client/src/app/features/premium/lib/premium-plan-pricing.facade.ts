@@ -20,26 +20,27 @@ export class PremiumPlanPricingFacade {
     public readonly loading = this.preview.isLoading;
     public readonly unavailable = computed(() => this.requestedPreview() === null || this.preview.value() === null);
 
-    public loadPrices(overview: BillingOverview, locale: string): void {
+    public loadPrices(overview: BillingOverview, locale: string): boolean {
         if (
             !this.isBrowser ||
             this.destroyRef.destroyed ||
             !overview.availableProviders.some(provider => provider.toLowerCase() === 'paddle')
         ) {
             this.requestedPreview.set(undefined);
-            return;
+            return false;
         }
 
         const configuration = resolvePriceConfiguration(overview);
         if (configuration === null) {
             this.requestedPreview.set(null);
-            return;
+            return false;
         }
 
         const { monthly, yearly, token, environment } = configuration;
         const result = this.paddle.previewPlanPricesAsync({ monthly, yearly }, { token, environment, locale });
         // A replacement can arrive before the resource observes this promise.
         this.requestedPreview.set({ result: result.catch(() => null) });
+        return true;
     }
 }
 

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogService } from 'fd-ui-kit';
@@ -20,6 +20,8 @@ import type { AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.da
 export class AdminDmarcReportsComponent {
     private readonly dialog = inject(FdUiDialogService);
     public readonly data = input.required<AdminDmarcView>();
+    public readonly retrying = input(false);
+    public readonly retryAttachments = output();
     protected readonly reportMailbox = DMARC_MAILBOX;
     protected readonly statusLabels = {
         verified: 'ADMIN_DMARC.VERIFIED',

@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, map, type Observable, tap } from 'rxjs';
+import { catchError, defer, finalize, map, type Observable, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
@@ -53,6 +53,9 @@ export type UserPrivacyState = {
     marketingAcceptedAtUtc: string | null;
 };
 
+type UserRead = { session: number; revision: number };
+type PendingUserInfo = { revision: number; response: Observable<User | null> };
+
 @Service()
 export class UserService {
     protected readonly baseUrl = environment.apiUrls.users;
@@ -61,6 +64,9 @@ export class UserService {
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
     private readonly userSignal = signal<User | null>(null);
     private sessionVersion = 0;
+    private nextUserRevision = 0;
+    private appliedUserRevision = 0;
+    private pendingSilentInfo: PendingUserInfo | undefined;
     public readonly user = this.userSignal.asReadonly();
 
     public recordActivity(): Observable<void> {
@@ -100,12 +106,14 @@ export class UserService {
             })
             .pipe(
                 tap(() => {
-                    const current = this.userSignal();
-                    if (current !== null && purpose === PrivacyConsentPurpose.AiProcessing) {
-                        this.setUserForSession(session, {
-                            ...current,
-                            aiConsentAcceptedAt: granted ? utcInstant(new Date().toISOString()) : null,
-                        });
+                    if (purpose === PrivacyConsentPurpose.AiProcessing) {
+                        const current = this.userSignal();
+                        this.setUserForSession(
+                            session,
+                            current === null
+                                ? null
+                                : { ...current, aiConsentAcceptedAt: granted ? utcInstant(new Date().toISOString()) : null },
+                        );
                     }
                 }),
             );
@@ -113,6 +121,7 @@ export class UserService {
 
     public clearUser(): void {
         this.sessionVersion++;
+        this.pendingSilentInfo = undefined;
         this.userSignal.set(null);
     }
 
@@ -122,46 +131,47 @@ export class UserService {
 
     public getOverview(): Observable<UserProfileOverview | null> {
         const session = this.sessionVersion;
-        return this.sdk.client.getUsersOverview({ version: this.sdk.version }).pipe(
-            map(profileOverviewFromSdk),
-            tap(overview => {
-                this.setUserForSession(session, overview.user);
-            }),
-            catchError((error: unknown) => {
-                this.setUserForSession(session, null);
-                return fallbackApiError('Get user overview error', error, null);
-            }),
+        return defer(() =>
+            this.trackUserRead(
+                this.sdk.client.getUsersOverview({ version: this.sdk.version }).pipe(map(profileOverviewFromSdk)),
+                { session, revision: ++this.nextUserRevision },
+                overview => overview.user,
+                'Get user overview error',
+            ),
         );
     }
 
     public getInfo(): Observable<User | null> {
         const session = this.sessionVersion;
-        return this.sdk.client.getUsersInfo({ version: this.sdk.version }).pipe(
-            map(userFromSdk),
-            tap(user => {
-                this.setUserForSession(session, user);
-            }),
-            catchError((error: unknown) => {
-                this.setUserForSession(session, null);
-                return fallbackApiError('Get user info error', error, null);
-            }),
-        );
+        return defer(() => this.readUserInfo({ session, revision: ++this.nextUserRevision }));
     }
 
-    public getInfoSilently(): Observable<User | null> {
+    public getInfoSilently({ fresh = false }: { fresh?: boolean } = {}): Observable<User | null> {
         const session = this.sessionVersion;
-        return this.sdk.client
-            .getUsersInfo({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
-            .pipe(
-                map(userFromSdk),
-                tap(user => {
-                    this.setUserForSession(session, user);
+        return defer(() => {
+            const pending = this.pendingSilentInfo;
+            if (session !== this.sessionVersion) {
+                return this.readUserInfo({ session, revision: ++this.nextUserRevision }, this.silentLoadingContext);
+            }
+            if (!fresh && pending !== undefined && pending.revision >= this.appliedUserRevision) {
+                return pending.response;
+            }
+
+            const revision = ++this.nextUserRevision;
+            if (fresh) {
+                this.appliedUserRevision = revision;
+            }
+            const response = this.readUserInfo({ session, revision }, this.silentLoadingContext).pipe(
+                finalize(() => {
+                    if (this.pendingSilentInfo?.response === response) {
+                        this.pendingSilentInfo = undefined;
+                    }
                 }),
-                catchError((error: unknown) => {
-                    this.setUserForSession(session, null);
-                    return fallbackApiError('Get user info error', error, null);
-                }),
+                shareReplay({ bufferSize: 1, refCount: true }),
             );
+            this.pendingSilentInfo = { revision, response };
+            return response;
+        });
     }
 
     public update(data: UpdateUserDto): Observable<User | null> {
@@ -218,9 +228,7 @@ export class UserService {
         return this.sdk.client.patchUsersPasswordSet({ version: this.sdk.version, setPasswordHttpRequest: request }).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current !== null && session === this.sessionVersion) {
-                    this.userSignal.set({ ...current, hasPassword: true });
-                }
+                this.setUserForSession(session, current === null ? null : { ...current, hasPassword: true });
             }),
             map(() => true),
             catchError((error: unknown) => fallbackApiError('Set password error', error, false)),
@@ -238,9 +246,7 @@ export class UserService {
         return this.sdk.client.deleteUsersAiConsent({ version: this.sdk.version }).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current !== null && session === this.sessionVersion) {
-                    this.userSignal.set({ ...current, aiConsentAcceptedAt: null });
-                }
+                this.setUserForSession(session, current === null ? null : { ...current, aiConsentAcceptedAt: null });
             }),
             catchError((error: unknown) => rethrowApiError('Revoke AI consent error', error)),
         );
@@ -355,8 +361,40 @@ export class UserService {
             );
     }
 
+    private readUserInfo(owner: UserRead, context?: HttpContext): Observable<User | null> {
+        return this.trackUserRead(
+            this.sdk.client
+                .getUsersInfo({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, context))
+                .pipe(map(userFromSdk)),
+            owner,
+            user => user,
+            'Get user info error',
+        );
+    }
+
+    private trackUserRead<T>(source: Observable<T>, owner: UserRead, getUser: (result: T) => User, message: string): Observable<T | null> {
+        return source.pipe(
+            tap(result => {
+                this.setUserFromRead(owner, getUser(result));
+            }),
+            catchError((error: unknown) => {
+                this.setUserFromRead(owner, null);
+                return fallbackApiError(message, error, null);
+            }),
+        );
+    }
+
+    private setUserFromRead({ session, revision }: UserRead, user: User | null): void {
+        if (session === this.sessionVersion && revision >= this.appliedUserRevision) {
+            this.appliedUserRevision = revision;
+            this.userSignal.set(user);
+        }
+    }
+
     private setUserForSession(session: number, user: User | null): void {
         if (session === this.sessionVersion) {
+            this.appliedUserRevision = ++this.nextUserRevision;
+            this.pendingSilentInfo = undefined;
             this.userSignal.set(user);
         }
     }

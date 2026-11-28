@@ -1,12 +1,24 @@
 <fd-ui-dialog size="lg" bodyScrollInset="edge" [title]="'NOTIFICATIONS.TITLE' | translate">
-    <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
+    <div #feed class="notifications-dialog__body" tabindex="-1" [attr.aria-busy]="isFetching()">
         <p role="alert" class="fd-ui-error-text" [hidden]="!markAllReadError()">{{ 'NOTIFICATIONS.MARK_ALL_READ_ERROR' | translate }}</p>
+        @if (loadFailed()) {
+            <fd-ui-inline-alert
+                class="notifications-dialog__load-error"
+                role="alert"
+                severity="danger"
+                [message]="'ERRORS.LOAD_FAILED_MESSAGE' | translate"
+                [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                (primaryAction)="retryLoad()"
+            />
+        }
         @if (isLoading()) {
             <div class="notifications-dialog__state fd-place-center fd-gap-sm" role="status" aria-live="polite">
                 <fd-ui-icon name="hourglass_top" />
                 <p class="fd-ui-body-sm">{{ 'COMMON.LOADING' | translate }}</p>
             </div>
-        } @else if (notifications().length === 0) {
+        } @else if (notifications().length > 0) {
+            <fd-notifications-dialog-list [items]="notificationItems()" (notificationOpen)="openNotification($event)" />
+        } @else if (!loadFailed()) {
             <div
                 class="notifications-dialog__state notifications-dialog__state--empty fd-place-center fd-gap-sm"
                 role="status"
@@ -16,8 +28,6 @@
                 <p class="notifications-dialog__state-title fd-ui-card-title">{{ 'NOTIFICATIONS.EMPTY_TITLE' | translate }}</p>
                 <p class="notifications-dialog__state-text fd-ui-body-sm">{{ 'NOTIFICATIONS.EMPTY_TEXT' | translate }}</p>
             </div>
-        } @else {
-            <fd-notifications-dialog-list [items]="notificationItems()" (notificationOpen)="openNotification($event)" />
         }
     </div>
 

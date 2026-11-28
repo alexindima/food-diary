@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { filter as filterEvents, of, Subject, take, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
@@ -80,6 +80,38 @@ beforeEach(() => {
         ],
     });
 });
+
+it.each([{ path: '/users', request: getUsers }, ...historyRoutes.map(({ path, request }) => ({ path, request }))])(
+    'keeps $path filters and page when an obsolete response arrives at NavigationEnd',
+    async ({ path, request }) => {
+        const pending = new Subject<PagedResponse<never>>();
+        request
+            .mockReturnValueOnce(pending)
+            .mockReturnValue(of({ ...EMPTY_PAGE, totalPages: SECOND_PAGE, totalItems: TWO_PAGES_OF_ITEMS }));
+        const harness = await RouterTestingHarness.create(`${path}?page=2&search=previous`);
+        const router = TestBed.inject(Router);
+        const restored = `${path}?search=restored`;
+        const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+        router.events
+            .pipe(
+                filterEvents(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+                take(1),
+            )
+            .subscribe(() => {
+                pendingAtNavigation(pending.observed);
+                pending.next({ ...EMPTY_PAGE, page: SECOND_PAGE, totalPages: SECOND_PAGE, totalItems: TWO_PAGES_OF_ITEMS });
+                pending.complete();
+            });
+
+        await router.navigateByUrl(restored);
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+
+        expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+        expect(router.url).toBe(restored);
+        expect(request).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'restored', expect.any(Object));
+    },
+);
 
 describe.each(historyRoutes)('Protected history route $path', ({ path, filters, firstFilter, request, emptyText }) => {
     it('hides a stale load failure when navigation selects an invalid period', async () => {

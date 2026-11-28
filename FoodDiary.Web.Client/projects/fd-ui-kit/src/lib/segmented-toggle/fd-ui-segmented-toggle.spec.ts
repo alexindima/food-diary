@@ -98,6 +98,49 @@ describe('FdUiSegmentedToggleComponent changing inputs', () => {
     });
 });
 
+describe('FdUiSegmentedToggleComponent keyboard navigation', () => {
+    it('moves focus and selection with arrow keys and wraps at the group edges', () => {
+        const changed = vi.fn<(value: string) => void>();
+        component.selectedValue.subscribe(changed);
+        const [day, week, month] = radioButtons();
+        expect([day.tabIndex, week.tabIndex, month.tabIndex]).toEqual([0, -1, -1]);
+        day.focus();
+
+        pressArrow(day, 'ArrowLeft');
+        expect(document.activeElement).toBe(month);
+        expect([day.tabIndex, week.tabIndex, month.tabIndex]).toEqual([-1, -1, 0]);
+        expect(month.getAttribute('aria-checked')).toBe('true');
+        pressArrow(month, 'ArrowDown');
+        expect(document.activeElement).toBe(day);
+        pressArrow(day, 'ArrowRight');
+        expect(document.activeElement).toBe(week);
+        pressArrow(week, 'ArrowUp');
+        expect(document.activeElement).toBe(day);
+        expect(changed.mock.calls).toEqual([['month'], ['day'], ['week'], ['day']]);
+    });
+
+    it('uses the checked option as the only tab stop and leaves a fallback when it is absent', () => {
+        const changed = vi.fn<(value: string) => void>();
+        component.selectedValue.subscribe(changed);
+        fixture.componentRef.setInput('selectedValue', 'month');
+        fixture.detectChanges();
+        expect(radioButtons().map(button => button.tabIndex)).toEqual([-1, -1, 0]);
+
+        fixture.componentRef.setInput('options', testOptions.slice(0, -1));
+        fixture.detectChanges();
+        expect(radioButtons().map(button => button.tabIndex)).toEqual([0, -1]);
+        expect(radioButtons().map(button => button.getAttribute('aria-checked'))).toEqual(['false', 'false']);
+        expect(changed).not.toHaveBeenCalled();
+    });
+});
+
+function pressArrow(button: HTMLButtonElement, key: string): void {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    button.dispatchEvent(event);
+    fixture.detectChanges();
+    expect(event.defaultPrevented).toBe(true);
+}
+
 describe('FdUiSegmentedToggleComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();

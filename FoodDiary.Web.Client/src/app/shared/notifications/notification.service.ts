@@ -1,5 +1,5 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
-import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, map, merge, type Observable, Subject, tap } from 'rxjs';
 
@@ -125,6 +125,7 @@ export class NotificationService {
                     }),
                 ),
     });
+    public readonly hasNotificationsLoadError = computed(() => this.notificationsResource.error() !== undefined);
 
     public constructor() {
         effect(() => {

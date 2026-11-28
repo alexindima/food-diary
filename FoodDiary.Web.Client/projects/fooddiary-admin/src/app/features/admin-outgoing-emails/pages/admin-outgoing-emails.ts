@@ -7,7 +7,7 @@ import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiS
 import { map } from 'rxjs';
 
 import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -86,7 +86,7 @@ export class AdminOutgoingEmailsComponent {
         stream: ({ params }) =>
             this.api.getPage(params.page, params.purpose, params.status, params.filters).pipe(
                 map(result => {
-                    if (this.pageRequest() !== params) {
+                    if (!this.ownsRequest(params)) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {
@@ -97,7 +97,7 @@ export class AdminOutgoingEmailsComponent {
                 }),
             ),
     });
-    private readonly pageResult = computed(() => (this.pageResource.hasValue() ? this.pageResource.value() : null));
+    protected readonly pageResult = computed(() => (this.pageResource.hasValue() ? this.pageResource.value() : null));
     protected readonly loading = computed(
         () => this.pageResource.isLoading() || (this.pageResource.hasValue() && this.pageResource.value() === null),
     );
@@ -175,6 +175,13 @@ export class AdminOutgoingEmailsComponent {
         return `ADMIN_OUTGOING.PURPOSES.${this.purposes.includes(purpose) ? purpose : 'other'}`;
     }
 
+    protected retryLoad(): void {
+        const request = this.pageRequest();
+        if (request !== undefined && this.ownsRequest(request)) {
+            this.pageResource.reload();
+        }
+    }
+
     protected load(reset = false): void {
         if (reset) {
             this.draftPage.set(1);
@@ -201,6 +208,13 @@ export class AdminOutgoingEmailsComponent {
         } else {
             void this.router.navigateByUrl(tree);
         }
+    }
+
+    private ownsRequest(request: OutgoingPageRequest): boolean {
+        return (
+            this.pageRequest() === request &&
+            adminRouteInputsMatch(this.route, { ...this.queryFilters(), id: this.id(), correlationId: this.correlationId() })
+        );
     }
 
     private buildRequest({ page, purpose, status, recipient }: OutgoingListFilters): OutgoingPageRequest | undefined {

@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { OpenFoodFactsSdk } from '../../../shared/api/sdk/generated/api/open-food-facts.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { requireSdkFields, sdkOptional } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError } from '../../../shared/lib/api-error.utils';
+import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { OpenFoodFactsProduct } from '../models/open-food-facts.data';
 import { OPEN_FOOD_FACTS_SEARCH_LIMIT } from './product-api.tokens';
 
@@ -28,7 +28,7 @@ export class OpenFoodFactsService {
             .getOpenFoodFactsProducts({ version: this.sdk.version, search: query, limit: limit ?? this.defaultSearchLimit })
             .pipe(
                 map(values => values.map(value => requireSdkFields(value, ['barcode', 'name']))),
-                catchError((error: unknown) => fallbackApiError('Open Food Facts search error', error, [])),
+                catchError((error: unknown) => rethrowApiError('Open Food Facts search error', error)),
             );
     }
 }

@@ -68,6 +68,7 @@ type StatisticsFacadeMock = {
     isLoading: ReturnType<typeof signal<boolean>>;
     periodValidationError: ReturnType<typeof signal<string | null>>;
     reload: ReturnType<typeof vi.fn>;
+    retryBody: ReturnType<typeof vi.fn>;
     selectedNutritionTab: ReturnType<typeof signal<NutritionChartTab>>;
     selectedRange: ReturnType<typeof signal<StatisticsRange>>;
 };
@@ -128,6 +129,7 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         changeRange: vi.fn(),
         changeNutritionTab: vi.fn(),
         reload: vi.fn(),
+        retryBody: vi.fn(),
         exportDiary: vi.fn(),
     };
 }
@@ -489,6 +491,10 @@ describe('Statistics report with weight data only', () => {
                     { startDate: calendarDate(REPORT_END), endDate: calendarDate(REPORT_END), averageWeightKg: latestWeight },
                 ],
                 waist: [],
+            }),
+        );
+        api.getBodyMeasurements.mockReturnValue(
+            of({
                 weightMeasurements: { first: firstWeight, last: latestWeight, count: 2 },
                 waistMeasurements: { first: null, last: null, count: 0 },
             }),
@@ -539,6 +545,10 @@ describe('Statistics report with body measurements only', () => {
                         averageCircumferenceCm: NOVEMBER_WAIST,
                     },
                 ],
+            }),
+        );
+        api.getBodyMeasurements.mockReturnValue(
+            of({
                 weightMeasurements: { first: null, last: null, count: 0 },
                 waistMeasurements: { first: OCTOBER_WAIST, last: NOVEMBER_WAIST, count: 2 },
             }),
@@ -642,12 +652,18 @@ describe('Statistics report route ownership', () => {
 
 type StatisticsReportApi = {
     getSummary: ReturnType<typeof vi.fn<StatisticsService['getSummary']>>;
+    getBodyMeasurements: ReturnType<typeof vi.fn<StatisticsService['getBodyMeasurements']>>;
     exportDiary: ReturnType<typeof vi.fn<ExportService['exportDiary']>>;
 };
 
 function createReportApi(): StatisticsReportApi {
     return {
         getSummary: vi.fn<StatisticsService['getSummary']>().mockReturnValue(of(reportSummary(CURRENT_REPORT_CALORIES))),
+        getBodyMeasurements: vi
+            .fn<StatisticsService['getBodyMeasurements']>()
+            .mockReturnValue(
+                of({ weightMeasurements: { first: null, last: null, count: 0 }, waistMeasurements: { first: null, last: null, count: 0 } }),
+            ),
         exportDiary: vi.fn<ExportService['exportDiary']>().mockReturnValue(of(void 0)),
     };
 }
@@ -684,7 +700,7 @@ async function openReportAsync(
                     },
                 },
             },
-            { provide: StatisticsService, useValue: { getSummary: api.getSummary } },
+            { provide: StatisticsService, useValue: { getSummary: api.getSummary, getBodyMeasurements: api.getBodyMeasurements } },
             { provide: ExportService, useValue: { exportDiary: api.exportDiary } },
             { provide: UserService, useValue: { user: signal(null) } },
         ],
@@ -719,8 +735,6 @@ function reportSummary(totalCalories: number): StatisticsSummary {
         ],
         weight: [],
         waist: [],
-        weightMeasurements: { first: null, last: null, count: 0 },
-        waistMeasurements: { first: null, last: null, count: 0 },
     };
 }
 

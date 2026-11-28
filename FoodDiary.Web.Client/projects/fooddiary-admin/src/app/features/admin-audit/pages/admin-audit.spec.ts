@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { filter, firstValueFrom, of, Subject } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, take } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../../../src/testing/async-testing';
@@ -218,6 +218,32 @@ describe('AdminAuditPageComponent results and pagination', () => {
         expect(getPage).toHaveBeenLastCalledWith(expect.objectContaining({ page: SECOND_PAGE, actorUserId: 'admin-1' }));
         expect(button(fixture, 'ADMIN_COMMON.NEXT').disabled).toBe(true);
     });
+});
+
+it('keeps the new audit filters and page when a previous result arrives during navigation', async () => {
+    const pending = new Subject<AdminAuditPageResult>();
+    getPage.mockReturnValueOnce(pending);
+    const harness = await renderAsync('?page=2&actorUserId=previous', 'pending');
+    const router = TestBed.inject(Router);
+    const restored = '/?page=2&actorUserId=restored';
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ items: [ENTRY], totalItems: PAGE_SIZE });
+            pending.complete();
+        });
+
+    await router.navigateByUrl(restored);
+    await settleAsync(harness);
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restored);
+    expect(getPage).toHaveBeenLastCalledWith(expect.objectContaining({ page: SECOND_PAGE, actorUserId: 'restored' }));
 });
 
 async function renderAsync(query = '', request: 'pending' | 'settled' = 'settled'): Promise<RouterTestingHarness> {

@@ -1,11 +1,13 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent, FdUiLoaderComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { catchError, of } from 'rxjs';
+import { catchError, of, throwError } from 'rxjs';
 
+import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { ProductId } from '../../../../shared/models/semantics/entity-id';
@@ -19,14 +21,33 @@ const MAX_PRODUCT_PHOTOS = 5;
     templateUrl: './public-product-preview.html',
     styleUrl: './public-product-preview.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiDialogComponent, FdUiLoaderComponent, PublicProductGalleryComponent],
+    imports: [
+        TranslatePipe,
+        LocalizedNumberPipe,
+        FdUiDialogComponent,
+        FdUiLoaderComponent,
+        PublicProductGalleryComponent,
+        ErrorStateComponent,
+    ],
 })
 export class PublicProductPreviewComponent {
     private readonly id = inject<ProductId>(FD_UI_DIALOG_DATA);
     private readonly service = inject(PublicProductDetailsFacade);
+    protected readonly productResource = rxResource({
+        stream: () =>
+            this.service
+                .getById(this.id)
+                .pipe(
+                    catchError((error: unknown) =>
+                        error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.NotFound)
+                            ? of(null)
+                            : throwError(() => error),
+                    ),
+                ),
+    });
     protected readonly ref = inject(FdUiDialogRef);
     protected readonly language = injectCurrentLanguage();
-    protected readonly product = toSignal(this.service.getById(this.id).pipe(catchError(() => of(null))));
+    protected readonly product = computed(() => (this.productResource.hasValue() ? this.productResource.value() : null));
     protected readonly images = computed(() => {
         const item = this.product();
         return [

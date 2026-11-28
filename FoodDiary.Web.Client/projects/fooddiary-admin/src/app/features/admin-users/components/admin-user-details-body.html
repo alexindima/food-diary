@@ -1,24 +1,10 @@
-@for (section of sections(); track section.title) {
-    <section class="admin-user-details__section">
-        <h3>{{ section.title }}</h3>
-        <dl class="admin-user-details__grid">
-            @for (field of section.fields; track field.label) {
-                <div>
-                    <dt>{{ field.label }}</dt>
-                    <dd>{{ field.value }}</dd>
-                </div>
-            }
-        </dl>
-    </section>
-}
-
-@if (activityLoading()) {
-    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
-} @else if (activityFailed()) {
-    <fd-admin-load-error (retry)="retry.emit()" />
-} @else {
-    <section class="admin-user-details__section">
-        <h3>Role history</h3>
+<section class="admin-user-details__section" aria-labelledby="admin-user-role-history">
+    <h3 id="admin-user-role-history">Role history</h3>
+    @if (roleAuditLoading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (roleAuditFailed()) {
+        <fd-admin-load-error (retry)="retryRoleAudit.emit()" />
+    } @else {
         <div class="admin-user-details__audit-list">
             @for (event of roleAuditEvents(); track event.id) {
                 <div class="admin-user-details__audit">
@@ -35,10 +21,16 @@
                 <p>No role changes recorded.</p>
             }
         </div>
-    </section>
+    }
+</section>
 
-    <section class="admin-user-details__section">
-        <h3>Last logins</h3>
+<section class="admin-user-details__section" aria-labelledby="admin-user-last-logins">
+    <h3 id="admin-user-last-logins">Last logins</h3>
+    @if (loginEventsLoading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (loginEventsFailed()) {
+        <fd-admin-load-error (retry)="retryLoginEvents.emit()" />
+    } @else {
         <div class="admin-user-details__login-list">
             @for (event of loginEvents(); track event.id) {
                 <div class="admin-user-details__login">
@@ -56,5 +48,5 @@
                 <p>No login events found.</p>
             }
         </div>
-    </section>
-}
+    }
+</section>

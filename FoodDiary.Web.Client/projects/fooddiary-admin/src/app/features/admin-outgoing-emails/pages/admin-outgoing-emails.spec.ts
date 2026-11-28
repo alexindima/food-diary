@@ -178,6 +178,69 @@ it('uses the first repeated URL values and clears the message and filters when t
     expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
 });
 
+it('keeps the new outgoing mail filters and page when a previous result arrives during navigation', async () => {
+    const pending = new Subject<OutgoingEmailPage>();
+    const getPage = vi
+        .fn<AdminOutgoingEmailsFacade['getPage']>()
+        .mockReturnValueOnce(pending)
+        .mockReturnValue(of({ items: [MAIL], totalItems: OUTBOX_TOTAL }));
+    const { harness, router } = await setupOutboxAsync(`${OUTBOX}?page=2&recipient=previous@example.test`, getPage, {
+        waitForResult: false,
+    });
+    const restored = `${OUTBOX}?recipient=${RECIPIENT}`;
+    const pendingAtNavigation = vi.fn<(observed: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === restored),
+            take(1),
+        )
+        .subscribe(() => {
+            pendingAtNavigation(pending.observed);
+            pending.next({ items: [], totalItems: OUTBOX_TOTAL });
+            pending.complete();
+        });
+
+    await router.navigateByUrl(restored);
+    await renderOutboxAsync(harness);
+
+    expect(pendingAtNavigation).toHaveBeenCalledExactlyOnceWith(true);
+    expect(router.url).toBe(restored);
+    expect(getPage).toHaveBeenLastCalledWith(1, '', '', expect.objectContaining({ recipient: RECIPIENT }));
+});
+
+it.each([
+    { page: 1, id: MAIL.id },
+    { page: LAST_PAGE, id: '' },
+])('retries outgoing page $page and message "$id" without applying recipient edits', async ({ page, id }) => {
+    const first = new Subject<OutgoingEmailPage>();
+    const getPage = vi
+        .fn<AdminOutgoingEmailsFacade['getPage']>()
+        .mockReturnValueOnce(first)
+        .mockReturnValue(of({ items: [MAIL], totalItems: OUTBOX_TOTAL }));
+    const messageParam = id.length === 0 ? '' : `&id=${id}`;
+    const url = `${OUTBOX}?page=${page}${messageParam}&recipient=${RECIPIENT}&correlationId=request-1&status=sent`;
+    const { harness, element, router } = await setupOutboxAsync(url, getPage, { waitForResult: false });
+    first.error(new Error('Unavailable'));
+    await renderOutboxAsync(harness);
+    const recipient = element.querySelector<HTMLInputElement>('input[aria-label="ADMIN_OUTGOING.RECIPIENT"]');
+    if (recipient === null) {
+        throw new Error('Expected the recipient filter');
+    }
+    recipient.value = 'draft@example.test';
+    recipient.dispatchEvent(new Event('input', { bubbles: true }));
+    harness.detectChanges();
+    requireOutboxButton(element, 'ADMIN_COMMON.RETRY').click();
+    await renderOutboxAsync(harness);
+
+    const expected = [page, '', 'sent', { recipient: RECIPIENT, id, correlationId: 'request-1' }];
+    expect(getPage.mock.calls).toEqual([expected, expected]);
+    expect(router.url).toBe(url);
+    expect(recipient.value).toBe('draft@example.test');
+    expect(element.querySelector('[role="alert"]')).toBeNull();
+    expect(element.querySelector('tbody')?.textContent).toContain(RECIPIENT);
+    expect(element.querySelector('fd-outgoing-email-details') !== null).toBe(id.length > 0);
+});
+
 describe('outgoing mail route state', () => {
     it('skips an invalid period and preserves the corrected UTC bounds when recovering an out-of-range page', async () => {
         const getPage = vi
@@ -185,7 +248,9 @@ describe('outgoing mail route state', () => {
             .mockImplementation(page => of({ items: page === LAST_PAGE ? [MAIL] : [], totalItems: OUTBOX_TOTAL }));
         const { element, harness, router } = await setupOutboxAsync(`${OUTBOX}?period=custom&from=2026-10-07&to=2026-10-06`, getPage);
         expect(getPage).not.toHaveBeenCalled();
-        expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
+        expect(element.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
+        expect(element.textContent).not.toContain('ADMIN_OUTGOING.EMPTY');
+        expect(element.querySelector('fd-ui-pagination')).toBeNull();
 
         await harness.navigateByUrl(
             `${OUTBOX}?page=${REQUESTED_PAGE}&period=custom&from=2026-10-06&to=2026-10-06&recipient=${RECIPIENT}&status=sent`,

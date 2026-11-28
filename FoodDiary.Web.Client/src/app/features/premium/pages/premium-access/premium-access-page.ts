@@ -219,7 +219,7 @@ export class PremiumAccessPageComponent {
                 return;
             }
             this.applyBillingChange(overview);
-            this.pricing.loadPrices({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
+            this.loadPlanPrices(overview);
             if (!(await this.refreshAccountAccessAsync(this.overviewRevision)) || !this.isPageActive()) {
                 return;
             }
@@ -257,7 +257,11 @@ export class PremiumAccessPageComponent {
         }
     }
 
-    protected async reloadOverviewAsync(): Promise<void> {
+    protected async retryPricesAsync(): Promise<void> {
+        const overview = this.overview();
+        if (this.pricing.loading() || (overview !== null && this.loadPlanPrices(overview))) {
+            return;
+        }
         await this.loadOverviewAsync();
     }
 
@@ -349,9 +353,13 @@ export class PremiumAccessPageComponent {
 
         const loaded = this.isCurrentOverview(revision) && this.errorMessage() === null;
         if (loaded && this.showPlans()) {
-            this.pricing.loadPrices({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
+            this.loadPlanPrices(overview);
         }
         return loaded;
+    }
+
+    private loadPlanPrices(overview: BillingOverview): boolean {
+        return this.pricing.loadPrices({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
     }
 
     private isCurrentOverview(revision: number): boolean {

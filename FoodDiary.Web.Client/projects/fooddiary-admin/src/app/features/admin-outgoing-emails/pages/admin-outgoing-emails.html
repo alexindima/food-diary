@@ -26,7 +26,8 @@
         <p role="status">{{ 'ADMIN_OUTGOING.LOADING' | translate }}</p>
     } @else if (failed()) {
         <p role="alert">{{ 'ADMIN_OUTGOING.ERROR' | translate }}</p>
-    } @else {
+        <fd-ui-button type="button" (click)="retryLoad()">{{ 'ADMIN_COMMON.RETRY' | translate }}</fd-ui-button>
+    } @else if (pageResult()) {
         <div class="mail-scroll">
             <table>
                 <thead>

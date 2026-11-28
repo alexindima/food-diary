@@ -169,14 +169,15 @@ export class ProductListFacade {
         this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
     );
     public readonly isMobileSearchVisible = computed(() => this.isMobileSearchOpen() || this.hasSearchValue());
-    private readonly offQuery = signal<{ search: string } | undefined>(undefined);
+    private readonly offQuery = signal<string | undefined>(undefined);
     private readonly offRequest = rxResource({
         params: this.offQuery,
-        stream: ({ params }) => this.openFoodFactsService.search(params.search, PRODUCT_LIST_OFF_SEARCH_LIMIT),
+        stream: ({ params }) => this.openFoodFactsService.search(params, PRODUCT_LIST_OFF_SEARCH_LIMIT),
         defaultValue: [],
     });
     public readonly offProducts = computed(() => (this.offRequest.hasValue() ? this.offRequest.value() : []));
     public readonly offLoading = this.offRequest.isLoading;
+    public readonly offError = computed(() => this.offRequest.error() !== undefined);
     private readonly isMobileSearchOpen = signal(false);
 
     public clearSearch(): void {
@@ -235,6 +236,10 @@ export class ProductListFacade {
 
     public retryLoad(): void {
         this.requestProducts(this.currentPageIndex + 1, this.searchValue());
+    }
+
+    public retryOffSearch(): void {
+        this.offRequest.reload();
     }
 
     public onPageChange(pageIndex: number): void {
@@ -649,7 +654,7 @@ export class ProductListFacade {
 
     private searchOpenFoodFacts(search: string | null): void {
         const trimmed = search?.trim();
-        this.offQuery.set(trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH ? undefined : { search: trimmed });
+        this.offQuery.set(trimmed === undefined || trimmed.length < PRODUCT_LIST_OFF_SEARCH_MIN_LENGTH ? undefined : trimmed);
     }
 
     private currentFilters(search: string | null): ProductFilters {

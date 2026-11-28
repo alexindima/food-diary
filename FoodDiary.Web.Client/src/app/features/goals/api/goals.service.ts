@@ -37,7 +37,7 @@ export class GoalsService {
                 goals === null
                     ? of(null)
                     : this.clearBodyTargets(request, goals).pipe(
-                          concatMap(updated => this.userService.getInfoSilently().pipe(map(() => updated))),
+                          concatMap(updated => this.userService.getInfoSilently({ fresh: true }).pipe(map(() => updated))),
                       ),
             ),
         );

@@ -6,7 +6,7 @@ import { provideRouter, Router, withComponentInputBinding } from '@angular/route
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
@@ -81,7 +81,7 @@ function configureReportHttp(): HttpTestingController {
     return TestBed.inject(HttpTestingController);
 }
 
-it('retries the same local report after a failed measurement request and renders the recovered dates and observations', async () => {
+it('keeps nutrition visible and retries only the measurements for the same report period', async () => {
     const http = configureReportHttp();
     TestBed.inject(MeasurementSystemService).setSystem('metric');
     const harness = await RouterTestingHarness.create(REPORT_ROUTE);
@@ -92,21 +92,24 @@ it('retries the same local report after a failed measurement request and renders
     const first = expectReportRequests(http);
     first.report.flush(SUMMARY);
     first.weight.flush(OBSERVATIONS);
-    harness.detectChanges();
-    expect(host.querySelector('.statistics__skeleton-grid')).not.toBeNull();
-    expect(host.querySelector('fd-statistics-overview-card')).toBeNull();
 
     first.waist.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
-    harness.detectChanges();
-    expect(host.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(host.querySelector('fd-statistics-overview-card')?.textContent ?? '').toContain('2,200');
+        expect(host.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+    });
     requireElement(host, 'fd-error-state button').click();
     TestBed.tick();
 
-    const recovered = expectReportRequests(http);
-    recovered.report.flush(SUMMARY);
+    http.expectNone(request => request.url === REPORT_API);
+    const recovered = expectMeasurementRequests(http, FROM_DAY, TO_DAY);
     recovered.weight.flush(OBSERVATIONS);
     recovered.waist.flush([]);
-    harness.detectChanges();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(host.querySelector('fd-error-state')).toBeNull();
+    });
     expect(TestBed.inject(Router).url).toBe(REPORT_ROUTE);
     expect(host.querySelector('fd-error-state')).toBeNull();
     expect(requireElement(host, 'fd-statistics-overview-card').textContent).toContain('2,200');
@@ -123,6 +126,56 @@ it('retries the same local report after a failed measurement request and renders
     expect(current.textContent).toContain('72,4');
     expect(axis.textContent).toMatch(/25\s*окт/u);
     expect(axis.textContent).toMatch(/8\s*ноя/u);
+    http.verify();
+});
+
+it('keeps historical measurements out of the next period while its exact observations load', async () => {
+    const http = configureReportHttp();
+    TestBed.inject(MeasurementSystemService).setSystem('metric');
+    const harness = await RouterTestingHarness.create(REPORT_ROUTE);
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the Statistics route');
+    }
+    const bodySelector = 'fd-statistics-body-trend-card .fd-ui-stat-value';
+    const first = expectReportRequests(http);
+    first.report.flush(SUMMARY);
+    first.weight.flush(OBSERVATIONS);
+    first.waist.flush([]);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(requireElement(host, bodySelector).textContent).toContain(String(LAST_WEIGHT));
+    });
+
+    const day = '2026-12-05';
+    const nextCalories = 3100;
+    const nextWeight = 64.7;
+    await harness.navigateByUrl(`/statistics?range=custom&dateFrom=${day}&dateTo=${day}`);
+    const next = expectReportRequests(http, { from: day, to: day, quantizationDays: '1' });
+    next.report.flush({
+        nutrition: [
+            {
+                ...SUMMARY.nutrition[0],
+                dateFrom: new Date(`${day}T00:00:00.000`).toISOString(),
+                dateTo: new Date(`${day}T23:59:59.999`).toISOString(),
+                totalCalories: nextCalories,
+            },
+        ],
+        weight: [{ startDate: day, endDate: day, averageWeightKg: nextWeight }],
+        waist: [],
+    } satisfies StatisticsSummaryHttpResponse);
+    harness.detectChanges();
+
+    expect(requireElement(host, 'fd-statistics-overview-card').textContent).toContain('3,100');
+    expect(requireElement(host, bodySelector).textContent).not.toContain(String(LAST_WEIGHT));
+    expect(requireElement(host, 'fd-statistics-body-trend-card').parentElement?.hidden).toBe(true);
+    expect(host.querySelector('.statistics__card-shell[aria-busy="true"]')).not.toBeNull();
+    next.weight.flush([{ date: day, weightKg: nextWeight }]);
+    next.waist.flush([]);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(requireElement(host, bodySelector).textContent).toContain(String(nextWeight));
+    });
     http.verify();
 });
 
@@ -192,7 +245,10 @@ it('keeps the stored measurement date when the viewer time zone skipped that cal
     requests.report.flush({ nutrition: [], waist: [], weight } satisfies StatisticsSummaryHttpResponse);
     requests.weight.flush(measurements);
     requests.waist.flush([]);
-    harness.detectChanges();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(requireElement(host, 'fd-statistics-body-trend-card .fd-ui-stat-value').textContent).toContain(String(LAST_WEIGHT));
+    });
 
     expect(TestBed.inject(Router).url).toBe(route);
     const body = requireElement(host, 'fd-statistics-body-trend-card');
@@ -216,19 +272,23 @@ function expectReportRequests(
     { from = FROM_DAY, to = TO_DAY, quantizationDays = '2' } = {},
 ): { report: TestRequest; weight: TestRequest; waist: TestRequest } {
     const report = http.expectOne(request => request.method === 'GET' && request.url === REPORT_API);
-    const weight = http.expectOne(request => request.method === 'GET' && request.url === WEIGHT_API);
-    const waist = http.expectOne(request => request.method === 'GET' && request.url === WAIST_API);
     expect(report.request.params.get('dateFrom')).toBe(new Date(`${from}T00:00:00.000`).toISOString());
     expect(report.request.params.get('dateTo')).toBe(new Date(`${to}T23:59:59.999`).toISOString());
     expect(report.request.params.get('bodyDateFrom')).toBe(from);
     expect(report.request.params.get('bodyDateTo')).toBe(to);
     expect(report.request.params.get('quantizationDays')).toBe(quantizationDays);
+    return { report, ...expectMeasurementRequests(http, from, to) };
+}
+
+function expectMeasurementRequests(http: HttpTestingController, from: string, to: string): { weight: TestRequest; waist: TestRequest } {
+    const weight = http.expectOne(request => request.method === 'GET' && request.url === WEIGHT_API);
+    const waist = http.expectOne(request => request.method === 'GET' && request.url === WAIST_API);
     for (const entryRead of [weight, waist]) {
         expect(entryRead.request.params.get('dateFrom')).toBe(from);
         expect(entryRead.request.params.get('dateTo')).toBe(to);
         expect(entryRead.request.params.get('sort')).toBe('asc');
     }
-    return { report, weight, waist };
+    return { weight, waist };
 }
 
 function requireElement(root: ParentNode, selector: string): HTMLElement {

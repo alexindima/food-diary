@@ -11,10 +11,7 @@
         />
     </div>
 
-    @if (reportResource.isLoading()) {
-        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
-    } @else if (reportResource.hasValue()) {
-        @let data = reportResource.value();
+    @if (report(); as data) {
         @let summary = data.summary;
         <p class="fd-ui-body-sm">{{ 'ADMIN_DMARC.COMPLETED_DAYS' | translate }}</p>
 
@@ -37,9 +34,7 @@
             </fd-ui-card>
         </div>
 
-        @if (summary.countedReports === 0) {
-            <p role="status">{{ 'ADMIN_DMARC.NO_VERIFIED_REPORTS' | translate }}</p>
-        } @else {
+        @if (summary.countedReports > 0) {
             <h3 class="fd-ui-title-sm" id="admin-dmarc-sources">{{ 'ADMIN_DMARC.SOURCES' | translate }}</h3>
             <div class="dmarc-table-wrap" tabindex="0" role="region" aria-labelledby="admin-dmarc-sources">
                 <table class="dmarc-table">
@@ -69,6 +64,8 @@
                     </tbody>
                 </table>
             </div>
+        } @else if (!data.incomplete) {
+            <p role="status">{{ 'ADMIN_DMARC.NO_VERIFIED_REPORTS' | translate }}</p>
         }
         @if (data.hasDuplicateOrConflictingReports) {
             <p class="fd-ui-body-sm">
@@ -78,7 +75,9 @@
             </p>
         }
 
-        <fd-admin-dmarc-reports [data]="data" />
+        <fd-admin-dmarc-reports [data]="data" [retrying]="loading()" (retryAttachments)="retryAttachments()" />
+    } @else if (loading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
     } @else {
         <fd-admin-load-error (retry)="retry()" />
     }

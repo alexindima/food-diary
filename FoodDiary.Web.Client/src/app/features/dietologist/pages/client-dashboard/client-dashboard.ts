@@ -1,6 +1,6 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, signal, viewChild } from '@angular/core';
-import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -119,12 +119,13 @@ function toCalendarPeriod({ dateFrom, dateTo }: DashboardPeriod<Date>): Dashboar
 }
 
 type ClientDashboardDetails = {
-    dashboard: DietologistDashboardSnapshot | null;
     goals: DietologistClientGoals | null;
     recommendations: DietologistRecommendation[];
     tasks: ClientTask[];
     templates: RecommendationTemplate[];
 };
+
+type DashboardRequest = { clientId: ClientSummary['userId']; period: DashboardPeriod<CalendarDay> };
 
 type RecommendationFormModel = {
     text: string;
@@ -184,18 +185,15 @@ export class ClientDashboardComponent {
     private readonly clientChanged = new Subject<void>();
     private readonly dashboardPeriodChanged = new Subject<void>();
     private clientRevision = 0;
-    private dashboardReloadSequence = 0;
     private loadedMealPage = 1;
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
-    protected readonly dashboard = signal<DietologistDashboardSnapshot | null>(null);
     protected readonly goals = signal<DietologistClientGoals | null>(null);
     protected readonly recommendations = signal<DietologistRecommendation[]>([]);
     protected readonly recommendationTemplates = signal<RecommendationTemplate[]>([]);
     protected readonly tasks = signal<ClientTask[]>([]);
     protected readonly loading = signal(true);
-    protected readonly detailsLoading = signal(false);
     protected readonly loadingMoreMeals = signal(false);
     protected readonly moreMealsError = signal(false);
     protected readonly savingRecommendation = signal(false);
@@ -208,8 +206,34 @@ export class ClientDashboardComponent {
     protected readonly error = computed(() =>
         this.clientResource.error() === undefined ? null : 'DIETOLOGIST.CLIENT_DASHBOARD.LOAD_ERROR',
     );
-    protected readonly sectionLoadError = signal<string | null>(null);
+    private readonly supportingSectionFailed = signal(false);
     private readonly selectedPeriod = signal(toCalendarPeriod(this.recentPeriod(DEFAULT_PERIOD_DAYS)));
+    private readonly dashboardRequest = computed((): DashboardRequest | undefined => {
+        const client = this.client();
+        return client !== null && this.shouldLoadDietologistDashboardSnapshot(client)
+            ? { clientId: client.userId, period: this.selectedPeriod() }
+            : undefined;
+    });
+    private readonly dashboardResource = rxResource({
+        params: this.dashboardRequest,
+        stream: ({ params }) => this.loadDietologistDashboardSnapshot(params),
+    });
+    protected readonly dashboard = linkedSignal({
+        source: this.dashboardResource.snapshot,
+        computation: (snapshot, previous): DietologistDashboardSnapshot | null => {
+            if (snapshot.status === 'loading' || snapshot.status === 'reloading') {
+                return previous?.value ?? null;
+            }
+            return snapshot.status === 'resolved' || snapshot.status === 'local' ? (snapshot.value ?? null) : null;
+        },
+    });
+    protected readonly detailsLoading = this.dashboardResource.isLoading;
+    private readonly settledDashboard = toObservable(this.detailsLoading).pipe(filter(() => !this.detailsLoading()));
+    protected readonly sectionLoadError = computed(() =>
+        this.supportingSectionFailed() || this.dashboardResource.error() !== undefined
+            ? 'DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR'
+            : null,
+    );
     protected readonly selectedDateFrom = computed(() => formatDateInputValue(toLocalDate(this.selectedPeriod().dateFrom)));
     protected readonly selectedDateTo = computed(() => formatDateInputValue(toLocalDate(this.selectedPeriod().dateTo)));
     protected readonly dateFilterModel = signal<DateFilterFormModel>({
@@ -409,6 +433,9 @@ export class ClientDashboardComponent {
         params: () => ({ id: this.routeClientId() }),
         stream: ({ params }) => this.loadRouteClient(params.id).pipe(takeUntil(this.clientChanged), defaultIfEmpty(null)),
     });
+    protected readonly sectionsLoading = computed(
+        () => this.detailsLoading() || (this.client() !== null && this.clientResource.isLoading()),
+    );
 
     public constructor() {
         this.connectDevelopmentTools();
@@ -423,13 +450,11 @@ export class ClientDashboardComponent {
                 if (found === null) {
                     return of(null);
                 }
-                this.detailsLoading.set(true);
                 return this.loadClientDetails(found);
             }),
             tap({
                 error: () => {
                     this.loading.set(false);
-                    this.detailsLoading.set(false);
                 },
             }),
         );
@@ -437,7 +462,6 @@ export class ClientDashboardComponent {
 
     private resetClientState(): void {
         this.clientRevision++;
-        this.dashboardReloadSequence++;
         this.clientChanged.next();
         this.client.set(null);
         this.dashboard.set(null);
@@ -446,7 +470,6 @@ export class ClientDashboardComponent {
         this.tasks.set([]);
         this.recommendationTemplates.set([]);
         this.loading.set(true);
-        this.detailsLoading.set(false);
         this.loadingMoreMeals.set(false);
         this.moreMealsError.set(false);
         this.savingRecommendation.set(false);
@@ -454,7 +477,7 @@ export class ClientDashboardComponent {
         this.savingTemplate.set(false);
         this.changingTaskIds.set(new Set());
         this.loadedMealPage = 1;
-        this.sectionLoadError.set(null);
+        this.supportingSectionFailed.set(false);
         this.openDiscussionId.set(this.recommendationId());
         this.recommendationForm().reset({ text: '', templateName: '' });
         this.taskForm().reset({ title: '', details: '', dueDate: '' });
@@ -495,8 +518,15 @@ export class ClientDashboardComponent {
             return;
         }
 
-        this.selectedPeriod.set(toCalendarPeriod(nextPeriod));
-        await this.reloadDashboardAsync(client);
+        this.selectPeriod(nextPeriod);
+        await firstValueFrom(
+            this.settledDashboard.pipe(
+                takeUntil(this.dashboardPeriodChanged),
+                takeUntil(this.clientChanged),
+                takeUntilDestroyed(this.destroyRef),
+            ),
+            { defaultValue: false },
+        );
     }
 
     protected showPreviousPeriod(): void {
@@ -522,17 +552,17 @@ export class ClientDashboardComponent {
     private async loadMoreMealsAsync(): Promise<void> {
         const client = this.client();
         const snapshot = this.dashboard();
-        if (client === null || snapshot === null || !this.canLoadMoreMeals(client, snapshot)) {
+        const request = this.dashboardRequest();
+        if (client === null || snapshot === null || request === undefined || !this.canLoadMoreMeals(client, snapshot)) {
             return;
         }
 
-        const sequence = this.dashboardReloadSequence;
         const nextPage = this.loadedMealPage + 1;
         this.loadingMoreMeals.set(true);
         this.moreMealsError.set(false);
         try {
             const result = await firstValueFrom(
-                this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService), nextPage).pipe(
+                this.loadDietologistDashboardSnapshot(request, nextPage).pipe(
                     catchError(() => of(null)),
                     takeUntil(this.dashboardPeriodChanged),
                     takeUntil(this.clientChanged),
@@ -540,7 +570,7 @@ export class ClientDashboardComponent {
                 ),
                 { defaultValue: null },
             );
-            if (this.destroyRef.destroyed || sequence !== this.dashboardReloadSequence) {
+            if (this.destroyRef.destroyed || request !== this.dashboardRequest()) {
                 return;
             }
             if (result === null) {
@@ -551,7 +581,7 @@ export class ClientDashboardComponent {
             this.dashboard.set(appendClientMealPage(snapshot, result));
             this.loadedMealPage = nextPage;
         } finally {
-            if (!this.destroyRef.destroyed && sequence === this.dashboardReloadSequence) {
+            if (!this.destroyRef.destroyed && request === this.dashboardRequest()) {
                 this.loadingMoreMeals.set(false);
             }
         }
@@ -606,7 +636,7 @@ export class ClientDashboardComponent {
             .subscribe({
                 next: template => {
                     this.recommendationTemplates.update(templates =>
-                        [...templates.filter(item => item.id !== template.id), template].sort((left, right) =>
+                        [template, ...templates.filter(item => item.id !== template.id)].sort((left, right) =>
                             left.name.localeCompare(right.name),
                         ),
                     );
@@ -699,7 +729,7 @@ export class ClientDashboardComponent {
             if (!this.isCurrentClientResult(recommendation, revision)) {
                 return;
             }
-            this.recommendations.update(items => [recommendation, ...items]);
+            this.recommendations.update(items => [recommendation, ...items.filter(item => item.id !== recommendation.id)]);
             this.recommendationForm().reset({ ...this.recommendationModel(), text: '' });
             this.savingRecommendation.set(false);
             this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
@@ -737,7 +767,7 @@ export class ClientDashboardComponent {
             if (!this.isCurrentClientResult(task, revision)) {
                 return;
             }
-            this.tasks.update(tasks => [task, ...tasks]);
+            this.tasks.update(tasks => [task, ...tasks.filter(item => item.id !== task.id)]);
             this.taskForm().reset({ title: '', details: '', dueDate: '' });
             this.toastService.success(this.translateService.instant('CLIENT_TASKS.CREATED'));
         } catch {
@@ -818,19 +848,7 @@ export class ClientDashboardComponent {
     }
 
     private loadClientDetails(client: ClientSummary): Observable<ClientDashboardDetails> {
-        const reloadSequence = ++this.dashboardReloadSequence;
-        const language = resolveTranslateLanguage(this.translateService);
-        this.sectionLoadError.set(null);
-
         return forkJoin({
-            dashboard: this.shouldLoadDietologistDashboardSnapshot(client)
-                ? this.loadDietologistDashboardSnapshot(client, language).pipe(
-                      this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence),
-                      takeUntil(this.dashboardPeriodChanged),
-                      // A replacement period still lets the other initial sections complete.
-                      defaultIfEmpty(null),
-                  )
-                : of(null),
             goals: client.permissions.shareGoals
                 ? this.dietologistFacade.getClientGoals(client.userId).pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
                 : of(null),
@@ -845,7 +863,6 @@ export class ClientDashboardComponent {
                 .pipe(this.handleSectionLoadError<RecommendationTemplate[], RecommendationTemplate[]>([])),
         }).pipe(
             tap(result => {
-                this.applyDashboardIfCurrent(result.dashboard, reloadSequence);
                 this.goals.set(result.goals);
                 this.recommendations.update(items => this.mergeInitialItems(result.recommendations, items));
                 this.tasks.update(items => this.mergeInitialItems(result.tasks, items));
@@ -856,45 +873,12 @@ export class ClientDashboardComponent {
         );
     }
 
-    private reloadDashboard(client: ClientSummary): void {
-        void this.reloadDashboardAsync(client);
-    }
-
-    private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
-        const reloadSequence = ++this.dashboardReloadSequence;
+    private selectPeriod(period: DashboardPeriod<Date>): void {
+        this.selectedPeriod.set(toCalendarPeriod(period));
         this.dashboardPeriodChanged.next();
         this.loadingMoreMeals.set(false);
         this.moreMealsError.set(false);
-        if (!this.shouldLoadDietologistDashboardSnapshot(client)) {
-            this.applyDashboardIfCurrent(null, reloadSequence);
-            return;
-        }
-
-        this.detailsLoading.set(true);
-        this.sectionLoadError.set(null);
-        const result = await firstValueFrom(
-            this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService)).pipe(
-                this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence),
-                takeUntil(this.dashboardPeriodChanged),
-                takeUntil(this.clientChanged),
-                takeUntilDestroyed(this.destroyRef),
-            ),
-            { defaultValue: null },
-        );
-
-        if (this.destroyRef.destroyed) {
-            return;
-        }
-
-        this.applyDashboardIfCurrent(result, reloadSequence);
-    }
-
-    private applyDashboardIfCurrent(dashboard: DietologistDashboardSnapshot | null, reloadSequence: number): void {
-        if (reloadSequence === this.dashboardReloadSequence) {
-            this.dashboard.set(dashboard);
-            this.loadedMealPage = 1;
-            this.detailsLoading.set(false);
-        }
+        this.loadedMealPage = 1;
     }
 
     private mergeInitialItems<T extends { id: string }>(loaded: T[], current: T[]): T[] {
@@ -902,13 +886,12 @@ export class ClientDashboardComponent {
         return [...current, ...loaded.filter(item => !currentIds.has(item.id))];
     }
 
-    private loadDietologistDashboardSnapshot(client: ClientSummary, language: string, page = 1): Observable<DietologistDashboardSnapshot> {
-        const period = this.getSelectedPeriodValue();
-        return this.dietologistFacade.getClientDashboard(client.userId, {
-            dateFrom: period.dateFrom,
-            dateTo: period.dateTo,
+    private loadDietologistDashboardSnapshot({ clientId, period }: DashboardRequest, page = 1): Observable<DietologistDashboardSnapshot> {
+        return this.dietologistFacade.getClientDashboard(clientId, {
+            dateFrom: toLocalDate(period.dateFrom),
+            dateTo: toLocalDate(period.dateTo),
             page,
-            locale: language,
+            locale: resolveTranslateLanguage(this.translateService),
             trendDays: CLIENT_DASHBOARD_TREND_DAYS,
         });
     }
@@ -931,11 +914,7 @@ export class ClientDashboardComponent {
 
     private applyPeriod(period: DashboardPeriod<Date>): void {
         this.dateFilterModel.set({ dateFrom: formatDateInputValue(period.dateFrom), dateTo: formatDateInputValue(period.dateTo) });
-        this.selectedPeriod.set(toCalendarPeriod(period));
-        const client = this.client();
-        if (client !== null) {
-            this.reloadDashboard(client);
-        }
+        this.selectPeriod(period);
     }
 
     private recentPeriod(days: number): DashboardPeriod<Date> {
@@ -969,16 +948,11 @@ export class ClientDashboardComponent {
         return next;
     }
 
-    private handleSectionLoadError<T, TFallback>(
-        fallback: TFallback,
-        reloadSequence?: number,
-    ): (source: Observable<T>) => Observable<T | TFallback> {
+    private handleSectionLoadError<T, TFallback>(fallback: TFallback): (source: Observable<T>) => Observable<T | TFallback> {
         return source =>
             source.pipe(
                 catchError(() => {
-                    if (reloadSequence === undefined || reloadSequence === this.dashboardReloadSequence) {
-                        this.sectionLoadError.set('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
-                    }
+                    this.supportingSectionFailed.set(true);
                     return of(fallback);
                 }),
             );
@@ -1034,7 +1008,7 @@ export class ClientDashboardComponent {
     }
 
     private fillDevelopmentDraft(draftInput: unknown): void {
-        if (this.loading() || this.detailsLoading() || this.client() === null || this.isDevelopmentDraftSaving()) {
+        if (this.loading() || this.sectionsLoading() || this.client() === null || this.isDevelopmentDraftSaving()) {
             throw new DevelopmentToolError('Client is not ready.');
         }
         const draft = devRecord(draftInput, ['type', 'text', 'title', 'details', 'dueDate']);
@@ -1077,7 +1051,7 @@ export class ClientDashboardComponent {
             filterFields: ['dateFrom', 'dateTo', 'timeZone'],
             dateFrom: this.selectedDateFrom(),
             dateTo: this.selectedDateTo(),
-            loading: this.loading() || this.detailsLoading(),
+            loading: this.loading() || this.sectionsLoading(),
             error: this.error() ?? this.sectionLoadError(),
             meals: this.readDevelopmentMeals(),
             recommendation: {

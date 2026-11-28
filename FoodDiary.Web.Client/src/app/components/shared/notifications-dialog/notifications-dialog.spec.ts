@@ -27,6 +27,7 @@ type NotificationsDialogTestContext = {
         notifications: ReturnType<typeof signal<NotificationItem[]>>;
         notificationsLoading: ReturnType<typeof signal<boolean>>;
         notificationsLoaded: ReturnType<typeof signal<boolean>>;
+        hasNotificationsLoadError: ReturnType<typeof signal<boolean>>;
     };
     router: { navigateByUrl: ReturnType<typeof vi.fn> };
 };
@@ -38,6 +39,7 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
         notifications: signal(notifications),
         notificationsLoading: signal(false),
         notificationsLoaded: signal(true),
+        hasNotificationsLoadError: signal(false),
         ensureNotificationsLoaded: vi.fn(),
         markAsRead: vi.fn().mockReturnValue(of(void 0)),
         markAllRead: vi.fn().mockReturnValue(of(void 0)),
@@ -74,10 +76,12 @@ describe('NotificationsDialogComponent background reconciliation', () => {
         expect(host.querySelector('.notifications-dialog__state')).toBeNull();
 
         notificationService.notificationsLoading.set(false);
+        notificationService.hasNotificationsLoadError.set(true);
         fixture.detectChanges();
 
         expect(host.querySelector('.notifications-dialog__item')).toBe(originalCard);
         expect(host.querySelector('.notifications-dialog__state')).toBeNull();
+        expect(host.querySelector('fd-ui-inline-alert[role="alert"]')).not.toBeNull();
     });
 
     it('shows initial loading until the first feed load completes', () => {

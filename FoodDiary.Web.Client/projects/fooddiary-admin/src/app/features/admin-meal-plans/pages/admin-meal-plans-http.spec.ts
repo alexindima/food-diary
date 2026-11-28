@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { environment } from '../../../../environments/environment';
@@ -29,8 +29,14 @@ it('loads and saves a selected catalog draft through the page facade, then refre
     edit?.click();
     fixture.detectChanges();
     http.expectOne({ method: 'GET', url: `${url}/${id}` }).flush({ ...summary, days });
-    fixture.detectChanges();
-    http.expectOne(request => request.url === `${url}/recipes` && request.params.get('search') === '').flush([]);
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-meal-plan-editor')).not.toBeNull();
+    });
+    http.expectOne(request => request.method === 'GET' && request.url === `${url}/recipes` && request.params.get('search') === '').flush(
+        [],
+    );
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const name = host.querySelector<HTMLInputElement>('form input');

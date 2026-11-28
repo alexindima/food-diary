@@ -37,6 +37,32 @@
     color: var(--fd-color-text-muted);
 }
 
+.admin-user-details__section h3 {
+    margin: 0;
+}
+
+.admin-user-details__grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    margin: 0;
+}
+
+.admin-user-details__grid div {
+    min-width: 0;
+    padding: var(--fd-space-sm);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-sm);
+}
+
+.admin-user-details__grid dt {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+}
+
+.admin-user-details__grid dd {
+    margin: var(--fd-space-xxs) 0 0;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 640px) {
     .admin-user-details__header {
         grid-template-columns: 1fr;

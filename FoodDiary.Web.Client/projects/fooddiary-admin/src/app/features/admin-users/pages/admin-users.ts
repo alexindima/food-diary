@@ -11,7 +11,7 @@ import { finalize, map } from 'rxjs';
 
 import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
-import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminRouteInputsMatch, restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -76,9 +76,8 @@ export class AdminUsersComponent {
         lastActiveFrom: this.lastActiveFrom() ?? null,
         lastActiveTo: this.lastActiveTo() ?? null,
     }));
-    private readonly registrationPeriod = computed(() =>
-        adminPeriod(convertToParamMap({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null })),
-    );
+    private readonly periodInputs = computed(() => ({ period: this.period() ?? null, from: this.from() ?? null, to: this.to() ?? null }));
+    private readonly registrationPeriod = computed(() => adminPeriod(convertToParamMap(this.periodInputs())));
     private readonly appliedFilters = computed((): UserListFilters => {
         const query = this.queryFilters();
         return {
@@ -97,7 +96,10 @@ export class AdminUsersComponent {
         stream: ({ params }) =>
             this.usersService.getUsers(params.page, this.limit, params.search, params.filters).pipe(
                 map(response => {
-                    if (this.request() !== params) {
+                    if (
+                        this.request() !== params ||
+                        !adminRouteInputsMatch(this.route, { ...this.queryFilters(), ...this.periodInputs() })
+                    ) {
                         return null;
                     }
                     const correctingPage = restoreAdminPage(this.router, this.route, params.page, {

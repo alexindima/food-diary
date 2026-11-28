@@ -59,8 +59,12 @@ export class RecipeManageFacade {
 
     private readonly userFacade = inject(UserFacade);
     public readonly preferredLanguage = computed(() => normalizeRecipeLanguage(this.userFacade.user()?.language));
-    public async preparePublicationAsync(data: RecipeDto, isCurrent: () => boolean): Promise<RecipeDto | null> {
-        return this.publication.prepareAsync(data, isCurrent);
+    public async preparePublicationAsync(
+        data: RecipeDto,
+        isCurrent: () => boolean,
+        cancelLookup: Observable<unknown>,
+    ): Promise<RecipeDto | null> {
+        return this.publication.prepareAsync(data, isCurrent, cancelLookup);
     }
     public async confirmRecipeLanguageAsync(detected: string, selected: string): Promise<RecipeLanguageChoice | undefined> {
         return firstValueFrom(

@@ -6,6 +6,7 @@ import { FdUiTabsComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, firstAdminQueryValue } from '../../../shared/period/admin-query';
@@ -26,6 +27,7 @@ import { AdminBillingRecordsComponent } from './admin-billing-records';
         FdUiPaginationComponent,
         AdminBillingFiltersComponent,
         AdminBillingMetadataPanelComponent,
+        AdminLoadErrorComponent,
     ],
     providers: [AdminBillingFacade],
     templateUrl: './admin-billing.html',

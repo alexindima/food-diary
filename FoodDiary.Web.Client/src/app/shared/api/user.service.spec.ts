@@ -271,6 +271,80 @@ describe('UserService mutation session ownership', () => {
     });
 });
 
+describe('UserService same-session read freshness', () => {
+    it.each([
+        { method: 'getInfo', path: 'info', fails: false },
+        { method: 'getInfoSilently', path: 'info', fails: true },
+        { method: 'getOverview', path: 'overview', fails: false },
+    ] as const)('does not publish a late $method after a profile save (failure: $fails)', ({ method, path, fails }) => {
+        const read: Observable<unknown> = service[method]();
+        const next = vi.fn();
+        read.subscribe(next);
+        const pending = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${path}` });
+        const saved = { ...MOCK_USER, username: 'saved-profile' };
+        service.update(new UpdateUserDto({ username: saved.username })).subscribe();
+        httpMock.expectOne({ method: 'PATCH', url: `${BASE_URL}/info` }).flush(saved);
+
+        const response = method === 'getOverview' ? overviewForUser(MOCK_USER) : MOCK_USER;
+        if (fails) {
+            pending.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        } else {
+            pending.flush(response);
+        }
+
+        expect(next).toHaveBeenCalledWith(fails ? null : response);
+        expect(service.user()).toEqual(saved);
+    });
+
+    it('shares the pending silent profile request and reads again once it completes', async () => {
+        const first = firstValueFrom(service.getInfoSilently());
+        const second = firstValueFrom(service.getInfoSilently());
+        const requests = httpMock.match({ method: 'GET', url: `${BASE_URL}/info` });
+        for (const request of requests) {
+            expect(request.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+            request.flush(MOCK_USER);
+        }
+
+        expect(requests).toHaveLength(1);
+        await expect(Promise.all([first, second])).resolves.toEqual([MOCK_USER, MOCK_USER]);
+        const next = firstValueFrom(service.getInfoSilently());
+        const fresh = { ...MOCK_USER, username: 'fresh-profile' };
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` }).flush(fresh);
+        await expect(next).resolves.toEqual(fresh);
+    });
+
+    it('starts a fresh read after a mutation and ignores an older response even before the new read completes', async () => {
+        setCurrentUser(MOCK_USER);
+        const first = firstValueFrom(service.getInfoSilently());
+        const oldRequest = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` });
+        const next = firstValueFrom(service.getInfoSilently({ fresh: true }));
+        const freshRequest = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` });
+        const stale = { ...MOCK_USER, username: 'old-profile' };
+        const updated = { ...MOCK_USER, username: 'updated-profile' };
+
+        oldRequest.flush(stale);
+        expect(service.user()?.username).toBe(MOCK_USER.username);
+        freshRequest.flush(updated);
+
+        await expect(first).resolves.toEqual(stale);
+        await expect(next).resolves.toEqual(updated);
+        expect(service.user()).toEqual(updated);
+    });
+
+    it('cancels the shared HTTP request once its last subscriber leaves', () => {
+        const first = service.getInfoSilently().subscribe();
+        const second = service.getInfoSilently().subscribe();
+        const pending = httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` });
+        first.unsubscribe();
+        expect(pending.cancelled).toBe(false);
+        second.unsubscribe();
+        expect(pending.cancelled).toBe(true);
+
+        service.getInfoSilently().subscribe();
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` }).flush(MOCK_USER);
+    });
+});
+
 function overviewForUser(user: User): UserProfileOverview {
     return {
         user,

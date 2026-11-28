@@ -125,8 +125,14 @@ export class FdUiEmojiPickerComponent<Value extends FdUiEmojiPickerValue = FdUiE
     }
 
     private focusRelative(startIndex: number, direction: 1 | -1): void {
+        const optionCount = this.options().length;
+        if (startIndex >= optionCount) {
+            return;
+        }
+
         const nextIndex = this.findEnabledIndex(startIndex + direction, direction);
-        this.focusIndex(nextIndex);
+        const wrappedStart = direction === NEXT_OPTION_OFFSET ? FIRST_OPTION_INDEX : optionCount + PREVIOUS_OPTION_OFFSET;
+        this.focusIndex(nextIndex === NO_ENABLED_OPTION_INDEX ? this.findEnabledIndex(wrappedStart, direction) : nextIndex);
     }
 
     private findEnabledIndex(startIndex: number, direction: 1 | -1): number {

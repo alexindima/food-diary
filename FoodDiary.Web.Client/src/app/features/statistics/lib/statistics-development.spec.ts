@@ -39,9 +39,14 @@ const summary: StatisticsSummary = {
     ],
     weight: [],
     waist: [],
-    weightMeasurements: { first: null, last: null, count: 0 },
-    waistMeasurements: { first: null, last: null, count: 0 },
 };
+
+function getBodyMeasurements(): ReturnType<StatisticsService['getBodyMeasurements']> {
+    return of({
+        weightMeasurements: { first: null, last: null, count: 0 },
+        waistMeasurements: { first: null, last: null, count: 0 },
+    });
+}
 
 describe('live statistics audit context', () => {
     let facade: StatisticsFacade;
@@ -52,7 +57,7 @@ describe('live statistics audit context', () => {
         TestBed.configureTestingModule({
             providers: [
                 StatisticsFacade,
-                { provide: StatisticsService, useValue: { getSummary } },
+                { provide: StatisticsService, useValue: { getSummary, getBodyMeasurements } },
                 { provide: UserService, useValue: { user: signal(null) } },
                 { provide: ExportService, useValue: {} },
                 {

@@ -381,6 +381,32 @@ describe('FdUiTimeInputComponent rendered interactions', () => {
     });
 });
 
+it.each(['21:58', '21:59'])('scrolls to the last offered minute for %s and keeps the precise value', async value => {
+    const lastMinuteOffset = 280;
+    const offsetWidth = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(LAID_OUT_OPTION_WIDTH);
+    const offsetTop = vi.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement): number {
+        return this.textContent.trim() === '55' ? lastMinuteOffset : 0;
+    });
+    onTestFinished(() => {
+        offsetWidth.mockRestore();
+        offsetTop.mockRestore();
+    });
+    const { fixture, component, requireElement } = await setupTimeInputAsync();
+    const changed = vi.fn();
+    component.value.subscribe(changed);
+    fixture.componentRef.setInput('value', value);
+    fixture.detectChanges();
+    requireElement('[role="combobox"]').click();
+    fixture.detectChanges();
+
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    const lastMinute = pickerOption(overlay, 'Minutes', '55');
+    expect(lastMinute.parentElement?.scrollTop).toBe(lastMinuteOffset);
+    expect(lastMinute.getAttribute('aria-pressed')).toBe('false');
+    expect(component.value()).toBe(value);
+    expect(changed).not.toHaveBeenCalled();
+});
+
 function pickerOption(overlay: HTMLElement, groupLabel: string, value: string): HTMLButtonElement {
     const option = [...overlay.querySelectorAll<HTMLButtonElement>(`[role="group"][aria-label="${groupLabel}"] button`)].find(
         element => element.textContent.trim() === value,

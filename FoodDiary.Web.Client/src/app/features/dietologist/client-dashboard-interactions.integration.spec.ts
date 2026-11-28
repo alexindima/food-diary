@@ -469,6 +469,27 @@ describe('Dietologist dashboard initial recommendation ownership', () => {
     });
 });
 
+describe('Dietologist dashboard first read', () => {
+    it('displays the period summary while recommendations are still loading', async () => {
+        const { listClients, loadDashboard, loadRecommendations } = setupDashboardRouter();
+        const calories = 180;
+        const recommendations = new Subject<DietologistRecommendation[]>();
+        listClients.mockReturnValueOnce(of([{ ...FIRST_CLIENT, permissions: { ...PROFILE_PERMISSIONS, shareStatistics: true } }]));
+        loadRecommendations.mockReturnValueOnce(recommendations);
+        loadDashboard.mockReturnValueOnce(of(dashboardSnapshot(calories)));
+
+        const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+
+        expect(recommendations.observed).toBe(true);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(statisticsText(dashboardHost(harness))).toContain(String(calories));
+        });
+        expect(recommendations.observed).toBe(true);
+        expect(loadDashboard).toHaveBeenCalledOnce();
+    });
+});
+
 describe('Dietologist dashboard period retry', () => {
     it.each(['initial period', 'selected period'] as const)('retries the exact failed %s from the rendered date form', async failure => {
         const { listClients, loadDashboard } = setupDashboardRouter();

@@ -608,14 +608,16 @@ describe('ShoppingListFacade persistence operations', () => {
         expect(facade.selectedListId()).toBe('list-1');
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.DELETE_ERROR');
     });
+});
 
+describe('ShoppingListFacade removing lists and items', () => {
     it('ignores a repeated delete of an inactive list without replacing the current list', async () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         const deletedId = entityId<'shopping-list'>('list-2');
         shoppingListService.getOverview.mockReturnValueOnce(
             of(
                 makeOverview([
-                    { id: entityId<'shopping-list'>('list-1'), name: 'Main list', createdAt: utcInstant(''), itemsCount: 0 },
+                    { id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: list.items.length },
                     { id: deletedId, name: 'Weekend', createdAt: utcInstant(''), itemsCount: 0 },
                 ]),
             ),
@@ -631,6 +633,8 @@ describe('ShoppingListFacade persistence operations', () => {
         TestBed.tick();
 
         expect(shoppingListService.deleteById).toHaveBeenCalledExactlyOnceWith(deletedId);
+        expect(shoppingListService.getPage).toHaveBeenCalledOnce();
+        expect(shoppingListService.getById).not.toHaveBeenCalled();
         expect(facade.list()).toEqual(list);
         expect(facade.selectedListId()).toBe('list-1');
     });
@@ -848,7 +852,46 @@ describe('ShoppingListFacade autosave', () => {
     });
 });
 
-describe('ShoppingListFacade new list summaries', () => {
+describe('ShoppingListFacade directory refresh after mutations', () => {
+    it('loads the replacement selection after deleting the selected list', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const replacement = { ...list, id: entityId<'shopping-list'>('list-2'), name: 'Weekend' };
+        shoppingListService.getPage.mockReturnValueOnce(
+            of([{ id: replacement.id, name: replacement.name, createdAt: replacement.createdAt, itemsCount: 0 }]),
+        );
+        shoppingListService.getById.mockReturnValueOnce(of(replacement));
+        facade.initialize();
+        TestBed.tick();
+
+        facade.deleteListById(list.id);
+        TestBed.tick();
+
+        expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith(replacement.id);
+        expect(facade.list()).toEqual(replacement);
+        expect(facade.selectedListId()).toBe(replacement.id);
+    });
+
+    it.each([true, false])('keeps the created detail if the directory includes the new list: %s', listed => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const created = { ...list, id: entityId<'shopping-list'>('list-2'), name: 'New list' };
+        const directory = [listed ? created : list];
+        shoppingListService.create.mockReturnValueOnce(of(created));
+        shoppingListService.getPage.mockReturnValueOnce(
+            of(directory.map(({ id, name, createdAt }) => ({ id, name, createdAt, itemsCount: 0 }))),
+        );
+        facade.initialize();
+        TestBed.tick();
+
+        facade.createNewList();
+        TestBed.tick();
+
+        expect(shoppingListService.getPage).toHaveBeenCalledOnce();
+        expect(shoppingListService.getById).not.toHaveBeenCalled();
+        expect(facade.list()).toEqual(created);
+        expect(facade.selectedListId()).toBe(created.id);
+        expect(facade.isLoading()).toBe(false);
+    });
+
     it('should expose a newly created list summary before the list reload finishes', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         const createdList: ShoppingList = {

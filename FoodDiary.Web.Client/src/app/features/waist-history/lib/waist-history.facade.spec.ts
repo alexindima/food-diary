@@ -910,3 +910,53 @@ describe('WaistHistoryFacade stale chart responses', () => {
         expect(facade.rollingMonthSummaryPoints()).toEqual(createWaistPageSummary().summary);
     });
 });
+
+describe('WaistHistoryFacade rolling month ownership', () => {
+    it('retains the newer rolling month summary when the initial page response arrives late', () => {
+        const initial = createWaistPageSummary();
+        const page = new Subject<WaistHistoryPageSummary>();
+        const freshMonth = [{ ...initial.summary[0], averageCircumferenceCm: TARGET_WAIST }];
+        waistEntriesService.getPageSummary.mockReturnValueOnce(page);
+        waistEntriesService.getSummary.mockReturnValueOnce(of([])).mockReturnValueOnce(of(freshMonth));
+        facade.initialize();
+        TestBed.tick();
+
+        facade.changeRange('week');
+        TestBed.tick();
+        facade.changeRange('month');
+        TestBed.tick();
+        expect(facade.rollingMonthSummaryPoints()).toEqual(freshMonth);
+        expect(page.observed).toBe(true);
+
+        page.next(initial);
+        page.complete();
+
+        expect(facade.summaryPoints()).toEqual(freshMonth);
+        expect(facade.rollingMonthSummaryPoints()).toEqual(freshMonth);
+        expect(facade.entries()).toEqual(initial.entries);
+    });
+
+    it('uses the initial rolling month summary if the newer month request was canceled', () => {
+        const initial = createWaistPageSummary();
+        const page = new Subject<WaistHistoryPageSummary>();
+        const pendingMonth = new Subject<(typeof initial)['summary']>();
+        waistEntriesService.getPageSummary.mockReturnValueOnce(page);
+        waistEntriesService.getSummary.mockReturnValueOnce(of([])).mockReturnValueOnce(pendingMonth);
+        facade.initialize();
+        TestBed.tick();
+
+        facade.changeRange('week');
+        TestBed.tick();
+        facade.changeRange('month');
+        TestBed.tick();
+        expect(pendingMonth.observed).toBe(true);
+        facade.changeRange('year');
+        TestBed.tick();
+        expect(pendingMonth.observed).toBe(false);
+
+        page.next(initial);
+        page.complete();
+
+        expect(facade.rollingMonthSummaryPoints()).toEqual(initial.summary);
+    });
+});
